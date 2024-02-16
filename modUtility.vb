@@ -5,8 +5,6 @@ Imports System.Text
 Imports MySql.Data.MySqlClient
 
 Module modUtility
-    Public Sheets As String() = {"員工管理", "權限管理", "廠商管理", "客戶管理", "公司管理", "基礎價格", "銀行帳戶管理", "採購作業", "付款作業", "應付明細帳", "銷售作業", "收款作業",
-    "月結帳單", "應收帳款", "氣款應收帳", "能源局", "提氣量清冊", "保險", "發票機", "財務", "新桶明細", "氣量氣款收付明細", "現金帳", "支票管理", "銀行帳", "應收票據", "應納稅額"}
     Private PropertyCache As New Dictionary(Of Type, Dictionary(Of String, PropertyInfo))
 
     ''' <summary>
@@ -35,7 +33,7 @@ Module modUtility
                     If cmb.DataSource Is Nothing Then
                         propValue = cmb.Text
                     Else
-                        propValue = cmb.SelectedItem.Key
+                        propValue = cmb.SelectedItem.Value
                     End If
                 End If
 
@@ -53,6 +51,16 @@ Module modUtility
                 Dim tc As TabControl = control
                 propName = tc.Tag
                 propValue = tc.SelectedTab.Text
+
+            ElseIf TypeOf control Is CheckBox Then
+                Dim chk As CheckBox = control
+                propName = chk.Tag
+                propValue = chk.Checked
+
+            ElseIf TypeOf control Is FlowLayoutPanel Then
+                Dim flp As FlowLayoutPanel = control
+                propName = flp.Tag
+                propValue = String.Join(",", flp.Controls.OfType(Of CheckBox).Where(Function(chk) chk.Checked).Select(Function(x) x.Text))
             Else
                 Continue For
             End If
@@ -74,7 +82,7 @@ Module modUtility
                         prop.SetValue(entity, convertedValue)
 
                     Catch ex As Exception
-                        Throw
+                        MsgBox(ex.Message & vbCrLf & "出問題的欄位:" & control.Tag)
                     End Try
                 End If
             End If
@@ -123,7 +131,14 @@ Module modUtility
                     If rdos.Count > 0 Then
                         rdos.FirstOrDefault(Function(x) x.Text = value).Checked = True
                     End If
-                Else
+
+                ElseIf TypeOf control Is CheckBox Then
+                    Dim chk As CheckBox = control
+                    chk.Checked = value
+
+                ElseIf TypeOf control Is FlowLayoutPanel Then
+                    Dim flp As FlowLayoutPanel = control
+                    flp.Controls.OfType(Of CheckBox).Where(Function(chk) value.ToString.Contains(chk.Text)).ToList.ForEach(Sub(x) x.Checked = True)
 
                 End If
             End If

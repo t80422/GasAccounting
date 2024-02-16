@@ -1,4 +1,5 @@
 ﻿Public Interface ISubjectGroupView
+    'todo 可以改成繼承ICommonView
     ''' <summary>
     ''' 顯示科目列表到 UI
     ''' </summary>

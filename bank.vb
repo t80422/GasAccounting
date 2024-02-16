@@ -13,7 +13,9 @@ Imports System.Collections.Generic
 Partial Public Class bank
     Public Property bank_id As Integer
     Public Property bank_name As String
-    Public Property bank_InitialBalance As Nullable(Of Integer)
-    Public Property bank_CurrentBalance As Nullable(Of Integer)
+    Public Property bank_InitialBalance As Integer
+    Public Property bank_CurrentBalance As Integer
+
+    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class

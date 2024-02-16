@@ -22,10 +22,6 @@ Partial Public Class customer
     Public Property cus_address As String
     Public Property cus_tax_id As String
     Public Property cus_memo As String
-    Public Property cus_gas_normal As Nullable(Of Single)
-    Public Property cus_gas_c As Nullable(Of Single)
-    Public Property cus_gas_normal_deliver As Nullable(Of Single)
-    Public Property cus_gas_c_deliver As Nullable(Of Single)
     Public Property cus_insurance As String
     Public Property cus_gas_50 As Integer
     Public Property cus_gas_20 As Integer
@@ -36,7 +32,9 @@ Partial Public Class customer
     Public Property cus_gas_14 As Integer
     Public Property cus_gas_5 As Integer
     Public Property cus_gas_2 As Integer
+    Public Property cus_pp_Id As Nullable(Of Integer)
 
     Public Overridable Property cars As ICollection(Of car) = New HashSet(Of car)
+    Public Overridable Property priceplan As priceplan
 
 End Class

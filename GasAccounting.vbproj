@@ -47,6 +47,9 @@
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -101,6 +104,9 @@
     <Compile Include="bank.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Bank\BankPresenter.vb" />
+    <Compile Include="Bank\IBankView.vb" />
+    <Compile Include="BasePresenter.vb" />
     <Compile Include="basic_price.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -110,12 +116,17 @@
     <Compile Include="company.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Company\CompanyPresenter.vb" />
     <Compile Include="customer.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Customer\CustomerPresenter.vb" />
+    <Compile Include="Customer\ICustomer.vb" />
     <Compile Include="employee.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Employee\EmployeePresenter.vb" />
+    <Compile Include="Employee\IEmployeeView.vb" />
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -129,11 +140,64 @@
     <Compile Include="frmQueryCustomer.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ISubjectGroupView.vb" />
-    <Compile Include="ISubjectsView.vb" />
+    <Compile Include="Company\ICompanyView.vb" />
+    <Compile Include="ICommonView.vb" />
+    <Compile Include="IPresenter.vb" />
     <Compile Include="manufacturer.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Manufacturer\IManufacturerView.vb" />
+    <Compile Include="Manufacturer\ManufacturerPresenter.vb" />
+    <Compile Include="order.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="payment.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Payment\IPaymentView.vb" />
+    <Compile Include="Payment\PaymentPresenter.vb" />
+    <Compile Include="priceplan.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="purchase.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="role.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Roles\IRolesView.vb" />
+    <Compile Include="Roles\RolesPresenter.vb" />
+    <Compile Include="Services\BankService.vb" />
+    <Compile Include="Services\IBankService.vb" />
+    <Compile Include="Services\ISubjectsService.vb" />
+    <Compile Include="Services\SubjectsService.vb" />
+    <Compile Include="subject.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="subjects_group.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\BankVM.vb" />
+    <Compile Include="ViewModel\ComboBoxItems.vb" />
+    <Compile Include="ViewModel\CompanyVM.vb" />
+    <Compile Include="ViewModel\CustomerVM.vb" />
+    <Compile Include="ViewModel\EmployeeVM.vb" />
+    <Compile Include="ViewModel\ManufacturerVM.vb" />
+    <Compile Include="ViewModel\PaymentQueryVM.vb" />
+    <Compile Include="ViewModel\PaymentVM.vb" />
+    <Compile Include="ViewModel\PricePlanVM.vb" />
+    <Compile Include="ViewModel\PurchaseVM.vb" />
+    <Compile Include="PricePlan\IPricePlanView.vb" />
+    <Compile Include="PricePlan\PricePlanPresenter.vb" />
+    <Compile Include="Purchase\IPurchaseView.vb" />
+    <Compile Include="Purchase\PurchasePresenter.vb" />
+    <Compile Include="Services\CompanyService.vb" />
+    <Compile Include="Services\ICompanyService.vb" />
+    <Compile Include="Services\IManufacturerService.vb" />
+    <Compile Include="Services\ManufacturerService.vb" />
+    <Compile Include="Services\Service.vb" />
+    <Compile Include="Subjects\ISubjectGroupView.vb" />
+    <Compile Include="Subjects\ISubjectsView.vb" />
     <Compile Include="Model1.Context.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -149,17 +213,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\BasicPriceMV.vb" />
-    <Compile Include="Models\CarMV.vb" />
-    <Compile Include="Models\OrderMV.vb" />
-    <Compile Include="Models\SubjectGroupVM.vb" />
-    <Compile Include="Models\SubjectsVM.vb" />
+    <Compile Include="ViewModel\BasicPriceMV.vb" />
+    <Compile Include="ViewModel\CarMV.vb" />
+    <Compile Include="ViewModel\OrderMV.vb" />
+    <Compile Include="ViewModel\RolesVM.vb" />
+    <Compile Include="ViewModel\SubjectGroupVM.vb" />
+    <Compile Include="ViewModel\SubjectsVM.vb" />
     <Compile Include="modFormControl.vb" />
     <Compile Include="modUtility.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -171,23 +237,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="order.vb">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="purchase.vb">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="role.vb">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="subject.vb">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SubjectGroupPresenter.vb" />
-    <Compile Include="SubjectsPresenter.vb" />
-    <Compile Include="subjects_group.vb">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Subjects\SubjectGroupPresenter.vb" />
+    <Compile Include="Subjects\SubjectsPresenter.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmMain.resx">
@@ -211,6 +262,7 @@
     <None Include="Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </None>
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -238,5 +290,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

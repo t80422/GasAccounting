@@ -17,5 +17,6 @@ Partial Public Class subject
     Public Property s_memo As String
 
     Public Overridable Property subjects_group As subjects_group
+    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class

@@ -29,8 +29,6 @@ Module modFormControl
 
                 If txt.ReadOnly Then
                     txt.BackColor = SystemColors.Control
-                Else
-                    txt.BackColor = SystemColors.Window
                 End If
 
             ElseIf TypeOf ctrl Is CheckBox Then
@@ -295,7 +293,7 @@ Module modFormControl
         btns.Where(Function(x) x.Text = "修  改" Or x.Text = "刪  除").ToList.ForEach(Sub(y) y.Enabled = Not enableCreate)
     End Sub
 
-    Public Function SetPositiveIntegerOnly(sender As Object, e As KeyPressEventArgs) As Boolean
+    Public Function PositiveIntegerOnly_TextBox(sender As Object, e As KeyPressEventArgs) As Boolean
         ' 檢查按鍵是否為數字或控制鍵（如退格鍵）
         If Not Char.IsDigit(e.KeyChar) AndAlso Not Char.IsControl(e.KeyChar) Then
             ' 如果不是數字或控制鍵，取消事件，不允許字符被輸入
@@ -338,4 +336,67 @@ Module modFormControl
         Dim font As Font = sender.Font
         e.Graphics.DrawString(text, font, New SolidBrush(textColor), e.Bounds.Location)
     End Sub
+
+    Public Sub PositiveFloatOnly_TextBox(sender As Object, e As KeyPressEventArgs)
+        ' 檢查輸入的是不是數字或控制鍵，如果不是，則取消事件
+        If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) AndAlso (e.KeyChar <> ".") Then
+            e.Handled = True
+        End If
+
+        ' 只允許一個小數點
+        If (e.KeyChar = ".") AndAlso DirectCast(sender, TextBox).Text.IndexOf(".") > -1 Then
+            e.Handled = True
+        End If
+
+        ' 如果第一個字元是小數點，則在前面加上0
+        If (e.KeyChar = ".") AndAlso DirectCast(sender, TextBox).Text.Length = 0 Then
+            DirectCast(sender, TextBox).Text = "0."
+            DirectCast(sender, TextBox).Select(2, 0)
+            e.Handled = True
+        End If
+    End Sub
+
+    Public Sub FloatOnly_TextBox(sender As Object, e As KeyPressEventArgs)
+        ' 允許數字、控制字符、負號和小數點
+        If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) AndAlso
+       (e.KeyChar <> "."c) AndAlso (e.KeyChar <> "-"c) Then
+            e.Handled = True ' 拒絕字符
+        End If
+
+        ' 只允許一個小數點和在第一位的單個負號
+        Dim textBox As TextBox = DirectCast(sender, TextBox)
+        If (e.KeyChar = "."c AndAlso textBox.Text.IndexOf("."c) > -1) OrElse
+       (e.KeyChar = "-"c AndAlso textBox.Text.Length > 0 AndAlso textBox.Text.IndexOf("-"c) = 0) Then
+            e.Handled = True ' 拒絕字符
+        End If
+
+        ' 如果第一個字符是小數點，自動在前面加上0
+        If (e.KeyChar = "."c) AndAlso (textBox.Text.Length = 0 OrElse textBox.SelectionStart = 0) Then
+            textBox.Text = "0" & textBox.Text
+            textBox.SelectionStart = 1
+        End If
+
+        ' 如果第一個字符是負號，確保它是唯一的且在文本的開始位置
+        If (e.KeyChar = "-"c) AndAlso (textBox.SelectionStart <> 0 OrElse textBox.Text.IndexOf("-"c) > -1) Then
+            e.Handled = True
+        End If
+    End Sub
+
+    Public Sub SetComboBox(cmb As ComboBox, data As List(Of ComboBoxItems))
+        With cmb
+            .DataSource = data
+            .ValueMember = "Value"
+            .DisplayMember = "Display"
+            .SelectedIndex = -1
+        End With
+    End Sub
+
+    Public Function DGV_SelectionChanged(sender As Object) As Integer
+        Dim ctrl As DataGridView = sender
+        If Not ctrl.Focused Then Return 0
+
+        SetButtonState(ctrl, False)
+
+        Return ctrl.SelectedRows(0).Cells(0).Value
+    End Function
 End Module

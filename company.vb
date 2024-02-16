@@ -17,4 +17,6 @@ Partial Public Class company
     Public Property comp_tax_id As String
     Public Property comp_memo As String
 
+    Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
+
 End Class

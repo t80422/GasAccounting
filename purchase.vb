@@ -12,15 +12,17 @@ Imports System.Collections.Generic
 
 Partial Public Class purchase
     Public Property pur_id As Integer
-    Public Property pur_manu As String
+    Public Property pur_manu_id As Integer
     Public Property pur_date As Nullable(Of Date)
     Public Property pur_product As String
-    Public Property pur_quantity As Nullable(Of Single)
+    Public Property pur_quantity As Nullable(Of Integer)
     Public Property pur_unit_price As Nullable(Of Single)
     Public Property pur_price As Nullable(Of Single)
-    Public Property pur_company As String
-    Public Property pur_delivery As String
+    Public Property pur_comp_id As Integer
     Public Property pur_deli_unit_price As Nullable(Of Single)
     Public Property pur_delivery_fee As Nullable(Of Single)
+
+    Public Overridable Property company As company
+    Public Overridable Property manufacturer As manufacturer
 
 End Class

@@ -15,4 +15,6 @@ Partial Public Class role
     Public Property r_name As String
     Public Property r_permissions As String
 
+    Public Overridable Property employees As ICollection(Of employee) = New HashSet(Of employee)
+
 End Class
