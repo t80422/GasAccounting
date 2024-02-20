@@ -55,6 +55,8 @@
 
     Private Sub dgvCustomer_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvCustomer.CellMouseClick
         Dim dgv = CType(sender, DataGridView)
+        If dgv.SelectedRows.Count = 0 Then Exit Sub
+
         Dim selectRow = dgv.SelectedRows(0)
         Dim id As Integer = selectRow.Cells("編號").Value
 

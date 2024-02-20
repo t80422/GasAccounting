@@ -36,5 +36,6 @@ Partial Public Class customer
 
     Public Overridable Property cars As ICollection(Of car) = New HashSet(Of car)
     Public Overridable Property priceplan As priceplan
+    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
 
 End Class

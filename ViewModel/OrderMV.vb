@@ -82,6 +82,7 @@
     Public Property 折讓 As Integer
     Public Property 總金額 As Integer
     Public Property 備註 As String
+    Public Property 操作人員 As String
 
     Public Shared Function GetOrderList(data As IEnumerable(Of order)) As List(Of OrderMV)
         Dim list = data.Select(Function(x) New OrderMV With {
@@ -167,7 +168,8 @@
             .退丙氣 = x.o_return_c,
             .折讓 = x.o_sales_allowance,
             .總金額 = x.o_total_amount,
-            .備註 = x.o_memo
+            .備註 = x.o_memo,
+            .操作人員 = x.employee.emp_name
         }).ToList
 
         Return list

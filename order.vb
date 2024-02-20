@@ -94,8 +94,10 @@ Partial Public Class order
     Public Property o_deposit_in_2 As Integer
     Public Property o_delivery_type As String
     Public Property o_in_out As String
+    Public Property o_Operator As Nullable(Of Integer)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car
+    Public Overridable Property employee As employee
 
 End Class

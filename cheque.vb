@@ -10,14 +10,14 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class subject
-    Public Property s_id As Integer
-    Public Property s_sg_id As Integer
-    Public Property s_name As String
-    Public Property s_memo As String
-
-    Public Overridable Property subjects_group As subjects_group
-    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
-    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+Partial Public Class cheque
+    Public Property che_Id As Integer
+    Public Property che_Date As Date
+    Public Property che_Number As String
+    Public Property che_Amount As Integer
+    Public Property che_CashingDate As Nullable(Of Date)
+    Public Property che_Memo As String
+    Public Property che_IsCashing As Boolean
+    Public Property che_Type As String
 
 End Class

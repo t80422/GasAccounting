@@ -17,5 +17,6 @@ Partial Public Class bank
     Public Property bank_CurrentBalance As Integer
 
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
 
 End Class

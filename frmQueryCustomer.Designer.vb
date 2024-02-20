@@ -41,8 +41,8 @@ Partial Class frmQueryCustomer
         '
         Me.btnClear.AutoSize = True
         Me.btnClear.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.btnClear.Location = New System.Drawing.Point(288, 171)
-        Me.btnClear.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnClear.Location = New System.Drawing.Point(388, 171)
+        Me.btnClear.Margin = New System.Windows.Forms.Padding(4)
         Me.btnClear.Name = "btnClear"
         Me.btnClear.Size = New System.Drawing.Size(60, 30)
         Me.btnClear.TabIndex = 358
@@ -54,8 +54,8 @@ Partial Class frmQueryCustomer
         Me.btnOK.AutoSize = True
         Me.btnOK.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer))
         Me.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.btnOK.Location = New System.Drawing.Point(356, 171)
-        Me.btnOK.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnOK.Location = New System.Drawing.Point(456, 171)
+        Me.btnOK.Margin = New System.Windows.Forms.Padding(4)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(60, 30)
         Me.btnOK.TabIndex = 357
@@ -66,8 +66,8 @@ Partial Class frmQueryCustomer
         '
         Me.btnQuery.AutoSize = True
         Me.btnQuery.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.btnQuery.Location = New System.Drawing.Point(220, 171)
-        Me.btnQuery.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnQuery.Location = New System.Drawing.Point(320, 171)
+        Me.btnQuery.Margin = New System.Windows.Forms.Padding(4)
         Me.btnQuery.Name = "btnQuery"
         Me.btnQuery.Size = New System.Drawing.Size(60, 30)
         Me.btnQuery.TabIndex = 356
@@ -77,7 +77,7 @@ Partial Class frmQueryCustomer
         'txtCusPhone
         '
         Me.txtCusPhone.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.txtCusPhone.Location = New System.Drawing.Point(295, 134)
+        Me.txtCusPhone.Location = New System.Drawing.Point(395, 134)
         Me.txtCusPhone.Margin = New System.Windows.Forms.Padding(0)
         Me.txtCusPhone.Name = "txtCusPhone"
         Me.txtCusPhone.Size = New System.Drawing.Size(121, 27)
@@ -88,7 +88,7 @@ Partial Class frmQueryCustomer
         '
         Me.Label26.AutoSize = True
         Me.Label26.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label26.Location = New System.Drawing.Point(217, 135)
+        Me.Label26.Location = New System.Drawing.Point(317, 135)
         Me.Label26.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(51, 19)
@@ -98,7 +98,7 @@ Partial Class frmQueryCustomer
         'txtCusContactPerson
         '
         Me.txtCusContactPerson.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.txtCusContactPerson.Location = New System.Drawing.Point(295, 91)
+        Me.txtCusContactPerson.Location = New System.Drawing.Point(395, 91)
         Me.txtCusContactPerson.Margin = New System.Windows.Forms.Padding(0)
         Me.txtCusContactPerson.Name = "txtCusContactPerson"
         Me.txtCusContactPerson.Size = New System.Drawing.Size(121, 27)
@@ -109,7 +109,7 @@ Partial Class frmQueryCustomer
         '
         Me.Label20.AutoSize = True
         Me.Label20.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label20.Location = New System.Drawing.Point(217, 92)
+        Me.Label20.Location = New System.Drawing.Point(317, 92)
         Me.Label20.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(72, 19)
@@ -119,7 +119,7 @@ Partial Class frmQueryCustomer
         'txtCusName
         '
         Me.txtCusName.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.txtCusName.Location = New System.Drawing.Point(295, 48)
+        Me.txtCusName.Location = New System.Drawing.Point(395, 48)
         Me.txtCusName.Margin = New System.Windows.Forms.Padding(0)
         Me.txtCusName.Name = "txtCusName"
         Me.txtCusName.Size = New System.Drawing.Size(121, 27)
@@ -130,7 +130,7 @@ Partial Class frmQueryCustomer
         '
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label27.Location = New System.Drawing.Point(217, 49)
+        Me.Label27.Location = New System.Drawing.Point(317, 49)
         Me.Label27.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(51, 19)
@@ -140,7 +140,7 @@ Partial Class frmQueryCustomer
         'txtCusCode
         '
         Me.txtCusCode.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.txtCusCode.Location = New System.Drawing.Point(295, 5)
+        Me.txtCusCode.Location = New System.Drawing.Point(395, 5)
         Me.txtCusCode.Margin = New System.Windows.Forms.Padding(0)
         Me.txtCusCode.Name = "txtCusCode"
         Me.txtCusCode.Size = New System.Drawing.Size(121, 27)
@@ -151,7 +151,7 @@ Partial Class frmQueryCustomer
         '
         Me.Label55.AutoSize = True
         Me.Label55.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label55.Location = New System.Drawing.Point(217, 6)
+        Me.Label55.Location = New System.Drawing.Point(317, 6)
         Me.Label55.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label55.Name = "Label55"
         Me.Label55.Size = New System.Drawing.Size(51, 19)
@@ -160,20 +160,21 @@ Partial Class frmQueryCustomer
         '
         'dgvCustomer
         '
+        Me.dgvCustomer.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.dgvCustomer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCustomer.Dock = System.Windows.Forms.DockStyle.Left
         Me.dgvCustomer.Location = New System.Drawing.Point(5, 5)
         Me.dgvCustomer.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.dgvCustomer.Name = "dgvCustomer"
         Me.dgvCustomer.RowTemplate.Height = 24
-        Me.dgvCustomer.Size = New System.Drawing.Size(200, 206)
+        Me.dgvCustomer.Size = New System.Drawing.Size(300, 206)
         Me.dgvCustomer.TabIndex = 347
         '
         'frmQueryCustomer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(427, 216)
+        Me.ClientSize = New System.Drawing.Size(526, 216)
         Me.Controls.Add(Me.btnClear)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.btnQuery)
@@ -187,7 +188,7 @@ Partial Class frmQueryCustomer
         Me.Controls.Add(Me.Label55)
         Me.Controls.Add(Me.dgvCustomer)
         Me.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmQueryCustomer"
         Me.Padding = New System.Windows.Forms.Padding(5)
         Me.Text = "客戶查詢"

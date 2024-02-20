@@ -8,6 +8,8 @@
     End Sub
 
     Public Overrides Sub Add()
+        If Not _view.CheckDataRequired Then Exit Sub
+
         Dim data = _view.GetUserInput
 
         If data IsNot Nothing Then
@@ -28,10 +30,12 @@
     End Sub
 
     Public Overrides Sub Edit(id As Integer)
+        If Not _view.CheckDataRequired Then Exit Sub
+
+        Dim data = _view.GetUserInput
+
         Try
             Using db As New gas_accounting_systemEntities
-                Dim data = _view.GetUserInput
-
                 If data IsNot Nothing Then
                     UpdateCurrentBalance(data)
 

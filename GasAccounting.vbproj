@@ -113,6 +113,14 @@
     <Compile Include="car.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="cheque.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="collection.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Collection\CollectionPresenter.vb" />
+    <Compile Include="Collection\ICollectionView.vb" />
     <Compile Include="company.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -127,6 +135,12 @@
     </Compile>
     <Compile Include="Employee\EmployeePresenter.vb" />
     <Compile Include="Employee\IEmployeeView.vb" />
+    <Compile Include="frmLogin.Designer.vb">
+      <DependentUpon>frmLogin.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmLogin.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -171,13 +185,21 @@
     <Compile Include="Services\IBankService.vb" />
     <Compile Include="Services\ISubjectsService.vb" />
     <Compile Include="Services\SubjectsService.vb" />
+    <Compile Include="stock.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="subject.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="subjects_group.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="UintPriceHistory\IUnitPriceHistoryView.vb" />
+    <Compile Include="UintPriceHistory\UintPriceHistoryPresenter.vb" />
     <Compile Include="ViewModel\BankVM.vb" />
+    <Compile Include="ViewModel\ChequeVM.vb" />
+    <Compile Include="ViewModel\CollectionQueryVM.vb" />
+    <Compile Include="ViewModel\CollectionVM.vb" />
     <Compile Include="ViewModel\ComboBoxItems.vb" />
     <Compile Include="ViewModel\CompanyVM.vb" />
     <Compile Include="ViewModel\CustomerVM.vb" />
@@ -239,8 +261,12 @@
     </Compile>
     <Compile Include="Subjects\SubjectGroupPresenter.vb" />
     <Compile Include="Subjects\SubjectsPresenter.vb" />
+    <Compile Include="ViewModel\UnitPriceHistoryVM.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="frmLogin.resx">
+      <DependentUpon>frmLogin.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>

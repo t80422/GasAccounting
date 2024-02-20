@@ -34,6 +34,27 @@
         LoadList(_view.GetSearchCondition)
     End Sub
 
+    ''' <summary>
+    ''' 取得預設產品單價、運費單價
+    ''' </summary>
+    ''' <param name="manuId"></param>
+    Public Sub GetDefaultPrice(manuId As Integer, productName As String)
+        Try
+            Using db As New gas_accounting_systemEntities
+                Dim data = db.purchases.
+                            Where(Function(x) x.pur_manu_id = manuId AndAlso x.pur_product = productName AndAlso Not x.pur_Special).
+                            OrderByDescending(Function(x) x.pur_date).
+                            FirstOrDefault()
+                If data IsNot Nothing AndAlso Not data.pur_Special Then
+                    _view.SetDefaultPrice(data.pur_unit_price, data.pur_deli_unit_price)
+                End If
+            End Using
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
     Protected Function SetSearchConditions(query As IQueryable(Of purchase), conditions As Object) As IQueryable(Of purchase) Implements IPresenter(Of purchase, PurchaseVM).SetSearchConditions
         Dim c As purchase = conditions
 
@@ -55,8 +76,8 @@
                     .運費單價 = x.pur_deli_unit_price,
                     .運費 = x.pur_delivery_fee,
                     .金額 = x.pur_price,
-                    .公司 = x.company.comp_name
+                    .公司 = x.company.comp_name,
+                    .特殊狀況 = x.pur_Special
                 }).ToList
     End Function
-
 End Class

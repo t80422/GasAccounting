@@ -21,8 +21,9 @@ Partial Public Class purchase
     Public Property pur_comp_id As Integer
     Public Property pur_deli_unit_price As Nullable(Of Single)
     Public Property pur_delivery_fee As Nullable(Of Single)
+    Public Property pur_Special As Boolean
 
-    Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
+    Public Overridable Property company As company
 
 End Class

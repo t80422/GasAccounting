@@ -107,29 +107,6 @@ Module modFormControl
     End Function
 
     ''' <summary>
-    ''' 將資料放到DataGridView
-    ''' </summary>
-    ''' <param name="sql"></param>
-    ''' <param name="dgv"></param>
-    Public Sub GetDataToDgv(sql As String, dgv As DataGridView)
-        'With dgv
-        '    .DataSource = SelectTable(sql)
-        '    Dim lstTableNames = GetTableNamesFromQuery(sql)
-        '    '條件式
-        '    Dim conditions = String.Join(" OR ", lstTableNames.Select(Function(x) $"Table_name = '{x}'"))
-        '    '用table欄位的備註將dgv的欄位改名
-        '    Dim tableCol = SelectTable($"SELECT COLUMN_NAME, COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'gas_accounting_system' AND {conditions}")
-        '    For Each col As DataGridViewColumn In .Columns
-        '        Dim row = tableCol.AsEnumerable().FirstOrDefault(Function(x) x("COLUMN_NAME").ToString() = col.Name)
-        '        If row IsNot Nothing Then
-        '            col.HeaderText = row("COLUMN_COMMENT").ToString()
-        '        End If
-        '    Next
-        '    .AutoResizeColumnHeadersHeight()
-        'End With
-    End Sub
-
-    ''' <summary>
     ''' 取得指定控制項內所有的目標控制項
     ''' </summary>
     ''' <typeparam name="T">目標控制項</typeparam>
@@ -144,27 +121,6 @@ Module modFormControl
             Next
         End If
         Return lst
-    End Function
-
-    ''' <summary>
-    ''' 檢查TextBox裡是否為正整數
-    ''' </summary>
-    ''' <param name="dic"></param>
-    ''' <returns></returns>
-    Public Function CheckPositiveInteger(dic As Dictionary(Of String, Object)) As Boolean
-        For Each kvp In dic
-            If Not IsNumeric(kvp.Value.Text) Then
-                MsgBox(kvp.Key + " 不為數字!")
-                kvp.Value.Focus()
-                Return False
-            End If
-            If Val(kvp.Value.Text) < 0 Then
-                MsgBox(kvp.Key + " 不能為負數!")
-                kvp.Value.Focus()
-                Return False
-            End If
-        Next
-        Return True
     End Function
 
     Public Sub SaveDataGridWidth(sender As Object, e As EventArgs)
@@ -393,7 +349,7 @@ Module modFormControl
 
     Public Function DGV_SelectionChanged(sender As Object) As Integer
         Dim ctrl As DataGridView = sender
-        If Not ctrl.Focused Then Return 0
+        If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return 0
 
         SetButtonState(ctrl, False)
 

@@ -61,4 +61,97 @@
     Public Sub Query()
         LoadList(_view.GetQueryConditions)
     End Sub
+
+    Public Overrides Sub Add()
+        If Not _view.CheckDataRequired Then Exit Sub
+
+        Dim data = _view.GetUserInput
+
+        If data IsNot Nothing Then
+            Try
+                Using db As New gas_accounting_systemEntities
+                    db.payments.Add(data)
+
+                    If data.p_Type = "支票" Then
+                        db.cheques.Add(_view.GetChequeDatas)
+                    End If
+
+                    db.SaveChanges()
+                    LoadList()
+                    _view.ClearInput()
+                    MsgBox("新增成功")
+                End Using
+
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        End If
+    End Sub
+
+    Public Overrides Sub Edit(id As Integer)
+        If Not _view.CheckDataRequired Then Exit Sub
+
+        Dim data = _view.GetUserInput
+
+        Try
+            Using db As New gas_accounting_systemEntities
+                If data IsNot Nothing Then
+                    Dim payment = db.payments.Find(id)
+
+                    If payment IsNot Nothing Then
+                        If data.p_Type = "支票" Then
+                            Dim cheques = db.cheques.FirstOrDefault(Function(x) x.che_Number = payment.p_Cheque)
+
+                            If cheques IsNot Nothing Then
+                                Dim updateCheques = _view.GetChequeDatas
+                                updateCheques.che_Id = cheques.che_Id
+                                db.Entry(cheques).CurrentValues.SetValues(updateCheques)
+                            End If
+                        End If
+
+                        db.Entry(payment).CurrentValues.SetValues(data)
+                        db.SaveChanges()
+                        LoadList()
+                        MsgBox("修改成功。")
+                    Else
+                        MsgBox("未找到指定的對象。")
+                    End If
+                End If
+            End Using
+
+        Catch ex As Exception
+            MsgBox("修改時發生錯誤: " & ex.Message)
+        End Try
+    End Sub
+
+    Public Overrides Sub Delete(id As Integer)
+        If MsgBox("確定要刪除?", vbYesNo, "警告") = MsgBoxResult.No Then Exit Sub
+
+        Try
+            Using db As New gas_accounting_systemEntities
+                Dim data = db.payments.Find(id)
+                If data IsNot Nothing Then
+                    If data.p_Type = "支票" Then
+                        Dim cheques = db.cheques.FirstOrDefault(Function(x) x.che_Number = data.p_Cheque)
+
+                        If cheques IsNot Nothing Then
+                            db.cheques.Remove(cheques)
+                        End If
+                    End If
+
+                    db.payments.Remove(data)
+                    db.SaveChanges()
+                    LoadList()
+                    _view.ClearInput()
+                    MsgBox("刪除成功。")
+
+                Else
+                    MsgBox("未找到要刪除的對象。")
+                End If
+            End Using
+
+        Catch ex As Exception
+            MsgBox("刪除時發生錯誤: " & ex.Message)
+        End Try
+    End Sub
 End Class

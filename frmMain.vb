@@ -1,7 +1,15 @@
 ﻿Imports System.Text.RegularExpressions
 
 Public Class frmMain
-    Implements ISubjectGroupView, ISubjectsView, ICompanyView, IManufacturerView, IPurchaseView, ICustomer, IPricePlanView, IRolesView, IEmployeeView, IBankView, IPaymentView
+    Implements ISubjectGroupView, ISubjectsView, ICompanyView, IManufacturerView, IPurchaseView, ICustomer, IPricePlanView, IRolesView, IEmployeeView, IBankView, IPaymentView, IUnitPriceHistoryView,
+        ICollectionView
+
+    Public Structure UserData
+        Public Id As Integer
+        Public Name As String
+    End Structure
+
+    Public User As UserData
 
     Private _compService As ICompanyService = New CompanyService
     Private _manuService As IManufacturerService = New ManufacturerService
@@ -19,6 +27,8 @@ Public Class frmMain
     Private _employee As New EmployeePresenter(Me)
     Private _bank As New BankPresenter(Me)
     Private _payment As New PaymentPresenter(Me, _manuService, _bankService, _subjectService)
+    Private _uph As New UintPriceHistoryPresenter(Me, _manuService)
+    Private _collect As New CollectionPresenter(Me, _subjectService, _bankService, _compService)
 
     Private orgStockValues As New Dictionary(Of String, Object) '儲存客戶瓦斯桶庫存
     Private orgDepositStockValues As New Dictionary(Of String, Object) '儲存司機寄瓶庫存
@@ -26,9 +36,13 @@ Public Class frmMain
     Private orgDepositValues As New Dictionary(Of String, Object) '用於存儲TextBox.Tag = o_deposit開頭的初始值
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        InitTabPage()
         InitUI()
         SetCtrlStyle()
-        InitTabPage()
+    End Sub
+
+    Private Sub frmMain_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        End
     End Sub
 
     Private Sub InitUI()
@@ -70,6 +84,8 @@ Public Class frmMain
         btnCancel_pp_Click(btnCancel_pp, EventArgs.Empty)
         btnCancel_roles_Click(btnCancel_roles, EventArgs.Empty)
         btnCancel_payment_Click(btnCancel_payment, EventArgs.Empty)
+        btnCancel_uph_Click(btnCancel_uph, EventArgs.Empty)
+        btnCancel_col_Click(btnCancel_col, EventArgs.Empty)
     End Sub
 
     ''' <summary>
@@ -120,7 +136,7 @@ Public Class frmMain
             txto_new_in_50, txto_new_in_20, txto_new_in_16, txto_new_in_10, txto_new_in_4, txto_new_in_15, txto_new_in_14, txto_new_in_5, txto_new_in_2,
             txto_inspect_50, txto_inspect_20, txto_inspect_16, txto_inspect_10, txto_inspect_4, txto_inspect_15, txto_inspect_14, txto_inspect_5, txto_inspect_2,
             txtDepositIn_50, txtDepositIn_20, txtDepositIn_16, txtDepositIn_10, txtDepositIn_4, txtDepositIn_15, txtDepositIn_14, txtDepositIn_5, txtDepositIn_2,
-            txto_return, txto_return_c, txto_sales_allowance, txtWeight_pur}
+            txto_return, txto_return_c, txto_sales_allowance, txtWeight_pur, txtAmount}
 
         textBoxes.ForEach(Sub(txt) AddHandler txt.KeyPress, AddressOf PositiveIntegerOnly_TextBox)
     End Sub
@@ -129,7 +145,7 @@ Public Class frmMain
     ''' 設定TextBox只能輸入正浮點數
     ''' </summary>
     Private Sub PositiveFloatOnly()
-        Dim txts = New List(Of TextBox) From {txtUnitPrice_pur, txtDeliUnitPrice}
+        Dim txts = New List(Of TextBox) From {txtUnitPrice_pur, txtDeliUnitPrice, txtInitGasStock}
 
         txts.ForEach(Sub(x) AddHandler x.KeyPress, AddressOf PositiveFloatOnly_TextBox)
     End Sub
@@ -181,9 +197,6 @@ Public Class frmMain
     End Sub
 
     Private Function GetUserInput_Customer() As customer Implements ICommonView(Of customer, CustomerVM).GetUserInput
-        Dim required = New List(Of Control) From {txtCusCode, txtCusName_cus, txtCusContactPerson, txtCusPhone1}
-        If Not CheckRequired(required) Then Return Nothing
-
         Dim data As New customer
         AutoMapControlsToEntity(data, tpCustomer)
         AutoMapControlsToEntity(data, grpStock)
@@ -210,6 +223,11 @@ Public Class frmMain
     Public Sub SetPricePlanDetails(data As priceplan) Implements ICustomer.SetPricePlanDetails
         AutoMapEntityToControls(data, grpPricePlan)
     End Sub
+
+    Private Function CheckDataRequired_Customer() As Boolean Implements ICommonView(Of customer, CustomerVM).CheckDataRequired
+        Dim required = New List(Of Control) From {txtCusCode, txtCusName_cus, txtCusContactPerson, txtCusPhone1}
+        Return CheckRequired(required)
+    End Function
 
     '基本資料-客戶管理-取消
     Private Sub btnCancel_cus_Click(sender As Object, e As EventArgs) Handles btnCancel_cus.Click
@@ -521,7 +539,7 @@ Public Class frmMain
         orgDepositValues.Clear()
 
         Using db As New gas_accounting_systemEntities
-            Dim query = db.orders.Include("car").Include("car.customer")
+            Dim query = db.orders.Include("car").Include("car.customer").Include("employee")
             dgvOrder.DataSource = OrderMV.GetOrderList(query)
         End Using
 
@@ -529,6 +547,8 @@ Public Class frmMain
         tpIn.Parent = tcInOut
 
         If btnQuery_order.Text = "確  認" Then SetOrderQueryCtrl(btnQuery_order)
+
+        txtOperator.Text = User.Name
     End Sub
 
     '銷售管理-銷售作業-搜尋客戶
@@ -593,6 +613,7 @@ Public Class frmMain
                 AutoMapControlsToEntity(order, container)
                 AutoMapControlsToEntity(order, tpOut)
                 AutoMapControlsToEntity(order, tpIn)
+                order.o_Operator = User.Id
                 db.orders.Add(order)
 
                 '更新客戶、車輛瓦斯瓶庫存
@@ -709,6 +730,7 @@ Public Class frmMain
                 Dim customer = db.customers.Find(cusId)
 
                 AutoMapControlsToEntity(order, container)
+                order.o_Operator = User.Id
                 AutoMapControlsToEntity(car, container)
                 AutoMapControlsToEntity(customer, container)
 
@@ -744,11 +766,12 @@ Public Class frmMain
 
         Using db As New gas_accounting_systemEntities
             Dim ordId As Integer = row.Cells("編號").Value
-            Dim order = db.orders.Include("car").Include("car.customer").FirstOrDefault(Function(o) o.o_id = ordId)
+            Dim order = db.orders.Include("car").Include("car.customer").Include("employee").FirstOrDefault(Function(o) o.o_id = ordId)
 
             AutoMapEntityToControls(order, tpOrder)
             AutoMapEntityToControls(order.car.customer, tpOrder)
             AutoMapEntityToControls(order.car, tpOrder)
+            txtOperator.Text = order.employee.emp_name
 
             If order.o_in_out = "進場單" Then
                 tcInOut.SelectedIndex = 0
@@ -1280,20 +1303,22 @@ Public Class frmMain
         ClearControls(tpCompany)
     End Sub
 
-    Private Function ICompanyView_GetUserInput() As company Implements ICompanyView.GetUserInput
-        Dim req = New List(Of Control) From {txtName_comp, txtShortName, txtTaxID}
-        If Not CheckRequired(req) Then Return Nothing
-
+    Private Function GetUserInput_Company() As company Implements ICompanyView.GetUserInput
         Dim data As New company
         AutoMapControlsToEntity(data, tpCompany)
-
         Return data
+    End Function
+
+    Public Function CheckDataRequired() As Boolean Implements ICommonView(Of company, CompanyVM).CheckDataRequired
+        Dim req = New List(Of Control) From {txtName_comp, txtShortName, txtTaxID, txtInitGasStock}
+        Return CheckRequired(req)
     End Function
 
     '基本資料-公司管理-取消
     Private Sub btnCancel_comp_Click(sender As Object, e As EventArgs) Handles btnCancel_comp.Click
         ClearInput()
         SetButtonState(sender, True)
+        txtInitGasStock.ReadOnly = False
         _company.LoadList()
     End Sub
 
@@ -1308,6 +1333,7 @@ Public Class frmMain
         If Not ctrl.Focused Then Return
         ClearControls(ctrl.Parent)
         SetButtonState(ctrl, False)
+        txtInitGasStock.ReadOnly = True
         Dim id As Integer = ctrl.SelectedRows(0).Cells(0).Value
         _company.SelectRow(id)
     End Sub
@@ -1326,7 +1352,6 @@ Public Class frmMain
 
     Public Sub ShowList(data As List(Of ManufacturerVM)) Implements ICommonView(Of manufacturer, ManufacturerVM).ShowList
         dgvManufacturer.DataSource = data
-        SetColumnHeaders("manufacturer", dgvManufacturer)
     End Sub
 
     Public Sub SetDataToControl(data As manufacturer) Implements ICommonView(Of manufacturer, ManufacturerVM).SetDataToControl
@@ -1334,9 +1359,6 @@ Public Class frmMain
     End Sub
 
     Private Function GetUserInput_Manufacturer() As manufacturer Implements ICommonView(Of manufacturer, ManufacturerVM).GetUserInput
-        Dim req = New List(Of Control) From {txtCode_manu, txtName_menu, txtContact_manu, txtphone1_menu}
-        If Not CheckRequired(req) Then Return Nothing
-
         Dim data As New manufacturer
         AutoMapControlsToEntity(data, tpManu)
         Return data
@@ -1352,6 +1374,11 @@ Public Class frmMain
             .manu_name = txtName_menu.Text,
             .manu_phone1 = txtphone1_menu.Text
         }
+    End Function
+
+    Private Function CheckDataRequired_Manufacturer() As Boolean Implements ICommonView(Of manufacturer, ManufacturerVM).CheckDataRequired
+        Dim req = New List(Of Control) From {txtCode_manu, txtName_menu, txtContact_manu, txtphone1_menu}
+        Return CheckRequired(req)
     End Function
 
     '基本資料-廠商管理-取消
@@ -1413,7 +1440,6 @@ Public Class frmMain
 
     Public Sub ShowList(data As List(Of PurchaseVM)) Implements ICommonView(Of purchase, PurchaseVM).ShowList
         dgvPurchase.DataSource = data
-        SetColumnHeaders("purchase", dgvPurchase)
     End Sub
 
     Public Sub SetDataToControl(data As purchase) Implements ICommonView(Of purchase, PurchaseVM).SetDataToControl
@@ -1421,9 +1447,6 @@ Public Class frmMain
     End Sub
 
     Private Function GetUserInput_Purchase() As purchase Implements ICommonView(Of purchase, PurchaseVM).GetUserInput
-        Dim req = New List(Of Control) From {cmbCompany_pur, cmbGasVendor_pur, txtWeight_pur, cmbProduct_pur, txtUnitPrice_pur}
-        If Not CheckRequired(req) Then Return Nothing
-
         Dim data As New purchase
         AutoMapControlsToEntity(data, tpPurchase)
         Return data
@@ -1447,6 +1470,16 @@ Public Class frmMain
             .DisplayMember = "Display"
             .ValueMember = "Value"
         End With
+    End Sub
+
+    Private Function CheckDataRequired_Purchase() As Boolean Implements ICommonView(Of purchase, PurchaseVM).CheckDataRequired
+        Dim req = New List(Of Control) From {cmbCompany_pur, cmbGasVendor_pur, txtWeight_pur, cmbProduct_pur, txtUnitPrice_pur}
+        Return CheckRequired(req)
+    End Function
+
+    Public Sub SetDefaultPrice(productPrice As Single, deliveryPrice As Single) Implements IPurchaseView.SetDefaultPrice
+        txtUnitPrice_pur.Text = productPrice
+        txtDeliUnitPrice.Text = deliveryPrice
     End Sub
 
     '支出管理-大氣採購-取消
@@ -1496,6 +1529,13 @@ Public Class frmMain
         End If
     End Sub
 
+    '支出管理-大氣採購-選擇大氣廠商
+    Private Sub cmbGasVendor_pur_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbGasVendor_pur.SelectionChangeCommitted, cmbProduct_pur.SelectionChangeCommitted
+        If cmbGasVendor_pur.SelectedIndex > -1 AndAlso cmbProduct_pur.SelectedIndex > -1 Then
+            _purchase.GetDefaultPrice(cmbGasVendor_pur.SelectedItem.Value, cmbProduct_pur.Text)
+        End If
+    End Sub
+
     ''' <summary>
     ''' 設定大氣採購查詢控制項狀態
     ''' </summary>
@@ -1532,9 +1572,6 @@ Public Class frmMain
     End Sub
 
     Private Function GetUserInput_PricePlan() As priceplan Implements ICommonView(Of priceplan, PricePlanVM).GetUserInput
-        Dim req = New List(Of Control) From {txtName_pp}
-        If Not CheckRequired(req) Then Return Nothing
-
         Dim data = New priceplan
         AutoMapControlsToEntity(data, tpPricePlan)
         Return data
@@ -1543,6 +1580,11 @@ Public Class frmMain
     Private Sub ClearInput_PricePlan() Implements ICommonView(Of priceplan, PricePlanVM).ClearInput
         ClearControls(tpPricePlan)
     End Sub
+
+    Private Function CheckDataRequired_PricePlan() As Boolean Implements ICommonView(Of priceplan, PricePlanVM).CheckDataRequired
+        Dim req = New List(Of Control) From {txtName_pp}
+        Return CheckRequired(req)
+    End Function
 
     '基本資料-價格方案-取消
     Private Sub btnCancel_pp_Click(sender As Object, e As EventArgs) Handles btnCancel_pp.Click
@@ -1596,6 +1638,10 @@ Public Class frmMain
     Private Sub ClearInput_Roles() Implements ICommonView(Of role, RolesVM).ClearInput
         ClearControls(tpRoles)
     End Sub
+
+    Private Function CheckDataRequired_Roles() As Boolean Implements ICommonView(Of role, RolesVM).CheckDataRequired
+        Return True
+    End Function
 
     '基本資料-權限管理-取消
     Private Sub btnCancel_roles_Click(sender As Object, e As EventArgs) Handles btnCancel_roles.Click
@@ -1654,6 +1700,10 @@ Public Class frmMain
         ClearControls(tpEmployee)
     End Sub
 
+    Private Function CheckDataRequired_Employee() As Boolean Implements ICommonView(Of employee, EmployeeVM).CheckDataRequired
+        Return True
+    End Function
+
     '基本資料-員工管理-取消
     Private Sub btnCancel_emp_Click(sender As Object, e As EventArgs) Handles btnCancel_emp.Click
         SetButtonState(sender, True)
@@ -1709,6 +1759,10 @@ Public Class frmMain
         ClearControls(tpBank)
     End Sub
 
+    Private Function CheckDataRequired_Bank() As Boolean Implements ICommonView(Of bank, BankVM).CheckDataRequired
+        Return True
+    End Function
+
     '基本資料-銀行帳戶-取消
     Private Sub btnCancel_bank_Click(sender As Object, e As EventArgs) Handles btnCancel_bank.Click
         SetButtonState(sender, True)
@@ -1749,9 +1803,6 @@ Public Class frmMain
     End Sub
 
     Private Function GetUserInput_Payment() As payment Implements ICommonView(Of payment, PaymentVM).GetUserInput
-        Dim req = New List(Of Control) From {txtAmount, cmbPayType, cmbSubjects_payment, cmbSG_payment}
-        If Not CheckRequired(req) Then Return Nothing
-
         Dim data As New payment
         AutoMapControlsToEntity(data, tpPayment)
         Return data
@@ -1789,6 +1840,22 @@ Public Class frmMain
         }
     End Function
 
+    Public Function GetChequeDatas() As cheque Implements IPaymentView.GetChequeDatas
+        Return New cheque With {
+            .che_Date = dtpPayment.Value.Date,
+            .che_Number = txtChequeNum.Text,
+            .che_Amount = txtAmount.Text,
+            .che_Memo = txtMemo_payment.Text,
+            .che_Type = "借"
+            }
+    End Function
+
+    Private Function CheckDataRequired_Payment() As Boolean Implements ICommonView(Of payment, PaymentVM).CheckDataRequired
+        Dim req = New List(Of Control) From {txtAmount, cmbPayType, cmbSubjects_payment, cmbSG_payment}
+        If cmbPayType.Text = "支票" Then req.Add(txtChequeNum)
+        Return CheckRequired(req)
+    End Function
+
     '支出管理-付款作業-取消
     Private Sub btnCancel_payment_Click(sender As Object, e As EventArgs) Handles btnCancel_payment.Click
         SetButtonState(sender, True)
@@ -1797,6 +1864,7 @@ Public Class frmMain
         _payment.SetSubjectsGroupCmb()
         ClearInput_Payment()
         _payment.LoadList()
+        If btnQuery_payment.Text = "確  認" Then SetPaymentQueryCtrlsState()
     End Sub
 
     '支出管理-付款作業-新增
@@ -1822,6 +1890,7 @@ Public Class frmMain
         _payment.Delete(id)
     End Sub
 
+    '支出管理-付款作業-科目類別-取得科目
     Private Sub cmbSG_payment_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSG_payment.SelectedIndexChanged
         Dim cmb As ComboBox = sender
 
@@ -1848,5 +1917,202 @@ Public Class frmMain
     Private Sub SetPaymentQueryCtrlsState()
         Dim lst As New List(Of Control) From {lblPayType_payment, lblSG_payment, lblSubjects_payment, lblManu_payment, lblBank_payment}
         SetQueryControls(btnQuery_payment, lst)
+    End Sub
+
+    '支出管理-付款作業-支票號碼必填
+    Private Sub cmbPayType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPayType.SelectedIndexChanged
+        Dim cmb As ComboBox = sender
+        If cmb.Text = "支票" Then
+            lblReq_Chuque.Visible = True
+        Else
+            lblReq_Chuque.Visible = False
+        End If
+    End Sub
+
+    Public Sub SetManuCmb_uph(data As List(Of ComboBoxItems)) Implements IUnitPriceHistoryView.SetManuCmb
+        SetComboBox(cmbManu_uph, data)
+    End Sub
+
+    Public Sub LoadList(data As List(Of UnitPriceHistoryVM)) Implements IUnitPriceHistoryView.LoadList
+        dgvUPH.DataSource = data
+    End Sub
+
+    '支出管理-歷史單價查詢-取消
+    Private Sub btnCancel_uph_Click(sender As Object, e As EventArgs) Handles btnCancel_uph.Click
+        ClearControls(tpUPH)
+        dgvUPH.DataSource = Nothing
+        _uph.GetManuCmb()
+    End Sub
+
+    '支出管理-歷史單價查詢-查詢
+    Private Sub btnQuery_UPH_Click(sender As Object, e As EventArgs) Handles btnQuery_UPH.Click
+        Dim manuId As Integer = If(cmbManu_uph.SelectedItem Is Nothing, 0, cmbManu_uph.SelectedItem.Value)
+        _uph.Query(manuId, cmbProduct_UPH.Text, dtpStart_UPH.Value.Date, dtpEnd_UPH.Value.Date)
+    End Sub
+
+    '收入管理-收款作業-顯示支票號碼
+    Private Sub cmbType_col_TextChanged(sender As Object, e As EventArgs) Handles cmbType_col.TextChanged
+        Dim cmb As ComboBox = sender
+        Dim b As Boolean = cmb.Text = "支票"
+
+        lblChequeReq_col.Visible = b
+        lblCheque_col.Visible = b
+        txtCheque_col.Visible = b
+    End Sub
+
+    Private Sub btnQueryCus_col_Click(sender As Object, e As EventArgs) Handles btnQueryCus_col.Click
+        Using searchForm As New frmQueryCustomer
+            If searchForm.ShowDialog = DialogResult.OK Then
+                txtCusId_col.Text = searchForm.ID
+                txtCusName_col.Text = searchForm.Name
+            End If
+        End Using
+    End Sub
+
+    Public Sub ShowList(data As List(Of CollectionVM)) Implements ICommonView(Of collection, CollectionVM).ShowList
+        dgvCollection.DataSource = data
+    End Sub
+
+    Public Sub SetDataToControl(data As collection) Implements ICommonView(Of collection, CollectionVM).SetDataToControl
+        cmbSG_col.SelectedValue = data.subject.subjects_group.sg_id
+        AutoMapEntityToControls(data, tpCollection)
+    End Sub
+
+    Private Function GetUserInput_collection() As collection Implements ICommonView(Of collection, CollectionVM).GetUserInput
+        Dim data As New collection
+        AutoMapControlsToEntity(data, tpCollection)
+        Return data
+    End Function
+
+    Private Sub ClearInput_collection() Implements ICommonView(Of collection, CollectionVM).ClearInput
+        ClearControls(tpCollection)
+    End Sub
+
+    Private Function CheckDataRequired_collection() As Boolean Implements ICommonView(Of collection, CollectionVM).CheckDataRequired
+        Dim list As New List(Of Control) From {txtAmount_collection, cmbType_col, cmbSubjects, txtCusId_col}
+
+        If cmbType_col.Text = "支票" Then list.Add(txtCheque_col)
+
+        Return CheckRequired(list)
+    End Function
+
+    Private Sub ICollectionView_SetSubjectsGroupCmb(data As List(Of ComboBoxItems)) Implements ICollectionView.SetSubjectsGroupCmb
+        SetComboBox(cmbSG_col, data)
+    End Sub
+
+    Private Sub ICollectionView_SetSubjectsCmb(data As List(Of ComboBoxItems)) Implements ICollectionView.SetSubjectsCmb
+        SetComboBox(cmbSubjects, data)
+    End Sub
+
+    Private Function ICollectionView_GetQueryConditions() As CollectionQueryVM Implements ICollectionView.GetQueryConditions
+        Return New CollectionQueryVM With {
+            .Cheque = txtCheque_col.Text,
+            .CusId = If(txtCusId_col.Text = "", 0, txtCusId_col.Text),
+            .Subjects = If(cmbSubjects.SelectedItem Is Nothing, 0, cmbSubjects.SelectedItem.Value),
+            .SubjectsGroup = If(cmbSG_col.SelectedItem Is Nothing, 0, cmbSG_col.SelectedItem.Value),
+            .EndDate = dtpEnd_col.Value.Date,
+            .StartDate = dtpStart_col.Value.Date,
+            .Type = cmbType_col.Text
+        }
+    End Function
+
+    Private Function ICollectionView_GetChequeDatas() As cheque Implements ICollectionView.GetChequeDatas
+        Return New cheque With {
+            .che_Amount = txtAmount_collection.Text,
+            .che_Date = dtpDate_col.Value.Date,
+            .che_Memo = txtMemo_col.Text,
+            .che_Number = txtCheque_col.Text,
+            .che_Type = "貸"
+        }
+    End Function
+
+    Private Sub ICollectionView_SetBankCmb(data As List(Of ComboBoxItems)) Implements ICollectionView.SetBankCmb
+        SetComboBox(cmbBank_col, data)
+    End Sub
+
+    Public Sub SetCompanyCmb(data As List(Of ComboBoxItems)) Implements ICollectionView.SetCompanyCmb
+        SetComboBox(cmbCompany_col, data)
+    End Sub
+
+    '收入管理-收款作業-收款類型-支票號碼顯示
+    Private Sub cmbType_col_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbType_col.SelectedIndexChanged
+        Dim cmb As ComboBox = sender
+        Dim bVisible As Boolean
+
+        If cmb.Text = "支票" Then
+            bVisible = True
+        Else
+            bVisible = False
+        End If
+
+        lblChequeReq_col.Visible = bVisible
+        lblCheque_col.Visible = bVisible
+        txtCheque_col.Visible = bVisible
+    End Sub
+
+    '收入管理-收款作業-取消
+    Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
+        SetButtonState(sender, True)
+        _collect.GetSubjectsGroupCmb()
+        _collect.GetBankCmb()
+        _collect.GetCompanyCmb()
+        ClearInput_collection()
+        _collect.LoadList()
+        If btnQuery_col.Text = "確  認" Then SetCollectionQueryCtrlsState()
+    End Sub
+
+    '收入管理-收款作業-科目類別-取得科目
+    Private Sub cmbSG_col_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSG_col.SelectedIndexChanged
+        Dim cmb As ComboBox = sender
+
+        If cmb.SelectedIndex = -1 Then
+            cmbSubjects.DataSource = Nothing
+        Else
+            Dim sgId As Integer = cmb.SelectedItem.Value
+            _collect.GetSubjectsCmb(sgId)
+        End If
+    End Sub
+
+    '收入管理-收款作業-新增
+    Private Sub btnAdd_col_Click(sender As Object, e As EventArgs) Handles btnAdd_col.Click
+        _collect.Add()
+    End Sub
+
+    '收入管理-收款作業-dgv
+    Private Sub dgvCollection_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCollection.SelectionChanged, dgvCollection.CellMouseClick
+        Dim id = DGV_SelectionChanged(sender)
+        If id > 0 Then _collect.SelectRow(id)
+    End Sub
+
+    '收入管理-收款作業-修改
+    Private Sub btnEdit_col_Click(sender As Object, e As EventArgs) Handles btnEdit_col.Click
+        Dim id As Integer = txtColId.Text
+        _collect.Edit(id)
+    End Sub
+
+    '收入管理-收款作業-刪除
+    Private Sub btnDelete_col_Click(sender As Object, e As EventArgs) Handles btnDelete_col.Click
+        Dim id As Integer = txtColId.Text
+        _collect.Delete(id)
+    End Sub
+
+    '收入管理-收款作業-查詢
+    Private Sub btnQuery_col_Click(sender As Object, e As EventArgs) Handles btnQuery_col.Click
+        SetCollectionQueryCtrlsState()
+
+        If sender.Text = "查  詢" Then
+            _collect.Query()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' 設定收款作業查詢控制項狀態
+    ''' </summary>
+    Private Sub SetCollectionQueryCtrlsState()
+        Dim lst As New List(Of Control) From {lblType_col, txtCusId_col, lblSG_col, lblSubjects_col}
+
+        If lblCheque_col.Visible = True Then lst.Add(lblCheque_col)
+
+        SetQueryControls(btnQuery_col, lst)
     End Sub
 End Class

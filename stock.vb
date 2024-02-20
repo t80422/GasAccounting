@@ -10,14 +10,12 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class subject
-    Public Property s_id As Integer
-    Public Property s_sg_id As Integer
-    Public Property s_name As String
-    Public Property s_memo As String
+Partial Public Class stock
+    Public Property stk_Id As Integer
+    Public Property stk_comp_Id As Integer
+    Public Property stk_Year As Short
+    Public Property stk_EndingStock As Single
 
-    Public Overridable Property subjects_group As subjects_group
-    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
-    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property company As company
 
 End Class

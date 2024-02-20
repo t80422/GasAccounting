@@ -22,4 +22,8 @@
     ''' </summary>
     ''' <returns></returns>
     Function GetQueryConditions() As PaymentQueryVM
+    ''' <summary>
+    ''' 取得支票資訊
+    ''' </summary>
+    Function GetChequeDatas() As cheque
 End Interface

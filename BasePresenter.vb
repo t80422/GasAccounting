@@ -35,6 +35,8 @@
     ''' 新增
     ''' </summary>
     Public Overridable Sub Add()
+        If Not _view.CheckDataRequired Then Exit Sub
+
         Dim data = _view.GetUserInput
 
         If data IsNot Nothing Then
@@ -76,9 +78,13 @@
     ''' 修改
     ''' </summary>
     Public Overridable Sub Edit(id As Integer)
+        If Not _view.CheckDataRequired Then Exit Sub
+
+        Dim data = _view.GetUserInput
+
         Try
             Using db As New gas_accounting_systemEntities
-                Dim data = _view.GetUserInput
+
 
                 If data IsNot Nothing Then
                     Dim existingSubject = db.Set(Of TEntity).Find(id)

@@ -17,4 +17,11 @@
     ''' </summary>
     ''' <param name="items"></param>
     Sub SetGasVendorComboBox(items As List(Of ComboBoxItems))
+
+    ''' <summary>
+    ''' 設定預設價格
+    ''' </summary>
+    ''' <param name="productPrice">產品單價</param>
+    ''' <param name="deliveryPrice">運費單價</param>
+    Sub SetDefaultPrice(productPrice As Single, deliveryPrice As Single)
 End Interface

@@ -7,6 +7,22 @@
         _presenter = Me
     End Sub
 
+    Public Overrides Sub Edit(id As Integer)
+        MyBase.Edit(id)
+
+        Try
+            Using db As New gas_accounting_systemEntities
+
+            End Using
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Public Overrides Sub Delete(id As Integer)
+        MyBase.Delete(id)
+    End Sub
+
     Public Function SetSearchConditions(query As IQueryable(Of company), conditions As Object) As IQueryable(Of company) Implements IPresenter(Of company, CompanyVM).SetSearchConditions
         Return Nothing
     End Function
@@ -17,6 +33,7 @@
             .名稱 = x.comp_name,
             .簡稱 = x.comp_short,
             .統編 = x.comp_tax_id,
+            .瓦斯初始存量 = x.comp_GasStock,
             .備註 = x.comp_memo
         }).ToList
     End Function
