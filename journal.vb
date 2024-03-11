@@ -10,11 +10,13 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class subjects_group
-    Public Property sg_id As Integer
-    Public Property sg_name As String
-    Public Property sg_type As String
+Partial Public Class journal
+    Public Property j_Id As Integer
+    Public Property j_SubpoenaNo As Integer
+    Public Property j_s_Id As Nullable(Of Integer)
+    Public Property j_Amount As Single
+    Public Property j_Memo As String
 
-    Public Overridable Property subjects As ICollection(Of subject) = New HashSet(Of subject)
+    Public Overridable Property subject As subject
 
 End Class

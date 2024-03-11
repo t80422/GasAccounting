@@ -22,7 +22,6 @@
         If con.Cheque <> "" Then query = query.Where(Function(x) x.col_Cheque = con.Cheque)
         If con.CusId <> 0 Then query = query.Where(Function(x) x.col_cus_Id = con.CusId)
         If con.Subjects <> 0 Then query = query.Where(Function(x) x.col_s_Id = con.Subjects)
-        If con.SubjectsGroup <> 0 Then query = query.Where(Function(x) x.subject.s_sg_id = con.SubjectsGroup)
         If con.Type <> "" Then query = query.Where(Function(x) x.col_Type = con.Type)
 
         Return query
@@ -45,18 +44,10 @@
     End Function
 
     ''' <summary>
-    ''' 取得科目類別選單
-    ''' </summary>
-    Public Sub GetSubjectsGroupCmb()
-        _view.SetSubjectsGroupCmb(_subjectsService.GetSubjectsGroupCmbItems)
-    End Sub
-
-    ''' <summary>
     ''' 取得科目選單
     ''' </summary>
-    ''' <param name="sgId"></param>
-    Public Sub GetSubjectsCmb(sgId As Integer)
-        _view.SetSubjectsCmb(_subjectsService.GetSubjectsCmbItems(sgId))
+    Public Sub GetSubjectsCmb()
+        _view.SetSubjectsCmb(_subjectsService.GetSubjectsCmbItems("借"))
     End Sub
 
     ''' <summary>
@@ -78,7 +69,7 @@
     End Sub
 
     Public Overrides Sub Add()
-        If Not _view.CheckDataRequired Then Exit Sub
+        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
         Dim data = _view.GetUserInput
 
@@ -104,7 +95,7 @@
     End Sub
 
     Public Overrides Sub Edit(id As Integer)
-        If Not _view.CheckDataRequired Then Exit Sub
+        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
         Dim data = _view.GetUserInput
 

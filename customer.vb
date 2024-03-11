@@ -35,7 +35,7 @@ Partial Public Class customer
     Public Property cus_pp_Id As Nullable(Of Integer)
 
     Public Overridable Property cars As ICollection(Of car) = New HashSet(Of car)
-    Public Overridable Property priceplan As priceplan
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property priceplan As priceplan
 
 End Class

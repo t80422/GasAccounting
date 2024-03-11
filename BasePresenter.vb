@@ -3,7 +3,7 @@
     Protected _presenter As IPresenter(Of TEntity, TViewModel)
 
     ''' <summary>
-    ''' 要設定_presenter=Me
+    ''' 需初始化 _presenter=Me
     ''' </summary>
     ''' <param name="view"></param>
     Public Sub New(view As TView)
@@ -35,7 +35,7 @@
     ''' 新增
     ''' </summary>
     Public Overridable Sub Add()
-        If Not _view.CheckDataRequired Then Exit Sub
+        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
         Dim data = _view.GetUserInput
 
@@ -78,14 +78,12 @@
     ''' 修改
     ''' </summary>
     Public Overridable Sub Edit(id As Integer)
-        If Not _view.CheckDataRequired Then Exit Sub
+        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
         Dim data = _view.GetUserInput
 
         Try
             Using db As New gas_accounting_systemEntities
-
-
                 If data IsNot Nothing Then
                     Dim existingSubject = db.Set(Of TEntity).Find(id)
 
@@ -98,7 +96,6 @@
                         MsgBox("未找到指定的對象。")
                     End If
                 End If
-
             End Using
 
         Catch ex As Exception

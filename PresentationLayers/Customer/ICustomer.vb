@@ -10,7 +10,7 @@
     ''' <summary>
     ''' 設定價格方案ComboBox
     ''' </summary>
-    ''' <returns></returns>
     Sub SetPricePlan_Cmb(data As List(Of ComboBoxItems))
+
     Sub SetPricePlanDetails(data As priceplan)
 End Interface

@@ -10,7 +10,7 @@
     ''' <summary>
     ''' 設定列表的model
     ''' </summary>
-    ''' <param name="entity"></param>
+    ''' <param name="query"></param>
     ''' <returns></returns>
     Function SetListViewModel(query As IQueryable(Of TEntity)) As List(Of TViewModel)
 End Interface

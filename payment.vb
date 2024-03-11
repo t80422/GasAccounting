@@ -20,8 +20,12 @@ Partial Public Class payment
     Public Property p_Cheque As String
     Public Property p_bank_Id As Nullable(Of Integer)
     Public Property p_s_Id As Nullable(Of Integer)
+    Public Property p_AccountMonth As Nullable(Of Date)
+    Public Property p_comp_Id As Nullable(Of Integer)
+    Public Property p_SubpoenaNo As Integer
 
     Public Overridable Property bank As bank
+    Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
     Public Overridable Property subject As subject
 

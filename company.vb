@@ -19,6 +19,7 @@ Partial Public Class company
     Public Property comp_GasStock As Single
 
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
     Public Overridable Property stocks As ICollection(Of stock) = New HashSet(Of stock)
 

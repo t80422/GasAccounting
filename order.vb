@@ -13,7 +13,7 @@ Imports System.Collections.Generic
 Partial Public Class order
     Public Property o_id As Integer
     Public Property o_date As Nullable(Of Date)
-    Public Property o_c_id As Integer
+    Public Property o_c_id As Nullable(Of Integer)
     Public Property o_return As Integer
     Public Property o_return_c As Integer
     Public Property o_memo As String
@@ -55,7 +55,7 @@ Partial Public Class order
     Public Property o_deposit_out_14 As Integer
     Public Property o_deposit_out_5 As Integer
     Public Property o_deposit_out_2 As Integer
-    Public Property o_deposit_out_c_id As Integer
+    Public Property o_deposit_out_c_id As Nullable(Of Integer)
     Public Property o_in_50 As Integer
     Public Property o_in_20 As Integer
     Public Property o_in_16 As Integer

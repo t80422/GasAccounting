@@ -8,7 +8,7 @@
     End Sub
 
     Public Overrides Sub Add()
-        If Not _view.CheckDataRequired Then Exit Sub
+        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
         Dim data = _view.GetUserInput
 
@@ -30,7 +30,7 @@
     End Sub
 
     Public Overrides Sub Edit(id As Integer)
-        If Not _view.CheckDataRequired Then Exit Sub
+        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
         Dim data = _view.GetUserInput
 

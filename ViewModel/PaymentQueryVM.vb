@@ -1,6 +1,5 @@
 ﻿Public Class PaymentQueryVM
     Public Property Type As String
-    Public Property SubjectsGroupId As Integer
     Public Property SubjectsId As Integer
     Public Property ManufacturerId As Integer
     Public Property BankId As Integer

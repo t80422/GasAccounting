@@ -9,5 +9,6 @@
     Public Property 公司 As String
     Public Property 運費單價 As Single
     Public Property 運費 As Single
-    Public Property 特殊狀況 As Boolean
+    Public Property 特殊單價 As Boolean
+    Public Property 特殊運費 As Boolean
 End Class

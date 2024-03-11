@@ -104,8 +104,8 @@
     <Compile Include="bank.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Bank\BankPresenter.vb" />
-    <Compile Include="Bank\IBankView.vb" />
+    <Compile Include="PresentationLayers\Bank\BankPresenter.vb" />
+    <Compile Include="PresentationLayers\Bank\IBankView.vb" />
     <Compile Include="BasePresenter.vb" />
     <Compile Include="basic_price.vb">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -119,22 +119,22 @@
     <Compile Include="collection.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Collection\CollectionPresenter.vb" />
-    <Compile Include="Collection\ICollectionView.vb" />
+    <Compile Include="PresentationLayers\Collection\CollectionPresenter.vb" />
+    <Compile Include="PresentationLayers\Collection\ICollectionView.vb" />
     <Compile Include="company.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Company\CompanyPresenter.vb" />
+    <Compile Include="PresentationLayers\Company\CompanyPresenter.vb" />
     <Compile Include="customer.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Customer\CustomerPresenter.vb" />
-    <Compile Include="Customer\ICustomer.vb" />
+    <Compile Include="PresentationLayers\Customer\CustomerPresenter.vb" />
+    <Compile Include="PresentationLayers\Customer\ICustomer.vb" />
     <Compile Include="employee.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Employee\EmployeePresenter.vb" />
-    <Compile Include="Employee\IEmployeeView.vb" />
+    <Compile Include="PresentationLayers\Employee\EmployeePresenter.vb" />
+    <Compile Include="PresentationLayers\Employee\IEmployeeView.vb" />
     <Compile Include="frmLogin.Designer.vb">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </Compile>
@@ -154,22 +154,25 @@
     <Compile Include="frmQueryCustomer.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Company\ICompanyView.vb" />
+    <Compile Include="PresentationLayers\Company\ICompanyView.vb" />
     <Compile Include="ICommonView.vb" />
     <Compile Include="IPresenter.vb" />
+    <Compile Include="journal.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="manufacturer.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Manufacturer\IManufacturerView.vb" />
-    <Compile Include="Manufacturer\ManufacturerPresenter.vb" />
+    <Compile Include="PresentationLayers\Manufacturer\IManufacturerView.vb" />
+    <Compile Include="PresentationLayers\Manufacturer\ManufacturerPresenter.vb" />
     <Compile Include="order.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="payment.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Payment\IPaymentView.vb" />
-    <Compile Include="Payment\PaymentPresenter.vb" />
+    <Compile Include="PresentationLayers\Payment\IPaymentView.vb" />
+    <Compile Include="PresentationLayers\Payment\PaymentPresenter.vb" />
     <Compile Include="priceplan.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -179,11 +182,13 @@
     <Compile Include="role.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Roles\IRolesView.vb" />
-    <Compile Include="Roles\RolesPresenter.vb" />
+    <Compile Include="PresentationLayers\Roles\IRolesView.vb" />
+    <Compile Include="PresentationLayers\Roles\RolesPresenter.vb" />
     <Compile Include="Services\BankService.vb" />
     <Compile Include="Services\IBankService.vb" />
+    <Compile Include="Services\IJournalService.vb" />
     <Compile Include="Services\ISubjectsService.vb" />
+    <Compile Include="Services\JournalService.vb" />
     <Compile Include="Services\SubjectsService.vb" />
     <Compile Include="stock.vb">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -191,11 +196,9 @@
     <Compile Include="subject.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="subjects_group.vb">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UintPriceHistory\IUnitPriceHistoryView.vb" />
-    <Compile Include="UintPriceHistory\UintPriceHistoryPresenter.vb" />
+    <Compile Include="PresentationLayers\UintPriceHistory\IUnitPriceHistoryView.vb" />
+    <Compile Include="PresentationLayers\UintPriceHistory\UintPriceHistoryPresenter.vb" />
+    <Compile Include="ViewModel\AmountDueVM.vb" />
     <Compile Include="ViewModel\BankVM.vb" />
     <Compile Include="ViewModel\ChequeVM.vb" />
     <Compile Include="ViewModel\CollectionQueryVM.vb" />
@@ -209,17 +212,16 @@
     <Compile Include="ViewModel\PaymentVM.vb" />
     <Compile Include="ViewModel\PricePlanVM.vb" />
     <Compile Include="ViewModel\PurchaseVM.vb" />
-    <Compile Include="PricePlan\IPricePlanView.vb" />
-    <Compile Include="PricePlan\PricePlanPresenter.vb" />
-    <Compile Include="Purchase\IPurchaseView.vb" />
-    <Compile Include="Purchase\PurchasePresenter.vb" />
+    <Compile Include="PresentationLayers\PricePlan\IPricePlanView.vb" />
+    <Compile Include="PresentationLayers\PricePlan\PricePlanPresenter.vb" />
+    <Compile Include="PresentationLayers\Purchase\IPurchaseView.vb" />
+    <Compile Include="PresentationLayers\Purchase\PurchasePresenter.vb" />
     <Compile Include="Services\CompanyService.vb" />
     <Compile Include="Services\ICompanyService.vb" />
     <Compile Include="Services\IManufacturerService.vb" />
     <Compile Include="Services\ManufacturerService.vb" />
     <Compile Include="Services\Service.vb" />
-    <Compile Include="Subjects\ISubjectGroupView.vb" />
-    <Compile Include="Subjects\ISubjectsView.vb" />
+    <Compile Include="PresentationLayers\Subjects\ISubjectsView.vb" />
     <Compile Include="Model1.Context.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -259,8 +261,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Subjects\SubjectGroupPresenter.vb" />
-    <Compile Include="Subjects\SubjectsPresenter.vb" />
+    <Compile Include="PresentationLayers\Subjects\SubjectsPresenter.vb" />
     <Compile Include="ViewModel\UnitPriceHistoryVM.vb" />
   </ItemGroup>
   <ItemGroup>

@@ -2,12 +2,6 @@
     Inherits ICommonView(Of collection, CollectionVM)
 
     ''' <summary>
-    ''' 設定科目群組選單
-    ''' </summary>
-    ''' <param name="data"></param>
-    Sub SetSubjectsGroupCmb(data As List(Of ComboBoxItems))
-
-    ''' <summary>
     ''' 設定科目選單
     ''' </summary>
     ''' <param name="data"></param>

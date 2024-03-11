@@ -6,6 +6,7 @@
     Public Property 廠商名稱 As String
     Public Property 銀行名稱 As String
     Public Property 科目 As String
+    Public Property 帳款月份 As String
     Public Property 支票號碼 As String
     Public Property 備註 As String
 End Class
