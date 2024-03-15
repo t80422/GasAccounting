@@ -7977,7 +7977,7 @@ Partial Class frmMain
         Me.ClientSize = New System.Drawing.Size(1904, 1021)
         Me.Controls.Add(Me.TabControl1)
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.8.0"
+        Me.Text = "豐原瓦斯會計系統 v0.8.1"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage30.ResumeLayout(False)

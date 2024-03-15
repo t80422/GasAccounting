@@ -1606,7 +1606,7 @@ Public Class frmMain
     End Sub
 
     Private Function SetRequired_Employee() As List(Of Control) Implements ICommonView(Of employee, EmployeeVM).SetRequired
-        Return Nothing
+        Return New List(Of Control) From {txtEmpName, txtEmpPhone}
     End Function
 
     '基本資料-員工管理-取消
