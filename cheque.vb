@@ -12,12 +12,15 @@ Imports System.Collections.Generic
 
 Partial Public Class cheque
     Public Property che_Id As Integer
-    Public Property che_Date As Date
+    Public Property che_CollectionDate As Nullable(Of Date)
     Public Property che_Number As String
     Public Property che_Amount As Integer
     Public Property che_CashingDate As Nullable(Of Date)
     Public Property che_Memo As String
-    Public Property che_IsCashing As Boolean
     Public Property che_Type As String
+    Public Property che_IssuerName As String
+    Public Property che_ReceivedDate As Nullable(Of Date)
+    Public Property che_AccountNumber As String
+    Public Property chu_State As String
 
 End Class

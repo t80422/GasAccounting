@@ -16,7 +16,6 @@ Public Class frmLogin
 
                 If user IsNot Nothing Then
                     If user.emp_psw = PasswordTextBox.Text Then
-                        MsgBox("µn¤J¦¨¥\")
                         Hide()
 
                         frmMain.User.Id = user.emp_id
@@ -41,4 +40,7 @@ Public Class frmLogin
         Me.Close()
     End Sub
 
+    Private Sub frmLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class

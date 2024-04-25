@@ -49,13 +49,16 @@
             <PropertyRef Name="che_Id" />
           </Key>
           <Property Name="che_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="che_Date" Type="date" Nullable="false" />
+          <Property Name="che_CollectionDate" Type="date" />
           <Property Name="che_Number" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="che_Amount" Type="int" Nullable="false" />
           <Property Name="che_CashingDate" Type="date" />
           <Property Name="che_Memo" Type="varchar" MaxLength="50" />
-          <Property Name="che_IsCashing" Type="bool" Nullable="false" />
           <Property Name="che_Type" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="che_IssuerName" Type="varchar" MaxLength="50" />
+          <Property Name="che_ReceivedDate" Type="date" />
+          <Property Name="che_AccountNumber" Type="varchar" MaxLength="50" />
+          <Property Name="chu_State" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="collection">
           <Key>
@@ -72,6 +75,7 @@
           <Property Name="col_Memo" Type="varchar" MaxLength="50" />
           <Property Name="col_bank_Id" Type="int" />
           <Property Name="col_comp_Id" Type="int" />
+          <Property Name="col_SubpoenaNo" Type="int" />
         </EntityType>
         <EntityType Name="company">
           <Key>
@@ -641,7 +645,6 @@
           <EntitySet Name="banks" EntityType="gas_accounting_systemModel.bank" />
           <EntitySet Name="basic_price" EntityType="gas_accounting_systemModel.basic_price" />
           <EntitySet Name="cars" EntityType="gas_accounting_systemModel.car" />
-          <EntitySet Name="cheques" EntityType="gas_accounting_systemModel.cheque" />
           <EntitySet Name="collections" EntityType="gas_accounting_systemModel.collection" />
           <EntitySet Name="companies" EntityType="gas_accounting_systemModel.company" />
           <EntitySet Name="customers" EntityType="gas_accounting_systemModel.customer" />
@@ -727,6 +730,7 @@
             <End Role="subject" EntitySet="subjects" />
             <End Role="payment" EntitySet="payments" />
           </AssociationSet>
+          <EntitySet Name="cheques" EntityType="gas_accounting_systemModel.cheque" />
         </EntityContainer>
         <EntityType Name="bank">
           <Key>
@@ -772,19 +776,6 @@
           <NavigationProperty Name="orders" Relationship="gas_accounting_systemModel.orders_ibfk_1" FromRole="car" ToRole="order" />
           <NavigationProperty Name="orders1" Relationship="gas_accounting_systemModel.orders_ibfk_2" FromRole="car" ToRole="order" />
         </EntityType>
-        <EntityType Name="cheque">
-          <Key>
-            <PropertyRef Name="che_Id" />
-          </Key>
-          <Property Name="che_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="che_Date" Type="DateTime" Nullable="false" />
-          <Property Name="che_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="che_Amount" Type="Int32" Nullable="false" />
-          <Property Name="che_CashingDate" Type="DateTime" />
-          <Property Name="che_Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="che_IsCashing" Type="Boolean" Nullable="false" />
-          <Property Name="che_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="collection">
           <Key>
             <PropertyRef Name="col_Id" />
@@ -804,6 +795,7 @@
           <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.collection_ibfk_1" FromRole="collection" ToRole="customer" />
           <NavigationProperty Name="subject" Relationship="gas_accounting_systemModel.collection_ibfk_2" FromRole="collection" ToRole="subject" />
           <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.collection_ibfk_4" FromRole="collection" ToRole="company" />
+          <Property Name="col_SubpoenaNo" Type="Int32" />
         </EntityType>
         <EntityType Name="company">
           <Key>
@@ -1301,6 +1293,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="cheque">
+          <Key>
+            <PropertyRef Name="che_Id" />
+          </Key>
+          <Property Name="che_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="che_CollectionDate" Type="DateTime" />
+          <Property Name="che_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="che_Amount" Type="Int32" Nullable="false" />
+          <Property Name="che_CashingDate" Type="DateTime" />
+          <Property Name="che_Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="che_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="che_IssuerName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="che_ReceivedDate" Type="DateTime" />
+          <Property Name="che_AccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="chu_State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1349,23 +1357,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="cheques">
-            <EntityTypeMapping TypeName="gas_accounting_systemModel.cheque">
-              <MappingFragment StoreEntitySet="cheque">
-                <ScalarProperty Name="che_Type" ColumnName="che_Type" />
-                <ScalarProperty Name="che_IsCashing" ColumnName="che_IsCashing" />
-                <ScalarProperty Name="che_Memo" ColumnName="che_Memo" />
-                <ScalarProperty Name="che_CashingDate" ColumnName="che_CashingDate" />
-                <ScalarProperty Name="che_Amount" ColumnName="che_Amount" />
-                <ScalarProperty Name="che_Number" ColumnName="che_Number" />
-                <ScalarProperty Name="che_Date" ColumnName="che_Date" />
-                <ScalarProperty Name="che_Id" ColumnName="che_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="collections">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.collection">
               <MappingFragment StoreEntitySet="collection">
+                <ScalarProperty Name="col_SubpoenaNo" ColumnName="col_SubpoenaNo" />
                 <ScalarProperty Name="col_comp_Id" ColumnName="col_comp_Id" />
                 <ScalarProperty Name="col_bank_Id" ColumnName="col_bank_Id" />
                 <ScalarProperty Name="col_Memo" ColumnName="col_Memo" />
@@ -1640,6 +1635,23 @@
                 <ScalarProperty Name="s_name" ColumnName="s_name" />
                 <ScalarProperty Name="s_Type" ColumnName="s_Type" />
                 <ScalarProperty Name="s_id" ColumnName="s_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cheques">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.cheque">
+              <MappingFragment StoreEntitySet="cheque">
+                <ScalarProperty Name="chu_State" ColumnName="chu_State" />
+                <ScalarProperty Name="che_AccountNumber" ColumnName="che_AccountNumber" />
+                <ScalarProperty Name="che_ReceivedDate" ColumnName="che_ReceivedDate" />
+                <ScalarProperty Name="che_IssuerName" ColumnName="che_IssuerName" />
+                <ScalarProperty Name="che_Type" ColumnName="che_Type" />
+                <ScalarProperty Name="che_Memo" ColumnName="che_Memo" />
+                <ScalarProperty Name="che_CashingDate" ColumnName="che_CashingDate" />
+                <ScalarProperty Name="che_Amount" ColumnName="che_Amount" />
+                <ScalarProperty Name="che_Number" ColumnName="che_Number" />
+                <ScalarProperty Name="che_CollectionDate" ColumnName="che_CollectionDate" />
+                <ScalarProperty Name="che_Id" ColumnName="che_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

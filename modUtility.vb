@@ -149,7 +149,7 @@ Module modUtility
     ''' 取得資料表 prefix 開頭的欄位資料
     ''' </summary>
     ''' <param name="entity"></param>
-    ''' <param name="prefix"></param>
+    ''' <param name="prefix">開頭文字</param>
     ''' <returns></returns>
     Public Function GetEntityFieldsByPrefix(entity As Object, prefix As String) As Dictionary(Of String, Object)
         Dim result As New Dictionary(Of String, Object)

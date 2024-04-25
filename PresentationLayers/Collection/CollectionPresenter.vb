@@ -1,47 +1,57 @@
 ﻿Public Class CollectionPresenter
-    Inherits BasePresenter(Of collection, CollectionVM, ICollectionView)
-    Implements IPresenter(Of collection, CollectionVM)
-
+    Private _view As ICollectionView
     Private _subjectsService As SubjectsService
     Private _bankService As BankService
     Private _companyService As CompanyService
+    Private _colRep As ICollectionRep = New CollectionRep
 
     Public Sub New(view As ICollectionView, subjectsService As SubjectsService, bankService As BankService, companyService As CompanyService)
-        MyBase.New(view)
-        _presenter = Me
+        _view = view
         _subjectsService = subjectsService
         _bankService = bankService
         _companyService = companyService
     End Sub
 
-    Public Function SetSearchConditions(query As IQueryable(Of collection), conditions As Object) As IQueryable(Of collection) Implements IPresenter(Of collection, CollectionVM).SetSearchConditions
-        Dim con As CollectionQueryVM = conditions
-        con.EndDate = con.EndDate.AddDays(1).AddSeconds(-1)
-        query = query.Where(Function(x) x.col_Date >= con.StartDate AndAlso x.col_Date <= con.EndDate)
+    ''' <summary>
+    ''' 取得列表
+    ''' </summary>
+    ''' <param name="conditions"></param>
+    Public Sub LoadList(Optional conditions As Object = Nothing)
+        Try
+            Using db As New gas_accounting_systemEntities
+                Dim query = db.collections.AsNoTracking.AsQueryable
 
-        If con.Cheque <> "" Then query = query.Where(Function(x) x.col_Cheque = con.Cheque)
-        If con.CusId <> 0 Then query = query.Where(Function(x) x.col_cus_Id = con.CusId)
-        If con.Subjects <> 0 Then query = query.Where(Function(x) x.col_s_Id = con.Subjects)
-        If con.Type <> "" Then query = query.Where(Function(x) x.col_Type = con.Type)
+                If conditions IsNot Nothing Then
+                    query = SetSearchConditions(query, conditions)
+                End If
 
-        Return query
-    End Function
+                _view.ShowList(SetListViewModel(query))
+            End Using
 
-    Public Function SetListViewModel(query As IQueryable(Of collection)) As List(Of CollectionVM) Implements IPresenter(Of collection, CollectionVM).SetListViewModel
-        Dim collections = query.ToList
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
 
-        Return collections.Select(Function(x) New CollectionVM With {
-            .備註 = x.col_Memo,
-            .客戶名稱 = x.customer.cus_name,
-            .帳款月份 = x.col_AccountMonth.ToString("yyyy年MM月"),
-            .支票號碼 = x.col_Cheque,
-            .收款類型 = x.col_Type,
-            .日期 = x.col_Date,
-            .科目 = x.subject.s_name,
-            .編號 = x.col_Id,
-            .金額 = x.col_Amount
-        }).ToList
-    End Function
+    ''' <summary>
+    ''' 取得選取的資料
+    ''' </summary>
+    ''' <param name="id"></param>
+    Public Sub SelectRow(id As Integer)
+        Try
+            Using db As New gas_accounting_systemEntities
+                Dim data = db.collections.Find(id)
+                If data IsNot Nothing Then
+                    Dim che = db.cheques.FirstOrDefault(Function(x) x.che_Number = data.col_Cheque)
+                    _view.ClearInput()
+                    _view.SetDataToControl(data, che)
+                End If
+            End Using
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
 
     ''' <summary>
     ''' 取得科目選單
@@ -68,96 +78,86 @@
         LoadList(_view.GetQueryConditions)
     End Sub
 
-    Public Overrides Sub Add()
-        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
+    Public Sub Add()
+        Dim ord = _view.GetUserInput
 
-        Dim data = _view.GetUserInput
+        If ord IsNot Nothing Then
+            Dim journal As journal = If(ord.col_Type <> "支票", _view.GetJournalDatas, Nothing)
+            Dim cheque As cheque = If(ord.col_Type = "支票", _view.GetChequeDatas, Nothing)
 
-        If data IsNot Nothing Then
             Try
-                Using db As New gas_accounting_systemEntities
-                    db.collections.Add(data)
-
-                    If data.col_Type = "支票" Then
-                        db.cheques.Add(_view.GetChequeDatas)
-                    End If
-
-                    db.SaveChanges()
-                    LoadList()
-                    _view.ClearInput()
-                    MsgBox("新增成功")
-                End Using
-
+                _colRep.Add(ord, journal, cheque)
+                _view.Reset()
+                MsgBox("新增成功")
             Catch ex As Exception
                 MsgBox(ex.Message)
             End Try
         End If
     End Sub
 
-    Public Overrides Sub Edit(id As Integer)
-        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
+    Public Sub Edit()
+        Dim col = _view.GetUserInput
 
-        Dim data = _view.GetUserInput
+        If col IsNot Nothing Then
+            Dim journal As journal = If(col.col_Type <> "支票", _view.GetJournalDatas, Nothing)
+            Dim cheque As cheque = If(col.col_Type = "支票", _view.GetChequeDatas, Nothing)
 
-        Try
-            Using db As New gas_accounting_systemEntities
-                If data IsNot Nothing Then
-                    Dim collection = db.collections.Find(id)
-
-                    If collection IsNot Nothing Then
-                        If data.col_Type = "支票" Then
-                            Dim cheques = db.cheques.FirstOrDefault(Function(x) x.che_Number = collection.col_Cheque)
-
-                            If cheques IsNot Nothing Then
-                                Dim updateCheques = _view.GetChequeDatas
-                                updateCheques.che_Id = cheques.che_Id
-                                db.Entry(cheques).CurrentValues.SetValues(updateCheques)
-                            End If
-                        End If
-
-                        db.Entry(collection).CurrentValues.SetValues(data)
-                        db.SaveChanges()
-                        LoadList()
-                        MsgBox("修改成功。")
-                    Else
-                        MsgBox("未找到指定的對象。")
-                    End If
-                End If
-            End Using
-
-        Catch ex As Exception
-            MsgBox("修改時發生錯誤: " & ex.Message)
-        End Try
+            Try
+                _colRep.Edit(col, journal, cheque)
+                _view.Reset()
+                MsgBox("修改成功")
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        End If
     End Sub
 
-    Public Overrides Sub Delete(id As Integer)
+    Public Sub Delete(id As Integer)
         If MsgBox("確定要刪除?", vbYesNo, "警告") = MsgBoxResult.No Then Exit Sub
-
         Try
-            Using db As New gas_accounting_systemEntities
-                Dim data = db.collections.Find(id)
-                If data IsNot Nothing Then
-                    If data.col_Type = "支票" Then
-                        Dim cheques = db.cheques.FirstOrDefault(Function(x) x.che_Number = data.col_Cheque)
-
-                        If cheques IsNot Nothing Then
-                            db.cheques.Remove(cheques)
-                        End If
-                    End If
-
-                    db.collections.Remove(data)
-                    db.SaveChanges()
-                    LoadList()
-                    _view.ClearInput()
-                    MsgBox("刪除成功。")
-
-                Else
-                    MsgBox("未找到要刪除的對象。")
-                End If
-            End Using
-
+            _colRep.Delete(id)
+            _view.Reset()
+            MsgBox("刪除成功")
         Catch ex As Exception
-            MsgBox("刪除時發生錯誤: " & ex.Message)
+            MsgBox(ex.Message)
         End Try
     End Sub
+
+    Public Sub UpdateCheque(colId As Integer)
+        Try
+            _colRep.UpdateCheque(colId)
+            _view.Reset()
+            MsgBox("兌現成功")
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Function SetSearchConditions(query As IQueryable(Of collection), conditions As CollectionQueryVM) As IQueryable(Of collection)
+        conditions.EndDate = conditions.EndDate.AddDays(1).AddSeconds(-1)
+        query = query.Where(Function(x) x.col_Date >= conditions.StartDate AndAlso x.col_Date <= conditions.EndDate)
+
+        If conditions.Cheque <> "" Then query = query.Where(Function(x) x.col_Cheque = conditions.Cheque)
+        If conditions.CusId <> 0 Then query = query.Where(Function(x) x.col_cus_Id = conditions.CusId)
+        If conditions.Subjects <> 0 Then query = query.Where(Function(x) x.col_s_Id = conditions.Subjects)
+        If conditions.Type <> "" Then query = query.Where(Function(x) x.col_Type = conditions.Type)
+
+        Return query
+    End Function
+
+    Private Function SetListViewModel(query As IQueryable(Of collection)) As List(Of CollectionVM)
+        Dim collections = query.ToList
+
+        Return collections.Select(Function(x) New CollectionVM With {
+            .備註 = x.col_Memo,
+            .客戶名稱 = x.customer.cus_name,
+            .帳款月份 = x.col_AccountMonth.ToString("yyyy年MM月"),
+            .支票號碼 = x.col_Cheque,
+            .收款類型 = x.col_Type,
+            .日期 = x.col_Date,
+            .科目 = x.subject.s_name,
+            .編號 = x.col_Id,
+            .金額 = x.col_Amount
+        }).ToList
+    End Function
 End Class

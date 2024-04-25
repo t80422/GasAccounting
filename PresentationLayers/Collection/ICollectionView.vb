@@ -30,4 +30,14 @@
     ''' </summary>
     ''' <returns></returns>
     Function GetChequeDatas() As cheque
+
+    ''' <summary>
+    ''' 取得傳票資訊
+    ''' </summary>
+    ''' <returns></returns>
+    Function GetJournalDatas() As journal
+
+    Sub Reset()
+
+    Overloads Sub SetDataToControl(col As collection, Optional che As cheque = Nothing)
 End Interface

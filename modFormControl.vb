@@ -245,8 +245,10 @@ Module modFormControl
     Public Sub SetButtonState(sender As Control, enableCreate As Boolean)
         Dim parent = sender.Parent
         Dim btns = parent.Controls.OfType(Of Button)
-        btns.First(Function(x) x.Text = "新  增").Enabled = enableCreate
-        btns.Where(Function(x) x.Text = "修  改" Or x.Text = "刪  除").ToList.ForEach(Sub(y) y.Enabled = Not enableCreate)
+        Dim btnCreate = btns.FirstOrDefault(Function(x) x.Text.Contains("新"))
+
+        If btnCreate IsNot Nothing Then btnCreate.Enabled = enableCreate
+        btns.Where(Function(x) x.Text.Contains("修") Or x.Text.Contains("刪")).ToList.ForEach(Sub(y) y.Enabled = Not enableCreate)
     End Sub
 
     Public Function PositiveIntegerOnly_TextBox(sender As Object, e As KeyPressEventArgs) As Boolean

@@ -1,8 +1,9 @@
-﻿Imports System.Text.RegularExpressions
+﻿Imports System.Data.Entity.Validation
+Imports System.Text.RegularExpressions
 
 Public Class frmMain
     Implements ISubjectsView, ICompanyView, IManufacturerView, IPurchaseView, ICustomer, IPricePlanView, IRolesView, IEmployeeView, IBankView, IPaymentView, IUnitPriceHistoryView,
-        ICollectionView
+        ICollectionView, ICheque, IOrderView
 
     Public Structure UserData
         Public Id As Integer
@@ -28,11 +29,86 @@ Public Class frmMain
     Private _payment As New PaymentPresenter(Me, _manuService, _bankService, _subjectService, _compService)
     Private _uph As New UintPriceHistoryPresenter(Me, _manuService)
     Private _collect As New CollectionPresenter(Me, _subjectService, _bankService, _compService)
+    Private _cheque As New ChequePresenter(Me)
+    Private _order As New OrderPresenter(Me)
 
-    Private orgStockValues As New Dictionary(Of String, Object) '儲存客戶瓦斯桶庫存
-    Private orgDepositStockValues As New Dictionary(Of String, Object) '儲存司機寄瓶庫存
-    Private orgGasValues As New Dictionary(Of String, Integer) '用於存儲 txtGas_、txtGas_c_ 開頭的 TextBox 的初始值
-    Private orgDepositValues As New Dictionary(Of String, Object) '用於存儲TextBox.Tag = o_deposit開頭的初始值
+    Private inputTxts As String(,) = {
+        {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_15", "txto_in_14", "txto_in_5", "txto_in_2"},
+        {"txto_new_in_50", "txto_new_in_20", "txto_new_in_16", "txto_new_in_10", "txto_new_in_4", "txto_new_in_15", "txto_new_in_14", "txto_new_in_5", "txto_new_in_2"},
+        {"txto_inspect_50", "txto_inspect_20", "txto_inspect_16", "txto_inspect_10", "txto_inspect_4", "txto_inspect_15", "txto_inspect_14", "txto_inspect_5", "txto_inspect_2"},
+        {"txtDepositIn_50", "txtDepositIn_20", "txtDepositIn_16", "txtDepositIn_10", "txtDepositIn_4", "txtDepositIn_15", "txtDepositIn_14", "txtDepositIn_5", "txtDepositIn_2"}
+    }
+    Private outputTxts As String(,) = {
+        {"txtGas_c_50", "txtGas_c_20", "txtGas_c_16", "txtGas_c_10", "txtGas_c_4", "txtGas_c_15", "txtGas_c_14", "txtGas_c_5", "txtGas_c_2"},
+        {"txtGas_50", "txtGas_20", "txtGas_16", "txtGas_10", "txtGas_4", "txtGas_15", "txtGas_14", "txtGas_5", "txtGas_2"},
+        {"txtEmpty_50", "txtEmpty_20", "txtEmpty_16", "txtEmpty_10", "txtEmpty_4", "txtEmpty_15", "txtEmpty_14", "txtEmpty_5", "txtEmpty_2"},
+        {"txtDepositOut_50", "txtDepositOut_20", "txtDepositOut_16", "txtDepositOut_10", "txtDepositOut_4", "txtDepositOut_15", "txtDepositOut_14", "txtDepositOut_5", "txtDepositOut_2"}
+    }
+
+
+    'Private orgStockValues As New Dictionary(Of String, Object) '儲存客戶瓦斯桶庫存
+    'Private orgDepositStockValues As New Dictionary(Of String, Object) '儲存司機寄瓶庫存
+    'Private orgGasValues As New Dictionary(Of String, Integer) '用於存儲 txtGas_、txtGas_c_ 開頭的 TextBox 的初始值
+    'Private orgDepositValues As New Dictionary(Of String, Object) '用於存儲TextBox.Tag = o_deposit開頭的初始值
+
+    Private Sub Direction(sender As Object, e As KeyEventArgs, container As Control)
+        Dim btn As TextBox = sender
+        Dim txtName = btn.Name
+        Dim currentI As Integer
+        Dim currentJ As Integer
+        Dim nextI As Integer
+        Dim nextJ As Integer
+        Dim arr = If(container.Text = "進場單", inputTxts, outputTxts)
+
+        For i As Integer = 0 To arr.GetLength(0) - 1
+            For j As Integer = 0 To arr.GetLength(1) - 1
+                If txtName = arr(i, j) Then
+                    currentI = i
+                    currentJ = j
+                End If
+            Next
+        Next
+
+        nextI = currentI
+        nextJ = currentJ
+
+        Select Case e.KeyCode
+            Case Keys.Right, Keys.Enter
+                If currentJ < arr.GetLength(1) - 1 Then
+                    nextJ = currentJ + 1
+                ElseIf currentI = arr.GetLength(0) - 1 And currentJ = arr.GetLength(1) - 1 Then
+                    nextI = 0
+                    nextJ = 0
+                Else
+                    nextI = currentI + 1
+                    nextJ = 0
+                End If
+
+            Case Keys.Left
+                If currentJ <> 0 Then
+                    nextJ = currentJ - 1
+                ElseIf currentI = 0 And currentJ = 0 Then
+                    nextI = arr.GetLength(0) - 1
+                    nextJ = arr.GetLength(1) - 1
+                Else
+                    nextI = currentI - 1
+                    nextJ = arr.GetLength(1) - 1
+                End If
+
+            Case Keys.Up
+                nextI = If(currentI = 0, arr.GetLength(0) - 1, currentI - 1)
+
+            Case Keys.Down
+                nextI = If(currentI = arr.GetLength(0) - 1, 0, currentI + 1)
+
+            Case Else
+                Exit Sub
+        End Select
+
+        Dim txt As TextBox = container.Controls.OfType(Of TextBox).FirstOrDefault(Function(x) x.Name = arr(nextI, nextJ))
+        txt.Focus()
+        txt.SelectAll()
+    End Sub
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitTabPage()
@@ -83,7 +159,9 @@ Public Class frmMain
         btnCancel_roles_Click(btnCancel_roles, EventArgs.Empty)
         btnCancel_payment_Click(btnCancel_payment, EventArgs.Empty)
         btnCancel_uph_Click(btnCancel_uph, EventArgs.Empty)
-        btnCancel_col_Click(btnCancel_col, EventArgs.Empty)
+        'btnCancel_col_Click(btnCancel_col, EventArgs.Empty)
+        btnCancel_Che_Click(btnCancel_Che, EventArgs.Empty)
+        ICollectionView_Reset()
     End Sub
 
     ''' <summary>
@@ -94,11 +172,13 @@ Public Class frmMain
         Dim inTxts = tpIn.Controls.OfType(Of TextBox)
         inTxts.Where(Function(txt) txt.Name.StartsWith("txto_")).ToList.ForEach(Sub(t) AddHandler t.KeyUp, Sub(sender, e) CalculateStock(sender, e, True))
         inTxts.Where(Function(txt) txt.Name.StartsWith("txtDepositIn_")).ToList.ForEach(Sub(t) AddHandler t.KeyUp, Sub(sender, e) CalculateDeposit_TextChaged(sender, e, True))
+        inTxts.Where(Function(x) x.ReadOnly = False).ToList.ForEach(Sub(x) AddHandler x.KeyDown, Sub(sender, e) Direction(sender, e, tpIn))
 
         Dim outTxts = tpOut.Controls.OfType(Of TextBox)
         outTxts.Where(Function(txt) txt.Name.StartsWith("txtGas") Or txt.Name.StartsWith("txtEmpty")).
             ToList.ForEach(Sub(t) AddHandler t.KeyUp, Sub(sender, e) CalculateStock(sender, e, False))
         outTxts.Where(Function(txt) txt.Name.StartsWith("txtDepositOut_")).ToList.ForEach(Sub(t) AddHandler t.KeyUp, Sub(sender, e) CalculateDeposit_TextChaged(sender, e, False))
+        outTxts.Where(Function(x) x.ReadOnly = False).ToList.ForEach(Sub(x) AddHandler x.KeyDown, Sub(sender, e) Direction(sender, e, tpOut))
 
         Dim lstGas_c As New List(Of TextBox)
         Dim regGas_c As New Regex("^txtGas_c_\d+$")
@@ -309,7 +389,7 @@ Public Class frmMain
 
     '基本資料-車輛管理-新增
     Private Sub btnCreate_car_Click(sender As Object, e As EventArgs) Handles btnCreate_car.Click
-        Dim required = New List(Of Control) From {txtCusId_car, txtCarNo}
+        Dim required = New List(Of Control) From {txtCusCode_car, txtCarNo}
         If Not CheckRequired(required) Then Exit Sub
 
         Try
@@ -351,7 +431,7 @@ Public Class frmMain
 
     '基本資料-車輛管理-修改
     Private Sub btnEdit_car_Click(sender As Object, e As EventArgs) Handles btnEdit_car.Click
-        Dim required = New List(Of Control) From {txtCusId_car, txtCarNo}
+        Dim required = New List(Of Control) From {txtCusCode_car, txtCarNo}
         If Not CheckRequired(required) Then Exit Sub
 
         Dim id As Integer = txtCarId.Text
@@ -394,8 +474,9 @@ Public Class frmMain
     Private Sub btnQueryCus_car_Click(sender As Object, e As EventArgs) Handles btnQueryCus_car.Click
         Using searchForm As New frmQueryCustomer
             If searchForm.ShowDialog = DialogResult.OK Then
-                txtCusId_car.Text = searchForm.ID
-                txtCusName_car.Text = searchForm.Name
+                txtCusCode_car.Text = searchForm.CusCode
+                txtCusName_car.Text = searchForm.CusName
+                txtCusId_car.Text = searchForm.CusId
             End If
         End Using
     End Sub
@@ -404,7 +485,7 @@ Public Class frmMain
     Private Sub btnQuery_car_Click(sender As Object, e As EventArgs) Handles btnQuery_car.Click
         Dim btn As Button = sender
         Dim lst = New List(Of Control) From {
-            txtCusId_car,
+            txtCusCode_car,
             txtCarNo
         }
 
@@ -414,7 +495,7 @@ Public Class frmMain
             Try
                 Using db As New gas_accounting_systemEntities
                     Dim query = db.cars.AsQueryable
-                    If Not String.IsNullOrEmpty(txtCusId_car.Text) Then query = query.Where(Function(x) x.c_cus_id = txtCusId_car.Text)
+                    If Not String.IsNullOrEmpty(txtCusCode_car.Text) Then query = query.Where(Function(x) x.c_cus_id = txtCusCode_car.Text)
                     If Not String.IsNullOrEmpty(txtCarNo.Text) Then query = query.Where(Function(x) x.c_no.Contains(txtCarNo.Text))
                     dgvCar.DataSource = CarMV.GetCarList(query)
                 End Using
@@ -472,6 +553,213 @@ Public Class frmMain
         End Try
     End Sub
 
+    Private Function ISubjectsView_GetUserInput() As subject Implements ISubjectsView.GetUserInput
+        Dim data As New subject
+        AutoMapControlsToEntity(data, tpSubjects)
+        Return data
+    End Function
+
+    Public Sub ShowList(data As List(Of SubjectsVM)) Implements ICommonView(Of subject, SubjectsVM).ShowList
+        dgvSubject.DataSource = data
+    End Sub
+
+    Public Sub SetDataToControl(data As subject) Implements ICommonView(Of subject, SubjectsVM).SetDataToControl
+        AutoMapEntityToControls(data, tpSubjects)
+    End Sub
+
+    Private Sub ClearInput_subjects() Implements ICommonView(Of subject, SubjectsVM).ClearInput
+        ClearControls(tpSubjects)
+    End Sub
+
+    Private Function SetRequired_subjects() As List(Of Control) Implements ICommonView(Of subject, SubjectsVM).SetRequired
+        Return New List(Of Control) From {txtName_subjects}
+    End Function
+
+    '基本資料-科目管理-取消
+    Private Sub btnCancel_subjects_Click(sender As Object, e As EventArgs) Handles btnCancel_subjects.Click
+        ClearInput_subjects()
+        SetButtonState(sender, True)
+        _subjects.LoadList()
+    End Sub
+
+    '基本資料-科目管理-子科目-新增
+    Private Sub btnAdd_subjects_Click(sender As Object, e As EventArgs) Handles btnAdd_subjects.Click
+        _subjects.Add()
+    End Sub
+
+    '基本資料-科目管理-dgv
+    Private Sub dgvSubject_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSubject.SelectionChanged, dgvSubject.CellMouseClick
+        If Not sender.focused Then Return
+        SetButtonState(sender, False)
+        Dim id As Integer = dgvSubject.SelectedRows(0).Cells("編號").Value
+        _subjects.SelectRow(id)
+    End Sub
+
+    '基本資料-科目管理-子科目-修改
+    Private Sub btnEdit_subjects_Click(sender As Object, e As EventArgs) Handles btnEdit_subjects.Click
+        Dim id As Integer = txtId_subjects.Text
+        _subjects.Edit(id)
+    End Sub
+
+    '基本資料-科目管理-子科目-刪除
+    Private Sub btnDelete_subjects_Click(sender As Object, e As EventArgs) Handles btnDelete_subjects.Click
+        Dim id As Integer = txtId_subjects.Text
+        _subjects.Delete(id)
+    End Sub
+
+    Private Function GetSearchCondition_Purchase() As purchase Implements IPurchaseView.GetSearchCondition
+        Return New purchase With {
+            .pur_comp_id = cmbCompany_pur.SelectedValue,
+            .pur_manu_id = cmbGasVendor_pur.SelectedValue,
+            .pur_product = cmbProduct_pur.Text
+        }
+    End Function
+
+    Public Sub ShowList(data As List(Of PurchaseVM)) Implements ICommonView(Of purchase, PurchaseVM).ShowList
+        dgvPurchase.DataSource = data
+    End Sub
+
+    Public Sub SetDataToControl(data As purchase) Implements ICommonView(Of purchase, PurchaseVM).SetDataToControl
+        AutoMapEntityToControls(data, tpPurchase)
+    End Sub
+
+    Private Function GetUserInput_Purchase() As purchase Implements ICommonView(Of purchase, PurchaseVM).GetUserInput
+        Dim data As New purchase
+        AutoMapControlsToEntity(data, tpPurchase)
+        Return data
+    End Function
+
+    Private Sub ClearInput_Purchase() Implements ICommonView(Of purchase, PurchaseVM).ClearInput
+        ClearControls(tpPurchase)
+    End Sub
+
+    Public Sub SetCompanyComboBox(items As List(Of ComboBoxItems)) Implements IPurchaseView.SetCompanyComboBox
+        With cmbCompany_pur
+            .DataSource = items
+            .DisplayMember = "Display"
+            .ValueMember = "Value"
+        End With
+    End Sub
+
+    Public Sub SetGasVendorComboBox(items As List(Of ComboBoxItems)) Implements IPurchaseView.SetGasVendorComboBox
+        With cmbGasVendor_pur
+            .DataSource = items
+            .DisplayMember = "Display"
+            .ValueMember = "Value"
+        End With
+    End Sub
+
+    Private Function SetRequired_Purchase() As List(Of Control) Implements ICommonView(Of purchase, PurchaseVM).SetRequired
+        Return New List(Of Control) From {cmbCompany_pur, cmbGasVendor_pur, txtWeight_pur, cmbProduct_pur, txtUnitPrice_pur}
+    End Function
+
+    Public Sub SetDefaultPrice(productPrice As Single, deliveryPrice As Single) Implements IPurchaseView.SetDefaultPrice
+        txtUnitPrice_pur.Text = productPrice
+        txtDeliUnitPrice.Text = deliveryPrice
+    End Sub
+
+    '大氣採購-大氣採購-取消
+    Private Sub btnCancel_pur_Click(sender As Object, e As EventArgs) Handles btnCancel_pur.Click
+        SetButtonState(sender, True)
+        _purchase.SetCompanyCmb()
+        _purchase.SetGasVendorCmb()
+        ClearInput_Purchase()
+        If btnQuery_pur.Text = "確  認" Then SetPurchaseQueryCtrlsState()
+        _purchase.LoadList()
+    End Sub
+
+    '大氣採購-大氣採購-新增
+    Private Sub btnAdd_pur_Click(sender As Object, e As EventArgs) Handles btnAdd_pur.Click
+        _purchase.Add()
+    End Sub
+
+    '大氣採購-大氣採購-dgv
+    Private Sub dgvPurchase_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPurchase.SelectionChanged, dgvPurchase.CellMouseClick
+        Dim ctrl As DataGridView = sender
+        If Not ctrl.Focused Then Return
+
+        SetButtonState(ctrl, False)
+
+        Dim id As Integer = ctrl.SelectedRows(0).Cells("編號").Value
+        _purchase.SelectRow(id)
+    End Sub
+
+    '大氣採購-大氣採購-修改
+    Private Sub btnEdit_pur_Click(sender As Object, e As EventArgs) Handles btnEdit_pur.Click
+        Dim id As Integer = txtId_pur.Text
+        _purchase.Edit(id)
+    End Sub
+
+    '大氣採購-大氣採購-刪除
+    Private Sub btnDelete_pur_Click(sender As Object, e As EventArgs) Handles btnDelete_pur.Click
+        Dim id As Integer = txtId_pur.Text
+        _purchase.Delete(id)
+    End Sub
+
+    '大氣採購-大氣採購-查詢
+    Private Sub btnQuery_pur_Click(sender As Object, e As EventArgs) Handles btnQuery_pur.Click
+        SetPurchaseQueryCtrlsState()
+
+        If sender.Text = "查  詢" Then
+            _purchase.Query()
+        End If
+    End Sub
+
+    '大氣採購-大氣採購-選擇大氣廠商
+    Private Sub cmbGasVendor_pur_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbGasVendor_pur.SelectionChangeCommitted
+        If cmbGasVendor_pur.SelectedIndex > -1 AndAlso cmbProduct_pur.SelectedIndex > -1 Then
+            _purchase.GetDefaultPrice(cmbGasVendor_pur.SelectedItem.Value, cmbProduct_pur.Text)
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' 設定大氣採購查詢控制項狀態
+    ''' </summary>
+    Private Sub SetPurchaseQueryCtrlsState()
+        Dim lst As New List(Of Control) From {lblCompany_pur, lblGasVendor_pur, lblProduct}
+        SetQueryControls(btnQuery_pur, lst)
+    End Sub
+
+    ''' <summary>
+    ''' 計算運費
+    ''' </summary>
+    Private Sub CalculateFreight()
+        Dim unitPrice As Single = If(String.IsNullOrEmpty(txtDeliUnitPrice.Text), 0, txtDeliUnitPrice.Text)
+        Dim weight As Integer = If(String.IsNullOrEmpty(txtWeight_pur.Text), 0, txtWeight_pur.Text)
+        txtFreight.Text = unitPrice * weight
+    End Sub
+
+    ''' <summary>
+    ''' 計算大氣採購總金額
+    ''' </summary>
+    Private Sub CalculateSum_Purchase()
+        Dim weight As Integer = If(String.IsNullOrEmpty(txtWeight_pur.Text), 0, txtWeight_pur.Text)
+        Dim unitPrice As Single = If(String.IsNullOrEmpty(txtUnitPrice_pur.Text), 0, txtUnitPrice_pur.Text)
+        Dim Frieght As Single = If(String.IsNullOrEmpty(txtFreight.Text), 0, txtFreight.Text)
+        txtSum_pur.Text = weight * unitPrice + Frieght
+    End Sub
+
+    Public Sub SetManuCmb_uph(data As List(Of ComboBoxItems)) Implements IUnitPriceHistoryView.SetManuCmb
+        SetComboBox(cmbManu_uph, data)
+    End Sub
+
+    Public Sub LoadList(data As List(Of UnitPriceHistoryVM)) Implements IUnitPriceHistoryView.LoadList
+        dgvUPH.DataSource = data
+    End Sub
+
+    '大氣採購-歷史單價查詢-取消
+    Private Sub btnCancel_uph_Click(sender As Object, e As EventArgs) Handles btnCancel_uph.Click
+        ClearControls(tpUPH)
+        dgvUPH.DataSource = Nothing
+        _uph.GetManuCmb()
+    End Sub
+
+    '大氣採購-歷史單價查詢-查詢
+    Private Sub btnQuery_UPH_Click(sender As Object, e As EventArgs) Handles btnQuery_UPH.Click
+        Dim manuId As Integer = If(cmbManu_uph.SelectedItem Is Nothing, 0, cmbManu_uph.SelectedItem.Value)
+        _uph.Query(manuId, cmbProduct_UPH.Text, dtpStart_UPH.Value.Date, dtpEnd_UPH.Value.Date)
+    End Sub
+
     '系統設定-基礎價格-dgv點擊
     Private Sub dgvBasicPrice_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvBasicPrice.CellMouseClick
         If Not sender.focused Then Return
@@ -525,122 +813,628 @@ Public Class frmMain
         End Try
     End Sub
 
-    '銷售管理-取消
-    Private Sub btnCancel_order_Click(sender As Object, e As EventArgs)
-        SetButtonState(sender, True)
+    Public Sub ShowList(list As List(Of OrderVM)) Implements IOrderView.ShowList
+        dgvOrder.DataSource = list
+    End Sub
 
+    Public Sub ShowCusStk(data As customer) Implements IOrderView.ShowCusStk
+        AutoMapEntityToControls(data, tpOut)
+        AutoMapEntityToControls(data, tpIn)
+    End Sub
+
+    Public Sub SetCmbCar(list As List(Of ComboBoxItems)) Implements IOrderView.SetCmbCar
+        SetComboBox(cmbCarNo, New List(Of ComboBoxItems)(list))
+        SetComboBox(cmbo_deposit_out_c_id, New List(Of ComboBoxItems)(list))
+    End Sub
+
+    Public Function GetUserInput_ord() As order Implements IOrderView.GetUserInput_ord
+        Dim required = New List(Of Control) From {txtCusID_order, cmbCarNo}
+        If Not CheckRequired(required) Then Return Nothing
+
+        Dim order As New order
+        AutoMapControlsToEntity(order, tpOrder)
+        AutoMapControlsToEntity(order, tpOut)
+        AutoMapControlsToEntity(order, tpIn)
+        order.o_date = Now
+        order.o_Operator = User.Id
+
+        Return order
+    End Function
+
+    Public Function GetUserInput_cus(data As customer, container As Control) As customer Implements IOrderView.GetUserInput_cus
+        AutoMapControlsToEntity(data, container)
+        Return data
+    End Function
+
+    Public Function GetUserInput_car(data As car, container As Control) As car Implements IOrderView.GetUserInput_car
+        AutoMapControlsToEntity(data, container)
+        Return data
+    End Function
+
+    Public Sub Reset() Implements IOrderView.Reset
         Dim exception = New List(Of String) From {grpTransport.Name}
         ClearControls(tpOrder, exception)
-        cmbo_deposit_out_c_id.DataSource = Nothing
-        orgGasValues.Clear()
-        orgDepositValues.Clear()
-
-        Using db As New gas_accounting_systemEntities
-            Dim query = db.orders.Include("car").Include("car.customer").Include("employee")
-            dgvOrder.DataSource = OrderMV.GetOrderList(query)
-        End Using
 
         tpOut.Parent = tcInOut
         tpIn.Parent = tcInOut
+        txtOperator.Text = User.Name
 
         If btnQuery_order.Text = "確  認" Then SetOrderQueryCtrl(btnQuery_order)
+        SetButtonState(btnCancel_order, True)
+    End Sub
 
-        txtOperator.Text = User.Name
+    Public Sub ShowDetails(data As order) Implements IOrderView.ShowDetails
+        AutoMapEntityToControls(data, tpOrder)
+        'AutoMapEntityToControls(data.car.customer, tpOrder)
+        'AutoMapEntityToControls(data.car, tpOrder)
+        'txtOperator.Text = data.employee.emp_name
+        If data.o_in_out = "進場單" Then
+            tpOut.Parent = Nothing
+            tpIn.Parent = tcInOut
+
+            AutoMapEntityToControls(data, tpIn)
+
+            Dim txts = tpIn.Controls.OfType(Of TextBox)
+
+            For Each txtBox In txts.Where(Function(x) x.Name.StartsWith("txto_"))
+                Dim key = txtBox.Name
+                Dim value As Integer
+
+                If Integer.TryParse(txtBox.Text, value) Then
+                    _order.GasValues(key) = value
+                Else
+                    _order.GasValues(key) = 0
+                End If
+            Next
+
+            For Each txtBox In txts.Where(Function(x) x.Name.StartsWith("txtDepositIn_"))
+                Dim key = txtBox.Name
+                Dim value As Integer
+
+                If Integer.TryParse(txtBox.Text, value) Then
+                    _order.DepositValues(key) = value
+                Else
+                    _order.DepositValues(key) = 0
+                End If
+            Next
+
+        Else
+            tpOut.Parent = tcInOut
+            tpIn.Parent = Nothing
+
+            AutoMapEntityToControls(data, tpOut)
+
+            For Each txtBox In tpOut.Controls.OfType(Of TextBox).Where(Function(x) x.Name.StartsWith("txtGas") Or x.Name.StartsWith("txtEmpty"))
+                Dim key = txtBox.Name
+                Dim value As Integer
+
+                If Integer.TryParse(txtBox.Text, value) Then
+                    _order.GasValues(key) = value
+                Else
+                    _order.GasValues(key) = 0
+                End If
+            Next
+        End If
+    End Sub
+
+    Public Function GetQueryCondition() As OrderQueryVM Implements IOrderView.GetQueryCondition
+        Return New OrderQueryVM With {
+           .CarId = cmbCarNo.SelectedValue,
+           .CusId = If(String.IsNullOrEmpty(txtCusID_order.Text), Nothing, txtCusID_order.Text),
+           .EndDate = dtpEnd_order.Value.Date,
+           .StartDate = dtpStart_order.Value.Date
+        }
+    End Function
+
+    '銷售管理-取消
+    Private Sub btnCancel_order_Click(sender As Object, e As EventArgs) Handles btnCancel_order.Click
+        Reset()
+        _order.LoadList()
+
+        'Dim exception = New List(Of String) From {grpTransport.Name}
+        'ClearControls(tpOrder, exception)
+        'cmbo_deposit_out_c_id.DataSource = Nothing
+        'orgGasValues.Clear()
+        'orgDepositValues.Clear()
+
+        'Using db As New gas_accounting_systemEntities
+        '    Dim query = db.orders.Include("car").Include("car.customer").Include("employee")
+        '    dgvOrder.DataSource = OrderVM.GetOrderList(query)
+        'End Using
+
+        'tpOut.Parent = tcInOut
+        'tpIn.Parent = tcInOut
+
+        'If btnQuery_order.Text = "確  認" Then SetOrderQueryCtrl(btnQuery_order)
+
+        'txtOperator.Text = User.Name
     End Sub
 
     '銷售管理-搜尋客戶
     Private Sub btnQueryCus_ord_Click(sender As Object, e As EventArgs) Handles btnQueryCus_ord.Click
         Using searchForm As New frmQueryCustomer
             If searchForm.ShowDialog = DialogResult.OK Then
-                txtCusID_order.Text = searchForm.ID
-                txtCusName.Text = searchForm.Name
+                txtCusID_order.Text = searchForm.CusId
+                txtCusName.Text = searchForm.CusName
+                txtCusCode_ord.Text = searchForm.CusCode
                 cmbCarNo.Text = ""
             End If
         End Using
     End Sub
 
-    '銷售管理-車號選擇
-    Private Sub cmbCarNo_SelectionChangeCommitted(sender As Object, e As EventArgs)
-        Dim cmb As ComboBox = sender
-        cmbo_deposit_out_c_id.SelectedIndex = cmbCarNo.SelectedIndex
+    '銷售管理-客戶編號改變時
+    Private Sub txtCusID_order_TextChanged(sender As Object, e As EventArgs) Handles txtCusID_order.TextChanged
+        Dim txt As TextBox = sender
+        Dim id As Integer
 
+        ClearControls(tpIn)
+        ClearControls(tpOut)
+
+        If Integer.TryParse(txt.Text, id) Then
+            _order.GetCusStk(id)
+            _order.LoadCmbCar(id)
+            'Try
+            '    Using db As New gas_accounting_systemEntities
+            '        Dim cus = db.customers.Find(id)
+            '        AutoMapEntityToControls(cus, tpOut)
+            '        AutoMapEntityToControls(cus, tpIn)
+
+            '        Dim query = (From car In db.cars
+            '                     Where car.c_cus_id = txtCusID_order.Text).ToList
+
+            '        Dim formatQuery = query.Select(Function(x) New ComboBoxItems With {
+            '                        .Value = x.c_id,
+            '                        .Display = $"{x.c_no} {x.c_driver}"
+            '                    })
+
+            '        cmbCarNo.DataSource = formatQuery.ToList
+            '        cmbCarNo.DisplayMember = "Display"
+            '        cmbCarNo.ValueMember = "Value"
+            '        cmbCarNo.SelectedIndex = -1
+
+            '        cmbo_deposit_out_c_id.DataSource = formatQuery.ToList
+            '        cmbo_deposit_out_c_id.DisplayMember = "Display"
+            '        cmbo_deposit_out_c_id.ValueMember = "Value"
+            '        cmbo_deposit_out_c_id.SelectedIndex = -1
+
+            '        orgStockValues.Clear()
+            '        orgStockValues = GetEntityFieldsByPrefix(cus, "cus_gas")
+            '    End Using
+
+            'Catch ex As Exception
+            '    MsgBox(ex.Message)
+            'End Try
+        End If
+    End Sub
+
+    '銷售管理-車號選擇
+    Private Sub cmbCarNo_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbCarNo.SelectionChangeCommitted
+        Dim cmb As ComboBox = sender
         LoadDepositValue(cmb, tpIn)
+        Dim index As Integer = cmbCarNo.SelectedIndex
+        cmbo_deposit_out_c_id.SelectedIndex = index
     End Sub
 
     '銷售管理-寄桶結存車號
-    Private Sub cmbo_deposit_out_c_id_SelectedIndexChanged(sender As Object, e As EventArgs)
+    Private Sub cmbo_deposit_out_c_id_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbo_deposit_out_c_id.SelectedIndexChanged
         Dim cmb As ComboBox = sender
         LoadDepositValue(cmb, cmb.Parent)
     End Sub
 
-    '載入車輛結存瓶
+    '銷售管理-新增
+    Private Sub btnCreate_ord_Click(sender As Object, e As EventArgs) Handles btnCreate_ord.Click
+        _order.Add(If(tcInOut.SelectedIndex = 0, tpIn, tpOut))
+        'dtpo_date.Value = Now
+
+        'Dim required = New List(Of Control) From {txtCusID_order, cmbCarNo}
+        'If Not CheckRequired(required) Then Exit Sub
+
+        'Dim container = tpOrder
+
+        'Try
+        '    Using db As New gas_accounting_systemEntities
+        '        '新增到order
+        '        Dim order As New order
+        '        AutoMapControlsToEntity(order, container)
+        '        AutoMapControlsToEntity(order, tpOut)
+        '        AutoMapControlsToEntity(order, tpIn)
+        '        order.o_Operator = User.Id
+        '        db.orders.Add(order)
+
+        '        '更新客戶、車輛瓦斯瓶庫存
+        '        Dim cusId As Integer = txtCusID_order.Text
+        '        Dim cus = db.customers.Find(cusId)
+
+        '        If tcInOut.SelectedIndex = 0 Then
+        '            AutoMapControlsToEntity(cus, tpIn)
+
+        '            Dim carId As Integer = cmbCarNo.SelectedItem.Value
+        '            Dim car = db.cars.Find(carId)
+        '            AutoMapControlsToEntity(car, tpIn)
+
+        '        Else
+        '            AutoMapControlsToEntity(cus, tpOut)
+
+        '            Dim carId As Integer = cmbo_deposit_out_c_id.SelectedItem.Value
+        '            Dim car = db.cars.Find(carId)
+        '            AutoMapControlsToEntity(car, tpOut)
+        '        End If
+
+        '        db.SaveChanges()
+        '    End Using
+
+        '    btnCancel_order.PerformClick()
+        '    MsgBox("新增成功")
+
+        'Catch ex As Exception
+        '    Dim innerException = ex
+        '    While innerException.InnerException IsNot Nothing
+        '        innerException = innerException.InnerException
+        '    End While
+        '    MsgBox("An error occurred: " & innerException.Message)
+        'End Try
+    End Sub
+
+    '銷售管理-dgv
+    Private Sub dgvOrder_SelectionChanged(sender As Object, e As EventArgs) Handles dgvOrder.SelectionChanged, dgvOrder.CellMouseClick
+        If Not dgvOrder.Focused Then Return
+
+        SetButtonState(sender, False)
+
+        Dim row = dgvOrder.SelectedRows(0)
+        'Dim ordId As Integer = row.Cells("編號").Value
+        '_order.GetDetail(ordId)
+
+        Using db As New gas_accounting_systemEntities
+            Dim ordId As Integer = row.Cells("編號").Value
+            Dim order = db.orders.Include("car").Include("car.customer").Include("employee").FirstOrDefault(Function(o) o.o_id = ordId)
+
+            AutoMapEntityToControls(order, tpOrder)
+            AutoMapEntityToControls(order.car.customer, tpOrder)
+            AutoMapEntityToControls(order.car, tpOrder)
+            txtOperator.Text = order.employee.emp_name
+
+            If order.o_in_out = "進場單" Then
+                tcInOut.SelectedIndex = 0
+                tpOut.Parent = Nothing
+                tpIn.Parent = tcInOut
+
+                AutoMapEntityToControls(order, tpIn)
+                AutoMapEntityToControls(order.car, tpIn)
+
+                Dim txts = tpIn.Controls.OfType(Of TextBox)
+                For Each txtBox In txts.Where(Function(x) x.Name.StartsWith("txto_"))
+                    Dim key = txtBox.Name
+                    Dim value As Integer
+
+                    If Integer.TryParse(txtBox.Text, value) Then
+                        'orgGasValues(key) = value
+                        _order.GasValues(key) = value
+                    Else
+                        'orgGasValues(key) = 0
+                        _order.GasValues(key) = 0
+                    End If
+                Next
+
+                For Each txtBox In txts.Where(Function(x) x.Name.StartsWith("txtDepositIn_"))
+                    Dim key = txtBox.Name
+                    Dim value As Integer
+
+                    If Integer.TryParse(txtBox.Text, value) Then
+                        'orgDepositValues(key) = value
+                        _order.DepositValues(key) = value
+                    Else
+                        'orgDepositValues(key) = 0
+                        _order.DepositValues(key) = 0
+                    End If
+                Next
+
+            Else
+                tcInOut.SelectedIndex = 1
+                tpOut.Parent = tcInOut
+                tpIn.Parent = Nothing
+
+                AutoMapEntityToControls(order, tpOut)
+
+                For Each txtBox In tpOut.Controls.OfType(Of TextBox).Where(Function(x) x.Name.StartsWith("txtGas") Or x.Name.StartsWith("txtEmpty"))
+                    Dim key = txtBox.Name
+                    Dim value As Integer
+
+                    If Integer.TryParse(txtBox.Text, value) Then
+                        'orgGasValues(key) = value
+                        _order.GasValues(key) = value
+                    Else
+                        'orgGasValues(key) = 0
+                        _order.GasValues(key) = 0
+                    End If
+                Next
+            End If
+        End Using
+    End Sub
+
+    '銷售管理-修改
+    Private Sub btnEdit_order_Click(sender As Object, e As EventArgs) Handles btnEdit_order.Click
+        'Dim required = New List(Of Control) From {txtCusID_order, cmbCarNo}
+        'If Not CheckRequired(required) Then Exit Sub
+
+        'Dim container = tpOrder
+
+        'Try
+        '    Using db As New gas_accounting_systemEntities
+        '        '修改order、car、customer
+        '        Dim ordId As Integer = txto_id.Text
+        '        Dim order = db.orders.Find(ordId)
+        '        Dim carId As Integer = cmbCarNo.SelectedItem.Value
+        '        Dim car = db.cars.Find(carId)
+        '        Dim cusId As Integer = txtCusID_order.Text
+        '        Dim customer = db.customers.Find(cusId)
+
+        '        AutoMapControlsToEntity(order, container)
+        '        order.o_Operator = User.Id
+        '        AutoMapControlsToEntity(car, container)
+        '        AutoMapControlsToEntity(customer, container)
+
+        '        '修改客戶、車輛寄瓶庫存
+        '        If tcInOut.SelectedIndex = 0 Then
+        '            AutoMapControlsToEntity(order, tpIn)
+        '            AutoMapControlsToEntity(car, tpIn)
+        '            AutoMapControlsToEntity(customer, tpIn)
+        '        Else
+        '            AutoMapControlsToEntity(order, tpOut)
+        '            AutoMapControlsToEntity(car, tpOut)
+        '            AutoMapControlsToEntity(customer, tpOut)
+        '        End If
+
+        '        db.SaveChanges()
+        '    End Using
+
+        '    btnCancel_order.PerformClick()
+        '    MsgBox("修改成功")
+
+        'Catch ex As Exception
+        '    MsgBox(ex.Message)
+        'End Try
+        _order.Edit(tcInOut.SelectedTab)
+    End Sub
+
+    '銷售管理-刪除
+    Private Sub btnDelete_order_Click(sender As Object, e As EventArgs) Handles btnDelete_order.Click
+        'Try
+        '    Using db As New gas_accounting_systemEntities
+        '        Dim ordId As Integer = txto_id.Text
+        '        Dim order = db.orders.Find(ordId)
+        '        Dim cusId As Integer = txtCusID_order.Text
+        '        Dim customer = db.customers.Find(cusId)
+
+        '        Dim carId As Integer
+        '        Dim car As car
+
+        '        If tcInOut.SelectedIndex = 0 Then
+        '            customer.cus_gas_50 -= GetOrderValue(order, "50", True)
+        '            customer.cus_gas_20 -= GetOrderValue(order, "20", True)
+        '            customer.cus_gas_16 -= GetOrderValue(order, "16", True)
+        '            customer.cus_gas_10 -= GetOrderValue(order, "10", True)
+        '            customer.cus_gas_4 -= GetOrderValue(order, "4", True)
+        '            customer.cus_gas_15 -= GetOrderValue(order, "15", True)
+        '            customer.cus_gas_14 -= GetOrderValue(order, "14", True)
+        '            customer.cus_gas_5 -= GetOrderValue(order, "5", True)
+        '            customer.cus_gas_2 -= GetOrderValue(order, "2", True)
+
+        '            '取得寄瓶庫存
+        '            carId = cmbCarNo.SelectedItem.Value
+        '            car = db.cars.Find(carId)
+
+        '            car.c_deposit_50 -= GetDepositValue(order, "50", True)
+        '            car.c_deposit_20 -= GetDepositValue(order, "20", True)
+        '            car.c_deposit_16 -= GetDepositValue(order, "16", True)
+        '            car.c_deposit_10 -= GetDepositValue(order, "10", True)
+        '            car.c_deposit_4 -= GetDepositValue(order, "4", True)
+        '            car.c_deposit_15 -= GetDepositValue(order, "15", True)
+        '            car.c_deposit_14 -= GetDepositValue(order, "14", True)
+        '            car.c_deposit_5 -= GetDepositValue(order, "5", True)
+        '            car.c_deposit_2 -= GetDepositValue(order, "2", True)
+        '        Else
+        '            customer.cus_gas_50 += GetOrderValue(order, "50", False)
+        '            customer.cus_gas_20 += GetOrderValue(order, "20", False)
+        '            customer.cus_gas_16 += GetOrderValue(order, "16", False)
+        '            customer.cus_gas_10 += GetOrderValue(order, "10", False)
+        '            customer.cus_gas_4 += GetOrderValue(order, "4", False)
+        '            customer.cus_gas_15 += GetOrderValue(order, "15", False)
+        '            customer.cus_gas_14 += GetOrderValue(order, "14", False)
+        '            customer.cus_gas_5 += GetOrderValue(order, "5", False)
+        '            customer.cus_gas_2 += GetOrderValue(order, "2", False)
+
+        '            '取得寄瓶庫存
+        '            carId = order.o_deposit_out_c_id
+        '            car = db.cars.Find(carId)
+
+        '            car.c_deposit_50 -= GetDepositValue(order, "50", False)
+        '            car.c_deposit_20 -= GetDepositValue(order, "20", False)
+        '            car.c_deposit_16 -= GetDepositValue(order, "16", False)
+        '            car.c_deposit_10 -= GetDepositValue(order, "10", False)
+        '            car.c_deposit_4 -= GetDepositValue(order, "4", False)
+        '            car.c_deposit_15 -= GetDepositValue(order, "15", False)
+        '            car.c_deposit_14 -= GetDepositValue(order, "14", False)
+        '            car.c_deposit_5 -= GetDepositValue(order, "5", False)
+        '            car.c_deposit_2 -= GetDepositValue(order, "2", False)
+        '        End If
+
+        '        db.orders.Remove(order)
+        '        db.SaveChanges()
+        '    End Using
+
+        '    btnCancel_order.PerformClick()
+        '    MsgBox("刪除成功")
+
+        'Catch ex As Exception
+        '    MsgBox(ex.Message)
+        'End Try
+
+        _order.Delete(txto_id.Text, tcInOut.SelectedTab.Text)
+    End Sub
+
+    '銷售管理-快捷鍵
+    Private Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If TabControl1.SelectedTab.Name <> "tpOrder" Then Exit Sub
+
+        Select Case e.KeyCode
+            Case Keys.F1
+                If btnCreate_ord.Enabled = True Then _order.Add(If(tcInOut.SelectedIndex = 0, tpIn, tpOut))
+
+            Case Keys.F2
+                If btnEdit_order.Enabled = True Then _order.Edit(tcInOut.SelectedTab)
+
+            Case Keys.F3
+                If btnDelete_order.Enabled = True Then _order.Delete(txto_id.Text, tcInOut.SelectedTab.Text)
+
+            Case Keys.F4
+                Reset()
+                _order.LoadList()
+
+            Case Keys.F5
+
+        End Select
+    End Sub
+
+    ''' <summary>
+    ''' 載入車輛結存瓶
+    ''' </summary>
+    ''' <param name="cmb"></param>
+    ''' <param name="container"></param>
     Private Sub LoadDepositValue(cmb As ComboBox, container As Control)
         container.Controls.OfType(Of TextBox).Where(Function(txt) txt.Tag.ToString.StartsWith("o_deposit")).ToList.ForEach(Sub(t) t.Clear())
 
         If cmb.SelectedIndex <> -1 Then
             Dim id As Integer = cmb.SelectedItem.Value
+            Dim car = _order.LoadCar(id)
 
-            Using db As New gas_accounting_systemEntities
-                Dim query = db.cars.Find(id)
-                AutoMapEntityToControls(query, container)
-                orgDepositStockValues = GetEntityFieldsByPrefix(query, "c_deposit_")
+            If car IsNot Nothing Then
+                AutoMapEntityToControls(car, container)
+            End If
 
-                If Not String.IsNullOrEmpty(txto_id.Text) Then
-                    Dim ordId As Integer = txto_id.Text
-                    Dim order = db.orders.Find(ordId)
-                    orgDepositValues = GetEntityFieldsByPrefix(order, "o_deposit_out_")
-                End If
-            End Using
+            '如果是修改狀態
+            'If Not String.IsNullOrEmpty(txto_id.Text) Then
+            '    Dim ordId As Integer = txto_id.Text
+            '    Dim order = db.orders.Find(ordId)
+            '    orgDepositValues = GetEntityFieldsByPrefix(order, "o_deposit_out_")
+            'End If
+
         End If
     End Sub
 
-    '銷售管理-新增
-    Private Sub btnCreate_ord_Click(sender As Object, e As EventArgs) Handles btnCreate_ord.Click
-        dtpo_date.Value = Now
+    ''' <summary>
+    ''' 即時計算客戶瓦斯桶存量
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <param name="isIn">是否為進場</param>
+    Private Sub CalculateStock(sender As Object, e As EventArgs, isIn As Boolean)
+        Dim txt As TextBox = sender
+        Dim groupName As String = GetGroupName(txt.Name)
+        Dim container = txt.Parent
+        Dim targetTxtBox As TextBox = container.Controls.OfType(Of TextBox).FirstOrDefault(Function(x) x.Tag = "cus_gas_" & groupName)
 
-        Dim required = New List(Of Control) From {txtCusID_order, cmbCarNo}
-        If Not CheckRequired(required) Then Exit Sub
+        If String.IsNullOrEmpty(targetTxtBox.Text) Then Exit Sub
 
-        Dim container = tpOrder
+        Dim orgStock As Integer
+        'If orgStockValues.TryGetValue(targetTxtBox.Tag, orgStock) Then
+        '    Dim sum As Integer = orgStock
+        '    Dim txtValue As Integer = 0
+        '    Dim detialValue As Integer = 0
 
-        Try
-            Using db As New gas_accounting_systemEntities
-                '新增到order
-                Dim order As New order
-                AutoMapControlsToEntity(order, container)
-                AutoMapControlsToEntity(order, tpOut)
-                AutoMapControlsToEntity(order, tpIn)
-                order.o_Operator = User.Id
-                db.orders.Add(order)
+        '    If isIn Then
+        '        ' 入場單的計算
+        '        For Each txtBox In container.Controls.OfType(Of TextBox).Where(Function(x) (x.Name.StartsWith("txto_")) AndAlso x.Tag.ToString.Contains(groupName))
+        '            Integer.TryParse(txtBox.Text, txtValue)
+        '            ' 使用初始值和當前值計算庫存
+        '            sum += txtValue - If(orgGasValues.TryGetValue(txtBox.Name, detialValue), detialValue, 0)
+        '        Next
 
-                '更新客戶、車輛瓦斯瓶庫存
-                Dim cusId As Integer = txtCusID_order.Text
-                Dim cus = db.customers.Find(cusId)
+        '    Else
+        '        ' 出場單的計算
+        '        For Each txtBox In container.Controls.OfType(Of TextBox).
+        '            Where(Function(x) (x.Tag.ToString.StartsWith("o_gas_") Or x.Tag.ToString.StartsWith("o_empty_")) AndAlso x.Tag.ToString.Contains(groupName))
+        '            Integer.TryParse(txtBox.Text, txtValue)
+        '            sum -= txtValue - If(orgGasValues.TryGetValue(txtBox.Name, detialValue), detialValue, 0)
+        '        Next
+        '    End If
 
-                If tcInOut.SelectedIndex = 0 Then
-                    AutoMapControlsToEntity(cus, tpIn)
+        '    targetTxtBox.Text = sum.ToString()
+        'End If
+        If _order.StockValues.TryGetValue(targetTxtBox.Tag, orgStock) Then
+            Dim sum As Integer = orgStock
+            Dim txtValue As Integer = 0
+            Dim detialValue As Integer = 0
 
-                    Dim carId As Integer = cmbCarNo.SelectedItem.Value
-                    Dim car = db.cars.Find(carId)
-                    AutoMapControlsToEntity(car, tpIn)
+            If isIn Then
+                ' 入場單的計算
+                For Each txtBox In container.Controls.OfType(Of TextBox).Where(Function(x) (x.Name.StartsWith("txto_")) AndAlso x.Tag.ToString.Contains(groupName))
+                    Integer.TryParse(txtBox.Text, txtValue)
+                    ' 使用初始值和當前值計算庫存
+                    sum += txtValue - If(_order.GasValues.TryGetValue(txtBox.Name, detialValue), detialValue, 0)
+                Next
 
+            Else
+                ' 出場單的計算
+                For Each txtBox In container.Controls.OfType(Of TextBox).
+                    Where(Function(x) (x.Tag.ToString.StartsWith("o_gas_") Or x.Tag.ToString.StartsWith("o_empty_")) AndAlso x.Tag.ToString.Contains(groupName))
+                    Integer.TryParse(txtBox.Text, txtValue)
+                    sum -= txtValue - If(_order.GasValues.TryGetValue(txtBox.Name, detialValue), detialValue, 0)
+                Next
+            End If
+
+            targetTxtBox.Text = sum.ToString()
+        End If
+
+    End Sub
+
+    ''' <summary>
+    ''' 即時計算車輛寄桶數量
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <param name="isIn">是否為進場</param>
+    Private Sub CalculateDeposit_TextChaged(sender As Object, e As EventArgs, isIn As Boolean)
+        Dim txt As TextBox = sender
+        Dim groupName As String = GetGroupName(txt.Name)
+        Dim container = txt.Parent
+        Dim targetTxtBox As TextBox = container.Controls.OfType(Of TextBox).FirstOrDefault(Function(x) x.Tag = "c_deposit_" & groupName)
+
+        If targetTxtBox Is Nothing OrElse String.IsNullOrEmpty(targetTxtBox.Text) Then Exit Sub
+
+        ' 從字典獲取初始庫存值
+        Dim orgStock As Integer
+        'If orgDepositStockValues.TryGetValue(targetTxtBox.Tag, orgStock) Then
+        '    Dim sum As Integer = orgStock
+
+        '    For Each txtBox In container.Controls.OfType(Of TextBox).Where(Function(t) t.Tag.ToString.StartsWith("o_deposit_") AndAlso t.Tag.ToString.Contains(groupName))
+        '        Dim txtValue As Integer = If(String.IsNullOrEmpty(txtBox.Text), 0, txtBox.Text)
+
+        '        If isIn Then
+        '            sum += txtValue - If(orgDepositValues.TryGetValue(txt.Name, 0), orgDepositValues(txt.Name), 0)
+        '        Else
+        '            sum -= txtValue - If(orgDepositValues.TryGetValue(txt.Tag, 0), orgDepositValues(txt.Tag), 0)
+        '        End If
+        '    Next
+        '    'todo 寄桶出有問題       
+        '    targetTxtBox.Text = sum.ToString()
+        'End If
+
+        If _order.DepositStockValues.TryGetValue(targetTxtBox.Tag, orgStock) Then
+            Dim sum As Integer = orgStock
+
+            For Each txtBox In container.Controls.OfType(Of TextBox).Where(Function(t) t.Tag.ToString.StartsWith("o_deposit_") AndAlso t.Tag.ToString.Contains(groupName))
+                Dim txtValue As Integer = If(String.IsNullOrEmpty(txtBox.Text), 0, txtBox.Text)
+
+                If isIn Then
+                    sum += txtValue - If(_order.DepositValues.TryGetValue(txt.Name, 0), _order.DepositValues(txt.Name), 0)
                 Else
-                    AutoMapControlsToEntity(cus, tpOut)
-
-                    Dim carId As Integer = cmbo_deposit_out_c_id.SelectedItem.Value
-                    Dim car = db.cars.Find(carId)
-                    AutoMapControlsToEntity(car, tpOut)
+                    sum -= txtValue - If(_order.DepositValues.TryGetValue(txt.Tag, 0), _order.DepositValues(txt.Tag), 0)
                 End If
-
-                db.SaveChanges()
-            End Using
-
-            btnCancel_order.PerformClick()
-            MsgBox("新增成功")
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+            Next
+            'todo 寄桶出有問題       
+            targetTxtBox.Text = sum.ToString()
+        End If
     End Sub
 
     ''' <summary>
@@ -666,239 +1460,9 @@ Public Class frmMain
         Return Nothing
     End Function
 
-    '銷售管理-客戶編號改變時
-    Private Sub txtCusID_order_TextChanged(sender As Object, e As EventArgs) Handles txtCusID_order.TextChanged
-        Dim txt As TextBox = sender
-        Dim id As Integer
-
-        ClearControls(tpIn)
-        ClearControls(tpOut)
-
-        If Integer.TryParse(txt.Text, id) Then
-            Try
-                Using db As New gas_accounting_systemEntities
-                    Dim cus = db.customers.Find(id)
-                    AutoMapEntityToControls(cus, tpOut)
-                    AutoMapEntityToControls(cus, tpIn)
-
-                    Dim query = (From car In db.cars
-                                 Where car.c_cus_id = txtCusID_order.Text).ToList
-
-                    Dim formatQuery = query.Select(Function(x) New ComboBoxItems With {
-                                    .Value = x.c_id,
-                                    .Display = $"{x.c_no} {x.c_driver}"
-                                })
-
-                    cmbCarNo.DataSource = formatQuery.ToList
-                    cmbCarNo.DisplayMember = "Display"
-                    cmbCarNo.ValueMember = "Value"
-                    cmbCarNo.SelectedIndex = -1
-
-                    cmbo_deposit_out_c_id.DataSource = formatQuery.ToList
-                    cmbo_deposit_out_c_id.DisplayMember = "Display"
-                    cmbo_deposit_out_c_id.ValueMember = "Value"
-                    cmbo_deposit_out_c_id.SelectedIndex = -1
-
-                    orgStockValues.Clear()
-                    orgStockValues = GetEntityFieldsByPrefix(cus, "cus_gas")
-                End Using
-
-            Catch ex As Exception
-                MsgBox(ex.Message)
-            End Try
-        End If
-    End Sub
-
-    '銷售管理-修改
-    Private Sub btnEdit_order_Click(sender As Object, e As EventArgs)
-        Dim required = New List(Of Control) From {txtCusID_order, cmbCarNo}
-        If Not CheckRequired(required) Then Exit Sub
-
-        Dim container = tpOrder
-
-        Try
-            Using db As New gas_accounting_systemEntities
-                '修改order、car、customer
-                Dim ordId As Integer = txto_id.Text
-                Dim order = db.orders.Find(ordId)
-                Dim carId As Integer = cmbCarNo.SelectedItem.Value
-                Dim car = db.cars.Find(carId)
-                Dim cusId As Integer = txtCusID_order.Text
-                Dim customer = db.customers.Find(cusId)
-
-                AutoMapControlsToEntity(order, container)
-                order.o_Operator = User.Id
-                AutoMapControlsToEntity(car, container)
-                AutoMapControlsToEntity(customer, container)
-
-                '修改客戶、車輛寄瓶庫存
-                If tcInOut.SelectedIndex = 0 Then
-                    AutoMapControlsToEntity(order, tpIn)
-                    AutoMapControlsToEntity(car, tpIn)
-                    AutoMapControlsToEntity(customer, tpIn)
-                Else
-                    AutoMapControlsToEntity(order, tpOut)
-                    AutoMapControlsToEntity(car, tpOut)
-                    AutoMapControlsToEntity(customer, tpOut)
-                End If
-
-                db.SaveChanges()
-            End Using
-
-            btnCancel_order.PerformClick()
-            MsgBox("修改成功")
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    '銷售管理-dgv
-    Private Sub dgvOrder_SelectionChanged(sender As Object, e As EventArgs)
-        If Not sender.focused Then Return
-
-        SetButtonState(sender, False)
-
-        Dim row = dgvOrder.SelectedRows(0)
-
-        Using db As New gas_accounting_systemEntities
-            Dim ordId As Integer = row.Cells("編號").Value
-            Dim order = db.orders.Include("car").Include("car.customer").Include("employee").FirstOrDefault(Function(o) o.o_id = ordId)
-
-            AutoMapEntityToControls(order, tpOrder)
-            AutoMapEntityToControls(order.car.customer, tpOrder)
-            AutoMapEntityToControls(order.car, tpOrder)
-            txtOperator.Text = order.employee.emp_name
-
-            If order.o_in_out = "進場單" Then
-                tcInOut.SelectedIndex = 0
-                tpOut.Parent = Nothing
-                tpIn.Parent = tcInOut
-
-                AutoMapEntityToControls(order, tpIn)
-                AutoMapEntityToControls(order.car, tpIn)
-
-                Dim txts = tpIn.Controls.OfType(Of TextBox)
-                For Each txtBox In txts.Where(Function(x) x.Name.StartsWith("txto_"))
-                    Dim key = txtBox.Name
-                    Dim value As Integer
-
-                    If Integer.TryParse(txtBox.Text, value) Then
-                        orgGasValues(key) = value
-                    Else
-                        orgGasValues(key) = 0
-                    End If
-                Next
-
-                For Each txtBox In txts.Where(Function(x) x.Name.StartsWith("txtDepositIn_"))
-                    Dim key = txtBox.Name
-                    Dim value As Integer
-
-                    If Integer.TryParse(txtBox.Text, value) Then
-                        orgDepositValues(key) = value
-                    Else
-                        orgDepositValues(key) = 0
-                    End If
-                Next
-
-            Else
-                tcInOut.SelectedIndex = 1
-                tpOut.Parent = tcInOut
-                tpIn.Parent = Nothing
-
-                AutoMapEntityToControls(order, tpOut)
-
-                For Each txtBox In tpOut.Controls.OfType(Of TextBox).Where(Function(x) x.Name.StartsWith("txtGas") Or x.Name.StartsWith("txtEmpty"))
-                    Dim key = txtBox.Name
-                    Dim value As Integer
-
-                    If Integer.TryParse(txtBox.Text, value) Then
-                        orgGasValues(key) = value
-                    Else
-                        orgGasValues(key) = 0
-                    End If
-                Next
-            End If
-        End Using
-    End Sub
-
-    '銷售管理-刪除
-    Private Sub btnDelete_order_Click(sender As Object, e As EventArgs)
-        Try
-            Using db As New gas_accounting_systemEntities
-                Dim ordId As Integer = txto_id.Text
-                Dim order = db.orders.Find(ordId)
-                Dim cusId As Integer = txtCusID_order.Text
-                Dim customer = db.customers.Find(cusId)
-
-                Dim carId As Integer
-                Dim car As car
-
-                If tcInOut.SelectedIndex = 0 Then
-                    customer.cus_gas_50 -= GetOrderValue(order, "50", True)
-                    customer.cus_gas_20 -= GetOrderValue(order, "20", True)
-                    customer.cus_gas_16 -= GetOrderValue(order, "16", True)
-                    customer.cus_gas_10 -= GetOrderValue(order, "10", True)
-                    customer.cus_gas_4 -= GetOrderValue(order, "4", True)
-                    customer.cus_gas_15 -= GetOrderValue(order, "15", True)
-                    customer.cus_gas_14 -= GetOrderValue(order, "14", True)
-                    customer.cus_gas_5 -= GetOrderValue(order, "5", True)
-                    customer.cus_gas_2 -= GetOrderValue(order, "2", True)
-
-                    '取得寄瓶庫存
-                    carId = cmbCarNo.SelectedItem.Value
-                    car = db.cars.Find(carId)
-
-                    car.c_deposit_50 -= GetDepositValue(order, "50", True)
-                    car.c_deposit_20 -= GetDepositValue(order, "20", True)
-                    car.c_deposit_16 -= GetDepositValue(order, "16", True)
-                    car.c_deposit_10 -= GetDepositValue(order, "10", True)
-                    car.c_deposit_4 -= GetDepositValue(order, "4", True)
-                    car.c_deposit_15 -= GetDepositValue(order, "15", True)
-                    car.c_deposit_14 -= GetDepositValue(order, "14", True)
-                    car.c_deposit_5 -= GetDepositValue(order, "5", True)
-                    car.c_deposit_2 -= GetDepositValue(order, "2", True)
-                Else
-                    customer.cus_gas_50 += GetOrderValue(order, "50", False)
-                    customer.cus_gas_20 += GetOrderValue(order, "20", False)
-                    customer.cus_gas_16 += GetOrderValue(order, "16", False)
-                    customer.cus_gas_10 += GetOrderValue(order, "10", False)
-                    customer.cus_gas_4 += GetOrderValue(order, "4", False)
-                    customer.cus_gas_15 += GetOrderValue(order, "15", False)
-                    customer.cus_gas_14 += GetOrderValue(order, "14", False)
-                    customer.cus_gas_5 += GetOrderValue(order, "5", False)
-                    customer.cus_gas_2 += GetOrderValue(order, "2", False)
-
-                    '取得寄瓶庫存
-                    carId = order.o_deposit_out_c_id
-                    car = db.cars.Find(carId)
-
-                    car.c_deposit_50 -= GetDepositValue(order, "50", False)
-                    car.c_deposit_20 -= GetDepositValue(order, "20", False)
-                    car.c_deposit_16 -= GetDepositValue(order, "16", False)
-                    car.c_deposit_10 -= GetDepositValue(order, "10", False)
-                    car.c_deposit_4 -= GetDepositValue(order, "4", False)
-                    car.c_deposit_15 -= GetDepositValue(order, "15", False)
-                    car.c_deposit_14 -= GetDepositValue(order, "14", False)
-                    car.c_deposit_5 -= GetDepositValue(order, "5", False)
-                    car.c_deposit_2 -= GetDepositValue(order, "2", False)
-                End If
-
-                db.orders.Remove(order)
-                db.SaveChanges()
-            End Using
-
-            btnCancel_order.PerformClick()
-            MsgBox("刪除成功")
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
     '銷售管理-查詢
-    Private Sub btnQuery_order_Click(sender As Object, e As EventArgs)
-        Dim btn As Button = sender
+    Private Sub btnQuery_order_Click(sender As Object, e As EventArgs) Handles btnQuery_order.Click
+        Dim btn As Button = btnQuery_order
         SetOrderQueryCtrl(btn)
 
         If btn.Text = "查  詢" Then
@@ -923,7 +1487,7 @@ Public Class frmMain
                     query = query.Where(Function(x) x.o_date >= startDate AndAlso x.o_date <= endDate)
 
                     ' 執行查詢並設置數據源
-                    dgvOrder.DataSource = OrderMV.GetOrderList(query)
+                    'dgvOrder.DataSource = OrderVM.GetOrderList(query)
                 End Using
 
                 ClearControls(tpOrder)
@@ -934,43 +1498,43 @@ Public Class frmMain
         End If
     End Sub
 
-    ''' <summary>
-    ''' 取得寄瓶明細
-    ''' </summary>
-    ''' <param name="order"></param>
-    ''' <param name="group"></param>
-    ''' <param name="isIn"></param>
-    ''' <returns></returns>
-    Private Function GetDepositValue(order As order, group As String, isIn As Boolean) As Integer
-        If isIn Then
-            Return order.GetType.GetProperties.
-                Where(Function(p) p.Name.StartsWith("o_deposit_in_") And p.Name.Contains(group)).
-                Sum(Function(x) x.GetValue(order))
-        Else
-            Return order.GetType.GetProperties.
-                Where(Function(p) p.Name.StartsWith("o_deposit_out_") And p.Name.Contains(group)).
-                Sum(Function(x) x.GetValue(order))
-        End If
-    End Function
+    '''' <summary>
+    '''' 取得寄瓶明細
+    '''' </summary>
+    '''' <param name="order"></param>
+    '''' <param name="group"></param>
+    '''' <param name="isIn"></param>
+    '''' <returns></returns>
+    'Private Function GetDepositValue(order As order, group As String, isIn As Boolean) As Integer
+    '    If isIn Then
+    '        Return order.GetType.GetProperties.
+    '            Where(Function(p) p.Name.StartsWith("o_deposit_in_") And p.Name.Contains(group)).
+    '            Sum(Function(x) x.GetValue(order))
+    '    Else
+    '        Return order.GetType.GetProperties.
+    '            Where(Function(p) p.Name.StartsWith("o_deposit_out_") And p.Name.Contains(group)).
+    '            Sum(Function(x) x.GetValue(order))
+    '    End If
+    'End Function
 
-    ''' <summary>
-    ''' 取得訂單明細
-    ''' </summary>
-    ''' <param name="order"></param>
-    ''' <param name="group"></param>
-    ''' <param name="isIn"></param>
-    ''' <returns></returns>
-    Private Function GetOrderValue(order As order, group As String, isIn As Boolean) As Integer
-        If isIn Then
-            Return order.GetType.GetProperties.
-                Where(Function(p) (p.Name.StartsWith("o_in_") Or p.Name.StartsWith("o_new_in_") Or p.Name.StartsWith("o_inspect_")) And p.Name.Contains(group)).
-                Sum(Function(x) x.GetValue(order))
-        Else
-            Return order.GetType.GetProperties.
-                Where(Function(p) (p.Name.StartsWith("o_gas_") Or p.Name.StartsWith("o_gas_c_") Or p.Name.StartsWith("o_empty_")) And p.Name.Contains(group)).
-                Sum(Function(x) x.GetValue(order))
-        End If
-    End Function
+    '''' <summary>
+    '''' 取得訂單明細
+    '''' </summary>
+    '''' <param name="order"></param>
+    '''' <param name="group"></param>
+    '''' <param name="isIn"></param>
+    '''' <returns></returns>
+    'Private Function GetOrderValue(order As order, group As String, isIn As Boolean) As Integer
+    '    If isIn Then
+    '        Return order.GetType.GetProperties.
+    '            Where(Function(p) (p.Name.StartsWith("o_in_") Or p.Name.StartsWith("o_new_in_") Or p.Name.StartsWith("o_inspect_")) And p.Name.Contains(group)).
+    '            Sum(Function(x) x.GetValue(order))
+    '    Else
+    '        Return order.GetType.GetProperties.
+    '            Where(Function(p) (p.Name.StartsWith("o_gas_") Or p.Name.StartsWith("o_gas_c_") Or p.Name.StartsWith("o_empty_")) And p.Name.Contains(group)).
+    '            Sum(Function(x) x.GetValue(order))
+    '    End If
+    'End Function
 
     ''' <summary>
     ''' 設定銷售管理搜尋相關控制項狀態
@@ -984,80 +1548,6 @@ Public Class frmMain
         }
 
         SetQueryControls(btnQuery, lst)
-    End Sub
-
-    ''' <summary>
-    ''' 即時計算客戶瓦斯桶存量
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <param name="isIn">是否為進場</param>
-    Private Sub CalculateStock(sender As Object, e As EventArgs, isIn As Boolean)
-        Dim txt As TextBox = sender
-        Dim groupName As String = GetGroupName(txt.Name)
-        Dim container = txt.Parent
-        Dim targetTxtBox As TextBox = container.Controls.OfType(Of TextBox).FirstOrDefault(Function(x) x.Tag = "cus_gas_" & groupName)
-
-        If String.IsNullOrEmpty(targetTxtBox.Text) Then Exit Sub
-
-        Dim orgStock As Integer
-        If orgStockValues.TryGetValue(targetTxtBox.Tag, orgStock) Then
-            Dim sum As Integer = orgStock
-            Dim txtValue As Integer = 0
-            Dim detialValue As Integer = 0
-
-            If isIn Then
-                ' 入場單的計算
-                For Each txtBox In container.Controls.OfType(Of TextBox).Where(Function(x) (x.Name.StartsWith("txto_")) AndAlso x.Tag.ToString.Contains(groupName))
-                    Integer.TryParse(txtBox.Text, txtValue)
-                    ' 使用初始值和當前值計算庫存
-                    sum += txtValue - If(orgGasValues.TryGetValue(txtBox.Name, detialValue), detialValue, 0)
-                Next
-
-            Else
-                ' 出場單的計算
-                For Each txtBox In container.Controls.OfType(Of TextBox).
-                    Where(Function(x) (x.Tag.ToString.StartsWith("o_gas_") Or x.Tag.ToString.StartsWith("o_empty_")) AndAlso x.Tag.ToString.Contains(groupName))
-                    Integer.TryParse(txtBox.Text, txtValue)
-                    sum -= txtValue - If(orgGasValues.TryGetValue(txtBox.Name, detialValue), detialValue, 0)
-                Next
-            End If
-
-            targetTxtBox.Text = sum.ToString()
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' 即時計算車輛寄桶數量
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <param name="isIn">是否為進場</param>
-    Private Sub CalculateDeposit_TextChaged(sender As Object, e As EventArgs, isIn As Boolean)
-        Dim txt As TextBox = sender
-        Dim groupName As String = GetGroupName(txt.Name)
-        Dim container = txt.Parent
-        Dim targetTxtBox As TextBox = container.Controls.OfType(Of TextBox).FirstOrDefault(Function(x) x.Tag = "c_deposit_" & groupName)
-
-        If targetTxtBox Is Nothing OrElse String.IsNullOrEmpty(targetTxtBox.Text) Then Exit Sub
-
-        ' 從字典獲取初始庫存值
-        Dim orgStock As Integer
-        If orgDepositStockValues.TryGetValue(targetTxtBox.Tag, orgStock) Then
-            Dim sum As Integer = orgStock
-
-            For Each txtBox In container.Controls.OfType(Of TextBox).Where(Function(t) t.Tag.ToString.StartsWith("o_deposit_") AndAlso t.Tag.ToString.Contains(groupName))
-                Dim txtValue As Integer = If(String.IsNullOrEmpty(txtBox.Text), 0, txtBox.Text)
-
-                If isIn Then
-                    sum += txtValue - If(orgDepositValues.TryGetValue(txt.Name, 0), orgDepositValues(txt.Name), 0)
-                Else
-                    sum -= txtValue - If(orgDepositValues.TryGetValue(txt.Tag, 0), orgDepositValues(txt.Tag), 0)
-                End If
-            Next
-            'todo 寄桶出有問題       
-            targetTxtBox.Text = sum.ToString()
-        End If
     End Sub
 
     ''' <summary>
@@ -1143,60 +1633,6 @@ Public Class frmMain
         Integer.TryParse(txto_sales_allowance.Text, saleAllowance)
 
         txto_total_amount.Text = (gas * price + gas_c * price_c) - saleAllowance
-    End Sub
-
-    Private Function ISubjectsView_GetUserInput() As subject Implements ISubjectsView.GetUserInput
-        Dim data As New subject
-        AutoMapControlsToEntity(data, tpSubjects)
-        Return data
-    End Function
-
-    Public Sub ShowList(data As List(Of SubjectsVM)) Implements ICommonView(Of subject, SubjectsVM).ShowList
-        dgvSubject.DataSource = data
-    End Sub
-
-    Public Sub SetDataToControl(data As subject) Implements ICommonView(Of subject, SubjectsVM).SetDataToControl
-        AutoMapEntityToControls(data, tpSubjects)
-    End Sub
-
-    Private Sub ClearInput_subjects() Implements ICommonView(Of subject, SubjectsVM).ClearInput
-        ClearControls(tpSubjects)
-    End Sub
-
-    Private Function SetRequired_subjects() As List(Of Control) Implements ICommonView(Of subject, SubjectsVM).SetRequired
-        Return New List(Of Control) From {txtName_subjects}
-    End Function
-
-    '會計管理-科目管理-取消
-    Private Sub btnCancel_subjects_Click(sender As Object, e As EventArgs) Handles btnCancel_subjects.Click
-        ClearInput_subjects()
-        SetButtonState(sender, True)
-        _subjects.LoadList()
-    End Sub
-
-    '會計管理-科目管理-子科目-新增
-    Private Sub btnAdd_subjects_Click(sender As Object, e As EventArgs) Handles btnAdd_subjects.Click
-        _subjects.Add()
-    End Sub
-
-    '會計管理-科目管理-dgv
-    Private Sub dgvSubject_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSubject.SelectionChanged, dgvSubject.CellMouseClick
-        If Not sender.focused Then Return
-        SetButtonState(sender, False)
-        Dim id As Integer = dgvSubject.SelectedRows(0).Cells("編號").Value
-        _subjects.SelectRow(id)
-    End Sub
-
-    '會計管理-科目管理-子科目-修改
-    Private Sub btnEdit_subjects_Click(sender As Object, e As EventArgs) Handles btnEdit_subjects.Click
-        Dim id As Integer = txtId_subjects.Text
-        _subjects.Edit(id)
-    End Sub
-
-    '會計管理-科目管理-子科目-刪除
-    Private Sub btnDelete_subjects_Click(sender As Object, e As EventArgs) Handles btnDelete_subjects.Click
-        Dim id As Integer = txtId_subjects.Text
-        _subjects.Delete(id)
     End Sub
 
     Public Sub ShowList(data As List(Of CompanyVM)) Implements ICommonView(Of company, CompanyVM).ShowList
@@ -1335,138 +1771,6 @@ Public Class frmMain
         If btn.Text = "查  詢" Then
             _manufacturer.LoadList(GetSearchConditions)
         End If
-    End Sub
-
-    Private Function GetSearchCondition_Purchase() As purchase Implements IPurchaseView.GetSearchCondition
-        Return New purchase With {
-            .pur_comp_id = cmbCompany_pur.SelectedValue,
-            .pur_manu_id = cmbGasVendor_pur.SelectedValue,
-            .pur_product = cmbProduct_pur.Text
-        }
-    End Function
-
-    Public Sub ShowList(data As List(Of PurchaseVM)) Implements ICommonView(Of purchase, PurchaseVM).ShowList
-        dgvPurchase.DataSource = data
-    End Sub
-
-    Public Sub SetDataToControl(data As purchase) Implements ICommonView(Of purchase, PurchaseVM).SetDataToControl
-        AutoMapEntityToControls(data, tpPurchase)
-    End Sub
-
-    Private Function GetUserInput_Purchase() As purchase Implements ICommonView(Of purchase, PurchaseVM).GetUserInput
-        Dim data As New purchase
-        AutoMapControlsToEntity(data, tpPurchase)
-        Return data
-    End Function
-
-    Private Sub ClearInput_Purchase() Implements ICommonView(Of purchase, PurchaseVM).ClearInput
-        ClearControls(tpPurchase)
-    End Sub
-
-    Public Sub SetCompanyComboBox(items As List(Of ComboBoxItems)) Implements IPurchaseView.SetCompanyComboBox
-        With cmbCompany_pur
-            .DataSource = items
-            .DisplayMember = "Display"
-            .ValueMember = "Value"
-        End With
-    End Sub
-
-    Public Sub SetGasVendorComboBox(items As List(Of ComboBoxItems)) Implements IPurchaseView.SetGasVendorComboBox
-        With cmbGasVendor_pur
-            .DataSource = items
-            .DisplayMember = "Display"
-            .ValueMember = "Value"
-        End With
-    End Sub
-
-    Private Function SetRequired_Purchase() As List(Of Control) Implements ICommonView(Of purchase, PurchaseVM).SetRequired
-        Return New List(Of Control) From {cmbCompany_pur, cmbGasVendor_pur, txtWeight_pur, cmbProduct_pur, txtUnitPrice_pur}
-    End Function
-
-    Public Sub SetDefaultPrice(productPrice As Single, deliveryPrice As Single) Implements IPurchaseView.SetDefaultPrice
-        txtUnitPrice_pur.Text = productPrice
-        txtDeliUnitPrice.Text = deliveryPrice
-    End Sub
-
-    '大氣採購-取消
-    Private Sub btnCancel_pur_Click(sender As Object, e As EventArgs) Handles btnCancel_pur.Click
-        SetButtonState(sender, True)
-        _purchase.SetCompanyCmb()
-        _purchase.SetGasVendorCmb()
-        ClearInput_Purchase()
-        If btnQuery_pur.Text = "確  認" Then SetPurchaseQueryCtrlsState()
-        _purchase.LoadList()
-    End Sub
-
-    '大氣採購-新增
-    Private Sub btnAdd_pur_Click(sender As Object, e As EventArgs) Handles btnAdd_pur.Click
-        _purchase.Add()
-    End Sub
-
-    '大氣採購-dgv
-    Private Sub dgvPurchase_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPurchase.SelectionChanged, dgvPurchase.CellMouseClick
-        Dim ctrl As DataGridView = sender
-        If Not ctrl.Focused Then Return
-
-        SetButtonState(ctrl, False)
-
-        Dim id As Integer = ctrl.SelectedRows(0).Cells("編號").Value
-        _purchase.SelectRow(id)
-    End Sub
-
-    '大氣採購-修改
-    Private Sub btnEdit_pur_Click(sender As Object, e As EventArgs) Handles btnEdit_pur.Click
-        Dim id As Integer = txtId_pur.Text
-        _purchase.Edit(id)
-    End Sub
-
-    '大氣採購-刪除
-    Private Sub btnDelete_pur_Click(sender As Object, e As EventArgs) Handles btnDelete_pur.Click
-        Dim id As Integer = txtId_pur.Text
-        _purchase.Delete(id)
-    End Sub
-
-    '大氣採購-查詢
-    Private Sub btnQuery_pur_Click(sender As Object, e As EventArgs) Handles btnQuery_pur.Click
-        SetPurchaseQueryCtrlsState()
-
-        If sender.Text = "查  詢" Then
-            _purchase.Query()
-        End If
-    End Sub
-
-    '大氣採購-選擇大氣廠商
-    Private Sub cmbGasVendor_pur_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbGasVendor_pur.SelectionChangeCommitted, cmbProduct_pur.SelectionChangeCommitted
-        If cmbGasVendor_pur.SelectedIndex > -1 AndAlso cmbProduct_pur.SelectedIndex > -1 Then
-            _purchase.GetDefaultPrice(cmbGasVendor_pur.SelectedItem.Value, cmbProduct_pur.Text)
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' 設定大氣採購查詢控制項狀態
-    ''' </summary>
-    Private Sub SetPurchaseQueryCtrlsState()
-        Dim lst As New List(Of Control) From {lblCompany_pur, lblGasVendor_pur, lblProduct}
-        SetQueryControls(btnQuery_pur, lst)
-    End Sub
-
-    ''' <summary>
-    ''' 計算運費
-    ''' </summary>
-    Private Sub CalculateFreight()
-        Dim unitPrice As Single = If(String.IsNullOrEmpty(txtDeliUnitPrice.Text), 0, txtDeliUnitPrice.Text)
-        Dim weight As Integer = If(String.IsNullOrEmpty(txtWeight_pur.Text), 0, txtWeight_pur.Text)
-        txtFreight.Text = unitPrice * weight
-    End Sub
-
-    ''' <summary>
-    ''' 計算大氣採購總金額
-    ''' </summary>
-    Private Sub CalculateSum_Purchase()
-        Dim weight As Integer = If(String.IsNullOrEmpty(txtWeight_pur.Text), 0, txtWeight_pur.Text)
-        Dim unitPrice As Single = If(String.IsNullOrEmpty(txtUnitPrice_pur.Text), 0, txtUnitPrice_pur.Text)
-        Dim Frieght As Single = If(String.IsNullOrEmpty(txtFreight.Text), 0, txtFreight.Text)
-        txtSum_pur.Text = weight * unitPrice + Frieght
     End Sub
 
     Public Sub ShowList(data As List(Of PricePlanVM)) Implements ICommonView(Of priceplan, PricePlanVM).ShowList
@@ -1746,17 +2050,20 @@ Public Class frmMain
 
     Public Function GetChequeDatas() As cheque Implements IPaymentView.GetChequeDatas
         Return New cheque With {
-            .che_Date = dtpPayment.Value.Date,
-            .che_Number = txtChequeNum.Text,
+            .che_ReceivedDate = dtpCheDate.Value.Date,
+            .che_Number = txtCheNo_payment.Text,
             .che_Amount = txtAmount.Text,
             .che_Memo = txtMemo_payment.Text,
-            .che_Type = "借"
+            .che_Type = "借",
+            .che_IssuerName = cmbCompany_payment.Text,
+            .che_AccountNumber = cmbBank_payment.Text,
+            .chu_State = "未兌現"
             }
     End Function
 
     Private Function SetRequired_Payment() As List(Of Control) Implements ICommonView(Of payment, PaymentVM).SetRequired
         Dim req = New List(Of Control) From {txtAmount, cmbPayType, cmbSubjects_payment}
-        If cmbPayType.Text = "支票" Then req.Add(txtChequeNum)
+        If cmbPayType.Text = "支票" Then req.Add(txtCheNo_payment)
         Return req
     End Function
 
@@ -1820,11 +2127,15 @@ Public Class frmMain
     '支出管理-付款作業-支票號碼必填
     Private Sub cmbPayType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPayType.SelectedIndexChanged
         Dim cmb As ComboBox = sender
-        If cmb.Text = "支票" Then
-            lblReq_Chuque.Visible = True
-        Else
-            lblReq_Chuque.Visible = False
-        End If
+        Dim ctrls As Control() = {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, lblCheDateReq_payment, dtpCheDate}
+
+        For Each ctrl In ctrls
+            If cmb.Text = "支票" Then
+                ctrl.Visible = True
+            Else
+                ctrl.Visible = False
+            End If
+        Next
     End Sub
 
     Private Sub cmbManu_payment_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbManu_payment.SelectionChangeCommitted
@@ -1840,42 +2151,12 @@ Public Class frmMain
         _payment.GetAmountDue(cmbManu_payment.SelectedValue)
     End Sub
 
-    Public Sub SetManuCmb_uph(data As List(Of ComboBoxItems)) Implements IUnitPriceHistoryView.SetManuCmb
-        SetComboBox(cmbManu_uph, data)
-    End Sub
-
-    Public Sub LoadList(data As List(Of UnitPriceHistoryVM)) Implements IUnitPriceHistoryView.LoadList
-        dgvUPH.DataSource = data
-    End Sub
-
-    '支出管理-歷史單價查詢-取消
-    Private Sub btnCancel_uph_Click(sender As Object, e As EventArgs) Handles btnCancel_uph.Click
-        ClearControls(tpUPH)
-        dgvUPH.DataSource = Nothing
-        _uph.GetManuCmb()
-    End Sub
-
-    '支出管理-歷史單價查詢-查詢
-    Private Sub btnQuery_UPH_Click(sender As Object, e As EventArgs) Handles btnQuery_UPH.Click
-        Dim manuId As Integer = If(cmbManu_uph.SelectedItem Is Nothing, 0, cmbManu_uph.SelectedItem.Value)
-        _uph.Query(manuId, cmbProduct_UPH.Text, dtpStart_UPH.Value.Date, dtpEnd_UPH.Value.Date)
-    End Sub
-
-    '收入管理-收款作業-顯示支票號碼
-    Private Sub cmbType_col_TextChanged(sender As Object, e As EventArgs) Handles cmbType_col.TextChanged
-        Dim cmb As ComboBox = sender
-        Dim b As Boolean = cmb.Text = "支票"
-
-        lblChequeReq_col.Visible = b
-        lblCheque_col.Visible = b
-        txtCheque_col.Visible = b
-    End Sub
-
     Private Sub btnQueryCus_col_Click(sender As Object, e As EventArgs) Handles btnQueryCus_col.Click
         Using searchForm As New frmQueryCustomer
             If searchForm.ShowDialog = DialogResult.OK Then
-                txtCusId_col.Text = searchForm.ID
-                txtCusName_col.Text = searchForm.Name
+                txtCusId_col.Text = searchForm.CusId
+                txtCusName_col.Text = searchForm.CusName
+                txtCusCode_col.Text = searchForm.CusCode
             End If
         End Using
     End Sub
@@ -1884,11 +2165,30 @@ Public Class frmMain
         dgvCollection.DataSource = data
     End Sub
 
+    Public Sub SetDataToControl(col As collection, Optional che As cheque = Nothing) Implements ICollectionView.SetDataToControl
+        AutoMapEntityToControls(col, tpCollection)
+        If che IsNot Nothing Then
+            txtCheque_col.Text = che.che_Number
+            txtCashingDate.Text = If(che.che_CashingDate.HasValue, che.che_CashingDate.Value.ToString("yyyy年MM月dd日"), "")
+            txtIssuerName.Text = che.che_IssuerName
+            txtCheAcctNum.Text = che.che_AccountNumber
+        End If
+    End Sub
+
     Public Sub SetDataToControl(data As collection) Implements ICommonView(Of collection, CollectionVM).SetDataToControl
-        AutoMapEntityToControls(data, tpCollection)
+
     End Sub
 
     Private Function GetUserInput_collection() As collection Implements ICommonView(Of collection, CollectionVM).GetUserInput
+        Dim list As New List(Of Control) From {txtAmount_collection, cmbType_col, cmbSubjects, txtCusId_col, cmbCompany_col}
+
+        If cmbType_col.Text = "支票" Then
+            Dim ctrls As Control() = {txtCheque_col, txtIssuerName, txtCheAcctNum}
+            list.AddRange(ctrls)
+        End If
+
+        If Not CheckRequired(list) Then Return Nothing
+
         Dim data As New collection
         AutoMapControlsToEntity(data, tpCollection)
         Return data
@@ -1899,14 +2199,14 @@ Public Class frmMain
     End Sub
 
     Private Function SetRequired_collection() As List(Of Control) Implements ICommonView(Of collection, CollectionVM).SetRequired
-        Dim list As New List(Of Control) From {txtAmount_collection, cmbType_col, cmbSubjects, txtCusId_col, cmbCompany_col}
+        'Dim list As New List(Of Control) From {txtAmount_collection, cmbType_col, cmbSubjects, txtCusId_col, cmbCompany_col}
 
-        If cmbType_col.Text = "支票" Then
-            Dim ctrls As Control() = {txtCheque_col, txtIssuerName, txtCheAcctNum}
-            list.AddRange(ctrls)
-        End If
+        'If cmbType_col.Text = "支票" Then
+        '    Dim ctrls As Control() = {txtCheque_col, txtIssuerName, txtCheAcctNum}
+        '    list.AddRange(ctrls)
+        'End If
 
-        Return list
+        'Return list
     End Function
 
     Private Sub ICollectionView_SetSubjectsCmb(data As List(Of ComboBoxItems)) Implements ICollectionView.SetSubjectsCmb
@@ -1927,10 +2227,13 @@ Public Class frmMain
     Private Function ICollectionView_GetChequeDatas() As cheque Implements ICollectionView.GetChequeDatas
         Return New cheque With {
             .che_Amount = txtAmount_collection.Text,
-            .che_Date = dtpDate_col.Value.Date,
+            .che_ReceivedDate = dtpDate_col.Value.Date,
             .che_Memo = txtMemo_col.Text,
             .che_Number = txtCheque_col.Text,
-            .che_Type = "貸"
+            .che_Type = "貸",
+            .che_AccountNumber = txtCheAcctNum.Text,
+            .che_IssuerName = txtIssuerName.Text,
+            .chu_State = "未兌現"
         }
     End Function
 
@@ -1942,31 +2245,46 @@ Public Class frmMain
         SetComboBox(cmbCompany_col, data)
     End Sub
 
+    Public Function GetJournalDatas() As journal Implements ICollectionView.GetJournalDatas
+        Return New journal With {
+            .j_Amount = txtAmount_collection.Text,
+            .j_Memo = txtMemo_col.Text,
+            .j_s_Id = cmbSubjects.SelectedValue
+        }
+    End Function
+
+    Private Sub ICollectionView_Reset() Implements ICollectionView.Reset
+        ClearControls(tpCollection)
+
+        _collect.GetBankCmb()
+        _collect.GetCompanyCmb()
+        _collect.GetSubjectsCmb()
+        _collect.LoadList()
+
+        If btnQuery_col.Text = "確  認" Then SetOrderQueryCtrl(btnQuery_col)
+        SetButtonState(btnCancel_col, True)
+
+        btnCashing.Visible = False
+        cmbType_col.Enabled = True
+    End Sub
+
     '收入管理-收款作業-收款類型-支票號碼顯示
     Private Sub cmbType_col_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbType_col.SelectedIndexChanged
         Dim cmb As ComboBox = sender
-        Dim bVisible As Boolean
+        Dim bVisible As Boolean = cmb.Text = "支票"
+        Dim ctrls As Control() = {lblChequeReq_col, lblCheque_col, txtCheque_col, lblCashingDate_col, txtCashingDate, lblIssuerNameReq, lblIssuerName, txtIssuerName,
+            lblChequeAccountNumberReq, lblChequeAccountNumber, txtCheAcctNum}
 
-        If cmb.Text = "支票" Then
-            bVisible = True
-        Else
-            bVisible = False
+        ctrls.ToList.ForEach(Sub(x) x.Visible = bVisible)
+
+        If bVisible AndAlso btnQuery_col.Text = "確  認" Then
+            lblCheque_col.BackColor = Color.Green
         End If
-
-        lblChequeReq_col.Visible = bVisible
-        lblCheque_col.Visible = bVisible
-        txtCheque_col.Visible = bVisible
     End Sub
 
     '收入管理-收款作業-取消
     Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
-        SetButtonState(sender, True)
-        _collect.GetBankCmb()
-        _collect.GetCompanyCmb()
-        _collect.GetSubjectsCmb()
-        ClearInput_collection()
-        _collect.LoadList()
-        If btnQuery_col.Text = "確  認" Then SetCollectionQueryCtrlsState()
+        ICollectionView_Reset()
     End Sub
 
     '收入管理-收款作業-新增
@@ -1977,13 +2295,24 @@ Public Class frmMain
     '收入管理-收款作業-dgv
     Private Sub dgvCollection_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCollection.SelectionChanged, dgvCollection.CellMouseClick
         Dim id = DGV_SelectionChanged(sender)
-        If id > 0 Then _collect.SelectRow(id)
+        If id > 0 Then
+            _collect.SelectRow(id)
+            cmbType_col.Enabled = False
+        End If
+    End Sub
+
+    '收入管理-收款作業-支票號碼改變
+    Private Sub txtCheque_col_TextChanged(sender As Object, e As EventArgs) Handles txtCheque_col.TextChanged
+        If Not String.IsNullOrEmpty(txtCheque_col.Text) AndAlso _cheque.IsCollected(txtCheque_col.Text) Then
+            btnCashing.Visible = True
+        Else
+            btnCashing.Visible = False
+        End If
     End Sub
 
     '收入管理-收款作業-修改
     Private Sub btnEdit_col_Click(sender As Object, e As EventArgs) Handles btnEdit_col.Click
-        Dim id As Integer = txtColId.Text
-        _collect.Edit(id)
+        _collect.Edit()
     End Sub
 
     '收入管理-收款作業-刪除
@@ -2001,14 +2330,81 @@ Public Class frmMain
         End If
     End Sub
 
+    '收入管理-收款作業-支票兌現
+    Private Sub btnCashing_Click(sender As Object, e As EventArgs) Handles btnCashing.Click
+        _collect.UpdateCheque(txtColId.Text)
+    End Sub
+
     ''' <summary>
     ''' 設定收款作業查詢控制項狀態
     ''' </summary>
     Private Sub SetCollectionQueryCtrlsState()
-        Dim lst As New List(Of Control) From {lblType_col, txtCusId_col, lblSubjects_col}
+        Dim lst As New List(Of Control) From {lblType_col, lblCusCode_col, lblSubjects_col}
 
         If lblCheque_col.Visible = True Then lst.Add(lblCheque_col)
 
         SetQueryControls(btnQuery_col, lst)
+    End Sub
+
+    Public Sub ShowList(data As List(Of ChequeVM)) Implements ICommonView(Of cheque, ChequeVM).ShowList
+        dgvCheque.DataSource = data
+    End Sub
+
+    Public Sub SetDataToControl(data As cheque) Implements ICommonView(Of cheque, ChequeVM).SetDataToControl
+        AutoMapEntityToControls(data, tpCheque)
+    End Sub
+
+    Public Function GetUserInput() As cheque Implements ICommonView(Of cheque, ChequeVM).GetUserInput
+        Dim data As New cheque
+        AutoMapControlsToEntity(data, tpCheque)
+        Return data
+    End Function
+
+    Private Sub ClearInput_Cheque() Implements ICommonView(Of cheque, ChequeVM).ClearInput
+        ClearControls(tpCheque)
+    End Sub
+
+    Private Function SetRequired_Cheque() As List(Of Control) Implements ICommonView(Of cheque, ChequeVM).SetRequired
+        Return Nothing
+    End Function
+
+    '會計管理-支票管理-取消
+    Private Sub btnCancel_Che_Click(sender As Object, e As EventArgs) Handles btnCancel_Che.Click
+        ClearControls(tpCheque)
+        _cheque.LoadList()
+    End Sub
+
+    '會計管理-支票管理-dgv
+    Private Sub dgvCheque_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCheque.SelectionChanged, dgvCheque.CellMouseClick
+        Dim id As Integer = DGV_SelectionChanged(sender)
+        _cheque.SelectRow(id)
+    End Sub
+
+    '會計管理-支票管理-狀態
+    Private Sub cmbState_Che_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbState_Che.SelectedIndexChanged
+        Dim cmb As ComboBox = sender
+        Dim ctrls As Control() = {lblCashingDate, dtpCashingDate, lblCollectionDate, dtpCollectionDate}
+        ctrls.ToList.ForEach(Sub(x) x.Visible = False)
+
+        Select Case cmb.Text
+            Case "已兌現"
+                lblCashingDate.Visible = True
+                dtpCashingDate.Visible = True
+            Case "已代收"
+                lblCollectionDate.Visible = True
+                dtpCollectionDate.Visible = True
+        End Select
+    End Sub
+
+    '會計管理-支票管理-批次代收
+    Private Sub btnCollectionBatch_Click(sender As Object, e As EventArgs) Handles btnCollectionBatch.Click
+        If btnCollectionBatch.Text = "批次代收" Then
+
+            btnCollectionBatch.Text = "確認"
+        Else
+            _cheque.SetBatchCollection(dtpCollectionStart.Value.Date, dtpCollectionEnd.Value.Date)
+            btnCollectionBatch.Text = "批次代收"
+        End If
+
     End Sub
 End Class

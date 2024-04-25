@@ -1,98 +1,83 @@
 ﻿Public Class frmQueryCustomer
-    Public Property ID As String
-    Public Property CusName As String
+    Implements IQueryCusView
+
+    Private _presenter As New QueryCusPresenter(Me, New CustomerRepository)
+
+    Public ReadOnly Property CusCode As String
+        Get
+            Return dgvCustomer.SelectedRows(0).Cells("代號").Value
+        End Get
+    End Property
+
+    Public ReadOnly Property CusName As String
+        Get
+            Return dgvCustomer.SelectedRows(0).Cells("名稱").Value
+        End Get
+    End Property
+
+    Public ReadOnly Property CusId As Integer
+        Get
+            Return dgvCustomer.SelectedRows(0).Cells("編號").Value
+        End Get
+    End Property
+
+    Public Sub ShowList(customers As List(Of QueryCusVM)) Implements IQueryCusView.ShowList
+        dgvCustomer.DataSource = customers
+    End Sub
+
+    Public Sub ShowDetails(data As customer) Implements IQueryCusView.ShowDetails
+        AutoMapEntityToControls(data, Me)
+    End Sub
+
+    Public Sub Reset() Implements IQueryCusView.Reset
+        ClearControls(Me)
+    End Sub
 
     Private Sub frmQueryCustomer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        btnClear.PerformClick()
+        SetDataGridViewStyle(Me)
+        Dim lst = New List(Of DataGridView) From {dgvCustomer}
+        ReadDataGridWidth(lst)
+        _presenter.LoadList()
     End Sub
 
     Private Sub btnQuery_Click(sender As Object, e As EventArgs) Handles btnQuery.Click
-        Try
-            Using db As New gas_accounting_systemEntities
-                Dim query = db.customers.AsQueryable
-
-                If Not String.IsNullOrEmpty(txtCusCode.Text) Then
-                    query = query.Where(Function(cus) cus.cus_code.Contains(txtCusCode.Text))
-                End If
-
-                If Not String.IsNullOrEmpty(txtCusName.Text) Then
-                    query = query.Where(Function(cus) cus.cus_name.Contains(txtCusName.Text))
-                End If
-
-                If Not String.IsNullOrEmpty(txtCusContactPerson.Text) Then
-                    query = query.Where(Function(cus) cus.cus_contact_person.Contains(txtCusContactPerson.Text))
-                End If
-
-                If Not String.IsNullOrEmpty(txtCusPhone.Text) Then
-                    query = query.Where(Function(cus) cus.cus_phone1.Contains(txtCusPhone.Text) OrElse cus.cus_phone2.Contains(txtCusPhone.Text))
-                End If
-
-                dgvCustomer.DataSource = query.Select(Function(x) New With {.編號 = x.cus_id, .名稱 = x.cus_name}).ToList
-                Dim lst = New List(Of DataGridView) From {dgvCustomer}
-                ReadDataGridWidth(lst)
-            End Using
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            Console.WriteLine(ex.Message)
-        End Try
+        _presenter.LoadList()
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-        If dgvCustomer.SelectedRows.Count = 0 Then
-            ID = ""
-            Name = ""
+        If dgvCustomer.SelectedRows.Count > 0 Then
+            DialogResult = DialogResult.OK
+            Close()
         Else
-            ID = dgvCustomer.SelectedRows(0).Cells("編號").Value
-            Name = dgvCustomer.SelectedRows(0).Cells("名稱").Value
+            DialogResult = DialogResult.None
         End If
-
     End Sub
 
     Private Sub dgvCustomer_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvCustomer.ColumnWidthChanged
         SaveDataGridWidth(sender, e)
     End Sub
 
-    Private Sub dgvCustomer_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvCustomer.CellMouseClick
+    Private Sub dgvCustomer_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCustomer.CellMouseClick, dgvCustomer.SelectionChanged
         Dim dgv = CType(sender, DataGridView)
-        If dgv.SelectedRows.Count = 0 Then Exit Sub
+        If Not dgv.Focused Then Exit Sub
 
         Dim selectRow = dgv.SelectedRows(0)
         Dim id As Integer = selectRow.Cells("編號").Value
 
-        Try
-            Using db As New gas_accounting_systemEntities
-                Dim query = From cus In db.customers
-                            Where cus.cus_id = id
-                            Select cus
-                Dim customer = query.FirstOrDefault
-                AutoMapEntityToControls(customer, Me)
-            End Using
-
-        Catch ex As Exception
-            Console.WriteLine(ex.Message)
-        End Try
+        _presenter.LoadDetails(id)
     End Sub
 
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
-        ClearControls(Me)
-
-        Try
-            Using db As New gas_accounting_systemEntities
-                Dim query = From customer In db.customers
-                            Select New With {
-                                .編號 = customer.cus_id,
-                                .名稱 = customer.cus_name
-                            }
-                dgvCustomer.DataSource = query.ToList
-            End Using
-
-            SetDataGridViewStyle(Me)
-            Dim lst = New List(Of DataGridView) From {dgvCustomer}
-            ReadDataGridWidth(lst)
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+        _presenter.Reset()
     End Sub
+
+    Public Function GetSearchCondition() As customer Implements IQueryCusView.GetSearchCondition
+
+        Return New customer With {
+            .cus_code = txtCusCode.Text,
+            .cus_name = txtCusName.Text,
+            .cus_contact_person = txtCusContactPerson.Text,
+            .cus_phone1 = txtCusPhone.Text
+        }
+    End Function
 End Class

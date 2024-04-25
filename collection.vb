@@ -22,6 +22,7 @@ Partial Public Class collection
     Public Property col_Memo As String
     Public Property col_bank_Id As Nullable(Of Integer)
     Public Property col_comp_Id As Nullable(Of Integer)
+    Public Property col_SubpoenaNo As Nullable(Of Integer)
 
     Public Overridable Property bank As bank
     Public Overridable Property customer As customer
