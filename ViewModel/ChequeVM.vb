@@ -9,4 +9,21 @@
     Public Property 兌現日期 As Date?
     Public Property 代收日期 As Date?
     Public Property 借貸 As String
+
+    Public Sub New()
+
+    End Sub
+
+    Public Sub New(data As cheque)
+        編號 = data.che_Id
+        收票日期 = data.che_ReceivedDate
+        支票號碼 = data.che_Number
+        銀行帳號 = data.che_AccountNumber
+        發票人 = data.che_IssuerName
+        金額 = data.che_Amount
+        狀態 = data.chu_State
+        兌現日期 = data.che_CashingDate
+        代收日期 = data.che_CollectionDate
+        借貸 = data.che_Type
+    End Sub
 End Class

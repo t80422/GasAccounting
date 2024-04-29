@@ -137,23 +137,23 @@
     </Compile>
     <Compile Include="PresentationLayers\Employee\EmployeePresenter.vb" />
     <Compile Include="PresentationLayers\Employee\IEmployeeView.vb" />
-    <Compile Include="frmLogin.Designer.vb">
+    <Compile Include="Forms\frmLogin.Designer.vb">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmLogin.vb">
+    <Compile Include="Forms\frmLogin.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.vb">
+    <Compile Include="Forms\frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.Designer.vb">
+    <Compile Include="Forms\frmMain.Designer.vb">
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmQueryCustomer.Designer.vb">
+    <Compile Include="Forms\frmQueryCustomer.Designer.vb">
       <DependentUpon>frmQueryCustomer.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmQueryCustomer.vb">
+    <Compile Include="Forms\frmQueryCustomer.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="PresentationLayers\Company\ICompanyView.vb" />
@@ -283,13 +283,13 @@
     <Compile Include="ViewModel\UnitPriceHistoryVM.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="frmLogin.resx">
+    <EmbeddedResource Include="Forms\frmLogin.resx">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
+    <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmQueryCustomer.resx">
+    <EmbeddedResource Include="Forms\frmQueryCustomer.resx">
       <DependentUpon>frmQueryCustomer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">

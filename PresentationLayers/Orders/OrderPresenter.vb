@@ -157,6 +157,10 @@
         End Try
     End Sub
 
+    Public Function GetCusDataByCusCode(cusCode As String) As customer
+        Return _cusRep.GetCusByCusCode(cusCode)
+    End Function
+
     Private Function GetData(ByRef ord As order, ByRef car As car, ByRef cus As customer, container As Control) As Boolean
         ord = _view.GetUserInput_ord()
         If ord Is Nothing Then Return False

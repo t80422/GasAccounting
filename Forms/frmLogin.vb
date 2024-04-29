@@ -1,3 +1,5 @@
+Imports System.Configuration
+
 Public Class frmLogin
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         If String.IsNullOrEmpty(UsernameTextBox.Text) Then
@@ -16,11 +18,12 @@ Public Class frmLogin
 
                 If user IsNot Nothing Then
                     If user.emp_psw = PasswordTextBox.Text Then
-                        Hide()
+                        'Hide()
 
-                        frmMain.User.Id = user.emp_id
-                        frmMain.User.Name = user.emp_name
-                        frmMain.Show()
+                        'frmMain.User.Id = user.emp_id
+                        'frmMain.User.Name = user.emp_name
+                        'frmMain.Show()
+                        OpenMain(user)
                     Else
                         MsgBox("±K½X¿ù»~")
                         Return
@@ -40,7 +43,21 @@ Public Class frmLogin
         Me.Close()
     End Sub
 
-    Private Sub frmLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub OpenMain(user As employee)
+        Me.Hide()
 
+        frmMain.User.Id = user.emp_id
+        frmMain.User.Name = user.emp_name
+        frmMain.Show()
+    End Sub
+
+    Private Sub frmLogin_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        If (ConfigurationManager.AppSettings("debug") = "T") Then
+            Dim user = New employee
+            user.emp_name = "test"
+            user.emp_id = 0
+
+            OpenMain(user)
+        End If
     End Sub
 End Class

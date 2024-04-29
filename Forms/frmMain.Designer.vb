@@ -22,6 +22,7 @@ Partial Class frmMain
     '請勿使用程式碼編輯器進行修改。
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage30 = New System.Windows.Forms.TabPage()
         Me.tcBasicInfo = New System.Windows.Forms.TabControl()
@@ -666,6 +667,12 @@ Partial Class frmMain
         Me.TabPage32 = New System.Windows.Forms.TabPage()
         Me.TabControl6 = New System.Windows.Forms.TabControl()
         Me.tpCheque = New System.Windows.Forms.TabPage()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.Label94 = New System.Windows.Forms.Label()
+        Me.dtpQueryEnd_che = New System.Windows.Forms.DateTimePicker()
+        Me.dtpQueryStart_che = New System.Windows.Forms.DateTimePicker()
+        Me.Label116 = New System.Windows.Forms.Label()
+        Me.btnQuery_che = New System.Windows.Forms.Button()
         Me.TextBox23 = New System.Windows.Forms.TextBox()
         Me.Label124 = New System.Windows.Forms.Label()
         Me.txtCheId = New System.Windows.Forms.TextBox()
@@ -689,8 +696,6 @@ Partial Class frmMain
         Me.Label145 = New System.Windows.Forms.Label()
         Me.dtpCashingDate = New System.Windows.Forms.DateTimePicker()
         Me.lblCashingDate = New System.Windows.Forms.Label()
-        Me.dgvCheque = New System.Windows.Forms.DataGridView()
-        Me.Button39 = New System.Windows.Forms.Button()
         Me.btnCancel_Che = New System.Windows.Forms.Button()
         Me.TextBox76 = New System.Windows.Forms.TextBox()
         Me.Label148 = New System.Windows.Forms.Label()
@@ -698,6 +703,7 @@ Partial Class frmMain
         Me.Label147 = New System.Windows.Forms.Label()
         Me.DateTimePicker7 = New System.Windows.Forms.DateTimePicker()
         Me.Label146 = New System.Windows.Forms.Label()
+        Me.dgvCheque = New System.Windows.Forms.DataGridView()
         Me.TabPage6 = New System.Windows.Forms.TabPage()
         Me.Label172 = New System.Windows.Forms.Label()
         Me.TextBox61 = New System.Windows.Forms.TextBox()
@@ -734,6 +740,7 @@ Partial Class frmMain
         Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.TabControl1.SuspendLayout
         Me.TabPage30.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -789,6 +796,7 @@ Partial Class frmMain
         Me.TabPage32.SuspendLayout
         Me.TabControl6.SuspendLayout
         Me.tpCheque.SuspendLayout
+        Me.GroupBox5.SuspendLayout
         Me.GroupBox4.SuspendLayout
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabPage6.SuspendLayout
@@ -5130,10 +5138,10 @@ Partial Class frmMain
         '
         Me.txtCusCode_ord.Location = New System.Drawing.Point(109, 51)
         Me.txtCusCode_ord.Name = "txtCusCode_ord"
-        Me.txtCusCode_ord.ReadOnly = True
         Me.txtCusCode_ord.Size = New System.Drawing.Size(100, 30)
         Me.txtCusCode_ord.TabIndex = 460
         Me.txtCusCode_ord.Tag = "cus_code"
+        Me.ToolTip1.SetToolTip(Me.txtCusCode_ord, "輸入後按下Enter即可搜尋客戶")
         '
         'txtOperator
         '
@@ -6665,12 +6673,13 @@ Partial Class frmMain
         '
         'txtCusID_order
         '
-        Me.txtCusID_order.Location = New System.Drawing.Point(316, 94)
+        Me.txtCusID_order.Location = New System.Drawing.Point(582, 8)
         Me.txtCusID_order.Name = "txtCusID_order"
         Me.txtCusID_order.ReadOnly = True
         Me.txtCusID_order.Size = New System.Drawing.Size(100, 30)
         Me.txtCusID_order.TabIndex = 430
         Me.txtCusID_order.Tag = "cus_id"
+        Me.txtCusID_order.Visible = False
         '
         'txto_id
         '
@@ -6713,7 +6722,7 @@ Partial Class frmMain
         Me.btnQueryCus_ord.AutoSize = True
         Me.btnQueryCus_ord.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.btnQueryCus_ord.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnQueryCus_ord.Location = New System.Drawing.Point(219, 94)
+        Me.btnQueryCus_ord.Location = New System.Drawing.Point(314, 94)
         Me.btnQueryCus_ord.Name = "btnQueryCus_ord"
         Me.btnQueryCus_ord.Size = New System.Drawing.Size(82, 26)
         Me.btnQueryCus_ord.TabIndex = 449
@@ -6831,7 +6840,7 @@ Partial Class frmMain
         Me.cmbCarNo.FormattingEnabled = True
         Me.cmbCarNo.Location = New System.Drawing.Point(109, 94)
         Me.cmbCarNo.Name = "cmbCarNo"
-        Me.cmbCarNo.Size = New System.Drawing.Size(100, 27)
+        Me.cmbCarNo.Size = New System.Drawing.Size(199, 27)
         Me.cmbCarNo.TabIndex = 439
         Me.cmbCarNo.Tag = "o_c_id"
         '
@@ -7561,6 +7570,7 @@ Partial Class frmMain
         '
         'tpCheque
         '
+        Me.tpCheque.Controls.Add(Me.GroupBox5)
         Me.tpCheque.Controls.Add(Me.TextBox23)
         Me.tpCheque.Controls.Add(Me.Label124)
         Me.tpCheque.Controls.Add(Me.txtCheId)
@@ -7579,8 +7589,6 @@ Partial Class frmMain
         Me.tpCheque.Controls.Add(Me.Label145)
         Me.tpCheque.Controls.Add(Me.dtpCashingDate)
         Me.tpCheque.Controls.Add(Me.lblCashingDate)
-        Me.tpCheque.Controls.Add(Me.dgvCheque)
-        Me.tpCheque.Controls.Add(Me.Button39)
         Me.tpCheque.Controls.Add(Me.btnCancel_Che)
         Me.tpCheque.Controls.Add(Me.TextBox76)
         Me.tpCheque.Controls.Add(Me.Label148)
@@ -7588,6 +7596,7 @@ Partial Class frmMain
         Me.tpCheque.Controls.Add(Me.Label147)
         Me.tpCheque.Controls.Add(Me.DateTimePicker7)
         Me.tpCheque.Controls.Add(Me.Label146)
+        Me.tpCheque.Controls.Add(Me.dgvCheque)
         Me.tpCheque.Location = New System.Drawing.Point(4, 29)
         Me.tpCheque.Name = "tpCheque"
         Me.tpCheque.Padding = New System.Windows.Forms.Padding(5)
@@ -7596,9 +7605,65 @@ Partial Class frmMain
         Me.tpCheque.Text = "支票管理"
         Me.tpCheque.UseVisualStyleBackColor = True
         '
+        'GroupBox5
+        '
+        Me.GroupBox5.Controls.Add(Me.Label94)
+        Me.GroupBox5.Controls.Add(Me.dtpQueryEnd_che)
+        Me.GroupBox5.Controls.Add(Me.dtpQueryStart_che)
+        Me.GroupBox5.Controls.Add(Me.Label116)
+        Me.GroupBox5.Controls.Add(Me.btnQuery_che)
+        Me.GroupBox5.Location = New System.Drawing.Point(1146, 8)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(256, 156)
+        Me.GroupBox5.TabIndex = 360
+        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.Text = "查詢"
+        '
+        'Label94
+        '
+        Me.Label94.AutoSize = True
+        Me.Label94.Location = New System.Drawing.Point(6, 73)
+        Me.Label94.Name = "Label94"
+        Me.Label94.Size = New System.Drawing.Size(30, 19)
+        Me.Label94.TabIndex = 3
+        Me.Label94.Text = "迄"
+        '
+        'dtpQueryEnd_che
+        '
+        Me.dtpQueryEnd_che.Location = New System.Drawing.Point(42, 65)
+        Me.dtpQueryEnd_che.Name = "dtpQueryEnd_che"
+        Me.dtpQueryEnd_che.Size = New System.Drawing.Size(200, 30)
+        Me.dtpQueryEnd_che.TabIndex = 2
+        '
+        'dtpQueryStart_che
+        '
+        Me.dtpQueryStart_che.Location = New System.Drawing.Point(42, 29)
+        Me.dtpQueryStart_che.Name = "dtpQueryStart_che"
+        Me.dtpQueryStart_che.Size = New System.Drawing.Size(200, 30)
+        Me.dtpQueryStart_che.TabIndex = 1
+        '
+        'Label116
+        '
+        Me.Label116.AutoSize = True
+        Me.Label116.Location = New System.Drawing.Point(6, 37)
+        Me.Label116.Name = "Label116"
+        Me.Label116.Size = New System.Drawing.Size(30, 19)
+        Me.Label116.TabIndex = 0
+        Me.Label116.Text = "起"
+        '
+        'btnQuery_che
+        '
+        Me.btnQuery_che.BackColor = System.Drawing.Color.Lime
+        Me.btnQuery_che.Location = New System.Drawing.Point(42, 101)
+        Me.btnQuery_che.Name = "btnQuery_che"
+        Me.btnQuery_che.Size = New System.Drawing.Size(140, 44)
+        Me.btnQuery_che.TabIndex = 343
+        Me.btnQuery_che.Text = "查  詢"
+        Me.btnQuery_che.UseVisualStyleBackColor = False
+        '
         'TextBox23
         '
-        Me.TextBox23.Location = New System.Drawing.Point(1516, 12)
+        Me.TextBox23.Location = New System.Drawing.Point(406, 98)
         Me.TextBox23.Name = "TextBox23"
         Me.TextBox23.Size = New System.Drawing.Size(166, 30)
         Me.TextBox23.TabIndex = 432
@@ -7607,7 +7672,7 @@ Partial Class frmMain
         'Label124
         '
         Me.Label124.AutoSize = True
-        Me.Label124.Location = New System.Drawing.Point(1417, 15)
+        Me.Label124.Location = New System.Drawing.Point(307, 101)
         Me.Label124.Name = "Label124"
         Me.Label124.Size = New System.Drawing.Size(95, 19)
         Me.Label124.TabIndex = 431
@@ -7658,9 +7723,9 @@ Partial Class frmMain
         Me.GroupBox4.Controls.Add(Me.dtpCollectionEnd)
         Me.GroupBox4.Controls.Add(Me.dtpCollectionStart)
         Me.GroupBox4.Controls.Add(Me.Label119)
-        Me.GroupBox4.Location = New System.Drawing.Point(1150, 50)
+        Me.GroupBox4.Location = New System.Drawing.Point(1408, 8)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(400, 108)
+        Me.GroupBox4.Size = New System.Drawing.Size(256, 156)
         Me.GroupBox4.TabIndex = 358
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "批次代收"
@@ -7668,7 +7733,7 @@ Partial Class frmMain
         'btnCollectionBatch
         '
         Me.btnCollectionBatch.BackColor = System.Drawing.Color.Lime
-        Me.btnCollectionBatch.Location = New System.Drawing.Point(248, 29)
+        Me.btnCollectionBatch.Location = New System.Drawing.Point(42, 101)
         Me.btnCollectionBatch.Name = "btnCollectionBatch"
         Me.btnCollectionBatch.Size = New System.Drawing.Size(140, 44)
         Me.btnCollectionBatch.TabIndex = 359
@@ -7726,7 +7791,7 @@ Partial Class frmMain
         '
         'TextBox8
         '
-        Me.TextBox8.Location = New System.Drawing.Point(1246, 8)
+        Me.TextBox8.Location = New System.Drawing.Point(134, 98)
         Me.TextBox8.Name = "TextBox8"
         Me.TextBox8.Size = New System.Drawing.Size(166, 30)
         Me.TextBox8.TabIndex = 355
@@ -7735,7 +7800,7 @@ Partial Class frmMain
         'Label117
         '
         Me.Label117.AutoSize = True
-        Me.Label117.Location = New System.Drawing.Point(1146, 15)
+        Me.Label117.Location = New System.Drawing.Point(34, 101)
         Me.Label117.Name = "Label117"
         Me.Label117.Size = New System.Drawing.Size(94, 19)
         Me.Label117.TabIndex = 354
@@ -7763,7 +7828,7 @@ Partial Class frmMain
         'Button1
         '
         Me.Button1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.Button1.Location = New System.Drawing.Point(164, 114)
+        Me.Button1.Location = New System.Drawing.Point(740, 120)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(140, 44)
         Me.Button1.TabIndex = 351
@@ -7808,33 +7873,10 @@ Partial Class frmMain
         Me.lblCashingDate.Text = "兌現日期"
         Me.lblCashingDate.Visible = False
         '
-        'dgvCheque
-        '
-        Me.dgvCheque.AllowUserToAddRows = False
-        Me.dgvCheque.AllowUserToDeleteRows = False
-        Me.dgvCheque.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvCheque.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvCheque.Location = New System.Drawing.Point(5, 184)
-        Me.dgvCheque.Name = "dgvCheque"
-        Me.dgvCheque.ReadOnly = True
-        Me.dgvCheque.RowTemplate.Height = 24
-        Me.dgvCheque.Size = New System.Drawing.Size(1872, 760)
-        Me.dgvCheque.TabIndex = 346
-        '
-        'Button39
-        '
-        Me.Button39.BackColor = System.Drawing.Color.Lime
-        Me.Button39.Location = New System.Drawing.Point(320, 114)
-        Me.Button39.Name = "Button39"
-        Me.Button39.Size = New System.Drawing.Size(140, 44)
-        Me.Button39.TabIndex = 343
-        Me.Button39.Text = "查  詢"
-        Me.Button39.UseVisualStyleBackColor = False
-        '
         'btnCancel_Che
         '
         Me.btnCancel_Che.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_Che.Location = New System.Drawing.Point(8, 114)
+        Me.btnCancel_Che.Location = New System.Drawing.Point(584, 120)
         Me.btnCancel_Che.Name = "btnCancel_Che"
         Me.btnCancel_Che.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_Che.TabIndex = 342
@@ -7891,6 +7933,19 @@ Partial Class frmMain
         Me.Label146.Size = New System.Drawing.Size(93, 19)
         Me.Label146.TabIndex = 4
         Me.Label146.Text = "收票日期"
+        '
+        'dgvCheque
+        '
+        Me.dgvCheque.AllowUserToAddRows = False
+        Me.dgvCheque.AllowUserToDeleteRows = False
+        Me.dgvCheque.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvCheque.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgvCheque.Location = New System.Drawing.Point(5, 184)
+        Me.dgvCheque.Name = "dgvCheque"
+        Me.dgvCheque.ReadOnly = True
+        Me.dgvCheque.RowTemplate.Height = 24
+        Me.dgvCheque.Size = New System.Drawing.Size(1872, 760)
+        Me.dgvCheque.TabIndex = 346
         '
         'TabPage6
         '
@@ -8223,7 +8278,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.9.0"
+        Me.Text = "豐原瓦斯會計系統 v0.9.1"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage30.ResumeLayout(False)
@@ -8306,6 +8361,8 @@ Partial Class frmMain
         Me.TabControl6.ResumeLayout(False)
         Me.tpCheque.ResumeLayout(False)
         Me.tpCheque.PerformLayout
+        Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).EndInit
@@ -9015,7 +9072,7 @@ Partial Class frmMain
     Friend WithEvents dtpCashingDate As DateTimePicker
     Friend WithEvents lblCashingDate As Label
     Friend WithEvents dgvCheque As DataGridView
-    Friend WithEvents Button39 As Button
+    Friend WithEvents btnQuery_che As Button
     Friend WithEvents btnCancel_Che As Button
     Friend WithEvents TextBox76 As TextBox
     Friend WithEvents Label148 As Label
@@ -9032,4 +9089,10 @@ Partial Class frmMain
     Friend WithEvents txtCusCode_col As TextBox
     Friend WithEvents txtCashingDate As TextBox
     Friend WithEvents btnCashing As Button
+    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents GroupBox5 As GroupBox
+    Friend WithEvents Label94 As Label
+    Friend WithEvents dtpQueryEnd_che As DateTimePicker
+    Friend WithEvents dtpQueryStart_che As DateTimePicker
+    Friend WithEvents Label116 As Label
 End Class

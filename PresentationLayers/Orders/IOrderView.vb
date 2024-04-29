@@ -22,5 +22,6 @@
     Sub Reset()
 
     Sub ShowDetails(data As order)
+
     Function GetQueryCondition() As OrderQueryVM
 End Interface

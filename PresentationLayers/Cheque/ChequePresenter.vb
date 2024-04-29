@@ -1,13 +1,8 @@
 ﻿Public Class ChequePresenter
-    'Inherits BasePresenter(Of cheque, ChequeVM, ICheque)
-    'Implements IPresenter(Of cheque, ChequeVM)
-
     Private _view As ICheque
     Private cheRep As IChequeRepository = New ChequeRepository
 
     Public Sub New(view As ICheque)
-        'MyBase.New(view)
-        '_presenter = Me
         _view = view
     End Sub
 
@@ -45,7 +40,7 @@
                 datas.ForEach(Sub(x) x.chu_State = "已代收")
                 db.SaveChanges()
                 LoadList()
-                MsgBox("修改完成")
+                MsgBox($"需修改張數:{datas.Count} 已修改張數:{datas.Count}")
             End Using
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -81,6 +76,20 @@
 
         Return False
     End Function
+
+    ''' <summary>
+    ''' 列出未兌現清單
+    ''' </summary>
+    ''' <param name="startDate"></param>
+    ''' <param name="endDate"></param>
+    Public Sub ShowCollectionYetList(startDate As Date, endDate As Date)
+        Dim list = cheRep.Query(startDate, endDate, New cheque With {.chu_State = "未兌現"})
+        _view.ShowList(list)
+    End Sub
+
+    Public Sub Query(startDate As Date, endDate As Date)
+        _view.ShowList(cheRep.Query(startDate, endDate))
+    End Sub
 
     Private Function SetSearchConditions(query As IQueryable(Of cheque), conditions As Object) As IQueryable(Of cheque)
         Throw New NotImplementedException()

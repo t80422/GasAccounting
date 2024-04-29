@@ -44,6 +44,7 @@ Public Class frmMain
         {"txtEmpty_50", "txtEmpty_20", "txtEmpty_16", "txtEmpty_10", "txtEmpty_4", "txtEmpty_15", "txtEmpty_14", "txtEmpty_5", "txtEmpty_2"},
         {"txtDepositOut_50", "txtDepositOut_20", "txtDepositOut_16", "txtDepositOut_10", "txtDepositOut_4", "txtDepositOut_15", "txtDepositOut_14", "txtDepositOut_5", "txtDepositOut_2"}
     }
+    Private orderDateIsToMin As Boolean = False '用來控制"銷售管理""日期"跳到"分"
 
 
     'Private orgStockValues As New Dictionary(Of String, Object) '儲存客戶瓦斯桶庫存
@@ -865,9 +866,6 @@ Public Class frmMain
 
     Public Sub ShowDetails(data As order) Implements IOrderView.ShowDetails
         AutoMapEntityToControls(data, tpOrder)
-        'AutoMapEntityToControls(data.car.customer, tpOrder)
-        'AutoMapEntityToControls(data.car, tpOrder)
-        'txtOperator.Text = data.employee.emp_name
         If data.o_in_out = "進場單" Then
             tpOut.Parent = Nothing
             tpIn.Parent = tcInOut
@@ -930,24 +928,6 @@ Public Class frmMain
     Private Sub btnCancel_order_Click(sender As Object, e As EventArgs) Handles btnCancel_order.Click
         Reset()
         _order.LoadList()
-
-        'Dim exception = New List(Of String) From {grpTransport.Name}
-        'ClearControls(tpOrder, exception)
-        'cmbo_deposit_out_c_id.DataSource = Nothing
-        'orgGasValues.Clear()
-        'orgDepositValues.Clear()
-
-        'Using db As New gas_accounting_systemEntities
-        '    Dim query = db.orders.Include("car").Include("car.customer").Include("employee")
-        '    dgvOrder.DataSource = OrderVM.GetOrderList(query)
-        'End Using
-
-        'tpOut.Parent = tcInOut
-        'tpIn.Parent = tcInOut
-
-        'If btnQuery_order.Text = "確  認" Then SetOrderQueryCtrl(btnQuery_order)
-
-        'txtOperator.Text = User.Name
     End Sub
 
     '銷售管理-搜尋客戶
@@ -1082,8 +1062,6 @@ Public Class frmMain
         SetButtonState(sender, False)
 
         Dim row = dgvOrder.SelectedRows(0)
-        'Dim ordId As Integer = row.Cells("編號").Value
-        '_order.GetDetail(ordId)
 
         Using db As New gas_accounting_systemEntities
             Dim ordId As Integer = row.Cells("編號").Value
@@ -1294,6 +1272,45 @@ Public Class frmMain
             Case Keys.F5
 
         End Select
+    End Sub
+
+    '銷售管理-客戶代號
+    Private Sub txtCusCode_ord_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCusCode_ord.KeyDown
+        '按下Enter時,搜尋客戶資料
+        If e.KeyCode = Keys.Enter Then
+            Dim cus = _order.GetCusDataByCusCode(txtCusCode_ord.Text)
+            Reset()
+            If cus IsNot Nothing Then
+                txtCusCode_ord.Text = cus.cus_code
+                txtCusName.Text = cus.cus_name
+                txtCusID_order.Text = cus.cus_id
+
+                '"客戶代號" 輸入完成並按下 "enter" ,有查到就跳到 "日期" 的時間 "分"=====
+                dtpo_date.Focus()
+
+                '模擬按"Tab"兩次以跳到"分"
+                If Not orderDateIsToMin Then
+                    SendKeys.Send("{RIGHT}")
+                    SendKeys.Send("{RIGHT}")
+                    SendKeys.Send("{RIGHT}")
+                    SendKeys.Send("{RIGHT}")
+                    orderDateIsToMin = True
+                End If
+                '=======================================================================
+            Else
+                MsgBox("查無此客戶")
+            End If
+        End If
+    End Sub
+
+    '銷售管理-日期
+    Private Sub dtpo_date_KeyDown(sender As Object, e As KeyEventArgs) Handles dtpo_date.KeyDown
+        '按下Enter時,跳到"車號"
+        If e.KeyCode = Keys.Enter Then
+            cmbCarNo.Focus()
+            '自動展開選單
+            cmbCarNo.DroppedDown = True
+        End If
     End Sub
 
     ''' <summary>
@@ -2372,6 +2389,7 @@ Public Class frmMain
     Private Sub btnCancel_Che_Click(sender As Object, e As EventArgs) Handles btnCancel_Che.Click
         ClearControls(tpCheque)
         _cheque.LoadList()
+        btnCollectionBatch.Text = "批次代收"
     End Sub
 
     '會計管理-支票管理-dgv
@@ -2399,12 +2417,17 @@ Public Class frmMain
     '會計管理-支票管理-批次代收
     Private Sub btnCollectionBatch_Click(sender As Object, e As EventArgs) Handles btnCollectionBatch.Click
         If btnCollectionBatch.Text = "批次代收" Then
-
+            _cheque.ShowCollectionYetList(dtpCollectionStart.Value, dtpCollectionEnd.Value)
             btnCollectionBatch.Text = "確認"
         Else
             _cheque.SetBatchCollection(dtpCollectionStart.Value.Date, dtpCollectionEnd.Value.Date)
+
             btnCollectionBatch.Text = "批次代收"
         End If
+    End Sub
 
+    '會計管理-支票管理-查詢
+    Private Sub btnQuery_che_Click(sender As Object, e As EventArgs) Handles btnQuery_che.Click
+        _cheque.Query(dtpQueryStart_che.Value, dtpQueryEnd_che.Value)
     End Sub
 End Class

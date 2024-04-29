@@ -30,4 +30,15 @@
             Return Nothing
         End Try
     End Function
+
+    Public Function GetCusByCusCode(cusCode As String) As customer Implements ICustomerRepository.GetCusByCusCode
+        Try
+            Using db As New gas_accounting_systemEntities
+                Return db.customers.FirstOrDefault(Function(x) x.cus_code = cusCode)
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            Return Nothing
+        End Try
+    End Function
 End Class
