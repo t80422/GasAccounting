@@ -25,6 +25,7 @@
     ''' <param name="cusId"></param>
     Public Sub GetCusStk(cusId As Integer)
         Dim data = _cusRep.GetCustomerById(cusId)
+
         If data IsNot Nothing Then
             StockValues = GetEntityFieldsByPrefix(data, "cus_gas")
             _view.ShowCusStk(data)

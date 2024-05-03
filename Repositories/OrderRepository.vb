@@ -72,6 +72,16 @@ Public Class OrderRepository
 
                     db.SaveChanges()
                     transation.Commit()
+                Catch ex As DbUpdateException
+                    Dim innerException = ex.InnerException
+
+                    While innerException IsNot Nothing
+                        Console.WriteLine(innerException.Message)
+                        innerException = innerException.InnerException
+                    End While
+
+                    transation.Rollback()
+                    Throw
                 Catch ex As Exception
                     transation.Rollback()
                     Throw

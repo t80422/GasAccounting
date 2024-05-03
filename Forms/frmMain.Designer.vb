@@ -2001,10 +2001,10 @@ Partial Class frmMain
         Me.grpPricePlan.Controls.Add(Me.txtcus_gas_c_deliver)
         Me.grpPricePlan.Controls.Add(Me.lblCGasDeliver_cus)
         Me.grpPricePlan.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.grpPricePlan.Location = New System.Drawing.Point(544, 134)
+        Me.grpPricePlan.Location = New System.Drawing.Point(1314, 96)
         Me.grpPricePlan.Name = "grpPricePlan"
         Me.grpPricePlan.Padding = New System.Windows.Forms.Padding(5)
-        Me.grpPricePlan.Size = New System.Drawing.Size(436, 179)
+        Me.grpPricePlan.Size = New System.Drawing.Size(436, 160)
         Me.grpPricePlan.TabIndex = 350
         Me.grpPricePlan.TabStop = False
         Me.grpPricePlan.Text = "價格方案"
@@ -2134,10 +2134,10 @@ Partial Class frmMain
         Me.grpStock.Controls.Add(Me.Label198)
         Me.grpStock.Controls.Add(Me.TextBox79)
         Me.grpStock.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.grpStock.Location = New System.Drawing.Point(8, 134)
+        Me.grpStock.Location = New System.Drawing.Point(778, 96)
         Me.grpStock.Name = "grpStock"
         Me.grpStock.Padding = New System.Windows.Forms.Padding(5)
-        Me.grpStock.Size = New System.Drawing.Size(530, 179)
+        Me.grpStock.Size = New System.Drawing.Size(530, 160)
         Me.grpStock.TabIndex = 349
         Me.grpStock.TabStop = False
         Me.grpStock.Text = "瓦斯桶庫存"
@@ -2591,7 +2591,7 @@ Partial Class frmMain
         'btnQuery_cus
         '
         Me.btnQuery_cus.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_cus.Location = New System.Drawing.Point(1610, 269)
+        Me.btnQuery_cus.Location = New System.Drawing.Point(632, 212)
         Me.btnQuery_cus.Name = "btnQuery_cus"
         Me.btnQuery_cus.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_cus.TabIndex = 306
@@ -2601,7 +2601,7 @@ Partial Class frmMain
         'btnCancel_cus
         '
         Me.btnCancel_cus.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_cus.Location = New System.Drawing.Point(1454, 269)
+        Me.btnCancel_cus.Location = New System.Drawing.Point(476, 212)
         Me.btnCancel_cus.Name = "btnCancel_cus"
         Me.btnCancel_cus.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_cus.TabIndex = 305
@@ -2611,7 +2611,7 @@ Partial Class frmMain
         'btnDelete_cus
         '
         Me.btnDelete_cus.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete_cus.Location = New System.Drawing.Point(1298, 269)
+        Me.btnDelete_cus.Location = New System.Drawing.Point(320, 212)
         Me.btnDelete_cus.Name = "btnDelete_cus"
         Me.btnDelete_cus.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_cus.TabIndex = 304
@@ -2621,7 +2621,7 @@ Partial Class frmMain
         'btnEdit_cus
         '
         Me.btnEdit_cus.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit_cus.Location = New System.Drawing.Point(1142, 269)
+        Me.btnEdit_cus.Location = New System.Drawing.Point(164, 212)
         Me.btnEdit_cus.Name = "btnEdit_cus"
         Me.btnEdit_cus.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_cus.TabIndex = 303
@@ -2631,7 +2631,7 @@ Partial Class frmMain
         'btnCreate_cus
         '
         Me.btnCreate_cus.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCreate_cus.Location = New System.Drawing.Point(986, 269)
+        Me.btnCreate_cus.Location = New System.Drawing.Point(8, 212)
         Me.btnCreate_cus.Name = "btnCreate_cus"
         Me.btnCreate_cus.Size = New System.Drawing.Size(140, 44)
         Me.btnCreate_cus.TabIndex = 302
@@ -2643,10 +2643,10 @@ Partial Class frmMain
         '
         Me.dgvCustomer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCustomer.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvCustomer.Location = New System.Drawing.Point(5, 324)
+        Me.dgvCustomer.Location = New System.Drawing.Point(5, 274)
         Me.dgvCustomer.Name = "dgvCustomer"
         Me.dgvCustomer.RowTemplate.Height = 24
-        Me.dgvCustomer.Size = New System.Drawing.Size(1872, 620)
+        Me.dgvCustomer.Size = New System.Drawing.Size(1872, 670)
         Me.dgvCustomer.TabIndex = 301
         '
         'tpCar
@@ -6238,6 +6238,7 @@ Partial Class frmMain
         'txtGas_c_2
         '
         Me.txtGas_c_2.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtGas_c_2.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_2.Location = New System.Drawing.Point(762, 42)
         Me.txtGas_c_2.Name = "txtGas_c_2"
         Me.txtGas_c_2.Size = New System.Drawing.Size(53, 30)
@@ -6265,6 +6266,7 @@ Partial Class frmMain
         'txtGas_c_5
         '
         Me.txtGas_c_5.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtGas_c_5.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_5.Location = New System.Drawing.Point(685, 42)
         Me.txtGas_c_5.Name = "txtGas_c_5"
         Me.txtGas_c_5.Size = New System.Drawing.Size(53, 30)
@@ -6292,6 +6294,7 @@ Partial Class frmMain
         'txtGas_c_14
         '
         Me.txtGas_c_14.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtGas_c_14.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_14.Location = New System.Drawing.Point(608, 42)
         Me.txtGas_c_14.Name = "txtGas_c_14"
         Me.txtGas_c_14.Size = New System.Drawing.Size(53, 30)
@@ -6319,6 +6322,7 @@ Partial Class frmMain
         'txtGas_c_15
         '
         Me.txtGas_c_15.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtGas_c_15.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_15.Location = New System.Drawing.Point(531, 42)
         Me.txtGas_c_15.Name = "txtGas_c_15"
         Me.txtGas_c_15.Size = New System.Drawing.Size(53, 30)
@@ -6344,6 +6348,7 @@ Partial Class frmMain
         '
         'txtGas_c_4
         '
+        Me.txtGas_c_4.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_4.Location = New System.Drawing.Point(454, 42)
         Me.txtGas_c_4.Name = "txtGas_c_4"
         Me.txtGas_c_4.Size = New System.Drawing.Size(53, 30)
@@ -6368,6 +6373,7 @@ Partial Class frmMain
         '
         'txtGas_c_10
         '
+        Me.txtGas_c_10.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_10.Location = New System.Drawing.Point(377, 42)
         Me.txtGas_c_10.Name = "txtGas_c_10"
         Me.txtGas_c_10.Size = New System.Drawing.Size(53, 30)
@@ -6392,6 +6398,7 @@ Partial Class frmMain
         '
         'txtGas_c_16
         '
+        Me.txtGas_c_16.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_16.Location = New System.Drawing.Point(300, 42)
         Me.txtGas_c_16.Name = "txtGas_c_16"
         Me.txtGas_c_16.Size = New System.Drawing.Size(53, 30)
@@ -6416,6 +6423,7 @@ Partial Class frmMain
         '
         'txtGas_c_20
         '
+        Me.txtGas_c_20.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_20.Location = New System.Drawing.Point(223, 42)
         Me.txtGas_c_20.Name = "txtGas_c_20"
         Me.txtGas_c_20.Size = New System.Drawing.Size(53, 30)
@@ -6440,6 +6448,7 @@ Partial Class frmMain
         '
         'txtGas_c_50
         '
+        Me.txtGas_c_50.ForeColor = System.Drawing.Color.Red
         Me.txtGas_c_50.Location = New System.Drawing.Point(146, 42)
         Me.txtGas_c_50.Name = "txtGas_c_50"
         Me.txtGas_c_50.Size = New System.Drawing.Size(53, 30)
@@ -6673,7 +6682,7 @@ Partial Class frmMain
         '
         'txtCusID_order
         '
-        Me.txtCusID_order.Location = New System.Drawing.Point(582, 8)
+        Me.txtCusID_order.Location = New System.Drawing.Point(402, 94)
         Me.txtCusID_order.Name = "txtCusID_order"
         Me.txtCusID_order.ReadOnly = True
         Me.txtCusID_order.Size = New System.Drawing.Size(100, 30)
@@ -8278,7 +8287,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.9.1"
+        Me.Text = "豐原瓦斯會計系統 v0.9.2"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage30.ResumeLayout(False)
