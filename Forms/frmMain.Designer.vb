@@ -587,7 +587,7 @@ Partial Class frmMain
         Me.Label203 = New System.Windows.Forms.Label()
         Me.Label202 = New System.Windows.Forms.Label()
         Me.btnQueryCus_ord = New System.Windows.Forms.Button()
-        Me.Button19 = New System.Windows.Forms.Button()
+        Me.btnPrint = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.Label165 = New System.Windows.Forms.Label()
         Me.btnQuery_order = New System.Windows.Forms.Button()
@@ -739,8 +739,11 @@ Partial Class frmMain
         Me.Column29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.btnCusGasPayCollect = New System.Windows.Forms.Button()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.dtpReport = New System.Windows.Forms.DateTimePicker()
         Me.TabControl1.SuspendLayout
         Me.TabPage30.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -804,6 +807,7 @@ Partial Class frmMain
         CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.NumericUpDown20, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.TabPage3.SuspendLayout
         Me.SuspendLayout
         '
         'TabControl1
@@ -5108,7 +5112,7 @@ Partial Class frmMain
         Me.tpOrder.Controls.Add(Me.Label203)
         Me.tpOrder.Controls.Add(Me.Label202)
         Me.tpOrder.Controls.Add(Me.btnQueryCus_ord)
-        Me.tpOrder.Controls.Add(Me.Button19)
+        Me.tpOrder.Controls.Add(Me.btnPrint)
         Me.tpOrder.Controls.Add(Me.GroupBox3)
         Me.tpOrder.Controls.Add(Me.Label77)
         Me.tpOrder.Controls.Add(Me.Label64)
@@ -6629,6 +6633,7 @@ Partial Class frmMain
         Me.txtSumGas_c.ReadOnly = True
         Me.txtSumGas_c.Size = New System.Drawing.Size(100, 30)
         Me.txtSumGas_c.TabIndex = 453
+        Me.txtSumGas_c.Tag = "o_gas_c_total"
         '
         'txtSumGas
         '
@@ -6637,6 +6642,7 @@ Partial Class frmMain
         Me.txtSumGas.ReadOnly = True
         Me.txtSumGas.Size = New System.Drawing.Size(100, 30)
         Me.txtSumGas.TabIndex = 451
+        Me.txtSumGas.Tag = "o_gas_total"
         '
         'txto_sales_allowance
         '
@@ -6738,15 +6744,15 @@ Partial Class frmMain
         Me.btnQueryCus_ord.Text = "搜尋客戶"
         Me.btnQueryCus_ord.UseVisualStyleBackColor = False
         '
-        'Button19
+        'btnPrint
         '
-        Me.Button19.BackColor = System.Drawing.Color.Lime
-        Me.Button19.Location = New System.Drawing.Point(632, 302)
-        Me.Button19.Name = "Button19"
-        Me.Button19.Size = New System.Drawing.Size(140, 44)
-        Me.Button19.TabIndex = 431
-        Me.Button19.Text = "列印 (F5)"
-        Me.Button19.UseVisualStyleBackColor = False
+        Me.btnPrint.BackColor = System.Drawing.Color.Lime
+        Me.btnPrint.Location = New System.Drawing.Point(632, 302)
+        Me.btnPrint.Name = "btnPrint"
+        Me.btnPrint.Size = New System.Drawing.Size(140, 44)
+        Me.btnPrint.TabIndex = 431
+        Me.btnPrint.Text = "列印 (F5)"
+        Me.btnPrint.UseVisualStyleBackColor = False
         '
         'GroupBox3
         '
@@ -6774,7 +6780,7 @@ Partial Class frmMain
         'btnQuery_order
         '
         Me.btnQuery_order.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_order.Location = New System.Drawing.Point(10, 101)
+        Me.btnQuery_order.Location = New System.Drawing.Point(42, 105)
         Me.btnQuery_order.Name = "btnQuery_order"
         Me.btnQuery_order.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_order.TabIndex = 339
@@ -7570,6 +7576,7 @@ Partial Class frmMain
         '
         Me.TabControl6.Controls.Add(Me.tpCheque)
         Me.TabControl6.Controls.Add(Me.TabPage6)
+        Me.TabControl6.Controls.Add(Me.TabPage3)
         Me.TabControl6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl6.Location = New System.Drawing.Point(3, 3)
         Me.TabControl6.Name = "TabControl6"
@@ -8269,6 +8276,28 @@ Partial Class frmMain
         Me.TextBox2.TabIndex = 410
         Me.TextBox2.Tag = "cus_tax_id"
         '
+        'TabPage3
+        '
+        Me.TabPage3.Controls.Add(Me.dtpReport)
+        Me.TabPage3.Controls.Add(Me.btnCusGasPayCollect)
+        Me.TabPage3.Location = New System.Drawing.Point(4, 29)
+        Me.TabPage3.Name = "TabPage3"
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage3.Size = New System.Drawing.Size(1882, 949)
+        Me.TabPage3.TabIndex = 28
+        Me.TabPage3.Text = "報表"
+        Me.TabPage3.UseVisualStyleBackColor = True
+        '
+        'btnCusGasPayCollect
+        '
+        Me.btnCusGasPayCollect.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnCusGasPayCollect.Location = New System.Drawing.Point(10, 10)
+        Me.btnCusGasPayCollect.Name = "btnCusGasPayCollect"
+        Me.btnCusGasPayCollect.Size = New System.Drawing.Size(250, 30)
+        Me.btnCusGasPayCollect.TabIndex = 0
+        Me.btnCusGasPayCollect.Text = "日氣量氣款收付明細表"
+        Me.btnCusGasPayCollect.UseVisualStyleBackColor = False
+        '
         'tpLogOut
         '
         Me.tpLogOut.Location = New System.Drawing.Point(4, 29)
@@ -8279,6 +8308,13 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
+        'dtpReport
+        '
+        Me.dtpReport.Location = New System.Drawing.Point(304, 79)
+        Me.dtpReport.Name = "dtpReport"
+        Me.dtpReport.Size = New System.Drawing.Size(200, 30)
+        Me.dtpReport.TabIndex = 1
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -8287,7 +8323,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.9.2"
+        Me.Text = "豐原瓦斯會計系統 v0.9.3"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage30.ResumeLayout(False)
@@ -8382,6 +8418,7 @@ Partial Class frmMain
         CType(Me.NumericUpDown19, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.NumericUpDown20, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit
+        Me.TabPage3.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -8920,7 +8957,7 @@ Partial Class frmMain
     Friend WithEvents Label203 As Label
     Friend WithEvents Label202 As Label
     Friend WithEvents btnQueryCus_ord As Button
-    Friend WithEvents Button19 As Button
+    Friend WithEvents btnPrint As Button
     Friend WithEvents GroupBox3 As GroupBox
     Friend WithEvents Label165 As Label
     Friend WithEvents btnQuery_order As Button
@@ -9104,4 +9141,7 @@ Partial Class frmMain
     Friend WithEvents dtpQueryEnd_che As DateTimePicker
     Friend WithEvents dtpQueryStart_che As DateTimePicker
     Friend WithEvents Label116 As Label
+    Friend WithEvents TabPage3 As TabPage
+    Friend WithEvents btnCusGasPayCollect As Button
+    Friend WithEvents dtpReport As DateTimePicker
 End Class

@@ -41,4 +41,31 @@
             Return Nothing
         End Try
     End Function
+
+    Public Function CustomersGasDetailByDay(d As Date) As List(Of CustomersGasDetailByDay) Implements ICustomerRepository.CustomersGasDetailByDay
+        Try
+            Using db As New gas_accounting_systemEntities
+                Return db.customers.Select(Function(x) New CustomersGasDetailByDay With {
+                     .客戶名稱 = x.cus_name,
+                     .存氣 = 0,
+                     .本日提量 = db.orders.Where(Function(o) o.car.c_cus_id = x.cus_id And o.o_date.Value.Date = d.Date).
+                                           Sum(Function(o) o.o_gas_total + o.o_gas_c_total),
+                     .當月累計提量 = db.orders.Where(Function(o) o.car.c_cus_id = x.cus_id And o.o_date.Value.Year = d.Year And o.o_date.Value.Month = d.Month).
+                                               Sum(Function(o) o.o_gas_total + o.o_gas_c_total),
+                     .本日氣款 = db.orders.Where(Function(o) o.car.c_cus_id = x.cus_id And o.o_date.Value.Date = d.Date).
+                                           Sum(Function(o) o.o_total_amount),
+                     .本日收款 = db.collections.Where(Function(c) c.col_cus_Id = x.cus_id And c.col_Date.Date = d.Date).
+                                                Sum(Function(c) c.col_Amount),
+                     .結欠 = db.orders.Where(Function(o) o.car.c_cus_id = x.cus_id And o.o_date.Value.Year = d.Year And o.o_date.Value.Month = d.Month).
+                                       Sum(Function(o) o.o_total_amount) -
+                             db.collections.Where(Function(c) c.col_cus_Id = x.cus_id And c.col_Date.Year = d.Year And c.col_Date.Month = d.Month).
+                                       Sum(Function(c) c.col_Amount)
+                 })
+            End Using
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+            Throw
+            Return New List(Of CustomersGasDetailByDay)
+        End Try
+    End Function
 End Class

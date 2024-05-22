@@ -31,6 +31,7 @@ Public Class frmMain
     Private _collect As New CollectionPresenter(Me, _subjectService, _bankService, _compService)
     Private _cheque As New ChequePresenter(Me)
     Private _order As New OrderPresenter(Me)
+    Private _report As New Report()
 
     Private inputTxts As String(,) = {
         {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_15", "txto_in_14", "txto_in_5", "txto_in_2"},
@@ -927,7 +928,7 @@ Public Class frmMain
     '銷售管理-取消
     Private Sub btnCancel_order_Click(sender As Object, e As EventArgs) Handles btnCancel_order.Click
         Reset()
-        _order.LoadList()
+        _order.LoadList(False)
     End Sub
 
     '銷售管理-搜尋客戶
@@ -973,6 +974,7 @@ Public Class frmMain
     '銷售管理-新增
     Private Sub btnCreate_ord_Click(sender As Object, e As EventArgs) Handles btnCreate_ord.Click
         _order.Add(If(tcInOut.SelectedIndex = 0, tpIn, tpOut))
+        txtCusCode_ord.Focus()
     End Sub
 
     '銷售管理-dgv
@@ -1071,7 +1073,7 @@ Public Class frmMain
 
             Case Keys.F4
                 Reset()
-                _order.LoadList()
+                _order.LoadList(False)
 
             Case Keys.F5
 
@@ -1133,33 +1135,13 @@ Public Class frmMain
         SetOrderQueryCtrl(btn)
 
         If btn.Text = "查  詢" Then
-            Try
-                Using db As New gas_accounting_systemEntities
-                    ' 初始化查詢，包含關聯
-                    Dim query = db.orders.Include("car").Include("car.customer")
-
-                    ' 轉換輸入值
-                    Dim startDate = dtpStart_order.Value
-                    Dim endDate = dtpEnd_order.Value
-                    Dim cusId As Integer = If(String.IsNullOrEmpty(txtCusID_order.Text), 0, Convert.ToInt32(txtCusID_order.Text))
-                    Dim carId As Integer = If(String.IsNullOrEmpty(cmbCarNo.SelectedValue), 0, Convert.ToInt32(cmbCarNo.SelectedValue))
-
-                    ' 應用過濾條件
-                    If cusId > 0 Then
-                        query = query.Where(Function(x) x.car.c_cus_id = cusId)
-                    End If
-                    If carId > 0 Then
-                        query = query.Where(Function(x) x.o_c_id = carId)
-                    End If
-                    query = query.Where(Function(x) x.o_date >= startDate AndAlso x.o_date <= endDate)
-                End Using
-
-                ClearControls(tpOrder)
-            Catch ex As Exception
-                MsgBox(ex.Message)
-                Console.WriteLine(ex.Message)
-            End Try
+            _order.LoadList(True)
         End If
+    End Sub
+
+    '銷售管理-列印
+    Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
+        _order.Print(txto_id.Text)
     End Sub
 
     ''' <summary>
@@ -1940,17 +1922,6 @@ Public Class frmMain
         ClearControls(tpCollection)
     End Sub
 
-    Private Function SetRequired_collection() As List(Of Control) Implements ICommonView(Of collection, CollectionVM).SetRequired
-        'Dim list As New List(Of Control) From {txtAmount_collection, cmbType_col, cmbSubjects, txtCusId_col, cmbCompany_col}
-
-        'If cmbType_col.Text = "支票" Then
-        '    Dim ctrls As Control() = {txtCheque_col, txtIssuerName, txtCheAcctNum}
-        '    list.AddRange(ctrls)
-        'End If
-
-        'Return list
-    End Function
-
     Private Sub ICollectionView_SetSubjectsCmb(data As List(Of ComboBoxItems)) Implements ICollectionView.SetSubjectsCmb
         SetComboBox(cmbSubjects, data)
     End Sub
@@ -2154,5 +2125,14 @@ Public Class frmMain
     '會計管理-支票管理-查詢
     Private Sub btnQuery_che_Click(sender As Object, e As EventArgs) Handles btnQuery_che.Click
         _cheque.Query(dtpQueryStart_che.Value, dtpQueryEnd_che.Value)
+    End Sub
+
+    Private Function ICommonView_SetRequired() As List(Of Control) Implements ICommonView(Of collection, CollectionVM).SetRequired
+        Throw New NotImplementedException()
+    End Function
+
+    '會計管理-報表-日氣量氣款收付明細表
+    Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
+        _report.PrintCustomersGasDetailByDay(dtpReport.Value)
     End Sub
 End Class

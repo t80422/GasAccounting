@@ -15,6 +15,7 @@ Partial Public Class subject
     Public Property s_Type As String
     Public Property s_name As String
     Public Property s_memo As String
+    Public Property s_IsDeletable As Nullable(Of Boolean)
 
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property journals As ICollection(Of journal) = New HashSet(Of journal)
