@@ -97,6 +97,8 @@ Partial Public Class order
     Public Property o_Operator As Nullable(Of Integer)
     Public Property o_gas_total As Nullable(Of Integer)
     Public Property o_gas_c_total As Nullable(Of Integer)
+    Public Property o_UnitPrice As Nullable(Of Single)
+    Public Property o_UnitPriceC As Nullable(Of Single)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car

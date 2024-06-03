@@ -1,0 +1,118 @@
+﻿Imports ClosedXML.Excel
+
+Public Class CloseXML_Excel
+    Implements IDisposable
+
+    Private workbook As XLWorkbook
+    Private worksheet As IXLWorksheet
+
+    Public Sub New(filePath As String)
+        Try
+            workbook = New XLWorkbook(filePath)
+            worksheet = workbook.Worksheets.First()
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+            Throw
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 設定指定列的欄寬。
+    ''' </summary>
+    ''' <param name="columnIndex">列的索引，從 1 開始。</param>
+    ''' <param name="width">欄寬值。</param>
+    Public Sub SetColumnWidth(columnIndex As Integer, width As Double)
+        worksheet.Column(columnIndex).Width = width
+    End Sub
+
+    ''' <summary>
+    ''' 設定指定行的列高。
+    ''' </summary>
+    ''' <param name="rowIndex">行的索引，從 1 開始。</param>
+    ''' <param name="height_cm">列高值。</param>
+    Public Sub SetRowHeight(rowIndex As Integer, height_cm As Double)
+        worksheet.Row(rowIndex).Height = CmToPoints(height_cm)
+    End Sub
+
+    Public Sub SelectWorksheet(sheetName As String)
+        Try
+            worksheet = workbook.Worksheet(sheetName)
+        Catch ex As Exception
+            Console.WriteLine($"Sheet '{sheetName}' not found: {ex.Message}")
+        End Try
+    End Sub
+
+    Public Sub WriteToCell(rowIndex As Integer, columnIndex As Integer, content As String, Optional formatOptions As CellFormatOptions = Nothing)
+        Dim cell = worksheet.Cell(rowIndex, columnIndex)
+        cell.Value = content
+
+        If formatOptions IsNot Nothing Then
+            cell.Style.Font.FontName = formatOptions.FontName
+            cell.Style.Font.FontSize = formatOptions.FontSize
+            cell.Style.Font.Bold = formatOptions.IsBold
+            cell.Style.Alignment.Horizontal = If(formatOptions.HorizontalCenter, XLAlignmentHorizontalValues.Center, XLAlignmentHorizontalValues.Left)
+            cell.Style.Alignment.Vertical = If(formatOptions.VerticalCenter, XLAlignmentVerticalValues.Center, XLAlignmentVerticalValues.Top)
+            cell.Style.Alignment.WrapText = formatOptions.WrapText
+            If formatOptions.VerticalText Then cell.Style.Alignment.TextRotation = 255
+        End If
+    End Sub
+
+    Public Function SaveAs(filePath As String) As Boolean
+        Try
+            workbook.SaveAs(filePath)
+            MsgBox("報表建立成功!")
+            Return True
+        Catch ex As Exception
+            MsgBox($"Error saving file: {ex.Message}")
+        End Try
+
+        Return False
+    End Function
+
+    Public Sub Dispose() Implements IDisposable.Dispose
+        workbook?.Dispose()
+    End Sub
+
+    ''' <summary>
+    ''' 設定指定範圍的單元格下底線
+    ''' </summary>
+    ''' <param name="startRowIndex">起始行索引，從1開始</param>
+    ''' <param name="startColIndex">起始列索引，從1開始</param>
+    ''' <param name="endRowIndex">結束行索引，從1開始</param>
+    ''' <param name="endColIndex">結束列索引，從1開始</param>
+    ''' <param name="borderStyle">下底線樣式</param>
+    Public Sub SetBottomBorder(startRowIndex As Integer, startColIndex As Integer, endRowIndex As Integer, endColIndex As Integer, Optional borderStyle As XLBorderStyleValues = XLBorderStyleValues.Thin)
+        Dim range = worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
+        range.Style.Border.BottomBorder = borderStyle
+    End Sub
+
+    Public Class CellFormatOptions
+        Public Property FontName As String = "新細明體"
+        Public Property FontSize As Double = 11
+        Public Property IsBold As Boolean = False
+        ''' <summary>
+        ''' 水平置中
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property HorizontalCenter As Boolean = False
+        ''' <summary>
+        ''' 垂直置中
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property VerticalCenter As Boolean = False
+        ''' <summary>
+        ''' 自動換行
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property WrapText As Boolean = False
+        ''' <summary>
+        ''' 垂直文字
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property VerticalText As Boolean = False
+    End Class
+
+    Private Function CmToPoints(cm As Double) As Double
+        Return cm * 28.35
+    End Function
+End Class

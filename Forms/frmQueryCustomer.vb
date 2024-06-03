@@ -1,7 +1,7 @@
 ﻿Public Class frmQueryCustomer
     Implements IQueryCusView
 
-    Private _presenter As New QueryCusPresenter(Me, New CustomerRepository)
+    Private _presenter As New QueryCusPresenter(Me, New CustomerRepository(New gas_accounting_systemEntities))
 
     Public ReadOnly Property CusCode As String
         Get

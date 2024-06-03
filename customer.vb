@@ -33,6 +33,8 @@ Partial Public Class customer
     Public Property cus_gas_5 As Integer
     Public Property cus_gas_2 As Integer
     Public Property cus_pp_Id As Nullable(Of Integer)
+    Public Property cus_GasStock As Integer
+    Public Property cus_GasCStock As Integer
 
     Public Overridable Property cars As ICollection(Of car) = New HashSet(Of car)
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)

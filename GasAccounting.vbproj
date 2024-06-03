@@ -264,13 +264,28 @@
     <Compile Include="bank.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CusGetGas.vb" />
     <Compile Include="Models\CustomersGasDetailByDay.vb" />
-    <Compile Include="Models\Report.vb" />
-    <Compile Include="Services\CloseXML_Excel.vb" />
-    <Compile Include="Services\HtmlToPDF.vb" />
-    <Compile Include="PresentationLayers\Bank\BankPresenter.vb" />
-    <Compile Include="PresentationLayers\Bank\IBankView.vb" />
-    <Compile Include="PresentationLayers\BasePresenter.vb" />
+    <Compile Include="Models\DailyCustomerReceivable.vb" />
+    <Compile Include="Models\GasPayableDetail.vb" />
+    <Compile Include="Models\GasUsageAndCylinderCount.vb" />
+    <Compile Include="Models\OrderUnitPrice.vb" />
+    <Compile Include="Forms\IReportView.vb" />
+    <Compile Include="Presenters\ReportPresenter.vb" />
+    <Compile Include="Repositories\BasicPrice\BasicPriceRep.vb" />
+    <Compile Include="Repositories\BasicPrice\IBasicPriceRep.vb" />
+    <Compile Include="Repositories\IRepository.vb" />
+    <Compile Include="Repositories\PricePlan\IPricePlanRep.vb" />
+    <Compile Include="Repositories\PricePlan\PricePlanRep.vb" />
+    <Compile Include="Repositories\Report\IReportRep.vb" />
+    <Compile Include="Repositories\Report\ReportRep.vb" />
+    <Compile Include="Repositories\Repository.vb" />
+    <Compile Include="Utilities\CloseXML_Excel.vb" />
+    <Compile Include="Services\CusOrdByCarService.vb" />
+    <Compile Include="Utilities\HtmlToPDF.vb" />
+    <Compile Include="Presenters\BankPresenter.vb" />
+    <Compile Include="Forms\IBankView.vb" />
+    <Compile Include="Presenters\BasePresenter.vb" />
     <Compile Include="basic_price.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -283,24 +298,24 @@
     <Compile Include="collection.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\Cheque\ChequePresenter.vb" />
-    <Compile Include="PresentationLayers\Cheque\ICheque.vb" />
-    <Compile Include="PresentationLayers\Collection\CollectionPresenter.vb" />
-    <Compile Include="PresentationLayers\Collection\ICollectionView.vb" />
+    <Compile Include="Presenters\ChequePresenter.vb" />
+    <Compile Include="Forms\ICheque.vb" />
+    <Compile Include="Presenters\CollectionPresenter.vb" />
+    <Compile Include="Forms\ICollectionView.vb" />
     <Compile Include="company.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\Company\CompanyPresenter.vb" />
+    <Compile Include="Presenters\CompanyPresenter.vb" />
     <Compile Include="customer.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\Customer\CustomerPresenter.vb" />
-    <Compile Include="PresentationLayers\Customer\ICustomer.vb" />
+    <Compile Include="Presenters\CustomerPresenter.vb" />
+    <Compile Include="Forms\ICustomer.vb" />
     <Compile Include="employee.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\Employee\EmployeePresenter.vb" />
-    <Compile Include="PresentationLayers\Employee\IEmployeeView.vb" />
+    <Compile Include="Presenters\EmployeePresenter.vb" />
+    <Compile Include="Forms\IEmployeeView.vb" />
     <Compile Include="Forms\frmLogin.Designer.vb">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </Compile>
@@ -320,52 +335,53 @@
     <Compile Include="Forms\frmQueryCustomer.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PresentationLayers\Company\ICompanyView.vb" />
-    <Compile Include="PresentationLayers\ICommonView.vb" />
-    <Compile Include="PresentationLayers\IPresenter.vb" />
+    <Compile Include="Forms\ICompanyView.vb" />
+    <Compile Include="Forms\ICommonView.vb" />
+    <Compile Include="Presenters\IPresenter.vb" />
     <Compile Include="journal.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="manufacturer.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\Manufacturer\IManufacturerView.vb" />
-    <Compile Include="PresentationLayers\Manufacturer\ManufacturerPresenter.vb" />
+    <Compile Include="Forms\IManufacturerView.vb" />
+    <Compile Include="Presenters\ManufacturerPresenter.vb" />
     <Compile Include="order.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="payment.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\Orders\IOrderView.vb" />
-    <Compile Include="PresentationLayers\Orders\OrderPresenter.vb" />
-    <Compile Include="PresentationLayers\Payment\IPaymentView.vb" />
-    <Compile Include="PresentationLayers\Payment\PaymentPresenter.vb" />
-    <Compile Include="PresentationLayers\QueryCus\IQueryCusView.vb" />
-    <Compile Include="PresentationLayers\QueryCus\QueryCusPresenter.vb" />
+    <Compile Include="Forms\IOrderView.vb" />
+    <Compile Include="Presenters\OrderPresenter.vb" />
+    <Compile Include="Forms\IPaymentView.vb" />
+    <Compile Include="Presenters\PaymentPresenter.vb" />
+    <Compile Include="Forms\IQueryCusView.vb" />
+    <Compile Include="Presenters\QueryCusPresenter.vb" />
     <Compile Include="priceplan.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="purchase.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\CarRepository.vb" />
-    <Compile Include="Repositories\ChequeRepository.vb" />
-    <Compile Include="Repositories\CollectionRep.vb" />
-    <Compile Include="Repositories\CustomerRepository.vb" />
-    <Compile Include="Repositories\ICarRepository.vb" />
-    <Compile Include="Repositories\IChequeRepository.vb" />
-    <Compile Include="Repositories\ICollectionRep.vb" />
-    <Compile Include="Repositories\ICustomerRepository.vb" />
-    <Compile Include="Repositories\IOrderRepository.vb" />
-    <Compile Include="Repositories\OrderRepository.vb" />
+    <Compile Include="Repositories\Car\CarRepository.vb" />
+    <Compile Include="Repositories\Cheque\ChequeRepository.vb" />
+    <Compile Include="Repositories\Collection\CollectionRep.vb" />
+    <Compile Include="Repositories\Customer\CustomerRepository.vb" />
+    <Compile Include="Repositories\Car\ICarRepository.vb" />
+    <Compile Include="Repositories\Cheque\IChequeRepository.vb" />
+    <Compile Include="Repositories\Collection\ICollectionRep.vb" />
+    <Compile Include="Repositories\Customer\ICustomerRepository.vb" />
+    <Compile Include="Repositories\Order\IOrderRepository.vb" />
+    <Compile Include="Repositories\Order\OrderRepository.vb" />
     <Compile Include="role.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\Roles\IRolesView.vb" />
-    <Compile Include="PresentationLayers\Roles\RolesPresenter.vb" />
+    <Compile Include="Forms\IRolesView.vb" />
+    <Compile Include="Presenters\RolesPresenter.vb" />
     <Compile Include="Services\BankService.vb" />
     <Compile Include="Services\IBankService.vb" />
+    <Compile Include="Services\ICusOrdByCarService.vb" />
     <Compile Include="Services\IJournalService.vb" />
     <Compile Include="Services\ISubjectsService.vb" />
     <Compile Include="Services\JournalService.vb" />
@@ -376,34 +392,36 @@
     <Compile Include="subject.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="PresentationLayers\UintPriceHistory\IUnitPriceHistoryView.vb" />
-    <Compile Include="PresentationLayers\UintPriceHistory\UintPriceHistoryPresenter.vb" />
-    <Compile Include="ViewModel\AmountDueVM.vb" />
-    <Compile Include="ViewModel\BankVM.vb" />
-    <Compile Include="ViewModel\ChequeVM.vb" />
-    <Compile Include="ViewModel\CollectionQueryVM.vb" />
-    <Compile Include="ViewModel\CollectionVM.vb" />
-    <Compile Include="ViewModel\ComboBoxItems.vb" />
-    <Compile Include="ViewModel\CompanyVM.vb" />
-    <Compile Include="ViewModel\CustomerVM.vb" />
-    <Compile Include="ViewModel\EmployeeVM.vb" />
-    <Compile Include="ViewModel\ManufacturerVM.vb" />
-    <Compile Include="ViewModel\OrderQueryVM.vb" />
-    <Compile Include="ViewModel\OrderVoucherVM.vb" />
-    <Compile Include="ViewModel\PaymentQueryVM.vb" />
-    <Compile Include="ViewModel\PaymentVM.vb" />
-    <Compile Include="ViewModel\PricePlanVM.vb" />
-    <Compile Include="ViewModel\PurchaseVM.vb" />
-    <Compile Include="PresentationLayers\PricePlan\IPricePlanView.vb" />
-    <Compile Include="PresentationLayers\PricePlan\PricePlanPresenter.vb" />
-    <Compile Include="PresentationLayers\Purchase\IPurchaseView.vb" />
-    <Compile Include="PresentationLayers\Purchase\PurchasePresenter.vb" />
+    <Compile Include="Forms\IUnitPriceHistoryView.vb" />
+    <Compile Include="Presenters\UintPriceHistoryPresenter.vb" />
+    <Compile Include="ViewModels\AmountDueVM.vb" />
+    <Compile Include="ViewModels\BankVM.vb" />
+    <Compile Include="ViewModels\ChequeVM.vb" />
+    <Compile Include="ViewModels\CollectionQueryVM.vb" />
+    <Compile Include="ViewModels\CollectionVM.vb" />
+    <Compile Include="ViewModels\ComboBoxItems.vb" />
+    <Compile Include="ViewModels\CompanyVM.vb" />
+    <Compile Include="ViewModels\CustomerVM.vb" />
+    <Compile Include="ViewModels\EmployeeVM.vb" />
+    <Compile Include="ViewModels\ManufacturerVM.vb" />
+    <Compile Include="ViewModels\Order\OrderInVM.vb" />
+    <Compile Include="ViewModels\Order\OrderOutVM.vb" />
+    <Compile Include="ViewModels\Order\OrderSearchCriteria.vb" />
+    <Compile Include="ViewModels\OrderVoucherVM.vb" />
+    <Compile Include="ViewModels\PaymentQueryVM.vb" />
+    <Compile Include="ViewModels\PaymentVM.vb" />
+    <Compile Include="ViewModels\PricePlanVM.vb" />
+    <Compile Include="ViewModels\PurchaseVM.vb" />
+    <Compile Include="Forms\IPricePlanView.vb" />
+    <Compile Include="Presenters\PricePlanPresenter.vb" />
+    <Compile Include="Forms\IPurchaseView.vb" />
+    <Compile Include="Presenters\PurchasePresenter.vb" />
     <Compile Include="Services\CompanyService.vb" />
     <Compile Include="Services\ICompanyService.vb" />
     <Compile Include="Services\IManufacturerService.vb" />
     <Compile Include="Services\ManufacturerService.vb" />
     <Compile Include="Services\Service.vb" />
-    <Compile Include="PresentationLayers\Subjects\ISubjectsView.vb" />
+    <Compile Include="Forms\ISubjectsView.vb" />
     <Compile Include="Model1.Context.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -419,15 +437,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\BasicPriceMV.vb" />
-    <Compile Include="ViewModel\CarMV.vb" />
-    <Compile Include="ViewModel\OrderVM.vb" />
-    <Compile Include="ViewModel\QueryCusVM.vb" />
-    <Compile Include="ViewModel\RolesVM.vb" />
-    <Compile Include="ViewModel\SubjectGroupVM.vb" />
-    <Compile Include="ViewModel\SubjectsVM.vb" />
+    <Compile Include="ViewModels\BasicPriceMV.vb" />
+    <Compile Include="ViewModels\CarMV.vb" />
+    <Compile Include="ViewModels\Order\OrderVM.vb" />
+    <Compile Include="ViewModels\QueryCusVM.vb" />
+    <Compile Include="ViewModels\RolesVM.vb" />
+    <Compile Include="ViewModels\SubjectGroupVM.vb" />
+    <Compile Include="ViewModels\SubjectsVM.vb" />
     <Compile Include="modFormControl.vb" />
-    <Compile Include="Services\modUtility.vb" />
+    <Compile Include="Utilities\modUtility.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -444,8 +462,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PresentationLayers\Subjects\SubjectsPresenter.vb" />
-    <Compile Include="ViewModel\UnitPriceHistoryVM.vb" />
+    <Compile Include="Presenters\SubjectsPresenter.vb" />
+    <Compile Include="ViewModels\UnitPriceHistoryVM.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\frmLogin.resx">
