@@ -225,4 +225,18 @@ Module modUtility
             End Using
         End Using
     End Sub
+
+    ''' <summary>
+    ''' 取得內部例外狀況
+    ''' </summary>
+    ''' <param name="innerException"></param>
+    ''' <returns></returns>
+    Public Function GetInnerExceptionMessage(innerException As Exception) As String
+        Dim message As String = innerException.Message
+        While innerException.InnerException IsNot Nothing
+            innerException = innerException.InnerException
+            message &= " -> " & innerException.Message
+        End While
+        Return message
+    End Function
 End Module

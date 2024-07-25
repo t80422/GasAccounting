@@ -1,4 +1,7 @@
-﻿Public MustInherit Class BasePresenter(Of TEntity As Class, TViewModel, TView As ICommonView(Of TEntity, TViewModel))
+﻿Imports System.Data.Entity.Infrastructure
+Imports System.Data.Entity.Validation
+
+Public MustInherit Class BasePresenter(Of TEntity As Class, TViewModel, TView As ICommonView(Of TEntity, TViewModel))
     Protected ReadOnly _view As TView
     Protected _presenter As IPresenter(Of TEntity, TViewModel)
 
@@ -97,6 +100,10 @@
                     End If
                 End If
             End Using
+
+        Catch ex As DbUpdateException
+            Dim innerExceptionMessage As String = If(ex.InnerException IsNot Nothing, GetInnerExceptionMessage(ex.InnerException), "No inner exception")
+            MsgBox("資料庫更新時發生錯誤: " & innerExceptionMessage)
 
         Catch ex As Exception
             MsgBox("修改時發生錯誤: " & ex.Message)
