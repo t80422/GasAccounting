@@ -21,10 +21,8 @@ Public Class OrderPresenter
 
     Private tempCarStk As car
     Public Property GasBarrel As New Dictionary(Of String, Object) '儲存客戶訂單瓦斯桶數量
-    'Public Property GasDepoitBarrel As New Dictionary(Of String, Object) '儲存車訂單寄桶數量
+    Public Property InspectBarrel As New Dictionary(Of String, Object) '儲存客戶訂單檢驗瓶數量
     Public Property StockValues As New Dictionary(Of String, Object) '儲存客戶瓦斯桶庫存
-    'Public Property DepositStockValues As New Dictionary(Of String, Object) '儲存司機寄瓶庫存
-    'Public Property OrgCarId As Integer '紀錄訂單原始CarId
     Public Property GasValues As New Dictionary(Of String, Integer) '用於存儲 txtGas_、txtGas_c_ 開頭的 TextBox 的初始值
     Public Property DepositValues As New Dictionary(Of String, Object) '用於存儲TextBox.Tag = o_deposit開頭的初始值
 
@@ -37,12 +35,6 @@ Public Class OrderPresenter
         _bpRep = service.BPRep
     End Sub
 
-    'Public Sub LoadList(isQuery As Boolean)
-    '    Dim condition = _view.GetQueryCondition
-    '    Dim list = _ordRep.QueryOrders(condition, isQuery)
-    '    _view.ShowList(list.Select(Function(x) New OrderVM(x)).ToList)
-    'End Sub
-
     ''' <summary>
     ''' 取得客戶庫存
     ''' </summary>
@@ -51,7 +43,7 @@ Public Class OrderPresenter
         Dim data = _cusRep.GetCustomerById(cusId)
 
         If data IsNot Nothing Then
-            StockValues = GetEntityFieldsByPrefix(data, "cus_gas")
+            StockValues = GetEntityFieldsByPrefix(data, "cus_gas", "cus_inspect_")
             _view.ShowCusStk(data)
         End If
     End Sub
@@ -63,7 +55,6 @@ Public Class OrderPresenter
     Public Sub GetCarStk(carId As Integer)
         Dim data = _carRep.GetById(carId)
         If data IsNot Nothing Then
-            'DepositStockValues = GetEntityFieldsByPrefix(data, "c_deposit_")
             tempCarStk = data
             _view.ShowCarStk(data)
         End If
@@ -78,17 +69,6 @@ Public Class OrderPresenter
         If data IsNot Nothing Then _view.SetCmbCar(data)
     End Sub
 
-    'Public Function LoadCar(carId As Integer) As car
-    '    Dim car = _carRep.GetCarById(carId)
-
-    '    If car IsNot Nothing Then
-    '        DepositStockValues = GetEntityFieldsByPrefix(car, "c_deposit_")
-    '        Return car
-    '    End If
-
-    '    Return Nothing
-    'End Function
-
     Public Sub Insert(container As Control)
         Try
             Dim ord As New order
@@ -100,13 +80,9 @@ Public Class OrderPresenter
                 cus.cus_GasStock += ord.o_return
                 cus.cus_GasCStock += ord.o_return_c
 
-                '=====
-                '_ordRep.Add(ord, car, cus)
                 _service.Insert(ord, cus, car)
-                '=====
 
                 _view.Reset()
-                'LoadList(False)
                 SearchOrders()
                 MsgBox("新增成功")
             End If
@@ -147,38 +123,9 @@ Public Class OrderPresenter
                 cus.cus_GasStock += ord.o_return - gasReturn("Gas")
                 cus.cus_GasCStock += ord.o_return_c - gasReturn("GasC")
 
-                '_ordRep.Edit(ord, car, cus)
                 _service.Update(ord, cus, car, OrgCarStk, tempOrd)
 
-                'If car.c_id <> OrgCarStk.c_id Then
-                '    Dim orgCar = _carRep.GetById(OrgCarStk.c_id)
-
-                '    If ord.o_in_out = "進場單" Then
-                '        orgCar.c_deposit_50 -= tempOrd.o_deposit_in_50
-                '        orgCar.c_deposit_20 -= tempOrd.o_deposit_in_20
-                '        orgCar.c_deposit_16 -= tempOrd.o_deposit_in_16
-                '        orgCar.c_deposit_10 -= tempOrd.o_deposit_in_10
-                '        orgCar.c_deposit_4 -= tempOrd.o_deposit_in_4
-                '        orgCar.c_deposit_15 -= tempOrd.o_deposit_in_15
-                '        orgCar.c_deposit_14 -= tempOrd.o_deposit_in_14
-                '        orgCar.c_deposit_5 -= tempOrd.o_deposit_in_5
-                '        orgCar.c_deposit_2 -= tempOrd.o_deposit_in_2
-                '    Else
-                '        orgCar.c_deposit_50 += tempOrd.o_deposit_out_50
-                '        orgCar.c_deposit_20 += tempOrd.o_deposit_out_20
-                '        orgCar.c_deposit_16 += tempOrd.o_deposit_out_16
-                '        orgCar.c_deposit_10 += tempOrd.o_deposit_out_10
-                '        orgCar.c_deposit_4 += tempOrd.o_deposit_out_4
-                '        orgCar.c_deposit_15 += tempOrd.o_deposit_out_15
-                '        orgCar.c_deposit_14 += tempOrd.o_deposit_out_14
-                '        orgCar.c_deposit_5 += tempOrd.o_deposit_out_5
-                '        orgCar.c_deposit_2 += tempOrd.o_deposit_out_2
-                '    End If
-                '    _carRep.Save()
-                'End If
-
                 _view.Reset()
-                'LoadList(False)
                 SearchOrders()
                 MsgBox("修改成功")
             End If
@@ -349,35 +296,41 @@ Public Class OrderPresenter
         Return orgStk + sum
     End Function
 
-    'Public Function CalculateCarStk(products As List(Of TextBox), orgStk As Integer, isIn As Boolean) As Integer
-    '    Dim sum As Integer
+    ''' <summary>
+    ''' 計算檢驗瓶庫存
+    ''' </summary>
+    ''' <param name="txtInspect"></param>
+    ''' <param name="txtInspectStk"></param>
+    ''' <param name="isIn"></param>
+    ''' <returns></returns>
+    Public Function CalculateInspectStk(txtInspect As TextBox, txtInspectStk As TextBox, isIn As Boolean) As Integer
+        Dim orgStk As Integer
+        Dim orgOrder As Integer
+        Dim inspect As Integer = If(String.IsNullOrEmpty(txtInspect.Text), 0, txtInspect.Text)
 
-    '    For Each txt In products
-    '        Dim barrelValue As Integer
-    '        Dim txtValue = If(String.IsNullOrEmpty(txt.Text), 0, txt.Text)
+        If StockValues.TryGetValue(txtInspectStk.Tag, orgStk) Then
+            If InspectBarrel.TryGetValue(txtInspect.Tag, orgOrder) Then
+                If isIn Then
+                    Return orgStk + inspect - orgOrder
+                End If
+            Else
+                If isIn Then
+                    Return orgStk + inspect
+                End If
+            End If
+        End If
 
-    '        If GasDepoitBarrel.TryGetValue(txt.Tag, barrelValue) Then
-    '            If isIn Then
-    '                '入場單計算
-    '                sum += txtValue - barrelValue
-    '            Else
-    '                '出場單計算
-    '                sum -= txtValue - barrelValue
-    '            End If
-    '        Else
-    '            If isIn Then
-    '                '入場單計算
-    '                sum += txtValue
-    '            Else
-    '                '出場單計算
-    '                sum -= txtValue
-    '            End If
-    '        End If
-    '    Next
+        Return orgStk
+    End Function
 
-    '    Return orgStk + sum
-    'End Function
-
+    ''' <summary>
+    ''' 計算寄存瓶
+    ''' </summary>
+    ''' <param name="products"></param>
+    ''' <param name="group"></param>
+    ''' <param name="isIn"></param>
+    ''' <param name="firstCount"></param>
+    ''' <returns></returns>
     Public Function CalculateCarStk(products As List(Of TextBox), group As Integer, isIn As Boolean, Optional firstCount As Boolean = False) As Integer
         Dim sum As Integer
 
@@ -487,10 +440,8 @@ Public Class OrderPresenter
         If ord Is Nothing Then Return False
 
         car = _carRep.GetById(ord.o_c_id)
-        'car = ord.car
         _view.GetUserInput_car(car, container)
 
-        'cus = _cusRep.GetById(car.c_cus_id)
         cus = car.customer
         _view.GetUserInput_cus(cus, container)
 

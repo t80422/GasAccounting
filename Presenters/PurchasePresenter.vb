@@ -5,13 +5,15 @@
     Private _compService As ICompanyService
     Private _manuService As IManufacturerService
     Private _journalService As IJournalService
+    Private ReadOnly _subjectRep As ISubjectRep
 
-    Public Sub New(view As IPurchaseView, compService As ICompanyService, manuService As IManufacturerService)
+    Public Sub New(view As IPurchaseView, compService As ICompanyService, manuService As IManufacturerService, subjectRep As ISubjectRep)
         MyBase.New(view)
         _presenter = Me
         _compService = compService
         _manuService = manuService
         _journalService = New JournalService
+        _subjectRep = subjectRep
     End Sub
 
     ''' <summary>
@@ -27,6 +29,25 @@
     ''' </summary>
     Public Sub SetGasVendorCmb()
         _view.SetGasVendorComboBox(_manuService.GetGasVendorCmbItems)
+    End Sub
+
+    ''' <summary>
+    ''' 設定運輸公司下拉選單
+    ''' </summary>
+    Public Sub SetDriveCompanyCmb()
+        Try
+            _view.SetDriveVendorCmb(_manuService.GetVendorCmbItemsWithoutGas)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub SetSubjectCmb()
+        Try
+            _view.SetSubjectCmb(_subjectRep.GetCmb)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     ''' <summary>
@@ -73,23 +94,23 @@
         If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
         Dim data = _view.GetUserInput
-        data.pur_SubpoenaNo = _journalService.GetSubpoenaNo()
+        'data.pur_SubpoenaNo = _journalService.GetSubpoenaNo()
 
         If data IsNot Nothing Then
             Try
                 Using db As New gas_accounting_systemEntities
                     db.purchases.Add(data)
 
-#Region "新增傳票"
-                    Dim journal As New journal() With
-                    {
-                        .j_Amount = data.pur_price,
-                        .j_Memo = data.pur_Memo,
-                        .j_SubpoenaNo = data.pur_SubpoenaNo,
-                        .j_s_Id = 1
-                    }
-                    _journalService.Add(journal)
-#End Region
+                    '#Region "新增傳票"
+                    '                    Dim journal As New journal() With
+                    '                    {
+                    '                        .j_Amount = data.pur_price,
+                    '                        .j_Memo = data.pur_Memo,
+                    '                        .j_s_Id = 1,
+                    '                        .j_SubpoenaNo = data.pur_SubpoenaNo
+                    '                    }
+                    '                    _journalService.Add(journal)
+                    '#End Region
 
                     db.SaveChanges()
 
@@ -110,6 +131,7 @@
         If c.pur_comp_id <> 0 Then query = query.Where(Function(x) x.pur_comp_id = c.pur_comp_id)
         If c.pur_manu_id <> 0 Then query = query.Where(Function(x) x.pur_manu_id = c.pur_manu_id)
         If c.pur_product <> Nothing Then query = query.Where(Function(x) x.pur_product = c.pur_product)
+        If c.pur_PayType <> Nothing Then query = query.Where(Function(x) x.pur_PayType = c.pur_PayType)
 
         Return query
     End Function
@@ -122,13 +144,16 @@
                         .產品 = x.pur_product,
                         .單價 = x.pur_unit_price,
                         .重量 = x.pur_quantity,
-                        .廠商 = x.manufacturer.manu_name,
+                        .廠商 = x.manufacturer1.manu_name,
                         .運費單價 = x.pur_deli_unit_price,
                         .運費 = x.pur_delivery_fee,
                         .金額 = x.pur_price,
                         .公司 = x.company.comp_name,
                         .特殊單價 = x.pur_SpecialUP,
-                        .特殊運費 = x.pur_SpecialDUP
+                        .特殊運費 = x.pur_SpecialDUP,
+                        .科目 = x.subject.s_name,
+                        .運輸公司 = x.manufacturer.manu_name,
+                        .付款方式 = x.pur_PayType
                     }).OrderByDescending(Function(x) x.編號).
                     ToList
 
@@ -161,16 +186,18 @@
                             .pur_SpecialDUP = data.pur_SpecialDUP
                             .pur_SpecialUP = data.pur_SpecialUP
                             .pur_unit_price = data.pur_unit_price
+                            .pur_DriveCmpId = data.pur_DriveCmpId
+                            .pur_PayType = data.pur_PayType
                         End With
 
-#Region "修改傳票"
-                        Dim journal As New journal With {
-                            .j_Amount = existingSubject.pur_price,
-                            .j_Memo = existingSubject.pur_Memo,
-                            .j_SubpoenaNo = existingSubject.pur_SubpoenaNo
-                        }
-                        _journalService.Edit(journal)
-#End Region
+                        '#Region "修改傳票"
+                        '                        Dim journal As New journal With {
+                        '                            .j_Amount = existingSubject.pur_price,
+                        '                            .j_Memo = existingSubject.pur_Memo,
+                        '                            .j_SubpoenaNo = existingSubject.pur_SubpoenaNo
+                        '                        }
+                        '                        _journalService.Edit(journal)
+                        '#End Region
 
                         db.SaveChanges()
                         LoadList()
@@ -194,7 +221,7 @@
                 Dim data = db.purchases.Find(id)
                 If data IsNot Nothing Then
                     '刪除傳票
-                    _journalService.Delete(data.pur_SubpoenaNo)
+                    '_journalService.Delete(data.pur_SubpoenaNo)
 
                     db.purchases.Remove(data)
                     db.SaveChanges()

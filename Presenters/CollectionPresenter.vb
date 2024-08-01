@@ -1,15 +1,15 @@
 ﻿Public Class CollectionPresenter
     Private _view As ICollectionView
     Private _subjectsService As SubjectsService
-    Private _bankService As BankService
     Private _companyService As CompanyService
     Private _colRep As ICollectionRep = New CollectionRep
+    Private ReadOnly _bankRep As IBankRep
 
-    Public Sub New(view As ICollectionView, subjectsService As SubjectsService, bankService As BankService, companyService As CompanyService)
+    Public Sub New(view As ICollectionView, subjectsService As SubjectsService, companyService As CompanyService, bankRep As IBankRep)
         _view = view
         _subjectsService = subjectsService
-        _bankService = bankService
         _companyService = companyService
+        _bankRep = bankRep
     End Sub
 
     ''' <summary>
@@ -63,8 +63,8 @@
     ''' <summary>
     ''' 取得銀行選單
     ''' </summary>
-    Public Sub GetBankCmb()
-        _view.SetBankCmb(_bankService.GetBankCmbItems)
+    Public Sub LoadBankList()
+        _view.SetBankCmb(_bankRep.GetBankCombobox)
     End Sub
 
     ''' <summary>

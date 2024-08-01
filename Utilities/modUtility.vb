@@ -82,7 +82,7 @@ Module modUtility
                         prop.SetValue(entity, convertedValue)
 
                     Catch ex As Exception
-                        MsgBox(ex.Message & vbCrLf & "出問題的欄位:" & control.Tag)
+                        Throw New Exception(ex.Message & vbCrLf & "出問題的欄位:" & control.Tag)
                     End Try
                 End If
             End If
@@ -151,15 +151,15 @@ Module modUtility
     ''' <param name="entity"></param>
     ''' <param name="prefix">開頭文字</param>
     ''' <returns></returns>
-    Public Function GetEntityFieldsByPrefix(entity As Object, prefix As String) As Dictionary(Of String, Object)
+    Public Function GetEntityFieldsByPrefix(entity As Object, ParamArray prefixes As String()) As Dictionary(Of String, Object)
         Dim result As New Dictionary(Of String, Object)
         Dim entityType As Type = entity.GetType()
 
         ' 使用反射獲取所有屬性
         Dim properties As PropertyInfo() = entityType.GetProperties()
         For Each prop As PropertyInfo In properties
-            ' 檢查屬性名稱是否以指定的前綴開頭
-            If prop.Name.StartsWith(prefix) Then
+            ' 檢查屬性名稱是否以任何指定的前綴開頭
+            If prefixes.Any(Function(x) prop.Name.StartsWith(x)) Then
                 ' 將屬性名稱和值添加到結果字典中
                 result.Add(prop.Name, prop.GetValue(entity))
             End If

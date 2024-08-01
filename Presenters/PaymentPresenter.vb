@@ -8,8 +8,9 @@
     Private _companyService As CompanyService
 
     Private _journalService As IJournalService
+    Private ReadOnly _bankRep As IBankRep
 
-    Public Sub New(view As IPaymentView, manuService As ManufacturerService, bankService As BankService, subjectsService As SubjectsService, companyService As CompanyService)
+    Public Sub New(view As IPaymentView, manuService As ManufacturerService, bankService As BankService, subjectsService As SubjectsService, companyService As CompanyService, bankRep As IBankRep)
         MyBase.New(view)
         _presenter = Me
         _manuService = manuService
@@ -17,6 +18,7 @@
         _subjectsService = subjectsService
         _companyService = companyService
         _journalService = New JournalService
+        _bankRep = bankRep
     End Sub
 
     Public Function SetSearchConditions(query As IQueryable(Of payment), conditions As Object) As IQueryable(Of payment) Implements IPresenter(Of payment, PaymentVM).SetSearchConditions
@@ -58,8 +60,12 @@
     ''' <summary>
     ''' 設定銀行下拉選單
     ''' </summary>
-    Public Sub SetBankCmb()
-        _view.SetBankCmb(_bankService.GetBankCmbItems)
+    Public Sub LoadBanksList()
+        Try
+            _view.SetBankCmb(_bankRep.GetBankCombobox)
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+        End Try
     End Sub
 
     ''' <summary>

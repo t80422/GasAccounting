@@ -11,4 +11,29 @@
     Public Property 運費 As Single
     Public Property 特殊單價 As Boolean
     Public Property 特殊運費 As Boolean
+    Public Property 運輸公司 As String
+    Public Property 科目 As String
+    Public Property 付款方式 As String
+
+    Public Sub New(data As purchase)
+        編號 = data.pur_id
+        廠商 = data.manufacturer1.manu_name
+        日期 = data.pur_date
+        產品 = data.pur_product
+        重量 = data.pur_quantity
+        單價 = data.pur_unit_price
+        金額 = data.pur_price
+        公司 = data.company.comp_name
+        運費單價 = data.pur_deli_unit_price
+        運費 = data.pur_delivery_fee
+        特殊單價 = data.pur_SpecialUP
+        特殊運費 = data.pur_SpecialDUP
+        運輸公司 = data.manufacturer?.manu_name
+        科目 = data.subject?.s_name
+        付款方式 = data.pur_PayType
+    End Sub
+
+    Public Sub New()
+
+    End Sub
 End Class

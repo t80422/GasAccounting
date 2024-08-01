@@ -189,7 +189,6 @@ Module modFormControl
                 .ColumnHeadersDefaultCellStyle.BackColor = Color.MediumTurquoise
                 .AllowUserToAddRows = False
                 .AllowUserToDeleteRows = False
-                .ReadOnly = True
                 .AllowUserToResizeColumns = True
             End With
         Next

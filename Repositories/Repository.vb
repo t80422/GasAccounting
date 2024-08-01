@@ -22,11 +22,17 @@ Public Class Repository(Of T As Class)
     End Sub
 
     Public Sub Update(entity As T) Implements IRepository(Of T).Update
+        _dbSet.Attach(entity)
         _context.Entry(entity).State = EntityState.Modified
     End Sub
 
     Public Sub Delete(id As Integer) Implements IRepository(Of T).Delete
         Dim entity As T = _dbSet.Find(id)
+
+        If _context.Entry(entity).State = EntityState.Detached Then
+            _dbSet.Attach(entity)
+        End If
+
         _dbSet.Remove(entity)
     End Sub
 

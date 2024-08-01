@@ -280,7 +280,10 @@ Partial Class frmMain
         Me.Label70 = New System.Windows.Forms.Label()
         Me.Label69 = New System.Windows.Forms.Label()
         Me.tpBank = New System.Windows.Forms.TabPage()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.txtBankName = New System.Windows.Forms.TextBox()
+        Me.Label135 = New System.Windows.Forms.Label()
+        Me.txtAccount_bank = New System.Windows.Forms.TextBox()
+        Me.Label134 = New System.Windows.Forms.Label()
         Me.Label82 = New System.Windows.Forms.Label()
         Me.Label73 = New System.Windows.Forms.Label()
         Me.Label224 = New System.Windows.Forms.Label()
@@ -317,11 +320,8 @@ Partial Class frmMain
         Me.txtId_pp = New System.Windows.Forms.TextBox()
         Me.Label159 = New System.Windows.Forms.Label()
         Me.tpSubjects = New System.Windows.Forms.TabPage()
-        Me.Label303 = New System.Windows.Forms.Label()
         Me.Label304 = New System.Windows.Forms.Label()
         Me.txtMemo_subjects = New System.Windows.Forms.TextBox()
-        Me.Label301 = New System.Windows.Forms.Label()
-        Me.cmbType_sg = New System.Windows.Forms.ComboBox()
         Me.Label300 = New System.Windows.Forms.Label()
         Me.dgvSubject = New System.Windows.Forms.DataGridView()
         Me.btnCancel_subjects = New System.Windows.Forms.Button()
@@ -335,6 +335,13 @@ Partial Class frmMain
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.tpPurchase = New System.Windows.Forms.TabPage()
+        Me.Label141 = New System.Windows.Forms.Label()
+        Me.cmbPayType_pur = New System.Windows.Forms.ComboBox()
+        Me.lblPayType_pur = New System.Windows.Forms.Label()
+        Me.cmbSubject = New System.Windows.Forms.ComboBox()
+        Me.Label137 = New System.Windows.Forms.Label()
+        Me.cmbDriveCmp = New System.Windows.Forms.ComboBox()
+        Me.Label136 = New System.Windows.Forms.Label()
         Me.chkSp = New System.Windows.Forms.CheckBox()
         Me.chkSpecial = New System.Windows.Forms.CheckBox()
         Me.Label309 = New System.Windows.Forms.Label()
@@ -359,10 +366,10 @@ Partial Class frmMain
         Me.Label38 = New System.Windows.Forms.Label()
         Me.cmbCompany_pur = New System.Windows.Forms.ComboBox()
         Me.lblCompany_pur = New System.Windows.Forms.Label()
-        Me.DateTimePicker21 = New System.Windows.Forms.DateTimePicker()
+        Me.dtpDate_pur = New System.Windows.Forms.DateTimePicker()
         Me.Label92 = New System.Windows.Forms.Label()
         Me.lblGasVendor_pur = New System.Windows.Forms.Label()
-        Me.TextBox140 = New System.Windows.Forms.TextBox()
+        Me.txtMemo_pur = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.dgvPurchase = New System.Windows.Forms.DataGridView()
         Me.btnQuery_pur = New System.Windows.Forms.Button()
@@ -382,9 +389,23 @@ Partial Class frmMain
         Me.cmbManu_uph = New System.Windows.Forms.ComboBox()
         Me.Label76 = New System.Windows.Forms.Label()
         Me.dgvUPH = New System.Windows.Forms.DataGridView()
+        Me.tpGasCheckout = New System.Windows.Forms.TabPage()
+        Me.chkDate_gc = New System.Windows.Forms.CheckBox()
+        Me.cmbVendor_gc = New System.Windows.Forms.ComboBox()
+        Me.btnCancel_gc = New System.Windows.Forms.Button()
+        Me.btnCheckout_gc = New System.Windows.Forms.Button()
+        Me.btnQuery_gc = New System.Windows.Forms.Button()
+        Me.dgvGasCheckout = New System.Windows.Forms.DataGridView()
+        Me.cmbPayType_gc = New System.Windows.Forms.ComboBox()
+        Me.Label140 = New System.Windows.Forms.Label()
+        Me.dtpEnd_gc = New System.Windows.Forms.DateTimePicker()
+        Me.Label139 = New System.Windows.Forms.Label()
+        Me.dtpStart_gc = New System.Windows.Forms.DateTimePicker()
+        Me.Label138 = New System.Windows.Forms.Label()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabControl3 = New System.Windows.Forms.TabControl()
         Me.tpPayment = New System.Windows.Forms.TabPage()
+        Me.Label83 = New System.Windows.Forms.Label()
         Me.dtpCheDate = New System.Windows.Forms.DateTimePicker()
         Me.lblCheDateReq_payment = New System.Windows.Forms.Label()
         Me.grpAmountDue = New System.Windows.Forms.GroupBox()
@@ -399,7 +420,6 @@ Partial Class frmMain
         Me.Label84 = New System.Windows.Forms.Label()
         Me.dtpEnd_payment = New System.Windows.Forms.DateTimePicker()
         Me.dtpStart_payment = New System.Windows.Forms.DateTimePicker()
-        Me.Label83 = New System.Windows.Forms.Label()
         Me.Label81 = New System.Windows.Forms.Label()
         Me.cmbBank_payment = New System.Windows.Forms.ComboBox()
         Me.lblBank_payment = New System.Windows.Forms.Label()
@@ -427,11 +447,22 @@ Partial Class frmMain
         Me.Label192 = New System.Windows.Forms.Label()
         Me.Label265 = New System.Windows.Forms.Label()
         Me.tpOrder = New System.Windows.Forms.TabPage()
+        Me.btnCusGasCylinderInventory = New System.Windows.Forms.Button()
         Me.txtCusCode_ord = New System.Windows.Forms.TextBox()
         Me.txtOperator = New System.Windows.Forms.TextBox()
         Me.Label107 = New System.Windows.Forms.Label()
         Me.tcInOut = New System.Windows.Forms.TabControl()
         Me.tpIn = New System.Windows.Forms.TabPage()
+        Me.txtInspect2 = New System.Windows.Forms.TextBox()
+        Me.txtInspect4 = New System.Windows.Forms.TextBox()
+        Me.txtInspect5 = New System.Windows.Forms.TextBox()
+        Me.txtInspect10 = New System.Windows.Forms.TextBox()
+        Me.txtInspect14 = New System.Windows.Forms.TextBox()
+        Me.txtInspect15 = New System.Windows.Forms.TextBox()
+        Me.txtInspect16 = New System.Windows.Forms.TextBox()
+        Me.txtInspect20 = New System.Windows.Forms.TextBox()
+        Me.txtInspect50 = New System.Windows.Forms.TextBox()
+        Me.Label142 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.TextBox16 = New System.Windows.Forms.TextBox()
         Me.TextBox17 = New System.Windows.Forms.TextBox()
@@ -594,6 +625,8 @@ Partial Class frmMain
         Me.btnQueryCus_ord = New System.Windows.Forms.Button()
         Me.btnPrint = New System.Windows.Forms.Button()
         Me.grpSearch_ord = New System.Windows.Forms.GroupBox()
+        Me.rdoOut = New System.Windows.Forms.RadioButton()
+        Me.rdoIn = New System.Windows.Forms.RadioButton()
         Me.Label165 = New System.Windows.Forms.Label()
         Me.btnQuery_order = New System.Windows.Forms.Button()
         Me.dtpEnd_order = New System.Windows.Forms.DateTimePicker()
@@ -672,6 +705,8 @@ Partial Class frmMain
         Me.TabPage32 = New System.Windows.Forms.TabPage()
         Me.TabControl6 = New System.Windows.Forms.TabControl()
         Me.tpCheque = New System.Windows.Forms.TabPage()
+        Me.btnSelectAll = New System.Windows.Forms.Button()
+        Me.btnChange = New System.Windows.Forms.Button()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.Label94 = New System.Windows.Forms.Label()
         Me.dtpQueryEnd_che = New System.Windows.Forms.DateTimePicker()
@@ -684,12 +719,6 @@ Partial Class frmMain
         Me.Label123 = New System.Windows.Forms.Label()
         Me.Label122 = New System.Windows.Forms.Label()
         Me.Label121 = New System.Windows.Forms.Label()
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
-        Me.btnCollectionBatch = New System.Windows.Forms.Button()
-        Me.Label120 = New System.Windows.Forms.Label()
-        Me.dtpCollectionEnd = New System.Windows.Forms.DateTimePicker()
-        Me.dtpCollectionStart = New System.Windows.Forms.DateTimePicker()
-        Me.Label119 = New System.Windows.Forms.Label()
         Me.TextBox21 = New System.Windows.Forms.TextBox()
         Me.Label118 = New System.Windows.Forms.Label()
         Me.TextBox8 = New System.Windows.Forms.TextBox()
@@ -759,9 +788,7 @@ Partial Class frmMain
         Me.btnCusGasPayCollect = New System.Windows.Forms.Button()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.rdoIn = New System.Windows.Forms.RadioButton()
-        Me.rdoOut = New System.Windows.Forms.RadioButton()
-        Me.btnCusGasCylinderInventory = New System.Windows.Forms.Button()
+        Me.btnNotHonoredQuery = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout
         Me.TabPage30.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -796,6 +823,8 @@ Partial Class frmMain
         CType(Me.dgvPurchase, System.ComponentModel.ISupportInitialize).BeginInit
         Me.tpUPH.SuspendLayout
         CType(Me.dgvUPH, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.tpGasCheckout.SuspendLayout
+        CType(Me.dgvGasCheckout, System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabPage1.SuspendLayout
         Me.TabControl3.SuspendLayout
         Me.tpPayment.SuspendLayout
@@ -819,7 +848,6 @@ Partial Class frmMain
         Me.TabControl6.SuspendLayout
         Me.tpCheque.SuspendLayout
         Me.GroupBox5.SuspendLayout
-        Me.GroupBox4.SuspendLayout
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabPage6.SuspendLayout
         Me.GroupBox9.SuspendLayout
@@ -1443,6 +1471,7 @@ Partial Class frmMain
         Me.dgvRoles.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvRoles.Location = New System.Drawing.Point(5, 304)
         Me.dgvRoles.Name = "dgvRoles"
+        Me.dgvRoles.ReadOnly = True
         Me.dgvRoles.RowTemplate.Height = 24
         Me.dgvRoles.Size = New System.Drawing.Size(1872, 640)
         Me.dgvRoles.TabIndex = 270
@@ -1963,6 +1992,7 @@ Partial Class frmMain
         Me.dgvManufacturer.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvManufacturer.Location = New System.Drawing.Point(5, 244)
         Me.dgvManufacturer.Name = "dgvManufacturer"
+        Me.dgvManufacturer.ReadOnly = True
         Me.dgvManufacturer.RowTemplate.Height = 24
         Me.dgvManufacturer.Size = New System.Drawing.Size(1872, 700)
         Me.dgvManufacturer.TabIndex = 271
@@ -2723,6 +2753,7 @@ Partial Class frmMain
         Me.dgvCustomer.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvCustomer.Location = New System.Drawing.Point(5, 284)
         Me.dgvCustomer.Name = "dgvCustomer"
+        Me.dgvCustomer.ReadOnly = True
         Me.dgvCustomer.RowTemplate.Height = 24
         Me.dgvCustomer.Size = New System.Drawing.Size(1872, 660)
         Me.dgvCustomer.TabIndex = 301
@@ -3000,7 +3031,6 @@ Partial Class frmMain
         '
         Me.txtCusCode_car.Location = New System.Drawing.Point(145, 55)
         Me.txtCusCode_car.Name = "txtCusCode_car"
-        Me.txtCusCode_car.ReadOnly = True
         Me.txtCusCode_car.Size = New System.Drawing.Size(100, 30)
         Me.txtCusCode_car.TabIndex = 415
         Me.txtCusCode_car.Tag = "cus_code"
@@ -3152,6 +3182,7 @@ Partial Class frmMain
         Me.dgvCar.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvCar.Location = New System.Drawing.Point(5, 204)
         Me.dgvCar.Name = "dgvCar"
+        Me.dgvCar.ReadOnly = True
         Me.dgvCar.RowTemplate.Height = 24
         Me.dgvCar.Size = New System.Drawing.Size(1872, 740)
         Me.dgvCar.TabIndex = 349
@@ -3295,6 +3326,7 @@ Partial Class frmMain
         Me.dgvCompany.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvCompany.Location = New System.Drawing.Point(5, 104)
         Me.dgvCompany.Name = "dgvCompany"
+        Me.dgvCompany.ReadOnly = True
         Me.dgvCompany.RowTemplate.Height = 24
         Me.dgvCompany.Size = New System.Drawing.Size(1872, 840)
         Me.dgvCompany.TabIndex = 10
@@ -3558,6 +3590,7 @@ Partial Class frmMain
         Me.dgvBasicPrice.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvBasicPrice.Location = New System.Drawing.Point(5, 177)
         Me.dgvBasicPrice.Name = "dgvBasicPrice"
+        Me.dgvBasicPrice.ReadOnly = True
         Me.dgvBasicPrice.RowTemplate.Height = 24
         Me.dgvBasicPrice.Size = New System.Drawing.Size(1872, 767)
         Me.dgvBasicPrice.TabIndex = 10
@@ -3619,7 +3652,10 @@ Partial Class frmMain
         '
         'tpBank
         '
-        Me.tpBank.Controls.Add(Me.ComboBox1)
+        Me.tpBank.Controls.Add(Me.txtBankName)
+        Me.tpBank.Controls.Add(Me.Label135)
+        Me.tpBank.Controls.Add(Me.txtAccount_bank)
+        Me.tpBank.Controls.Add(Me.Label134)
         Me.tpBank.Controls.Add(Me.Label82)
         Me.tpBank.Controls.Add(Me.Label73)
         Me.tpBank.Controls.Add(Me.Label224)
@@ -3641,22 +3677,50 @@ Partial Class frmMain
         Me.tpBank.Padding = New System.Windows.Forms.Padding(5)
         Me.tpBank.Size = New System.Drawing.Size(1882, 949)
         Me.tpBank.TabIndex = 35
-        Me.tpBank.Text = "銀行帳戶"
+        Me.tpBank.Text = "銀行管理"
         Me.tpBank.UseVisualStyleBackColor = True
         '
-        'ComboBox1
+        'txtBankName
         '
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(342, 8)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(100, 27)
-        Me.ComboBox1.TabIndex = 381
+        Me.txtBankName.Location = New System.Drawing.Point(390, 8)
+        Me.txtBankName.Name = "txtBankName"
+        Me.txtBankName.Size = New System.Drawing.Size(150, 30)
+        Me.txtBankName.TabIndex = 385
+        Me.txtBankName.Tag = "bank_name"
+        '
+        'Label135
+        '
+        Me.Label135.AutoSize = True
+        Me.Label135.ForeColor = System.Drawing.Color.Red
+        Me.Label135.Location = New System.Drawing.Point(831, 11)
+        Me.Label135.Name = "Label135"
+        Me.Label135.Size = New System.Drawing.Size(20, 19)
+        Me.Label135.TabIndex = 384
+        Me.Label135.Text = "*"
+        Me.Label135.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'txtAccount_bank
+        '
+        Me.txtAccount_bank.Location = New System.Drawing.Point(958, 8)
+        Me.txtAccount_bank.Name = "txtAccount_bank"
+        Me.txtAccount_bank.Size = New System.Drawing.Size(150, 30)
+        Me.txtAccount_bank.TabIndex = 383
+        Me.txtAccount_bank.Tag = "bank_Account"
+        '
+        'Label134
+        '
+        Me.Label134.AutoSize = True
+        Me.Label134.Location = New System.Drawing.Point(857, 11)
+        Me.Label134.Name = "Label134"
+        Me.Label134.Size = New System.Drawing.Size(93, 19)
+        Me.Label134.TabIndex = 382
+        Me.Label134.Text = "銀行帳號"
         '
         'Label82
         '
         Me.Label82.AutoSize = True
         Me.Label82.ForeColor = System.Drawing.Color.Red
-        Me.Label82.Location = New System.Drawing.Point(215, 11)
+        Me.Label82.Location = New System.Drawing.Point(265, 11)
         Me.Label82.Name = "Label82"
         Me.Label82.Size = New System.Drawing.Size(20, 19)
         Me.Label82.TabIndex = 380
@@ -3666,17 +3730,17 @@ Partial Class frmMain
         'Label73
         '
         Me.Label73.AutoSize = True
-        Me.Label73.Location = New System.Drawing.Point(241, 11)
+        Me.Label73.Location = New System.Drawing.Point(291, 11)
         Me.Label73.Name = "Label73"
-        Me.Label73.Size = New System.Drawing.Size(95, 19)
+        Me.Label73.Size = New System.Drawing.Size(93, 19)
         Me.Label73.TabIndex = 379
-        Me.Label73.Text = "公    司"
+        Me.Label73.Text = "銀行名稱"
         '
         'Label224
         '
         Me.Label224.AutoSize = True
         Me.Label224.ForeColor = System.Drawing.Color.Red
-        Me.Label224.Location = New System.Drawing.Point(448, 11)
+        Me.Label224.Location = New System.Drawing.Point(548, 11)
         Me.Label224.Name = "Label224"
         Me.Label224.Size = New System.Drawing.Size(20, 19)
         Me.Label224.TabIndex = 378
@@ -3739,17 +3803,17 @@ Partial Class frmMain
         '
         'TextBox62
         '
-        Me.TextBox62.Location = New System.Drawing.Point(985, 8)
+        Me.TextBox62.Location = New System.Drawing.Point(1468, 8)
         Me.TextBox62.Name = "TextBox62"
         Me.TextBox62.ReadOnly = True
-        Me.TextBox62.Size = New System.Drawing.Size(100, 30)
+        Me.TextBox62.Size = New System.Drawing.Size(150, 30)
         Me.TextBox62.TabIndex = 7
         Me.TextBox62.Tag = "bank_CurrentBalance"
         '
         'Label129
         '
         Me.Label129.AutoSize = True
-        Me.Label129.Location = New System.Drawing.Point(886, 11)
+        Me.Label129.Location = New System.Drawing.Point(1369, 11)
         Me.Label129.Name = "Label129"
         Me.Label129.Size = New System.Drawing.Size(93, 19)
         Me.Label129.TabIndex = 6
@@ -3757,16 +3821,16 @@ Partial Class frmMain
         '
         'txtInitialBalance
         '
-        Me.txtInitialBalance.Location = New System.Drawing.Point(780, 8)
+        Me.txtInitialBalance.Location = New System.Drawing.Point(1213, 8)
         Me.txtInitialBalance.Name = "txtInitialBalance"
-        Me.txtInitialBalance.Size = New System.Drawing.Size(100, 30)
+        Me.txtInitialBalance.Size = New System.Drawing.Size(150, 30)
         Me.txtInitialBalance.TabIndex = 5
         Me.txtInitialBalance.Tag = "bank_InitialBalance"
         '
         'Label128
         '
         Me.Label128.AutoSize = True
-        Me.Label128.Location = New System.Drawing.Point(681, 11)
+        Me.Label128.Location = New System.Drawing.Point(1114, 11)
         Me.Label128.Name = "Label128"
         Me.Label128.Size = New System.Drawing.Size(93, 19)
         Me.Label128.TabIndex = 4
@@ -3774,16 +3838,16 @@ Partial Class frmMain
         '
         'txtAccountName
         '
-        Me.txtAccountName.Location = New System.Drawing.Point(575, 8)
+        Me.txtAccountName.Location = New System.Drawing.Point(675, 8)
         Me.txtAccountName.Name = "txtAccountName"
-        Me.txtAccountName.Size = New System.Drawing.Size(100, 30)
+        Me.txtAccountName.Size = New System.Drawing.Size(150, 30)
         Me.txtAccountName.TabIndex = 3
-        Me.txtAccountName.Tag = "bank_name"
+        Me.txtAccountName.Tag = "bank_AccountName"
         '
         'Label127
         '
         Me.Label127.AutoSize = True
-        Me.Label127.Location = New System.Drawing.Point(474, 11)
+        Me.Label127.Location = New System.Drawing.Point(574, 11)
         Me.Label127.Name = "Label127"
         Me.Label127.Size = New System.Drawing.Size(95, 19)
         Me.Label127.TabIndex = 2
@@ -3794,7 +3858,7 @@ Partial Class frmMain
         Me.txtId_bank.Location = New System.Drawing.Point(109, 8)
         Me.txtId_bank.Name = "txtId_bank"
         Me.txtId_bank.ReadOnly = True
-        Me.txtId_bank.Size = New System.Drawing.Size(100, 30)
+        Me.txtId_bank.Size = New System.Drawing.Size(150, 30)
         Me.txtId_bank.TabIndex = 1
         Me.txtId_bank.Tag = "bank_id"
         '
@@ -4005,11 +4069,8 @@ Partial Class frmMain
         '
         'tpSubjects
         '
-        Me.tpSubjects.Controls.Add(Me.Label303)
         Me.tpSubjects.Controls.Add(Me.Label304)
         Me.tpSubjects.Controls.Add(Me.txtMemo_subjects)
-        Me.tpSubjects.Controls.Add(Me.Label301)
-        Me.tpSubjects.Controls.Add(Me.cmbType_sg)
         Me.tpSubjects.Controls.Add(Me.Label300)
         Me.tpSubjects.Controls.Add(Me.dgvSubject)
         Me.tpSubjects.Controls.Add(Me.btnCancel_subjects)
@@ -4028,16 +4089,6 @@ Partial Class frmMain
         Me.tpSubjects.Text = "科目管理"
         Me.tpSubjects.UseVisualStyleBackColor = True
         '
-        'Label303
-        '
-        Me.Label303.AutoSize = True
-        Me.Label303.ForeColor = System.Drawing.Color.Red
-        Me.Label303.Location = New System.Drawing.Point(548, 11)
-        Me.Label303.Name = "Label303"
-        Me.Label303.Size = New System.Drawing.Size(20, 19)
-        Me.Label303.TabIndex = 373
-        Me.Label303.Text = "*"
-        '
         'Label304
         '
         Me.Label304.AutoSize = True
@@ -4050,36 +4101,16 @@ Partial Class frmMain
         '
         'txtMemo_subjects
         '
-        Me.txtMemo_subjects.Location = New System.Drawing.Point(932, 8)
+        Me.txtMemo_subjects.Location = New System.Drawing.Point(649, 5)
         Me.txtMemo_subjects.Name = "txtMemo_subjects"
         Me.txtMemo_subjects.Size = New System.Drawing.Size(300, 30)
         Me.txtMemo_subjects.TabIndex = 371
         Me.txtMemo_subjects.Tag = "s_memo"
         '
-        'Label301
-        '
-        Me.Label301.AutoSize = True
-        Me.Label301.Location = New System.Drawing.Point(574, 11)
-        Me.Label301.Name = "Label301"
-        Me.Label301.Size = New System.Drawing.Size(95, 19)
-        Me.Label301.TabIndex = 372
-        Me.Label301.Text = "借    貸"
-        '
-        'cmbType_sg
-        '
-        Me.cmbType_sg.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbType_sg.FormattingEnabled = True
-        Me.cmbType_sg.Items.AddRange(New Object() {"借", "貸"})
-        Me.cmbType_sg.Location = New System.Drawing.Point(675, 11)
-        Me.cmbType_sg.Name = "cmbType_sg"
-        Me.cmbType_sg.Size = New System.Drawing.Size(150, 27)
-        Me.cmbType_sg.TabIndex = 369
-        Me.cmbType_sg.Tag = "s_Type"
-        '
         'Label300
         '
         Me.Label300.AutoSize = True
-        Me.Label300.Location = New System.Drawing.Point(831, 14)
+        Me.Label300.Location = New System.Drawing.Point(548, 11)
         Me.Label300.Name = "Label300"
         Me.Label300.Size = New System.Drawing.Size(95, 19)
         Me.Label300.TabIndex = 370
@@ -4189,6 +4220,7 @@ Partial Class frmMain
         '
         Me.TabControl2.Controls.Add(Me.tpPurchase)
         Me.TabControl2.Controls.Add(Me.tpUPH)
+        Me.TabControl2.Controls.Add(Me.tpGasCheckout)
         Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl2.Location = New System.Drawing.Point(3, 3)
         Me.TabControl2.Name = "TabControl2"
@@ -4198,6 +4230,13 @@ Partial Class frmMain
         '
         'tpPurchase
         '
+        Me.tpPurchase.Controls.Add(Me.Label141)
+        Me.tpPurchase.Controls.Add(Me.cmbPayType_pur)
+        Me.tpPurchase.Controls.Add(Me.lblPayType_pur)
+        Me.tpPurchase.Controls.Add(Me.cmbSubject)
+        Me.tpPurchase.Controls.Add(Me.Label137)
+        Me.tpPurchase.Controls.Add(Me.cmbDriveCmp)
+        Me.tpPurchase.Controls.Add(Me.Label136)
         Me.tpPurchase.Controls.Add(Me.chkSp)
         Me.tpPurchase.Controls.Add(Me.chkSpecial)
         Me.tpPurchase.Controls.Add(Me.Label309)
@@ -4222,10 +4261,10 @@ Partial Class frmMain
         Me.tpPurchase.Controls.Add(Me.Label38)
         Me.tpPurchase.Controls.Add(Me.cmbCompany_pur)
         Me.tpPurchase.Controls.Add(Me.lblCompany_pur)
-        Me.tpPurchase.Controls.Add(Me.DateTimePicker21)
+        Me.tpPurchase.Controls.Add(Me.dtpDate_pur)
         Me.tpPurchase.Controls.Add(Me.Label92)
         Me.tpPurchase.Controls.Add(Me.lblGasVendor_pur)
-        Me.tpPurchase.Controls.Add(Me.TextBox140)
+        Me.tpPurchase.Controls.Add(Me.txtMemo_pur)
         Me.tpPurchase.Controls.Add(Me.Label3)
         Me.tpPurchase.Controls.Add(Me.dgvPurchase)
         Me.tpPurchase.Controls.Add(Me.btnQuery_pur)
@@ -4241,12 +4280,80 @@ Partial Class frmMain
         Me.tpPurchase.Text = "大氣採購"
         Me.tpPurchase.UseVisualStyleBackColor = True
         '
+        'Label141
+        '
+        Me.Label141.AutoSize = True
+        Me.Label141.ForeColor = System.Drawing.Color.Red
+        Me.Label141.Location = New System.Drawing.Point(8, 95)
+        Me.Label141.Name = "Label141"
+        Me.Label141.Size = New System.Drawing.Size(20, 19)
+        Me.Label141.TabIndex = 453
+        Me.Label141.Text = "*"
+        '
+        'cmbPayType_pur
+        '
+        Me.cmbPayType_pur.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbPayType_pur.FormattingEnabled = True
+        Me.cmbPayType_pur.Items.AddRange(New Object() {"現金", "支票", "銀行"})
+        Me.cmbPayType_pur.Location = New System.Drawing.Point(133, 92)
+        Me.cmbPayType_pur.Name = "cmbPayType_pur"
+        Me.cmbPayType_pur.Size = New System.Drawing.Size(170, 27)
+        Me.cmbPayType_pur.TabIndex = 452
+        Me.cmbPayType_pur.Tag = "pur_PayType"
+        '
+        'lblPayType_pur
+        '
+        Me.lblPayType_pur.AutoSize = True
+        Me.lblPayType_pur.Location = New System.Drawing.Point(34, 95)
+        Me.lblPayType_pur.Name = "lblPayType_pur"
+        Me.lblPayType_pur.Size = New System.Drawing.Size(93, 19)
+        Me.lblPayType_pur.TabIndex = 451
+        Me.lblPayType_pur.Text = "付款方式"
+        '
+        'cmbSubject
+        '
+        Me.cmbSubject.FormattingEnabled = True
+        Me.cmbSubject.Items.AddRange(New Object() {"普氣", "丙氣"})
+        Me.cmbSubject.Location = New System.Drawing.Point(1467, 92)
+        Me.cmbSubject.Name = "cmbSubject"
+        Me.cmbSubject.Size = New System.Drawing.Size(200, 27)
+        Me.cmbSubject.TabIndex = 450
+        Me.cmbSubject.Tag = "pur_s_Id"
+        '
+        'Label137
+        '
+        Me.Label137.AutoSize = True
+        Me.Label137.Location = New System.Drawing.Point(1366, 95)
+        Me.Label137.Name = "Label137"
+        Me.Label137.Size = New System.Drawing.Size(95, 19)
+        Me.Label137.TabIndex = 449
+        Me.Label137.Text = "科    目"
+        '
+        'cmbDriveCmp
+        '
+        Me.cmbDriveCmp.FormattingEnabled = True
+        Me.cmbDriveCmp.Location = New System.Drawing.Point(1144, 51)
+        Me.cmbDriveCmp.Name = "cmbDriveCmp"
+        Me.cmbDriveCmp.Size = New System.Drawing.Size(523, 27)
+        Me.cmbDriveCmp.TabIndex = 448
+        Me.cmbDriveCmp.Tag = "pur_DriveCmpId"
+        '
+        'Label136
+        '
+        Me.Label136.AutoSize = True
+        Me.Label136.Location = New System.Drawing.Point(1045, 54)
+        Me.Label136.Name = "Label136"
+        Me.Label136.Size = New System.Drawing.Size(93, 19)
+        Me.Label136.TabIndex = 447
+        Me.Label136.Text = "運輸公司"
+        '
         'chkSp
         '
+        Me.chkSp.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkSp.AutoSize = True
-        Me.chkSp.Location = New System.Drawing.Point(1324, 53)
+        Me.chkSp.Location = New System.Drawing.Point(1320, 6)
         Me.chkSp.Name = "chkSp"
-        Me.chkSp.Size = New System.Drawing.Size(49, 23)
+        Me.chkSp.Size = New System.Drawing.Size(40, 29)
         Me.chkSp.TabIndex = 446
         Me.chkSp.Tag = "pur_SpecialDUP"
         Me.chkSp.Text = "特"
@@ -4254,10 +4361,11 @@ Partial Class frmMain
         '
         'chkSpecial
         '
+        Me.chkSpecial.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkSpecial.AutoSize = True
-        Me.chkSpecial.Location = New System.Drawing.Point(1324, 10)
+        Me.chkSpecial.Location = New System.Drawing.Point(999, 90)
         Me.chkSpecial.Name = "chkSpecial"
-        Me.chkSpecial.Size = New System.Drawing.Size(49, 23)
+        Me.chkSpecial.Size = New System.Drawing.Size(40, 29)
         Me.chkSpecial.TabIndex = 445
         Me.chkSpecial.Tag = "pur_SpecialUP"
         Me.chkSpecial.Text = "特"
@@ -4267,7 +4375,7 @@ Partial Class frmMain
         '
         Me.Label309.AutoSize = True
         Me.Label309.ForeColor = System.Drawing.Color.Red
-        Me.Label309.Location = New System.Drawing.Point(1021, 11)
+        Me.Label309.Location = New System.Drawing.Point(742, 95)
         Me.Label309.Name = "Label309"
         Me.Label309.Size = New System.Drawing.Size(20, 19)
         Me.Label309.TabIndex = 444
@@ -4277,7 +4385,7 @@ Partial Class frmMain
         '
         Me.Label308.AutoSize = True
         Me.Label308.ForeColor = System.Drawing.Color.Red
-        Me.Label308.Location = New System.Drawing.Point(718, 14)
+        Me.Label308.Location = New System.Drawing.Point(742, 11)
         Me.Label308.Name = "Label308"
         Me.Label308.Size = New System.Drawing.Size(20, 19)
         Me.Label308.TabIndex = 443
@@ -4287,7 +4395,7 @@ Partial Class frmMain
         '
         Me.Label307.AutoSize = True
         Me.Label307.ForeColor = System.Drawing.Color.Red
-        Me.Label307.Location = New System.Drawing.Point(718, 54)
+        Me.Label307.Location = New System.Drawing.Point(742, 54)
         Me.Label307.Name = "Label307"
         Me.Label307.Size = New System.Drawing.Size(20, 19)
         Me.Label307.TabIndex = 442
@@ -4297,7 +4405,7 @@ Partial Class frmMain
         '
         Me.Label306.AutoSize = True
         Me.Label306.ForeColor = System.Drawing.Color.Red
-        Me.Label306.Location = New System.Drawing.Point(285, 54)
+        Me.Label306.Location = New System.Drawing.Point(309, 54)
         Me.Label306.Name = "Label306"
         Me.Label306.Size = New System.Drawing.Size(20, 19)
         Me.Label306.TabIndex = 441
@@ -4307,7 +4415,7 @@ Partial Class frmMain
         '
         Me.Label305.AutoSize = True
         Me.Label305.ForeColor = System.Drawing.Color.Red
-        Me.Label305.Location = New System.Drawing.Point(285, 11)
+        Me.Label305.Location = New System.Drawing.Point(309, 11)
         Me.Label305.Name = "Label305"
         Me.Label305.Size = New System.Drawing.Size(20, 19)
         Me.Label305.TabIndex = 440
@@ -4315,7 +4423,7 @@ Partial Class frmMain
         '
         'txtDeliUnitPrice
         '
-        Me.txtDeliUnitPrice.Location = New System.Drawing.Point(1148, 51)
+        Me.txtDeliUnitPrice.Location = New System.Drawing.Point(1144, 8)
         Me.txtDeliUnitPrice.Name = "txtDeliUnitPrice"
         Me.txtDeliUnitPrice.Size = New System.Drawing.Size(170, 30)
         Me.txtDeliUnitPrice.TabIndex = 439
@@ -4324,7 +4432,7 @@ Partial Class frmMain
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(1049, 54)
+        Me.Label4.Location = New System.Drawing.Point(1045, 11)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(93, 19)
         Me.Label4.TabIndex = 438
@@ -4333,7 +4441,7 @@ Partial Class frmMain
         'cmbGasVendor_pur
         '
         Me.cmbGasVendor_pur.FormattingEnabled = True
-        Me.cmbGasVendor_pur.Location = New System.Drawing.Point(412, 51)
+        Me.cmbGasVendor_pur.Location = New System.Drawing.Point(436, 51)
         Me.cmbGasVendor_pur.Name = "cmbGasVendor_pur"
         Me.cmbGasVendor_pur.Size = New System.Drawing.Size(300, 27)
         Me.cmbGasVendor_pur.TabIndex = 437
@@ -4343,7 +4451,7 @@ Partial Class frmMain
         '
         Me.cmbProduct_pur.FormattingEnabled = True
         Me.cmbProduct_pur.Items.AddRange(New Object() {"普氣", "丙氣"})
-        Me.cmbProduct_pur.Location = New System.Drawing.Point(845, 8)
+        Me.cmbProduct_pur.Location = New System.Drawing.Point(869, 8)
         Me.cmbProduct_pur.Name = "cmbProduct_pur"
         Me.cmbProduct_pur.Size = New System.Drawing.Size(170, 27)
         Me.cmbProduct_pur.TabIndex = 436
@@ -4352,7 +4460,7 @@ Partial Class frmMain
         'lblProduct
         '
         Me.lblProduct.AutoSize = True
-        Me.lblProduct.Location = New System.Drawing.Point(744, 11)
+        Me.lblProduct.Location = New System.Drawing.Point(768, 11)
         Me.lblProduct.Name = "lblProduct"
         Me.lblProduct.Size = New System.Drawing.Size(95, 19)
         Me.lblProduct.TabIndex = 435
@@ -4361,7 +4469,7 @@ Partial Class frmMain
         'Label28
         '
         Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(744, 54)
+        Me.Label28.Location = New System.Drawing.Point(768, 54)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(95, 19)
         Me.Label28.TabIndex = 423
@@ -4369,7 +4477,7 @@ Partial Class frmMain
         '
         'txtSum_pur
         '
-        Me.txtSum_pur.Location = New System.Drawing.Point(1480, 51)
+        Me.txtSum_pur.Location = New System.Drawing.Point(1144, 92)
         Me.txtSum_pur.Name = "txtSum_pur"
         Me.txtSum_pur.ReadOnly = True
         Me.txtSum_pur.Size = New System.Drawing.Size(200, 30)
@@ -4378,7 +4486,7 @@ Partial Class frmMain
         '
         'txtFreight
         '
-        Me.txtFreight.Location = New System.Drawing.Point(1480, 8)
+        Me.txtFreight.Location = New System.Drawing.Point(1467, 8)
         Me.txtFreight.Name = "txtFreight"
         Me.txtFreight.Size = New System.Drawing.Size(200, 30)
         Me.txtFreight.TabIndex = 434
@@ -4386,7 +4494,7 @@ Partial Class frmMain
         '
         'txtWeight_pur
         '
-        Me.txtWeight_pur.Location = New System.Drawing.Point(845, 51)
+        Me.txtWeight_pur.Location = New System.Drawing.Point(869, 51)
         Me.txtWeight_pur.Name = "txtWeight_pur"
         Me.txtWeight_pur.Size = New System.Drawing.Size(170, 30)
         Me.txtWeight_pur.TabIndex = 424
@@ -4395,7 +4503,7 @@ Partial Class frmMain
         'Label31
         '
         Me.Label31.AutoSize = True
-        Me.Label31.Location = New System.Drawing.Point(1379, 11)
+        Me.Label31.Location = New System.Drawing.Point(1366, 11)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(95, 19)
         Me.Label31.TabIndex = 433
@@ -4404,7 +4512,7 @@ Partial Class frmMain
         'Label35
         '
         Me.Label35.AutoSize = True
-        Me.Label35.Location = New System.Drawing.Point(1379, 54)
+        Me.Label35.Location = New System.Drawing.Point(1045, 95)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(94, 19)
         Me.Label35.TabIndex = 427
@@ -4413,7 +4521,7 @@ Partial Class frmMain
         'Label37
         '
         Me.Label37.AutoSize = True
-        Me.Label37.Location = New System.Drawing.Point(1047, 11)
+        Me.Label37.Location = New System.Drawing.Point(768, 95)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(95, 19)
         Me.Label37.TabIndex = 425
@@ -4421,7 +4529,7 @@ Partial Class frmMain
         '
         'txtId_pur
         '
-        Me.txtId_pur.Location = New System.Drawing.Point(109, 8)
+        Me.txtId_pur.Location = New System.Drawing.Point(133, 8)
         Me.txtId_pur.Name = "txtId_pur"
         Me.txtId_pur.ReadOnly = True
         Me.txtId_pur.Size = New System.Drawing.Size(170, 30)
@@ -4430,16 +4538,16 @@ Partial Class frmMain
         '
         'txtUnitPrice_pur
         '
-        Me.txtUnitPrice_pur.Location = New System.Drawing.Point(1148, 8)
+        Me.txtUnitPrice_pur.Location = New System.Drawing.Point(869, 92)
         Me.txtUnitPrice_pur.Name = "txtUnitPrice_pur"
-        Me.txtUnitPrice_pur.Size = New System.Drawing.Size(170, 30)
+        Me.txtUnitPrice_pur.Size = New System.Drawing.Size(124, 30)
         Me.txtUnitPrice_pur.TabIndex = 426
         Me.txtUnitPrice_pur.Tag = "pur_unit_price"
         '
         'Label38
         '
         Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(8, 11)
+        Me.Label38.Location = New System.Drawing.Point(34, 11)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(95, 19)
         Me.Label38.TabIndex = 431
@@ -4448,7 +4556,7 @@ Partial Class frmMain
         'cmbCompany_pur
         '
         Me.cmbCompany_pur.FormattingEnabled = True
-        Me.cmbCompany_pur.Location = New System.Drawing.Point(412, 11)
+        Me.cmbCompany_pur.Location = New System.Drawing.Point(436, 8)
         Me.cmbCompany_pur.Name = "cmbCompany_pur"
         Me.cmbCompany_pur.Size = New System.Drawing.Size(300, 27)
         Me.cmbCompany_pur.TabIndex = 430
@@ -4457,25 +4565,25 @@ Partial Class frmMain
         'lblCompany_pur
         '
         Me.lblCompany_pur.AutoSize = True
-        Me.lblCompany_pur.Location = New System.Drawing.Point(311, 11)
+        Me.lblCompany_pur.Location = New System.Drawing.Point(335, 11)
         Me.lblCompany_pur.Name = "lblCompany_pur"
         Me.lblCompany_pur.Size = New System.Drawing.Size(95, 19)
         Me.lblCompany_pur.TabIndex = 429
         Me.lblCompany_pur.Text = "公    司"
         '
-        'DateTimePicker21
+        'dtpDate_pur
         '
-        Me.DateTimePicker21.CustomFormat = "yyyy/MM/dd"
-        Me.DateTimePicker21.Location = New System.Drawing.Point(109, 46)
-        Me.DateTimePicker21.Name = "DateTimePicker21"
-        Me.DateTimePicker21.Size = New System.Drawing.Size(170, 30)
-        Me.DateTimePicker21.TabIndex = 422
-        Me.DateTimePicker21.Tag = "pur_date"
+        Me.dtpDate_pur.CustomFormat = "yyyy/MM/dd"
+        Me.dtpDate_pur.Location = New System.Drawing.Point(133, 46)
+        Me.dtpDate_pur.Name = "dtpDate_pur"
+        Me.dtpDate_pur.Size = New System.Drawing.Size(170, 30)
+        Me.dtpDate_pur.TabIndex = 422
+        Me.dtpDate_pur.Tag = "pur_date"
         '
         'Label92
         '
         Me.Label92.AutoSize = True
-        Me.Label92.Location = New System.Drawing.Point(8, 54)
+        Me.Label92.Location = New System.Drawing.Point(34, 54)
         Me.Label92.Name = "Label92"
         Me.Label92.Size = New System.Drawing.Size(95, 19)
         Me.Label92.TabIndex = 421
@@ -4484,24 +4592,24 @@ Partial Class frmMain
         'lblGasVendor_pur
         '
         Me.lblGasVendor_pur.AutoSize = True
-        Me.lblGasVendor_pur.Location = New System.Drawing.Point(311, 54)
+        Me.lblGasVendor_pur.Location = New System.Drawing.Point(335, 54)
         Me.lblGasVendor_pur.Name = "lblGasVendor_pur"
         Me.lblGasVendor_pur.Size = New System.Drawing.Size(93, 19)
         Me.lblGasVendor_pur.TabIndex = 420
         Me.lblGasVendor_pur.Text = "大氣廠商"
         '
-        'TextBox140
+        'txtMemo_pur
         '
-        Me.TextBox140.Location = New System.Drawing.Point(109, 92)
-        Me.TextBox140.Name = "TextBox140"
-        Me.TextBox140.Size = New System.Drawing.Size(603, 30)
-        Me.TextBox140.TabIndex = 419
-        Me.TextBox140.Tag = "pur_Memo"
+        Me.txtMemo_pur.Location = New System.Drawing.Point(436, 92)
+        Me.txtMemo_pur.Name = "txtMemo_pur"
+        Me.txtMemo_pur.Size = New System.Drawing.Size(300, 30)
+        Me.txtMemo_pur.TabIndex = 419
+        Me.txtMemo_pur.Tag = "pur_Memo"
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(8, 97)
+        Me.Label3.Location = New System.Drawing.Point(335, 95)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(95, 19)
         Me.Label3.TabIndex = 418
@@ -4685,9 +4793,145 @@ Partial Class frmMain
         Me.dgvUPH.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvUPH.Location = New System.Drawing.Point(5, 74)
         Me.dgvUPH.Name = "dgvUPH"
+        Me.dgvUPH.ReadOnly = True
         Me.dgvUPH.RowTemplate.Height = 24
         Me.dgvUPH.Size = New System.Drawing.Size(1872, 870)
         Me.dgvUPH.TabIndex = 407
+        '
+        'tpGasCheckout
+        '
+        Me.tpGasCheckout.Controls.Add(Me.chkDate_gc)
+        Me.tpGasCheckout.Controls.Add(Me.cmbVendor_gc)
+        Me.tpGasCheckout.Controls.Add(Me.btnCancel_gc)
+        Me.tpGasCheckout.Controls.Add(Me.btnCheckout_gc)
+        Me.tpGasCheckout.Controls.Add(Me.btnQuery_gc)
+        Me.tpGasCheckout.Controls.Add(Me.dgvGasCheckout)
+        Me.tpGasCheckout.Controls.Add(Me.cmbPayType_gc)
+        Me.tpGasCheckout.Controls.Add(Me.Label140)
+        Me.tpGasCheckout.Controls.Add(Me.dtpEnd_gc)
+        Me.tpGasCheckout.Controls.Add(Me.Label139)
+        Me.tpGasCheckout.Controls.Add(Me.dtpStart_gc)
+        Me.tpGasCheckout.Controls.Add(Me.Label138)
+        Me.tpGasCheckout.Location = New System.Drawing.Point(4, 29)
+        Me.tpGasCheckout.Name = "tpGasCheckout"
+        Me.tpGasCheckout.Padding = New System.Windows.Forms.Padding(5)
+        Me.tpGasCheckout.Size = New System.Drawing.Size(1882, 949)
+        Me.tpGasCheckout.TabIndex = 32
+        Me.tpGasCheckout.Text = "大氣結帳"
+        Me.tpGasCheckout.UseVisualStyleBackColor = True
+        '
+        'chkDate_gc
+        '
+        Me.chkDate_gc.AutoSize = True
+        Me.chkDate_gc.Location = New System.Drawing.Point(509, 15)
+        Me.chkDate_gc.Name = "chkDate_gc"
+        Me.chkDate_gc.Size = New System.Drawing.Size(112, 23)
+        Me.chkDate_gc.TabIndex = 420
+        Me.chkDate_gc.Text = "搜尋日期"
+        Me.chkDate_gc.UseVisualStyleBackColor = True
+        '
+        'cmbVendor_gc
+        '
+        Me.cmbVendor_gc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbVendor_gc.FormattingEnabled = True
+        Me.cmbVendor_gc.Items.AddRange(New Object() {"現金", "支票", "銀行"})
+        Me.cmbVendor_gc.Location = New System.Drawing.Point(728, 10)
+        Me.cmbVendor_gc.Name = "cmbVendor_gc"
+        Me.cmbVendor_gc.Size = New System.Drawing.Size(250, 27)
+        Me.cmbVendor_gc.TabIndex = 419
+        '
+        'btnCancel_gc
+        '
+        Me.btnCancel_gc.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancel_gc.Location = New System.Drawing.Point(320, 46)
+        Me.btnCancel_gc.Name = "btnCancel_gc"
+        Me.btnCancel_gc.Size = New System.Drawing.Size(140, 44)
+        Me.btnCancel_gc.TabIndex = 418
+        Me.btnCancel_gc.Text = "取  消"
+        Me.btnCancel_gc.UseVisualStyleBackColor = False
+        '
+        'btnCheckout_gc
+        '
+        Me.btnCheckout_gc.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCheckout_gc.Location = New System.Drawing.Point(164, 46)
+        Me.btnCheckout_gc.Name = "btnCheckout_gc"
+        Me.btnCheckout_gc.Size = New System.Drawing.Size(140, 44)
+        Me.btnCheckout_gc.TabIndex = 417
+        Me.btnCheckout_gc.Text = "結  帳"
+        Me.btnCheckout_gc.UseVisualStyleBackColor = False
+        '
+        'btnQuery_gc
+        '
+        Me.btnQuery_gc.BackColor = System.Drawing.Color.Lime
+        Me.btnQuery_gc.Location = New System.Drawing.Point(8, 46)
+        Me.btnQuery_gc.Name = "btnQuery_gc"
+        Me.btnQuery_gc.Size = New System.Drawing.Size(140, 44)
+        Me.btnQuery_gc.TabIndex = 416
+        Me.btnQuery_gc.Text = "查  詢"
+        Me.btnQuery_gc.UseVisualStyleBackColor = False
+        '
+        'dgvGasCheckout
+        '
+        Me.dgvGasCheckout.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvGasCheckout.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgvGasCheckout.Location = New System.Drawing.Point(5, 114)
+        Me.dgvGasCheckout.Name = "dgvGasCheckout"
+        Me.dgvGasCheckout.ReadOnly = True
+        Me.dgvGasCheckout.RowTemplate.Height = 24
+        Me.dgvGasCheckout.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.dgvGasCheckout.Size = New System.Drawing.Size(1872, 830)
+        Me.dgvGasCheckout.TabIndex = 7
+        '
+        'cmbPayType_gc
+        '
+        Me.cmbPayType_gc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbPayType_gc.FormattingEnabled = True
+        Me.cmbPayType_gc.Items.AddRange(New Object() {"現金", "支票", "銀行"})
+        Me.cmbPayType_gc.Location = New System.Drawing.Point(1083, 10)
+        Me.cmbPayType_gc.Name = "cmbPayType_gc"
+        Me.cmbPayType_gc.Size = New System.Drawing.Size(250, 27)
+        Me.cmbPayType_gc.TabIndex = 6
+        '
+        'Label140
+        '
+        Me.Label140.AutoSize = True
+        Me.Label140.Location = New System.Drawing.Point(984, 16)
+        Me.Label140.Name = "Label140"
+        Me.Label140.Size = New System.Drawing.Size(93, 19)
+        Me.Label140.TabIndex = 5
+        Me.Label140.Text = "付款方式"
+        '
+        'dtpEnd_gc
+        '
+        Me.dtpEnd_gc.Location = New System.Drawing.Point(310, 10)
+        Me.dtpEnd_gc.Name = "dtpEnd_gc"
+        Me.dtpEnd_gc.Size = New System.Drawing.Size(193, 30)
+        Me.dtpEnd_gc.TabIndex = 4
+        '
+        'Label139
+        '
+        Me.Label139.AutoSize = True
+        Me.Label139.Location = New System.Drawing.Point(627, 16)
+        Me.Label139.Name = "Label139"
+        Me.Label139.Size = New System.Drawing.Size(95, 19)
+        Me.Label139.TabIndex = 2
+        Me.Label139.Text = "廠    商"
+        '
+        'dtpStart_gc
+        '
+        Me.dtpStart_gc.Location = New System.Drawing.Point(109, 10)
+        Me.dtpStart_gc.Name = "dtpStart_gc"
+        Me.dtpStart_gc.Size = New System.Drawing.Size(195, 30)
+        Me.dtpStart_gc.TabIndex = 1
+        '
+        'Label138
+        '
+        Me.Label138.AutoSize = True
+        Me.Label138.Location = New System.Drawing.Point(8, 16)
+        Me.Label138.Name = "Label138"
+        Me.Label138.Size = New System.Drawing.Size(95, 19)
+        Me.Label138.TabIndex = 0
+        Me.Label138.Text = "日    期"
         '
         'TabPage1
         '
@@ -4712,6 +4956,7 @@ Partial Class frmMain
         '
         'tpPayment
         '
+        Me.tpPayment.Controls.Add(Me.Label83)
         Me.tpPayment.Controls.Add(Me.dtpCheDate)
         Me.tpPayment.Controls.Add(Me.lblCheDateReq_payment)
         Me.tpPayment.Controls.Add(Me.grpAmountDue)
@@ -4722,7 +4967,6 @@ Partial Class frmMain
         Me.tpPayment.Controls.Add(Me.Label102)
         Me.tpPayment.Controls.Add(Me.lblReq_Chuque)
         Me.tpPayment.Controls.Add(Me.GroupBox1)
-        Me.tpPayment.Controls.Add(Me.Label83)
         Me.tpPayment.Controls.Add(Me.Label81)
         Me.tpPayment.Controls.Add(Me.cmbBank_payment)
         Me.tpPayment.Controls.Add(Me.lblBank_payment)
@@ -4757,12 +5001,22 @@ Partial Class frmMain
         Me.tpPayment.Text = "付款作業"
         Me.tpPayment.UseVisualStyleBackColor = True
         '
+        'Label83
+        '
+        Me.Label83.AutoSize = True
+        Me.Label83.ForeColor = System.Drawing.Color.Red
+        Me.Label83.Location = New System.Drawing.Point(925, 97)
+        Me.Label83.Name = "Label83"
+        Me.Label83.Size = New System.Drawing.Size(20, 19)
+        Me.Label83.TabIndex = 441
+        Me.Label83.Text = "*"
+        '
         'dtpCheDate
         '
         Me.dtpCheDate.CustomFormat = ""
-        Me.dtpCheDate.Location = New System.Drawing.Point(426, 96)
+        Me.dtpCheDate.Location = New System.Drawing.Point(1052, 133)
         Me.dtpCheDate.Name = "dtpCheDate"
-        Me.dtpCheDate.Size = New System.Drawing.Size(182, 30)
+        Me.dtpCheDate.Size = New System.Drawing.Size(180, 30)
         Me.dtpCheDate.TabIndex = 440
         Me.dtpCheDate.Tag = "p_AccountMonth"
         Me.dtpCheDate.Visible = False
@@ -4771,7 +5025,7 @@ Partial Class frmMain
         '
         Me.lblCheDateReq_payment.AutoSize = True
         Me.lblCheDateReq_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblCheDateReq_payment.Location = New System.Drawing.Point(327, 101)
+        Me.lblCheDateReq_payment.Location = New System.Drawing.Point(951, 139)
         Me.lblCheDateReq_payment.Name = "lblCheDateReq_payment"
         Me.lblCheDateReq_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblCheDateReq_payment.TabIndex = 438
@@ -4781,9 +5035,9 @@ Partial Class frmMain
         'grpAmountDue
         '
         Me.grpAmountDue.Controls.Add(Me.dgvAmountDue)
-        Me.grpAmountDue.Location = New System.Drawing.Point(12, 138)
+        Me.grpAmountDue.Location = New System.Drawing.Point(8, 8)
         Me.grpAmountDue.Name = "grpAmountDue"
-        Me.grpAmountDue.Size = New System.Drawing.Size(642, 181)
+        Me.grpAmountDue.Size = New System.Drawing.Size(630, 236)
         Me.grpAmountDue.TabIndex = 436
         Me.grpAmountDue.TabStop = False
         Me.grpAmountDue.Text = "應付未付列表"
@@ -4794,15 +5048,16 @@ Partial Class frmMain
         Me.dgvAmountDue.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvAmountDue.Location = New System.Drawing.Point(3, 26)
         Me.dgvAmountDue.Name = "dgvAmountDue"
+        Me.dgvAmountDue.ReadOnly = True
         Me.dgvAmountDue.RowTemplate.Height = 24
-        Me.dgvAmountDue.Size = New System.Drawing.Size(636, 152)
+        Me.dgvAmountDue.Size = New System.Drawing.Size(624, 207)
         Me.dgvAmountDue.TabIndex = 435
         '
         'Label113
         '
         Me.Label113.AutoSize = True
         Me.Label113.ForeColor = System.Drawing.Color.Red
-        Me.Label113.Location = New System.Drawing.Point(1553, 13)
+        Me.Label113.Location = New System.Drawing.Point(1238, 14)
         Me.Label113.Name = "Label113"
         Me.Label113.Size = New System.Drawing.Size(20, 19)
         Me.Label113.TabIndex = 434
@@ -4812,9 +5067,9 @@ Partial Class frmMain
         '
         Me.cmbCompany_payment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbCompany_payment.FormattingEnabled = True
-        Me.cmbCompany_payment.Location = New System.Drawing.Point(1678, 10)
+        Me.cmbCompany_payment.Location = New System.Drawing.Point(1365, 11)
         Me.cmbCompany_payment.Name = "cmbCompany_payment"
-        Me.cmbCompany_payment.Size = New System.Drawing.Size(180, 27)
+        Me.cmbCompany_payment.Size = New System.Drawing.Size(497, 27)
         Me.cmbCompany_payment.TabIndex = 433
         Me.cmbCompany_payment.Tag = "p_comp_Id"
         '
@@ -4822,7 +5077,7 @@ Partial Class frmMain
         '
         Me.Label114.AutoSize = True
         Me.Label114.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label114.Location = New System.Drawing.Point(1579, 13)
+        Me.Label114.Location = New System.Drawing.Point(1264, 14)
         Me.Label114.Name = "Label114"
         Me.Label114.Size = New System.Drawing.Size(95, 19)
         Me.Label114.TabIndex = 432
@@ -4832,9 +5087,9 @@ Partial Class frmMain
         '
         Me.dtpAccountMonth.CustomFormat = "yyyy年MM月"
         Me.dtpAccountMonth.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpAccountMonth.Location = New System.Drawing.Point(1056, 48)
+        Me.dtpAccountMonth.Location = New System.Drawing.Point(774, 91)
         Me.dtpAccountMonth.Name = "dtpAccountMonth"
-        Me.dtpAccountMonth.Size = New System.Drawing.Size(180, 30)
+        Me.dtpAccountMonth.Size = New System.Drawing.Size(145, 30)
         Me.dtpAccountMonth.TabIndex = 431
         Me.dtpAccountMonth.Tag = "p_AccountMonth"
         '
@@ -4842,7 +5097,7 @@ Partial Class frmMain
         '
         Me.Label102.AutoSize = True
         Me.Label102.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label102.Location = New System.Drawing.Point(954, 56)
+        Me.Label102.Location = New System.Drawing.Point(670, 97)
         Me.Label102.Name = "Label102"
         Me.Label102.Size = New System.Drawing.Size(93, 19)
         Me.Label102.TabIndex = 430
@@ -4852,7 +5107,7 @@ Partial Class frmMain
         '
         Me.lblReq_Chuque.AutoSize = True
         Me.lblReq_Chuque.ForeColor = System.Drawing.Color.Red
-        Me.lblReq_Chuque.Location = New System.Drawing.Point(8, 101)
+        Me.lblReq_Chuque.Location = New System.Drawing.Point(644, 139)
         Me.lblReq_Chuque.Name = "lblReq_Chuque"
         Me.lblReq_Chuque.Size = New System.Drawing.Size(20, 19)
         Me.lblReq_Chuque.TabIndex = 429
@@ -4864,7 +5119,7 @@ Partial Class frmMain
         Me.GroupBox1.Controls.Add(Me.Label84)
         Me.GroupBox1.Controls.Add(Me.dtpEnd_payment)
         Me.GroupBox1.Controls.Add(Me.dtpStart_payment)
-        Me.GroupBox1.Location = New System.Drawing.Point(1430, 243)
+        Me.GroupBox1.Location = New System.Drawing.Point(1414, 171)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Padding = New System.Windows.Forms.Padding(5)
         Me.GroupBox1.Size = New System.Drawing.Size(410, 73)
@@ -4897,21 +5152,11 @@ Partial Class frmMain
         Me.dtpStart_payment.TabIndex = 409
         Me.dtpStart_payment.Tag = "p_Date"
         '
-        'Label83
-        '
-        Me.Label83.AutoSize = True
-        Me.Label83.ForeColor = System.Drawing.Color.Red
-        Me.Label83.Location = New System.Drawing.Point(1242, 13)
-        Me.Label83.Name = "Label83"
-        Me.Label83.Size = New System.Drawing.Size(20, 19)
-        Me.Label83.TabIndex = 427
-        Me.Label83.Text = "*"
-        '
         'Label81
         '
         Me.Label81.AutoSize = True
         Me.Label81.ForeColor = System.Drawing.Color.Red
-        Me.Label81.Location = New System.Drawing.Point(928, 13)
+        Me.Label81.Location = New System.Drawing.Point(1238, 97)
         Me.Label81.Name = "Label81"
         Me.Label81.Size = New System.Drawing.Size(20, 19)
         Me.Label81.TabIndex = 425
@@ -4919,10 +5164,11 @@ Partial Class frmMain
         '
         'cmbBank_payment
         '
+        Me.cmbBank_payment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbBank_payment.FormattingEnabled = True
-        Me.cmbBank_payment.Location = New System.Drawing.Point(742, 10)
+        Me.cmbBank_payment.Location = New System.Drawing.Point(1365, 50)
         Me.cmbBank_payment.Name = "cmbBank_payment"
-        Me.cmbBank_payment.Size = New System.Drawing.Size(180, 27)
+        Me.cmbBank_payment.Size = New System.Drawing.Size(497, 27)
         Me.cmbBank_payment.TabIndex = 424
         Me.cmbBank_payment.Tag = "p_bank_Id"
         '
@@ -4930,18 +5176,18 @@ Partial Class frmMain
         '
         Me.lblBank_payment.AutoSize = True
         Me.lblBank_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblBank_payment.Location = New System.Drawing.Point(643, 13)
+        Me.lblBank_payment.Location = New System.Drawing.Point(1264, 54)
         Me.lblBank_payment.Name = "lblBank_payment"
         Me.lblBank_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblBank_payment.TabIndex = 423
-        Me.lblBank_payment.Text = "付款銀行"
+        Me.lblBank_payment.Text = "銀行帳號"
         '
         'cmbManu_payment
         '
         Me.cmbManu_payment.FormattingEnabled = True
-        Me.cmbManu_payment.Location = New System.Drawing.Point(138, 53)
+        Me.cmbManu_payment.Location = New System.Drawing.Point(774, 50)
         Me.cmbManu_payment.Name = "cmbManu_payment"
-        Me.cmbManu_payment.Size = New System.Drawing.Size(473, 27)
+        Me.cmbManu_payment.Size = New System.Drawing.Size(458, 27)
         Me.cmbManu_payment.TabIndex = 422
         Me.cmbManu_payment.Tag = "p_m_Id"
         '
@@ -4949,7 +5195,7 @@ Partial Class frmMain
         '
         Me.lblManu_payment.AutoSize = True
         Me.lblManu_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblManu_payment.Location = New System.Drawing.Point(34, 56)
+        Me.lblManu_payment.Location = New System.Drawing.Point(670, 54)
         Me.lblManu_payment.Name = "lblManu_payment"
         Me.lblManu_payment.Size = New System.Drawing.Size(95, 19)
         Me.lblManu_payment.TabIndex = 421
@@ -4959,9 +5205,9 @@ Partial Class frmMain
         '
         Me.cmbSubjects_payment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbSubjects_payment.FormattingEnabled = True
-        Me.cmbSubjects_payment.Location = New System.Drawing.Point(1367, 10)
+        Me.cmbSubjects_payment.Location = New System.Drawing.Point(1652, 93)
         Me.cmbSubjects_payment.Name = "cmbSubjects_payment"
-        Me.cmbSubjects_payment.Size = New System.Drawing.Size(180, 27)
+        Me.cmbSubjects_payment.Size = New System.Drawing.Size(210, 27)
         Me.cmbSubjects_payment.TabIndex = 420
         Me.cmbSubjects_payment.Tag = "p_s_Id"
         '
@@ -4969,7 +5215,7 @@ Partial Class frmMain
         '
         Me.lblSubjects_payment.AutoSize = True
         Me.lblSubjects_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblSubjects_payment.Location = New System.Drawing.Point(1268, 13)
+        Me.lblSubjects_payment.Location = New System.Drawing.Point(1551, 97)
         Me.lblSubjects_payment.Name = "lblSubjects_payment"
         Me.lblSubjects_payment.Size = New System.Drawing.Size(95, 19)
         Me.lblSubjects_payment.TabIndex = 419
@@ -4979,7 +5225,7 @@ Partial Class frmMain
         '
         Me.Label60.AutoSize = True
         Me.Label60.ForeColor = System.Drawing.Color.Red
-        Me.Label60.Location = New System.Drawing.Point(617, 16)
+        Me.Label60.Location = New System.Drawing.Point(1238, 54)
         Me.Label60.Name = "Label60"
         Me.Label60.Size = New System.Drawing.Size(20, 19)
         Me.Label60.TabIndex = 418
@@ -4987,26 +5233,26 @@ Partial Class frmMain
         '
         'txtCheNo_payment
         '
-        Me.txtCheNo_payment.Location = New System.Drawing.Point(138, 96)
+        Me.txtCheNo_payment.Location = New System.Drawing.Point(774, 133)
         Me.txtCheNo_payment.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCheNo_payment.Name = "txtCheNo_payment"
-        Me.txtCheNo_payment.Size = New System.Drawing.Size(180, 30)
+        Me.txtCheNo_payment.Size = New System.Drawing.Size(145, 30)
         Me.txtCheNo_payment.TabIndex = 409
         Me.txtCheNo_payment.Tag = "p_Cheque"
         Me.txtCheNo_payment.Visible = False
         '
         'txtMemo_payment
         '
-        Me.txtMemo_payment.Location = New System.Drawing.Point(1369, 53)
+        Me.txtMemo_payment.Location = New System.Drawing.Point(1365, 133)
         Me.txtMemo_payment.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtMemo_payment.Name = "txtMemo_payment"
-        Me.txtMemo_payment.Size = New System.Drawing.Size(489, 30)
+        Me.txtMemo_payment.Size = New System.Drawing.Size(497, 30)
         Me.txtMemo_payment.TabIndex = 395
         Me.txtMemo_payment.Tag = "p_Memo"
         '
         'txtAmount
         '
-        Me.txtAmount.Location = New System.Drawing.Point(742, 53)
+        Me.txtAmount.Location = New System.Drawing.Point(1052, 91)
         Me.txtAmount.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtAmount.Name = "txtAmount"
         Me.txtAmount.Size = New System.Drawing.Size(180, 30)
@@ -5015,11 +5261,11 @@ Partial Class frmMain
         '
         'txtId_payment
         '
-        Me.txtId_payment.Location = New System.Drawing.Point(138, 10)
+        Me.txtId_payment.Location = New System.Drawing.Point(774, 8)
         Me.txtId_payment.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtId_payment.Name = "txtId_payment"
         Me.txtId_payment.ReadOnly = True
-        Me.txtId_payment.Size = New System.Drawing.Size(180, 30)
+        Me.txtId_payment.Size = New System.Drawing.Size(145, 30)
         Me.txtId_payment.TabIndex = 383
         Me.txtId_payment.Tag = "p_Id"
         '
@@ -5027,7 +5273,7 @@ Partial Class frmMain
         '
         Me.lblCheNo_payment.AutoSize = True
         Me.lblCheNo_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblCheNo_payment.Location = New System.Drawing.Point(34, 99)
+        Me.lblCheNo_payment.Location = New System.Drawing.Point(670, 139)
         Me.lblCheNo_payment.Name = "lblCheNo_payment"
         Me.lblCheNo_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblCheNo_payment.TabIndex = 410
@@ -5036,7 +5282,7 @@ Partial Class frmMain
         '
         'dtpPayment
         '
-        Me.dtpPayment.Location = New System.Drawing.Point(428, 10)
+        Me.dtpPayment.Location = New System.Drawing.Point(1052, 7)
         Me.dtpPayment.Name = "dtpPayment"
         Me.dtpPayment.Size = New System.Drawing.Size(180, 30)
         Me.dtpPayment.TabIndex = 408
@@ -5048,7 +5294,7 @@ Partial Class frmMain
         Me.cmbPayType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbPayType.FormattingEnabled = True
         Me.cmbPayType.Items.AddRange(New Object() {"現金", "銀行", "支票"})
-        Me.cmbPayType.Location = New System.Drawing.Point(1056, 10)
+        Me.cmbPayType.Location = New System.Drawing.Point(1365, 93)
         Me.cmbPayType.Name = "cmbPayType"
         Me.cmbPayType.Size = New System.Drawing.Size(180, 27)
         Me.cmbPayType.TabIndex = 407
@@ -5058,16 +5304,17 @@ Partial Class frmMain
         '
         Me.dgvPayment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPayment.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvPayment.Location = New System.Drawing.Point(5, 344)
+        Me.dgvPayment.Location = New System.Drawing.Point(5, 264)
         Me.dgvPayment.Name = "dgvPayment"
+        Me.dgvPayment.ReadOnly = True
         Me.dgvPayment.RowTemplate.Height = 24
-        Me.dgvPayment.Size = New System.Drawing.Size(1872, 600)
+        Me.dgvPayment.Size = New System.Drawing.Size(1872, 680)
         Me.dgvPayment.TabIndex = 406
         '
         'btnQuery_payment
         '
         Me.btnQuery_payment.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_payment.Location = New System.Drawing.Point(1284, 272)
+        Me.btnQuery_payment.Location = New System.Drawing.Point(1268, 200)
         Me.btnQuery_payment.Name = "btnQuery_payment"
         Me.btnQuery_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_payment.TabIndex = 405
@@ -5077,7 +5324,7 @@ Partial Class frmMain
         'btnCancel_payment
         '
         Me.btnCancel_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_payment.Location = New System.Drawing.Point(1128, 272)
+        Me.btnCancel_payment.Location = New System.Drawing.Point(1112, 200)
         Me.btnCancel_payment.Name = "btnCancel_payment"
         Me.btnCancel_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_payment.TabIndex = 402
@@ -5087,7 +5334,7 @@ Partial Class frmMain
         'btnDelete_payment
         '
         Me.btnDelete_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete_payment.Location = New System.Drawing.Point(972, 272)
+        Me.btnDelete_payment.Location = New System.Drawing.Point(956, 200)
         Me.btnDelete_payment.Name = "btnDelete_payment"
         Me.btnDelete_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_payment.TabIndex = 401
@@ -5097,7 +5344,7 @@ Partial Class frmMain
         'btnEdit_payment
         '
         Me.btnEdit_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit_payment.Location = New System.Drawing.Point(816, 272)
+        Me.btnEdit_payment.Location = New System.Drawing.Point(800, 200)
         Me.btnEdit_payment.Name = "btnEdit_payment"
         Me.btnEdit_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_payment.TabIndex = 400
@@ -5107,7 +5354,7 @@ Partial Class frmMain
         'btnAdd_payment
         '
         Me.btnAdd_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnAdd_payment.Location = New System.Drawing.Point(660, 272)
+        Me.btnAdd_payment.Location = New System.Drawing.Point(644, 200)
         Me.btnAdd_payment.Name = "btnAdd_payment"
         Me.btnAdd_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnAdd_payment.TabIndex = 399
@@ -5119,7 +5366,7 @@ Partial Class frmMain
         '
         Me.lblPayType_payment.AutoSize = True
         Me.lblPayType_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblPayType_payment.Location = New System.Drawing.Point(954, 13)
+        Me.lblPayType_payment.Location = New System.Drawing.Point(1264, 97)
         Me.lblPayType_payment.Name = "lblPayType_payment"
         Me.lblPayType_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblPayType_payment.TabIndex = 398
@@ -5129,7 +5376,7 @@ Partial Class frmMain
         '
         Me.Label190.AutoSize = True
         Me.Label190.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label190.Location = New System.Drawing.Point(1265, 56)
+        Me.Label190.Location = New System.Drawing.Point(1264, 139)
         Me.Label190.Name = "Label190"
         Me.Label190.Size = New System.Drawing.Size(95, 19)
         Me.Label190.TabIndex = 396
@@ -5139,7 +5386,7 @@ Partial Class frmMain
         '
         Me.Label191.AutoSize = True
         Me.Label191.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label191.Location = New System.Drawing.Point(327, 13)
+        Me.Label191.Location = New System.Drawing.Point(951, 14)
         Me.Label191.Name = "Label191"
         Me.Label191.Size = New System.Drawing.Size(95, 19)
         Me.Label191.TabIndex = 394
@@ -5149,7 +5396,7 @@ Partial Class frmMain
         '
         Me.Label192.AutoSize = True
         Me.Label192.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label192.Location = New System.Drawing.Point(643, 56)
+        Me.Label192.Location = New System.Drawing.Point(951, 97)
         Me.Label192.Name = "Label192"
         Me.Label192.Size = New System.Drawing.Size(95, 19)
         Me.Label192.TabIndex = 392
@@ -5159,7 +5406,7 @@ Partial Class frmMain
         '
         Me.Label265.AutoSize = True
         Me.Label265.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label265.Location = New System.Drawing.Point(34, 13)
+        Me.Label265.Location = New System.Drawing.Point(670, 14)
         Me.Label265.Name = "Label265"
         Me.Label265.Size = New System.Drawing.Size(95, 19)
         Me.Label265.TabIndex = 384
@@ -5213,6 +5460,16 @@ Partial Class frmMain
         Me.tpOrder.Text = "銷售管理"
         Me.tpOrder.UseVisualStyleBackColor = True
         '
+        'btnCusGasCylinderInventory
+        '
+        Me.btnCusGasCylinderInventory.BackColor = System.Drawing.Color.Lime
+        Me.btnCusGasCylinderInventory.Location = New System.Drawing.Point(785, 401)
+        Me.btnCusGasCylinderInventory.Name = "btnCusGasCylinderInventory"
+        Me.btnCusGasCylinderInventory.Size = New System.Drawing.Size(269, 44)
+        Me.btnCusGasCylinderInventory.TabIndex = 461
+        Me.btnCusGasCylinderInventory.Text = "列印客戶寄桶結存瓶 (F6)"
+        Me.btnCusGasCylinderInventory.UseVisualStyleBackColor = False
+        '
         'txtCusCode_ord
         '
         Me.txtCusCode_ord.Location = New System.Drawing.Point(109, 51)
@@ -5224,7 +5481,7 @@ Partial Class frmMain
         '
         'txtOperator
         '
-        Me.txtOperator.Location = New System.Drawing.Point(498, 266)
+        Me.txtOperator.Location = New System.Drawing.Point(109, 312)
         Me.txtOperator.Name = "txtOperator"
         Me.txtOperator.ReadOnly = True
         Me.txtOperator.Size = New System.Drawing.Size(100, 30)
@@ -5234,7 +5491,7 @@ Partial Class frmMain
         'Label107
         '
         Me.Label107.AutoSize = True
-        Me.Label107.Location = New System.Drawing.Point(399, 269)
+        Me.Label107.Location = New System.Drawing.Point(8, 315)
         Me.Label107.Name = "Label107"
         Me.Label107.Size = New System.Drawing.Size(93, 19)
         Me.Label107.TabIndex = 458
@@ -5247,13 +5504,23 @@ Partial Class frmMain
         Me.tcInOut.Location = New System.Drawing.Point(857, 6)
         Me.tcInOut.Name = "tcInOut"
         Me.tcInOut.SelectedIndex = 0
-        Me.tcInOut.Size = New System.Drawing.Size(1017, 334)
+        Me.tcInOut.Size = New System.Drawing.Size(1017, 389)
         Me.tcInOut.TabIndex = 457
         Me.tcInOut.Tag = "o_in_out"
         '
         'tpIn
         '
         Me.tpIn.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.tpIn.Controls.Add(Me.txtInspect2)
+        Me.tpIn.Controls.Add(Me.txtInspect4)
+        Me.tpIn.Controls.Add(Me.txtInspect5)
+        Me.tpIn.Controls.Add(Me.txtInspect10)
+        Me.tpIn.Controls.Add(Me.txtInspect14)
+        Me.tpIn.Controls.Add(Me.txtInspect15)
+        Me.tpIn.Controls.Add(Me.txtInspect16)
+        Me.tpIn.Controls.Add(Me.txtInspect20)
+        Me.tpIn.Controls.Add(Me.txtInspect50)
+        Me.tpIn.Controls.Add(Me.Label142)
         Me.tpIn.Controls.Add(Me.TextBox1)
         Me.tpIn.Controls.Add(Me.TextBox16)
         Me.tpIn.Controls.Add(Me.TextBox17)
@@ -5327,13 +5594,106 @@ Partial Class frmMain
         Me.tpIn.Location = New System.Drawing.Point(4, 29)
         Me.tpIn.Name = "tpIn"
         Me.tpIn.Padding = New System.Windows.Forms.Padding(5)
-        Me.tpIn.Size = New System.Drawing.Size(1009, 301)
+        Me.tpIn.Size = New System.Drawing.Size(1009, 356)
         Me.tpIn.TabIndex = 0
         Me.tpIn.Text = "進場單"
         '
+        'txtInspect2
+        '
+        Me.txtInspect2.BackColor = System.Drawing.SystemColors.Control
+        Me.txtInspect2.Location = New System.Drawing.Point(762, 180)
+        Me.txtInspect2.Name = "txtInspect2"
+        Me.txtInspect2.ReadOnly = True
+        Me.txtInspect2.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect2.TabIndex = 519
+        Me.txtInspect2.Tag = "cus_inspect_2"
+        '
+        'txtInspect4
+        '
+        Me.txtInspect4.Location = New System.Drawing.Point(454, 180)
+        Me.txtInspect4.Name = "txtInspect4"
+        Me.txtInspect4.ReadOnly = True
+        Me.txtInspect4.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect4.TabIndex = 518
+        Me.txtInspect4.Tag = "cus_inspect_4"
+        '
+        'txtInspect5
+        '
+        Me.txtInspect5.BackColor = System.Drawing.SystemColors.Control
+        Me.txtInspect5.Location = New System.Drawing.Point(685, 180)
+        Me.txtInspect5.Name = "txtInspect5"
+        Me.txtInspect5.ReadOnly = True
+        Me.txtInspect5.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect5.TabIndex = 517
+        Me.txtInspect5.Tag = "cus_inspect_5"
+        '
+        'txtInspect10
+        '
+        Me.txtInspect10.Location = New System.Drawing.Point(377, 180)
+        Me.txtInspect10.Name = "txtInspect10"
+        Me.txtInspect10.ReadOnly = True
+        Me.txtInspect10.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect10.TabIndex = 516
+        Me.txtInspect10.Tag = "cus_inspect_10"
+        '
+        'txtInspect14
+        '
+        Me.txtInspect14.BackColor = System.Drawing.SystemColors.Control
+        Me.txtInspect14.Location = New System.Drawing.Point(608, 180)
+        Me.txtInspect14.Name = "txtInspect14"
+        Me.txtInspect14.ReadOnly = True
+        Me.txtInspect14.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect14.TabIndex = 515
+        Me.txtInspect14.Tag = "cus_inspect_14"
+        '
+        'txtInspect15
+        '
+        Me.txtInspect15.BackColor = System.Drawing.SystemColors.Control
+        Me.txtInspect15.Location = New System.Drawing.Point(531, 180)
+        Me.txtInspect15.Name = "txtInspect15"
+        Me.txtInspect15.ReadOnly = True
+        Me.txtInspect15.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect15.TabIndex = 514
+        Me.txtInspect15.Tag = "cus_inspect_15"
+        '
+        'txtInspect16
+        '
+        Me.txtInspect16.Location = New System.Drawing.Point(300, 180)
+        Me.txtInspect16.Name = "txtInspect16"
+        Me.txtInspect16.ReadOnly = True
+        Me.txtInspect16.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect16.TabIndex = 513
+        Me.txtInspect16.Tag = "cus_inspect_16"
+        '
+        'txtInspect20
+        '
+        Me.txtInspect20.Location = New System.Drawing.Point(223, 180)
+        Me.txtInspect20.Name = "txtInspect20"
+        Me.txtInspect20.ReadOnly = True
+        Me.txtInspect20.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect20.TabIndex = 512
+        Me.txtInspect20.Tag = "cus_inspect_20"
+        '
+        'txtInspect50
+        '
+        Me.txtInspect50.Location = New System.Drawing.Point(146, 180)
+        Me.txtInspect50.Name = "txtInspect50"
+        Me.txtInspect50.ReadOnly = True
+        Me.txtInspect50.Size = New System.Drawing.Size(53, 30)
+        Me.txtInspect50.TabIndex = 511
+        Me.txtInspect50.Tag = "cus_inspect_50"
+        '
+        'Label142
+        '
+        Me.Label142.Location = New System.Drawing.Point(8, 183)
+        Me.Label142.Name = "Label142"
+        Me.Label142.Size = New System.Drawing.Size(114, 19)
+        Me.Label142.TabIndex = 520
+        Me.Label142.Text = "檢驗結存瓶"
+        '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(762, 257)
+        Me.TextBox1.Location = New System.Drawing.Point(762, 318)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.Size = New System.Drawing.Size(53, 30)
@@ -5342,7 +5702,7 @@ Partial Class frmMain
         '
         'TextBox16
         '
-        Me.TextBox16.Location = New System.Drawing.Point(685, 257)
+        Me.TextBox16.Location = New System.Drawing.Point(685, 318)
         Me.TextBox16.Name = "TextBox16"
         Me.TextBox16.ReadOnly = True
         Me.TextBox16.Size = New System.Drawing.Size(53, 30)
@@ -5351,7 +5711,7 @@ Partial Class frmMain
         '
         'TextBox17
         '
-        Me.TextBox17.Location = New System.Drawing.Point(608, 257)
+        Me.TextBox17.Location = New System.Drawing.Point(608, 318)
         Me.TextBox17.Name = "TextBox17"
         Me.TextBox17.ReadOnly = True
         Me.TextBox17.Size = New System.Drawing.Size(53, 30)
@@ -5360,7 +5720,7 @@ Partial Class frmMain
         '
         'TextBox18
         '
-        Me.TextBox18.Location = New System.Drawing.Point(531, 257)
+        Me.TextBox18.Location = New System.Drawing.Point(531, 318)
         Me.TextBox18.Name = "TextBox18"
         Me.TextBox18.ReadOnly = True
         Me.TextBox18.Size = New System.Drawing.Size(53, 30)
@@ -5369,7 +5729,7 @@ Partial Class frmMain
         '
         'TextBox19
         '
-        Me.TextBox19.Location = New System.Drawing.Point(454, 257)
+        Me.TextBox19.Location = New System.Drawing.Point(454, 318)
         Me.TextBox19.Name = "TextBox19"
         Me.TextBox19.ReadOnly = True
         Me.TextBox19.Size = New System.Drawing.Size(53, 30)
@@ -5378,7 +5738,7 @@ Partial Class frmMain
         '
         'TextBox20
         '
-        Me.TextBox20.Location = New System.Drawing.Point(377, 257)
+        Me.TextBox20.Location = New System.Drawing.Point(377, 318)
         Me.TextBox20.Name = "TextBox20"
         Me.TextBox20.ReadOnly = True
         Me.TextBox20.Size = New System.Drawing.Size(53, 30)
@@ -5387,7 +5747,7 @@ Partial Class frmMain
         '
         'TextBox73
         '
-        Me.TextBox73.Location = New System.Drawing.Point(300, 257)
+        Me.TextBox73.Location = New System.Drawing.Point(300, 318)
         Me.TextBox73.Name = "TextBox73"
         Me.TextBox73.ReadOnly = True
         Me.TextBox73.Size = New System.Drawing.Size(53, 30)
@@ -5396,7 +5756,7 @@ Partial Class frmMain
         '
         'TextBox74
         '
-        Me.TextBox74.Location = New System.Drawing.Point(223, 257)
+        Me.TextBox74.Location = New System.Drawing.Point(223, 318)
         Me.TextBox74.Name = "TextBox74"
         Me.TextBox74.ReadOnly = True
         Me.TextBox74.Size = New System.Drawing.Size(53, 30)
@@ -5405,7 +5765,7 @@ Partial Class frmMain
         '
         'TextBox78
         '
-        Me.TextBox78.Location = New System.Drawing.Point(146, 257)
+        Me.TextBox78.Location = New System.Drawing.Point(146, 318)
         Me.TextBox78.Name = "TextBox78"
         Me.TextBox78.ReadOnly = True
         Me.TextBox78.Size = New System.Drawing.Size(53, 30)
@@ -5414,7 +5774,7 @@ Partial Class frmMain
         '
         'Label206
         '
-        Me.Label206.Location = New System.Drawing.Point(8, 263)
+        Me.Label206.Location = New System.Drawing.Point(8, 321)
         Me.Label206.Name = "Label206"
         Me.Label206.Size = New System.Drawing.Size(114, 19)
         Me.Label206.TabIndex = 501
@@ -5423,7 +5783,7 @@ Partial Class frmMain
         'txtBarrelIn_2
         '
         Me.txtBarrelIn_2.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_2.Location = New System.Drawing.Point(762, 171)
+        Me.txtBarrelIn_2.Location = New System.Drawing.Point(762, 226)
         Me.txtBarrelIn_2.Name = "txtBarrelIn_2"
         Me.txtBarrelIn_2.ReadOnly = True
         Me.txtBarrelIn_2.Size = New System.Drawing.Size(53, 30)
@@ -5432,7 +5792,7 @@ Partial Class frmMain
         '
         'txtBarrelIn_4
         '
-        Me.txtBarrelIn_4.Location = New System.Drawing.Point(454, 171)
+        Me.txtBarrelIn_4.Location = New System.Drawing.Point(454, 226)
         Me.txtBarrelIn_4.Name = "txtBarrelIn_4"
         Me.txtBarrelIn_4.ReadOnly = True
         Me.txtBarrelIn_4.Size = New System.Drawing.Size(53, 30)
@@ -5442,7 +5802,7 @@ Partial Class frmMain
         'txtBarrelIn_5
         '
         Me.txtBarrelIn_5.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_5.Location = New System.Drawing.Point(685, 171)
+        Me.txtBarrelIn_5.Location = New System.Drawing.Point(685, 226)
         Me.txtBarrelIn_5.Name = "txtBarrelIn_5"
         Me.txtBarrelIn_5.ReadOnly = True
         Me.txtBarrelIn_5.Size = New System.Drawing.Size(53, 30)
@@ -5451,7 +5811,7 @@ Partial Class frmMain
         '
         'txtBarrelIn_10
         '
-        Me.txtBarrelIn_10.Location = New System.Drawing.Point(377, 171)
+        Me.txtBarrelIn_10.Location = New System.Drawing.Point(377, 226)
         Me.txtBarrelIn_10.Name = "txtBarrelIn_10"
         Me.txtBarrelIn_10.ReadOnly = True
         Me.txtBarrelIn_10.Size = New System.Drawing.Size(53, 30)
@@ -5461,7 +5821,7 @@ Partial Class frmMain
         'txtBarrelIn_14
         '
         Me.txtBarrelIn_14.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_14.Location = New System.Drawing.Point(608, 171)
+        Me.txtBarrelIn_14.Location = New System.Drawing.Point(608, 226)
         Me.txtBarrelIn_14.Name = "txtBarrelIn_14"
         Me.txtBarrelIn_14.ReadOnly = True
         Me.txtBarrelIn_14.Size = New System.Drawing.Size(53, 30)
@@ -5471,7 +5831,7 @@ Partial Class frmMain
         'txtBarrelIn_15
         '
         Me.txtBarrelIn_15.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_15.Location = New System.Drawing.Point(531, 171)
+        Me.txtBarrelIn_15.Location = New System.Drawing.Point(531, 226)
         Me.txtBarrelIn_15.Name = "txtBarrelIn_15"
         Me.txtBarrelIn_15.ReadOnly = True
         Me.txtBarrelIn_15.Size = New System.Drawing.Size(53, 30)
@@ -5480,7 +5840,7 @@ Partial Class frmMain
         '
         'txtBarrelIn_16
         '
-        Me.txtBarrelIn_16.Location = New System.Drawing.Point(300, 171)
+        Me.txtBarrelIn_16.Location = New System.Drawing.Point(300, 226)
         Me.txtBarrelIn_16.Name = "txtBarrelIn_16"
         Me.txtBarrelIn_16.ReadOnly = True
         Me.txtBarrelIn_16.Size = New System.Drawing.Size(53, 30)
@@ -5489,7 +5849,7 @@ Partial Class frmMain
         '
         'txtBarrelIn_20
         '
-        Me.txtBarrelIn_20.Location = New System.Drawing.Point(223, 171)
+        Me.txtBarrelIn_20.Location = New System.Drawing.Point(223, 226)
         Me.txtBarrelIn_20.Name = "txtBarrelIn_20"
         Me.txtBarrelIn_20.ReadOnly = True
         Me.txtBarrelIn_20.Size = New System.Drawing.Size(53, 30)
@@ -5498,7 +5858,7 @@ Partial Class frmMain
         '
         'txtBarrelIn_50
         '
-        Me.txtBarrelIn_50.Location = New System.Drawing.Point(146, 171)
+        Me.txtBarrelIn_50.Location = New System.Drawing.Point(146, 226)
         Me.txtBarrelIn_50.Name = "txtBarrelIn_50"
         Me.txtBarrelIn_50.ReadOnly = True
         Me.txtBarrelIn_50.Size = New System.Drawing.Size(53, 30)
@@ -5507,7 +5867,7 @@ Partial Class frmMain
         '
         'Label205
         '
-        Me.Label205.Location = New System.Drawing.Point(8, 177)
+        Me.Label205.Location = New System.Drawing.Point(8, 229)
         Me.Label205.Name = "Label205"
         Me.Label205.Size = New System.Drawing.Size(114, 19)
         Me.Label205.TabIndex = 500
@@ -5516,7 +5876,7 @@ Partial Class frmMain
         'txtDepositIn_2
         '
         Me.txtDepositIn_2.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_2.Location = New System.Drawing.Point(762, 214)
+        Me.txtDepositIn_2.Location = New System.Drawing.Point(762, 272)
         Me.txtDepositIn_2.Name = "txtDepositIn_2"
         Me.txtDepositIn_2.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_2.TabIndex = 476
@@ -5524,7 +5884,7 @@ Partial Class frmMain
         '
         'txtDepositIn_4
         '
-        Me.txtDepositIn_4.Location = New System.Drawing.Point(454, 214)
+        Me.txtDepositIn_4.Location = New System.Drawing.Point(454, 272)
         Me.txtDepositIn_4.Name = "txtDepositIn_4"
         Me.txtDepositIn_4.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_4.TabIndex = 19
@@ -5533,7 +5893,7 @@ Partial Class frmMain
         'txtDepositIn_5
         '
         Me.txtDepositIn_5.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_5.Location = New System.Drawing.Point(685, 214)
+        Me.txtDepositIn_5.Location = New System.Drawing.Point(685, 272)
         Me.txtDepositIn_5.Name = "txtDepositIn_5"
         Me.txtDepositIn_5.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_5.TabIndex = 474
@@ -5541,7 +5901,7 @@ Partial Class frmMain
         '
         'txtDepositIn_10
         '
-        Me.txtDepositIn_10.Location = New System.Drawing.Point(377, 214)
+        Me.txtDepositIn_10.Location = New System.Drawing.Point(377, 272)
         Me.txtDepositIn_10.Name = "txtDepositIn_10"
         Me.txtDepositIn_10.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_10.TabIndex = 18
@@ -5550,7 +5910,7 @@ Partial Class frmMain
         'txtDepositIn_14
         '
         Me.txtDepositIn_14.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_14.Location = New System.Drawing.Point(608, 214)
+        Me.txtDepositIn_14.Location = New System.Drawing.Point(608, 272)
         Me.txtDepositIn_14.Name = "txtDepositIn_14"
         Me.txtDepositIn_14.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_14.TabIndex = 472
@@ -5559,7 +5919,7 @@ Partial Class frmMain
         'txtDepositIn_15
         '
         Me.txtDepositIn_15.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_15.Location = New System.Drawing.Point(531, 214)
+        Me.txtDepositIn_15.Location = New System.Drawing.Point(531, 272)
         Me.txtDepositIn_15.Name = "txtDepositIn_15"
         Me.txtDepositIn_15.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_15.TabIndex = 471
@@ -5567,7 +5927,7 @@ Partial Class frmMain
         '
         'txtDepositIn_16
         '
-        Me.txtDepositIn_16.Location = New System.Drawing.Point(300, 214)
+        Me.txtDepositIn_16.Location = New System.Drawing.Point(300, 272)
         Me.txtDepositIn_16.Name = "txtDepositIn_16"
         Me.txtDepositIn_16.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_16.TabIndex = 17
@@ -5575,7 +5935,7 @@ Partial Class frmMain
         '
         'txtDepositIn_20
         '
-        Me.txtDepositIn_20.Location = New System.Drawing.Point(223, 214)
+        Me.txtDepositIn_20.Location = New System.Drawing.Point(223, 272)
         Me.txtDepositIn_20.Name = "txtDepositIn_20"
         Me.txtDepositIn_20.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_20.TabIndex = 16
@@ -5583,7 +5943,7 @@ Partial Class frmMain
         '
         'txtDepositIn_50
         '
-        Me.txtDepositIn_50.Location = New System.Drawing.Point(146, 214)
+        Me.txtDepositIn_50.Location = New System.Drawing.Point(146, 272)
         Me.txtDepositIn_50.Name = "txtDepositIn_50"
         Me.txtDepositIn_50.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_50.TabIndex = 15
@@ -5591,7 +5951,7 @@ Partial Class frmMain
         '
         'Label272
         '
-        Me.Label272.Location = New System.Drawing.Point(8, 220)
+        Me.Label272.Location = New System.Drawing.Point(8, 275)
         Me.Label272.Name = "Label272"
         Me.Label272.Size = New System.Drawing.Size(114, 19)
         Me.Label272.TabIndex = 490
@@ -5600,7 +5960,7 @@ Partial Class frmMain
         'txto_inspect_2
         '
         Me.txto_inspect_2.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_inspect_2.Location = New System.Drawing.Point(762, 128)
+        Me.txto_inspect_2.Location = New System.Drawing.Point(762, 134)
         Me.txto_inspect_2.Name = "txto_inspect_2"
         Me.txto_inspect_2.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_2.TabIndex = 467
@@ -5609,7 +5969,7 @@ Partial Class frmMain
         'txto_new_in_2
         '
         Me.txto_new_in_2.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_new_in_2.Location = New System.Drawing.Point(762, 85)
+        Me.txto_new_in_2.Location = New System.Drawing.Point(762, 88)
         Me.txto_new_in_2.Name = "txto_new_in_2"
         Me.txto_new_in_2.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_2.TabIndex = 458
@@ -5626,7 +5986,7 @@ Partial Class frmMain
         '
         'txto_inspect_4
         '
-        Me.txto_inspect_4.Location = New System.Drawing.Point(454, 128)
+        Me.txto_inspect_4.Location = New System.Drawing.Point(454, 134)
         Me.txto_inspect_4.Name = "txto_inspect_4"
         Me.txto_inspect_4.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_4.TabIndex = 14
@@ -5634,7 +5994,7 @@ Partial Class frmMain
         '
         'txto_new_in_4
         '
-        Me.txto_new_in_4.Location = New System.Drawing.Point(454, 85)
+        Me.txto_new_in_4.Location = New System.Drawing.Point(454, 88)
         Me.txto_new_in_4.Name = "txto_new_in_4"
         Me.txto_new_in_4.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_4.TabIndex = 9
@@ -5651,7 +6011,7 @@ Partial Class frmMain
         'txto_inspect_5
         '
         Me.txto_inspect_5.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_inspect_5.Location = New System.Drawing.Point(685, 128)
+        Me.txto_inspect_5.Location = New System.Drawing.Point(685, 134)
         Me.txto_inspect_5.Name = "txto_inspect_5"
         Me.txto_inspect_5.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_5.TabIndex = 465
@@ -5660,7 +6020,7 @@ Partial Class frmMain
         'txto_new_in_5
         '
         Me.txto_new_in_5.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_new_in_5.Location = New System.Drawing.Point(685, 85)
+        Me.txto_new_in_5.Location = New System.Drawing.Point(685, 88)
         Me.txto_new_in_5.Name = "txto_new_in_5"
         Me.txto_new_in_5.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_5.TabIndex = 456
@@ -5677,7 +6037,7 @@ Partial Class frmMain
         '
         'txto_inspect_10
         '
-        Me.txto_inspect_10.Location = New System.Drawing.Point(377, 128)
+        Me.txto_inspect_10.Location = New System.Drawing.Point(377, 134)
         Me.txto_inspect_10.Name = "txto_inspect_10"
         Me.txto_inspect_10.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_10.TabIndex = 13
@@ -5685,7 +6045,7 @@ Partial Class frmMain
         '
         'txto_new_in_10
         '
-        Me.txto_new_in_10.Location = New System.Drawing.Point(377, 85)
+        Me.txto_new_in_10.Location = New System.Drawing.Point(377, 88)
         Me.txto_new_in_10.Name = "txto_new_in_10"
         Me.txto_new_in_10.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_10.TabIndex = 8
@@ -5702,7 +6062,7 @@ Partial Class frmMain
         'txto_inspect_14
         '
         Me.txto_inspect_14.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_inspect_14.Location = New System.Drawing.Point(608, 128)
+        Me.txto_inspect_14.Location = New System.Drawing.Point(608, 134)
         Me.txto_inspect_14.Name = "txto_inspect_14"
         Me.txto_inspect_14.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_14.TabIndex = 463
@@ -5711,7 +6071,7 @@ Partial Class frmMain
         'txto_new_in_14
         '
         Me.txto_new_in_14.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_new_in_14.Location = New System.Drawing.Point(608, 85)
+        Me.txto_new_in_14.Location = New System.Drawing.Point(608, 88)
         Me.txto_new_in_14.Name = "txto_new_in_14"
         Me.txto_new_in_14.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_14.TabIndex = 454
@@ -5729,7 +6089,7 @@ Partial Class frmMain
         'txto_inspect_15
         '
         Me.txto_inspect_15.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_inspect_15.Location = New System.Drawing.Point(531, 128)
+        Me.txto_inspect_15.Location = New System.Drawing.Point(531, 134)
         Me.txto_inspect_15.Name = "txto_inspect_15"
         Me.txto_inspect_15.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_15.TabIndex = 462
@@ -5738,7 +6098,7 @@ Partial Class frmMain
         'txto_new_in_15
         '
         Me.txto_new_in_15.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txto_new_in_15.Location = New System.Drawing.Point(531, 85)
+        Me.txto_new_in_15.Location = New System.Drawing.Point(531, 88)
         Me.txto_new_in_15.Name = "txto_new_in_15"
         Me.txto_new_in_15.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_15.TabIndex = 453
@@ -5755,7 +6115,7 @@ Partial Class frmMain
         '
         'txto_inspect_16
         '
-        Me.txto_inspect_16.Location = New System.Drawing.Point(300, 128)
+        Me.txto_inspect_16.Location = New System.Drawing.Point(300, 134)
         Me.txto_inspect_16.Name = "txto_inspect_16"
         Me.txto_inspect_16.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_16.TabIndex = 12
@@ -5763,7 +6123,7 @@ Partial Class frmMain
         '
         'txto_new_in_16
         '
-        Me.txto_new_in_16.Location = New System.Drawing.Point(300, 85)
+        Me.txto_new_in_16.Location = New System.Drawing.Point(300, 88)
         Me.txto_new_in_16.Name = "txto_new_in_16"
         Me.txto_new_in_16.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_16.TabIndex = 7
@@ -5779,7 +6139,7 @@ Partial Class frmMain
         '
         'txto_inspect_20
         '
-        Me.txto_inspect_20.Location = New System.Drawing.Point(223, 128)
+        Me.txto_inspect_20.Location = New System.Drawing.Point(223, 134)
         Me.txto_inspect_20.Name = "txto_inspect_20"
         Me.txto_inspect_20.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_20.TabIndex = 11
@@ -5787,7 +6147,7 @@ Partial Class frmMain
         '
         'txto_new_in_20
         '
-        Me.txto_new_in_20.Location = New System.Drawing.Point(223, 85)
+        Me.txto_new_in_20.Location = New System.Drawing.Point(223, 88)
         Me.txto_new_in_20.Name = "txto_new_in_20"
         Me.txto_new_in_20.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_20.TabIndex = 6
@@ -5803,7 +6163,7 @@ Partial Class frmMain
         '
         'txto_inspect_50
         '
-        Me.txto_inspect_50.Location = New System.Drawing.Point(146, 128)
+        Me.txto_inspect_50.Location = New System.Drawing.Point(146, 134)
         Me.txto_inspect_50.Name = "txto_inspect_50"
         Me.txto_inspect_50.Size = New System.Drawing.Size(53, 30)
         Me.txto_inspect_50.TabIndex = 10
@@ -5811,7 +6171,7 @@ Partial Class frmMain
         '
         'txto_new_in_50
         '
-        Me.txto_new_in_50.Location = New System.Drawing.Point(146, 85)
+        Me.txto_new_in_50.Location = New System.Drawing.Point(146, 88)
         Me.txto_new_in_50.Name = "txto_new_in_50"
         Me.txto_new_in_50.Size = New System.Drawing.Size(53, 30)
         Me.txto_new_in_50.TabIndex = 5
@@ -5827,7 +6187,7 @@ Partial Class frmMain
         '
         'Label212
         '
-        Me.Label212.Location = New System.Drawing.Point(8, 134)
+        Me.Label212.Location = New System.Drawing.Point(8, 137)
         Me.Label212.Name = "Label212"
         Me.Label212.Size = New System.Drawing.Size(114, 19)
         Me.Label212.TabIndex = 489
@@ -5843,7 +6203,7 @@ Partial Class frmMain
         '
         'Label214
         '
-        Me.Label214.Location = New System.Drawing.Point(8, 48)
+        Me.Label214.Location = New System.Drawing.Point(8, 45)
         Me.Label214.Name = "Label214"
         Me.Label214.Size = New System.Drawing.Size(114, 19)
         Me.Label214.TabIndex = 487
@@ -6020,7 +6380,7 @@ Partial Class frmMain
         Me.tpOut.Location = New System.Drawing.Point(4, 29)
         Me.tpOut.Name = "tpOut"
         Me.tpOut.Padding = New System.Windows.Forms.Padding(5)
-        Me.tpOut.Size = New System.Drawing.Size(1009, 301)
+        Me.tpOut.Size = New System.Drawing.Size(1009, 356)
         Me.tpOut.TabIndex = 1
         Me.tpOut.Text = "出場單"
         '
@@ -6663,7 +7023,7 @@ Partial Class frmMain
         '
         Me.grpTransport.Controls.Add(Me.RadioButton2)
         Me.grpTransport.Controls.Add(Me.rdoDelivery)
-        Me.grpTransport.Location = New System.Drawing.Point(399, 137)
+        Me.grpTransport.Location = New System.Drawing.Point(243, 307)
         Me.grpTransport.Name = "grpTransport"
         Me.grpTransport.Size = New System.Drawing.Size(150, 60)
         Me.grpTransport.TabIndex = 456
@@ -6822,7 +7182,7 @@ Partial Class frmMain
         'btnPrint
         '
         Me.btnPrint.BackColor = System.Drawing.Color.Lime
-        Me.btnPrint.Location = New System.Drawing.Point(668, 346)
+        Me.btnPrint.Location = New System.Drawing.Point(629, 401)
         Me.btnPrint.Name = "btnPrint"
         Me.btnPrint.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint.TabIndex = 431
@@ -6844,6 +7204,28 @@ Partial Class frmMain
         Me.grpSearch_ord.TabIndex = 446
         Me.grpSearch_ord.TabStop = False
         Me.grpSearch_ord.Text = "搜尋"
+        '
+        'rdoOut
+        '
+        Me.rdoOut.AutoSize = True
+        Me.rdoOut.Location = New System.Drawing.Point(145, 116)
+        Me.rdoOut.Name = "rdoOut"
+        Me.rdoOut.Size = New System.Drawing.Size(90, 23)
+        Me.rdoOut.TabIndex = 345
+        Me.rdoOut.Text = "出場單"
+        Me.rdoOut.UseVisualStyleBackColor = True
+        '
+        'rdoIn
+        '
+        Me.rdoIn.AutoSize = True
+        Me.rdoIn.Checked = True
+        Me.rdoIn.Location = New System.Drawing.Point(10, 116)
+        Me.rdoIn.Name = "rdoIn"
+        Me.rdoIn.Size = New System.Drawing.Size(90, 23)
+        Me.rdoIn.TabIndex = 344
+        Me.rdoIn.TabStop = True
+        Me.rdoIn.Text = "進場單"
+        Me.rdoIn.UseVisualStyleBackColor = True
         '
         'Label165
         '
@@ -6951,17 +7333,17 @@ Partial Class frmMain
         Me.dgvOrder.AllowUserToDeleteRows = False
         Me.dgvOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvOrder.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvOrder.Location = New System.Drawing.Point(5, 413)
+        Me.dgvOrder.Location = New System.Drawing.Point(5, 463)
         Me.dgvOrder.Name = "dgvOrder"
         Me.dgvOrder.ReadOnly = True
         Me.dgvOrder.RowTemplate.Height = 24
-        Me.dgvOrder.Size = New System.Drawing.Size(1886, 570)
+        Me.dgvOrder.Size = New System.Drawing.Size(1886, 520)
         Me.dgvOrder.TabIndex = 436
         '
         'btnCancel_order
         '
         Me.btnCancel_order.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_order.Location = New System.Drawing.Point(504, 346)
+        Me.btnCancel_order.Location = New System.Drawing.Point(473, 401)
         Me.btnCancel_order.Name = "btnCancel_order"
         Me.btnCancel_order.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_order.TabIndex = 435
@@ -6972,7 +7354,7 @@ Partial Class frmMain
         '
         Me.btnDelete_order.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.btnDelete_order.Enabled = False
-        Me.btnDelete_order.Location = New System.Drawing.Point(340, 346)
+        Me.btnDelete_order.Location = New System.Drawing.Point(317, 401)
         Me.btnDelete_order.Name = "btnDelete_order"
         Me.btnDelete_order.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_order.TabIndex = 434
@@ -6983,7 +7365,7 @@ Partial Class frmMain
         '
         Me.btnEdit_order.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.btnEdit_order.Enabled = False
-        Me.btnEdit_order.Location = New System.Drawing.Point(176, 346)
+        Me.btnEdit_order.Location = New System.Drawing.Point(161, 401)
         Me.btnEdit_order.Name = "btnEdit_order"
         Me.btnEdit_order.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_order.TabIndex = 433
@@ -6993,7 +7375,7 @@ Partial Class frmMain
         'btnCreate_ord
         '
         Me.btnCreate_ord.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCreate_ord.Location = New System.Drawing.Point(12, 346)
+        Me.btnCreate_ord.Location = New System.Drawing.Point(5, 401)
         Me.btnCreate_ord.Name = "btnCreate_ord"
         Me.btnCreate_ord.Size = New System.Drawing.Size(140, 44)
         Me.btnCreate_ord.TabIndex = 432
@@ -7152,7 +7534,6 @@ Partial Class frmMain
         '
         Me.txtCusCode_col.Location = New System.Drawing.Point(138, 54)
         Me.txtCusCode_col.Name = "txtCusCode_col"
-        Me.txtCusCode_col.ReadOnly = True
         Me.txtCusCode_col.Size = New System.Drawing.Size(165, 30)
         Me.txtCusCode_col.TabIndex = 445
         Me.txtCusCode_col.Tag = "cus_code"
@@ -7274,6 +7655,7 @@ Partial Class frmMain
         '
         'cmbBank_col
         '
+        Me.cmbBank_col.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbBank_col.FormattingEnabled = True
         Me.cmbBank_col.Location = New System.Drawing.Point(1017, 54)
         Me.cmbBank_col.Name = "cmbBank_col"
@@ -7289,7 +7671,7 @@ Partial Class frmMain
         Me.Label95.Name = "Label95"
         Me.Label95.Size = New System.Drawing.Size(93, 19)
         Me.Label95.TabIndex = 430
-        Me.Label95.Text = "收款銀行"
+        Me.Label95.Text = "銀行帳號"
         '
         'GroupBox2
         '
@@ -7543,6 +7925,7 @@ Partial Class frmMain
         Me.dgvCollection.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvCollection.Location = New System.Drawing.Point(5, 224)
         Me.dgvCollection.Name = "dgvCollection"
+        Me.dgvCollection.ReadOnly = True
         Me.dgvCollection.RowTemplate.Height = 24
         Me.dgvCollection.Size = New System.Drawing.Size(1872, 720)
         Me.dgvCollection.TabIndex = 406
@@ -7663,6 +8046,8 @@ Partial Class frmMain
         '
         'tpCheque
         '
+        Me.tpCheque.Controls.Add(Me.btnSelectAll)
+        Me.tpCheque.Controls.Add(Me.btnChange)
         Me.tpCheque.Controls.Add(Me.GroupBox5)
         Me.tpCheque.Controls.Add(Me.TextBox23)
         Me.tpCheque.Controls.Add(Me.Label124)
@@ -7670,7 +8055,6 @@ Partial Class frmMain
         Me.tpCheque.Controls.Add(Me.Label123)
         Me.tpCheque.Controls.Add(Me.Label122)
         Me.tpCheque.Controls.Add(Me.Label121)
-        Me.tpCheque.Controls.Add(Me.GroupBox4)
         Me.tpCheque.Controls.Add(Me.TextBox21)
         Me.tpCheque.Controls.Add(Me.Label118)
         Me.tpCheque.Controls.Add(Me.TextBox8)
@@ -7698,16 +8082,37 @@ Partial Class frmMain
         Me.tpCheque.Text = "支票管理"
         Me.tpCheque.UseVisualStyleBackColor = True
         '
+        'btnSelectAll
+        '
+        Me.btnSelectAll.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnSelectAll.Location = New System.Drawing.Point(582, 120)
+        Me.btnSelectAll.Name = "btnSelectAll"
+        Me.btnSelectAll.Size = New System.Drawing.Size(140, 44)
+        Me.btnSelectAll.TabIndex = 434
+        Me.btnSelectAll.Text = "全  選"
+        Me.btnSelectAll.UseVisualStyleBackColor = False
+        '
+        'btnChange
+        '
+        Me.btnChange.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnChange.Location = New System.Drawing.Point(738, 120)
+        Me.btnChange.Name = "btnChange"
+        Me.btnChange.Size = New System.Drawing.Size(140, 44)
+        Me.btnChange.TabIndex = 433
+        Me.btnChange.Text = "轉為已代收"
+        Me.btnChange.UseVisualStyleBackColor = False
+        '
         'GroupBox5
         '
+        Me.GroupBox5.Controls.Add(Me.btnNotHonoredQuery)
         Me.GroupBox5.Controls.Add(Me.Label94)
         Me.GroupBox5.Controls.Add(Me.dtpQueryEnd_che)
         Me.GroupBox5.Controls.Add(Me.dtpQueryStart_che)
         Me.GroupBox5.Controls.Add(Me.Label116)
         Me.GroupBox5.Controls.Add(Me.btnQuery_che)
-        Me.GroupBox5.Location = New System.Drawing.Point(1146, 8)
+        Me.GroupBox5.Location = New System.Drawing.Point(1196, 8)
         Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(256, 156)
+        Me.GroupBox5.Size = New System.Drawing.Size(317, 156)
         Me.GroupBox5.TabIndex = 360
         Me.GroupBox5.TabStop = False
         Me.GroupBox5.Text = "查詢"
@@ -7715,7 +8120,7 @@ Partial Class frmMain
         'Label94
         '
         Me.Label94.AutoSize = True
-        Me.Label94.Location = New System.Drawing.Point(6, 73)
+        Me.Label94.Location = New System.Drawing.Point(6, 71)
         Me.Label94.Name = "Label94"
         Me.Label94.Size = New System.Drawing.Size(30, 19)
         Me.Label94.TabIndex = 3
@@ -7738,7 +8143,7 @@ Partial Class frmMain
         'Label116
         '
         Me.Label116.AutoSize = True
-        Me.Label116.Location = New System.Drawing.Point(6, 37)
+        Me.Label116.Location = New System.Drawing.Point(6, 35)
         Me.Label116.Name = "Label116"
         Me.Label116.Size = New System.Drawing.Size(30, 19)
         Me.Label116.TabIndex = 0
@@ -7747,7 +8152,7 @@ Partial Class frmMain
         'btnQuery_che
         '
         Me.btnQuery_che.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_che.Location = New System.Drawing.Point(42, 101)
+        Me.btnQuery_che.Location = New System.Drawing.Point(10, 101)
         Me.btnQuery_che.Name = "btnQuery_che"
         Me.btnQuery_che.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_che.TabIndex = 343
@@ -7756,7 +8161,7 @@ Partial Class frmMain
         '
         'TextBox23
         '
-        Me.TextBox23.Location = New System.Drawing.Point(406, 98)
+        Me.TextBox23.Location = New System.Drawing.Point(406, 95)
         Me.TextBox23.Name = "TextBox23"
         Me.TextBox23.Size = New System.Drawing.Size(166, 30)
         Me.TextBox23.TabIndex = 432
@@ -7773,7 +8178,7 @@ Partial Class frmMain
         '
         'txtCheId
         '
-        Me.txtCheId.Location = New System.Drawing.Point(135, 8)
+        Me.txtCheId.Location = New System.Drawing.Point(135, 9)
         Me.txtCheId.Name = "txtCheId"
         Me.txtCheId.ReadOnly = True
         Me.txtCheId.Size = New System.Drawing.Size(166, 30)
@@ -7809,65 +8214,9 @@ Partial Class frmMain
         Me.Label121.TabIndex = 427
         Me.Label121.Text = "*"
         '
-        'GroupBox4
-        '
-        Me.GroupBox4.Controls.Add(Me.btnCollectionBatch)
-        Me.GroupBox4.Controls.Add(Me.Label120)
-        Me.GroupBox4.Controls.Add(Me.dtpCollectionEnd)
-        Me.GroupBox4.Controls.Add(Me.dtpCollectionStart)
-        Me.GroupBox4.Controls.Add(Me.Label119)
-        Me.GroupBox4.Location = New System.Drawing.Point(1408, 8)
-        Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(256, 156)
-        Me.GroupBox4.TabIndex = 358
-        Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "批次代收"
-        '
-        'btnCollectionBatch
-        '
-        Me.btnCollectionBatch.BackColor = System.Drawing.Color.Lime
-        Me.btnCollectionBatch.Location = New System.Drawing.Point(42, 101)
-        Me.btnCollectionBatch.Name = "btnCollectionBatch"
-        Me.btnCollectionBatch.Size = New System.Drawing.Size(140, 44)
-        Me.btnCollectionBatch.TabIndex = 359
-        Me.btnCollectionBatch.Text = "批次代收"
-        Me.btnCollectionBatch.UseVisualStyleBackColor = False
-        '
-        'Label120
-        '
-        Me.Label120.AutoSize = True
-        Me.Label120.Location = New System.Drawing.Point(6, 73)
-        Me.Label120.Name = "Label120"
-        Me.Label120.Size = New System.Drawing.Size(30, 19)
-        Me.Label120.TabIndex = 3
-        Me.Label120.Text = "迄"
-        '
-        'dtpCollectionEnd
-        '
-        Me.dtpCollectionEnd.Location = New System.Drawing.Point(42, 65)
-        Me.dtpCollectionEnd.Name = "dtpCollectionEnd"
-        Me.dtpCollectionEnd.Size = New System.Drawing.Size(200, 30)
-        Me.dtpCollectionEnd.TabIndex = 2
-        '
-        'dtpCollectionStart
-        '
-        Me.dtpCollectionStart.Location = New System.Drawing.Point(42, 29)
-        Me.dtpCollectionStart.Name = "dtpCollectionStart"
-        Me.dtpCollectionStart.Size = New System.Drawing.Size(200, 30)
-        Me.dtpCollectionStart.TabIndex = 1
-        '
-        'Label119
-        '
-        Me.Label119.AutoSize = True
-        Me.Label119.Location = New System.Drawing.Point(6, 37)
-        Me.Label119.Name = "Label119"
-        Me.Label119.Size = New System.Drawing.Size(30, 19)
-        Me.Label119.TabIndex = 0
-        Me.Label119.Text = "起"
-        '
         'TextBox21
         '
-        Me.TextBox21.Location = New System.Drawing.Point(677, 8)
+        Me.TextBox21.Location = New System.Drawing.Point(677, 9)
         Me.TextBox21.Name = "TextBox21"
         Me.TextBox21.Size = New System.Drawing.Size(166, 30)
         Me.TextBox21.TabIndex = 357
@@ -7884,7 +8233,7 @@ Partial Class frmMain
         '
         'TextBox8
         '
-        Me.TextBox8.Location = New System.Drawing.Point(134, 98)
+        Me.TextBox8.Location = New System.Drawing.Point(134, 95)
         Me.TextBox8.Name = "TextBox8"
         Me.TextBox8.Size = New System.Drawing.Size(166, 30)
         Me.TextBox8.TabIndex = 355
@@ -7901,7 +8250,7 @@ Partial Class frmMain
         '
         'dtpCollectionDate
         '
-        Me.dtpCollectionDate.Location = New System.Drawing.Point(679, 50)
+        Me.dtpCollectionDate.Location = New System.Drawing.Point(679, 52)
         Me.dtpCollectionDate.Name = "dtpCollectionDate"
         Me.dtpCollectionDate.Size = New System.Drawing.Size(166, 30)
         Me.dtpCollectionDate.TabIndex = 353
@@ -7921,7 +8270,7 @@ Partial Class frmMain
         'Button1
         '
         Me.Button1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.Button1.Location = New System.Drawing.Point(740, 120)
+        Me.Button1.Location = New System.Drawing.Point(1050, 120)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(140, 44)
         Me.Button1.TabIndex = 351
@@ -7932,7 +8281,7 @@ Partial Class frmMain
         '
         Me.cmbState_Che.FormattingEnabled = True
         Me.cmbState_Che.Items.AddRange(New Object() {"未兌現", "已兌現", "已代收", "失效"})
-        Me.cmbState_Che.Location = New System.Drawing.Point(408, 55)
+        Me.cmbState_Che.Location = New System.Drawing.Point(408, 54)
         Me.cmbState_Che.Name = "cmbState_Che"
         Me.cmbState_Che.Size = New System.Drawing.Size(166, 27)
         Me.cmbState_Che.TabIndex = 350
@@ -7949,7 +8298,7 @@ Partial Class frmMain
         '
         'dtpCashingDate
         '
-        Me.dtpCashingDate.Location = New System.Drawing.Point(974, 50)
+        Me.dtpCashingDate.Location = New System.Drawing.Point(974, 52)
         Me.dtpCashingDate.Name = "dtpCashingDate"
         Me.dtpCashingDate.Size = New System.Drawing.Size(166, 30)
         Me.dtpCashingDate.TabIndex = 348
@@ -7969,7 +8318,7 @@ Partial Class frmMain
         'btnCancel_Che
         '
         Me.btnCancel_Che.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_Che.Location = New System.Drawing.Point(584, 120)
+        Me.btnCancel_Che.Location = New System.Drawing.Point(894, 120)
         Me.btnCancel_Che.Name = "btnCancel_Che"
         Me.btnCancel_Che.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_Che.TabIndex = 342
@@ -7978,7 +8327,7 @@ Partial Class frmMain
         '
         'TextBox76
         '
-        Me.TextBox76.Location = New System.Drawing.Point(135, 55)
+        Me.TextBox76.Location = New System.Drawing.Point(135, 52)
         Me.TextBox76.Name = "TextBox76"
         Me.TextBox76.Size = New System.Drawing.Size(166, 30)
         Me.TextBox76.TabIndex = 9
@@ -7995,7 +8344,7 @@ Partial Class frmMain
         '
         'TextBox75
         '
-        Me.TextBox75.Location = New System.Drawing.Point(974, 8)
+        Me.TextBox75.Location = New System.Drawing.Point(974, 9)
         Me.TextBox75.Name = "TextBox75"
         Me.TextBox75.Size = New System.Drawing.Size(166, 30)
         Me.TextBox75.TabIndex = 7
@@ -8012,7 +8361,7 @@ Partial Class frmMain
         '
         'DateTimePicker7
         '
-        Me.DateTimePicker7.Location = New System.Drawing.Point(406, 8)
+        Me.DateTimePicker7.Location = New System.Drawing.Point(406, 9)
         Me.DateTimePicker7.Name = "DateTimePicker7"
         Me.DateTimePicker7.Size = New System.Drawing.Size(166, 30)
         Me.DateTimePicker7.TabIndex = 5
@@ -8035,7 +8384,6 @@ Partial Class frmMain
         Me.dgvCheque.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvCheque.Location = New System.Drawing.Point(5, 184)
         Me.dgvCheque.Name = "dgvCheque"
-        Me.dgvCheque.ReadOnly = True
         Me.dgvCheque.RowTemplate.Height = 24
         Me.dgvCheque.Size = New System.Drawing.Size(1872, 760)
         Me.dgvCheque.TabIndex = 346
@@ -8493,37 +8841,15 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'rdoIn
+        'btnNotHonoredQuery
         '
-        Me.rdoIn.AutoSize = True
-        Me.rdoIn.Checked = True
-        Me.rdoIn.Location = New System.Drawing.Point(10, 116)
-        Me.rdoIn.Name = "rdoIn"
-        Me.rdoIn.Size = New System.Drawing.Size(90, 23)
-        Me.rdoIn.TabIndex = 344
-        Me.rdoIn.TabStop = True
-        Me.rdoIn.Text = "進場單"
-        Me.rdoIn.UseVisualStyleBackColor = True
-        '
-        'rdoOut
-        '
-        Me.rdoOut.AutoSize = True
-        Me.rdoOut.Location = New System.Drawing.Point(145, 116)
-        Me.rdoOut.Name = "rdoOut"
-        Me.rdoOut.Size = New System.Drawing.Size(90, 23)
-        Me.rdoOut.TabIndex = 345
-        Me.rdoOut.Text = "出場單"
-        Me.rdoOut.UseVisualStyleBackColor = True
-        '
-        'btnCusGasCylinderInventory
-        '
-        Me.btnCusGasCylinderInventory.BackColor = System.Drawing.Color.Lime
-        Me.btnCusGasCylinderInventory.Location = New System.Drawing.Point(832, 346)
-        Me.btnCusGasCylinderInventory.Name = "btnCusGasCylinderInventory"
-        Me.btnCusGasCylinderInventory.Size = New System.Drawing.Size(269, 44)
-        Me.btnCusGasCylinderInventory.TabIndex = 461
-        Me.btnCusGasCylinderInventory.Text = "列印客戶寄桶結存瓶 (F6)"
-        Me.btnCusGasCylinderInventory.UseVisualStyleBackColor = False
+        Me.btnNotHonoredQuery.BackColor = System.Drawing.Color.Lime
+        Me.btnNotHonoredQuery.Location = New System.Drawing.Point(164, 101)
+        Me.btnNotHonoredQuery.Name = "btnNotHonoredQuery"
+        Me.btnNotHonoredQuery.Size = New System.Drawing.Size(140, 44)
+        Me.btnNotHonoredQuery.TabIndex = 344
+        Me.btnNotHonoredQuery.Text = "未兌現查詢"
+        Me.btnNotHonoredQuery.UseVisualStyleBackColor = False
         '
         'frmMain
         '
@@ -8533,7 +8859,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.9.4"
+        Me.Text = "豐原瓦斯會計系統 v0.9.5"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage30.ResumeLayout(False)
@@ -8586,6 +8912,9 @@ Partial Class frmMain
         Me.tpUPH.ResumeLayout(False)
         Me.tpUPH.PerformLayout
         CType(Me.dgvUPH, System.ComponentModel.ISupportInitialize).EndInit
+        Me.tpGasCheckout.ResumeLayout(False)
+        Me.tpGasCheckout.PerformLayout
+        CType(Me.dgvGasCheckout, System.ComponentModel.ISupportInitialize).EndInit
         Me.TabPage1.ResumeLayout(False)
         Me.TabControl3.ResumeLayout(False)
         Me.tpPayment.ResumeLayout(False)
@@ -8620,8 +8949,6 @@ Partial Class frmMain
         Me.tpCheque.PerformLayout
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout
-        Me.GroupBox4.ResumeLayout(False)
-        Me.GroupBox4.PerformLayout
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).EndInit
         Me.TabPage6.ResumeLayout(False)
         Me.TabPage6.PerformLayout
@@ -9005,7 +9332,6 @@ Partial Class frmMain
     Friend WithEvents txtInitGasStock As TextBox
     Friend WithEvents Label108 As Label
     Friend WithEvents Label111 As Label
-    Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents Label82 As Label
     Friend WithEvents Label73 As Label
     Friend WithEvents tpOrder As TabPage
@@ -9205,11 +9531,8 @@ Partial Class frmMain
     Friend WithEvents lblIssuerName As Label
     Friend WithEvents lblCashingDate_col As Label
     Friend WithEvents tpSubjects As TabPage
-    Friend WithEvents Label303 As Label
     Friend WithEvents Label304 As Label
     Friend WithEvents txtMemo_subjects As TextBox
-    Friend WithEvents Label301 As Label
-    Friend WithEvents cmbType_sg As ComboBox
     Friend WithEvents Label300 As Label
     Friend WithEvents dgvSubject As DataGridView
     Friend WithEvents btnCancel_subjects As Button
@@ -9247,10 +9570,10 @@ Partial Class frmMain
     Friend WithEvents Label38 As Label
     Friend WithEvents cmbCompany_pur As ComboBox
     Friend WithEvents lblCompany_pur As Label
-    Friend WithEvents DateTimePicker21 As DateTimePicker
+    Friend WithEvents dtpDate_pur As DateTimePicker
     Friend WithEvents Label92 As Label
     Friend WithEvents lblGasVendor_pur As Label
-    Friend WithEvents TextBox140 As TextBox
+    Friend WithEvents txtMemo_pur As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents dgvPurchase As DataGridView
     Friend WithEvents btnQuery_pur As Button
@@ -9284,7 +9607,6 @@ Partial Class frmMain
     Friend WithEvents Label84 As Label
     Friend WithEvents dtpEnd_payment As DateTimePicker
     Friend WithEvents dtpStart_payment As DateTimePicker
-    Friend WithEvents Label83 As Label
     Friend WithEvents Label81 As Label
     Friend WithEvents cmbBank_payment As ComboBox
     Friend WithEvents lblBank_payment As Label
@@ -9316,12 +9638,6 @@ Partial Class frmMain
     Friend WithEvents tpCheque As TabPage
     Friend WithEvents Label122 As Label
     Friend WithEvents Label121 As Label
-    Friend WithEvents GroupBox4 As GroupBox
-    Friend WithEvents btnCollectionBatch As Button
-    Friend WithEvents Label120 As Label
-    Friend WithEvents dtpCollectionEnd As DateTimePicker
-    Friend WithEvents dtpCollectionStart As DateTimePicker
-    Friend WithEvents Label119 As Label
     Friend WithEvents TextBox21 As TextBox
     Friend WithEvents Label118 As Label
     Friend WithEvents TextBox8 As TextBox
@@ -9378,4 +9694,42 @@ Partial Class frmMain
     Friend WithEvents rdoOut As RadioButton
     Friend WithEvents rdoIn As RadioButton
     Friend WithEvents btnCusGasCylinderInventory As Button
+    Friend WithEvents Label135 As Label
+    Friend WithEvents txtAccount_bank As TextBox
+    Friend WithEvents Label134 As Label
+    Friend WithEvents txtBankName As TextBox
+    Friend WithEvents cmbDriveCmp As ComboBox
+    Friend WithEvents Label136 As Label
+    Friend WithEvents cmbSubject As ComboBox
+    Friend WithEvents Label137 As Label
+    Friend WithEvents tpGasCheckout As TabPage
+    Friend WithEvents btnQuery_gc As Button
+    Friend WithEvents dgvGasCheckout As DataGridView
+    Friend WithEvents cmbPayType_gc As ComboBox
+    Friend WithEvents Label140 As Label
+    Friend WithEvents dtpEnd_gc As DateTimePicker
+    Friend WithEvents Label139 As Label
+    Friend WithEvents dtpStart_gc As DateTimePicker
+    Friend WithEvents Label138 As Label
+    Friend WithEvents btnCancel_gc As Button
+    Friend WithEvents btnCheckout_gc As Button
+    Friend WithEvents Label141 As Label
+    Friend WithEvents cmbPayType_pur As ComboBox
+    Friend WithEvents lblPayType_pur As Label
+    Friend WithEvents cmbVendor_gc As ComboBox
+    Friend WithEvents chkDate_gc As CheckBox
+    Friend WithEvents Label83 As Label
+    Friend WithEvents txtInspect2 As TextBox
+    Friend WithEvents txtInspect4 As TextBox
+    Friend WithEvents txtInspect5 As TextBox
+    Friend WithEvents txtInspect10 As TextBox
+    Friend WithEvents txtInspect14 As TextBox
+    Friend WithEvents txtInspect15 As TextBox
+    Friend WithEvents txtInspect16 As TextBox
+    Friend WithEvents txtInspect20 As TextBox
+    Friend WithEvents txtInspect50 As TextBox
+    Friend WithEvents Label142 As Label
+    Friend WithEvents btnSelectAll As Button
+    Friend WithEvents btnChange As Button
+    Friend WithEvents btnNotHonoredQuery As Button
 End Class

@@ -25,8 +25,7 @@
         Return query.Select(Function(x) New SubjectsVM With {
             .備註 = x.s_memo,
             .名稱 = x.s_name,
-            .編號 = x.s_id,
-            .類型 = x.s_Type
+            .編號 = x.s_id
         }).ToList
     End Function
 End Class

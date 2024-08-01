@@ -32,15 +32,14 @@
     ''' </summary>
     ''' <param name="startDate"></param>
     ''' <param name="endDate"></param>
-    Public Sub SetBatchCollection(startDate As Date, endDate As Date)
+    Public Sub SetBatchCollection(chequeIds As List(Of Integer))
         Try
             Using db As New gas_accounting_systemEntities
-                Dim datas = db.cheques.Where(Function(x) x.che_ReceivedDate >= startDate And x.che_ReceivedDate <= endDate AndAlso x.chu_State = "未兌現").ToList
+                Dim datas = db.cheques.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = "未兌現").ToList
 
                 datas.ForEach(Sub(x) x.chu_State = "已代收")
                 db.SaveChanges()
                 LoadList()
-                MsgBox($"需修改張數:{datas.Count} 已修改張數:{datas.Count}")
             End Using
         Catch ex As Exception
             MsgBox(ex.Message)

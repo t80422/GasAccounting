@@ -8,12 +8,13 @@
     End Sub
 
     Public Overrides Sub Add()
-        If Not CheckRequired(_view.SetRequired()) Then Exit Sub
+        Try
+            If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
-        Dim data = _view.GetUserInput
+            Dim data = _view.GetUserInput
 
-        If data IsNot Nothing Then
-            Try
+            If data IsNot Nothing Then
+
                 Using db As New gas_accounting_systemEntities
                     UpdateCurrentBalance(data)
                     db.banks.Add(data)
@@ -22,11 +23,10 @@
                     _view.ClearInput()
                     MsgBox("新增成功")
                 End Using
-
-            Catch ex As Exception
-                MsgBox(ex.Message)
-            End Try
-        End If
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     Public Overrides Sub Edit(id As Integer)
@@ -65,9 +65,11 @@
     Public Function SetListViewModel(query As IQueryable(Of bank)) As List(Of BankVM) Implements IPresenter(Of bank, BankVM).SetListViewModel
         Return query.Select(Function(x) New BankVM With {
             .初始資金 = x.bank_InitialBalance,
-            .名稱 = x.bank_name,
+            .銀行名 = x.bank_name,
             .編號 = x.bank_id,
-            .餘額 = x.bank_CurrentBalance
+            .餘額 = x.bank_CurrentBalance,
+            .帳號 = x.bank_Account,
+            .戶名 = x.bank_AccountName
         }).ToList
     End Function
 

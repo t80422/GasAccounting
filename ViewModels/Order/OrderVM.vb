@@ -162,12 +162,12 @@
         寄桶出14 = data.o_deposit_out_14
         寄桶出5 = data.o_deposit_out_5
         寄桶出2 = data.o_deposit_out_2
-        寄桶車號 = If(data.car1 IsNot Nothing, data.car1.c_no, Nothing)
+        寄桶車號 = data.car1?.c_no
         退普氣 = data.o_return
         退丙氣 = data.o_return_c
         折讓 = data.o_sales_allowance
         總金額 = data.o_total_amount
         備註 = data.o_memo
-        操作人員 = data.employee.emp_name
+        操作人員 = data.employee?.emp_name
     End Sub
 End Class

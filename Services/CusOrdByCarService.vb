@@ -67,6 +67,7 @@
 
                 If car.c_id <> orgCar.c_id Then
                     If order.o_in_out = "進場單" Then
+                        '寄存桶
                         orgCar.c_deposit_50 -= orgOrd.o_deposit_in_50
                         orgCar.c_deposit_20 -= orgOrd.o_deposit_in_20
                         orgCar.c_deposit_16 -= orgOrd.o_deposit_in_16
@@ -76,6 +77,9 @@
                         orgCar.c_deposit_14 -= orgOrd.o_deposit_in_14
                         orgCar.c_deposit_5 -= orgOrd.o_deposit_in_5
                         orgCar.c_deposit_2 -= orgOrd.o_deposit_in_2
+
+                        '檢驗桶
+
                     Else
                         orgCar.c_deposit_50 += orgOrd.o_deposit_out_50
                         orgCar.c_deposit_20 += orgOrd.o_deposit_out_20

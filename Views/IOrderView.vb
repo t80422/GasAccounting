@@ -1,6 +1,4 @@
 ﻿Public Interface IOrderView
-    'Sub ShowList(list As List(Of OrderVM))
-
     ''' <summary>
     ''' 顯示客戶庫存
     ''' </summary>
@@ -28,8 +26,6 @@
     Sub Reset()
 
     Sub ShowDetails(data As order)
-
-    'Function GetQueryCondition() As OrderSearchCriteria
 
     Sub ShowOrderList(orders As IEnumerable(Of Object))
 End Interface

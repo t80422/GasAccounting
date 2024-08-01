@@ -24,4 +24,16 @@
     ''' <param name="productPrice">產品單價</param>
     ''' <param name="deliveryPrice">運費單價</param>
     Sub SetDefaultPrice(productPrice As Single, deliveryPrice As Single)
+
+    ''' <summary>
+    ''' 設定運輸公司Combobox
+    ''' </summary>
+    ''' <param name="items"></param>
+    Sub SetDriveVendorCmb(items As List(Of ComboBoxItems))
+
+    ''' <summary>
+    ''' 設定科目Combobox
+    ''' </summary>
+    ''' <param name="items"></param>
+    Sub SetSubjectCmb(items As List(Of ComboBoxItems))
 End Interface

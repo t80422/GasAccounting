@@ -22,7 +22,6 @@ Partial Public Class gas_accounting_systemEntities
         Throw New UnintentionalCodeFirstException()
     End Sub
 
-    Public Overridable Property banks() As DbSet(Of bank)
     Public Overridable Property basic_price() As DbSet(Of basic_price)
     Public Overridable Property cars() As DbSet(Of car)
     Public Overridable Property cheques() As DbSet(Of cheque)
@@ -34,10 +33,11 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property manufacturers() As DbSet(Of manufacturer)
     Public Overridable Property payments() As DbSet(Of payment)
     Public Overridable Property priceplans() As DbSet(Of priceplan)
-    Public Overridable Property purchases() As DbSet(Of purchase)
     Public Overridable Property roles() As DbSet(Of role)
     Public Overridable Property stocks() As DbSet(Of stock)
-    Public Overridable Property subjects() As DbSet(Of subject)
     Public Overridable Property orders() As DbSet(Of order)
+    Public Overridable Property banks() As DbSet(Of bank)
+    Public Overridable Property subjects() As DbSet(Of subject)
+    Public Overridable Property purchases() As DbSet(Of purchase)
 
 End Class

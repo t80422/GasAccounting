@@ -30,4 +30,18 @@
             Return Nothing
         End Try
     End Function
+
+    Public Function GetVendorCmbItemsWithoutGas() As List(Of ComboBoxItems) Implements IManufacturerService.GetVendorCmbItemsWithoutGas
+        Try
+            Using db As New gas_accounting_systemEntities
+                Return db.manufacturers.Where(Function(x) x.manu_GasVendor = False).
+                                        Select(Function(x) New ComboBoxItems With {
+                                            .Display = x.manu_name,
+                                            .Value = x.manu_id
+                                        }).ToList
+            End Using
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class
