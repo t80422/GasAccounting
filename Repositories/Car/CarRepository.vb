@@ -1,5 +1,5 @@
 ﻿Public Class CarRepository
-    Inherits Repository(Of car)
+    Inherits Repository_old(Of car)
     Implements ICarRepository
 
     Public Sub New(context As gas_accounting_systemEntities)

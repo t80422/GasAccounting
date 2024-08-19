@@ -1,7 +1,4 @@
-﻿Imports System.Data.SqlClient
-Imports System.IO
-Imports System.Reflection
-Imports System.Text
+﻿Imports System.Reflection
 Imports MySql.Data.MySqlClient
 
 Module modUtility

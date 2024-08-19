@@ -290,4 +290,57 @@
 
         Return result
     End Function
+
+    Public Function GetCashAccount(month As Date) As List(Of CashAccount) Implements IReportRep.GetCashAccount
+        Dim result = New List(Of CashAccount)
+
+        Try
+            Using db As New gas_accounting_systemEntities
+                '取得日期區間
+                Dim startDate = New Date(month.Year, month.Month, 1)
+                Dim endDate = startDate.AddMonths(1)
+
+                '獲取收入數據
+                Dim collections = db.collections.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate).
+                                                 Select(Function(x) New With {
+                                                    .Date = x.col_Date,
+                                                    .Subject = x.subject.s_name,
+                                                    .Memo = x.col_Memo,
+                                                    .Amount = x.col_Amount,
+                                                    .IsIncome = True
+                                                 })
+                '獲取支出數據
+                Dim payments = db.payments.Where(Function(x) x.p_Date >= startDate AndAlso x.p_Date < endDate).
+                                           Select(Function(x) New With {
+                                                .Date = x.p_Date,
+                                                .Subject = x.subject.s_name,
+                                                .Memo = x.p_Memo,
+                                                .Amount = x.p_Amount,
+                                                .IsIncome = False
+                                           })
+                '合併並排列數據
+                Dim allTransactions = collections.Union(payments) _
+                                                 .OrderBy(Function(x) x.Date) _
+                                                 .ThenBy(Function(x) x.IsIncome)
+
+                '計算餘額並填入模型
+                Dim balance As Integer = 0
+                For Each transaction In allTransactions
+                    balance += If(transaction.IsIncome, transaction.Amount, -transaction.Amount)
+                    result.Add(New CashAccount With {
+                        .日 = transaction.Date.Day,
+                        .科目 = transaction.Subject,
+                        .摘要 = transaction.Memo,
+                        .收入金額 = If(transaction.IsIncome, transaction.Amount, 0),
+                        .支出金額 = If(transaction.IsIncome, 0, transaction.Amount),
+                        .餘額 = balance
+                    })
+                Next
+            End Using
+        Catch ex As Exception
+            Throw
+        End Try
+
+        Return result
+    End Function
 End Class

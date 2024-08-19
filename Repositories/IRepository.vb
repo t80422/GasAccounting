@@ -1,8 +1,8 @@
-﻿Public Interface IRepository(Of T As Class)
-    Function GetAll() As IEnumerable(Of T)
-    Function GetById(id As Integer) As T
-    Sub Insert(entity As T)
-    Sub Update(entity As T)
-    Sub Delete(id As Integer)
-    Sub Save()
+﻿Public Interface IRepository(Of TEntity As Class)
+    Function GetAllAsync() As Task(Of IEnumerable(Of TEntity))
+    Function GetByIdAsync(id As Integer) As Task(Of TEntity)
+    Function AddAsync(entity As TEntity) As Task
+    'Function UpdateAsync(entity As TEntity) As Task
+    Function DeleteAsync(entity As TEntity) As Task
+    Function SaveChangesAsync() As Task
 End Interface

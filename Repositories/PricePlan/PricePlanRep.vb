@@ -1,5 +1,5 @@
 ﻿Public Class PricePlanRep
-    Inherits Repository(Of priceplan)
+    Inherits Repository_old(Of priceplan)
     Implements IPricePlanRep
 
     Public Sub New(context As gas_accounting_systemEntities)

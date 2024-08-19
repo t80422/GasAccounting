@@ -1,4 +1,6 @@
-﻿Public Class SubjectRep
+﻿Imports System.Data.Entity
+
+Public Class SubjectRep
     Inherits Repository(Of subject)
     Implements ISubjectRep
 
@@ -6,16 +8,14 @@
         MyBase.New(context)
     End Sub
 
-    Public Function GetCmb() As List(Of ComboBoxItems) Implements ISubjectRep.GetCmb
+    Public Async Function GetCmbAsync() As Task(Of IEnumerable(Of ComboBoxItems)) Implements ISubjectRep.GetCmbAsync
         Try
-            Using db As New gas_accounting_systemEntities
-                Return db.subjects.Select(Function(x) New ComboBoxItems With {
-                    .Display = x.s_name,
-                    .Value = x.s_id
-                }).ToList
-            End Using
+            Return Await _dbSet.Select(Function(x) New ComboBoxItems With {
+                .Display = x.s_name,
+                .Value = x.s_id
+            }).ToListAsync
         Catch ex As Exception
-            Throw
+            Throw New Exception("取得科目下拉選單數據時發生錯誤", ex)
         End Try
     End Function
 End Class

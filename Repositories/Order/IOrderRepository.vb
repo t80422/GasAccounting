@@ -1,5 +1,5 @@
 ﻿Public Interface IOrderRepository
-    Inherits IRepository(Of order)
+    Inherits IRepository_old(Of order)
 
     'Function QueryOrders(condition As OrderSearchCriteria, isQuery As Boolean) As List(Of order)
 

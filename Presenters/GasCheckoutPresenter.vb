@@ -1,4 +1,7 @@
-﻿Public Class GasCheckoutPresenter
+﻿''' <summary>
+''' 大氣結帳
+''' </summary>
+Public Class GasCheckoutPresenter
     Private ReadOnly _view As IGasCheckoutView
     Private ReadOnly _purRep As IPurchaseRep
     Private ReadOnly _manuRep As IManufacturerRep
@@ -13,37 +16,40 @@
         AddHandler _view.CancelClicked, AddressOf Cancel
     End Sub
 
-    Public Sub LoadVendors()
+    Public Async Sub LoadVendors()
         Try
-            Dim datas = _manuRep.GetGasVendorsForCmb
+            Dim datas = Await _manuRep.GetGasVendorCmbDataAsync
             _view.LoadVendors(datas)
         Catch ex As Exception
             _view.ShowMessage(ex.Message)
         End Try
     End Sub
 
-    Public Sub LoadAllDatas()
+    Public Async Sub LoadAllDatas()
         Try
-            Dim datas = _purRep.GetAll.Where(Function(x) x.pur_Checkout = False).Select(Function(x) New PurchaseVM(x)).ToList
+            'Dim purchases = Await _purRep.GetAllAsync.Where(Function(x) x.pur_Checkout = False).Select(Function(x) New purchase(x))
+            Dim purchases = Await _purRep.GetAllAsync
+            Dim datas = purchases.Where(Function(x) Not x.pur_Checkout).Select(Function(x) New PurchaseVM)
             _view.ShowList(datas)
         Catch ex As Exception
             _view.ShowMessage(ex.Message)
         End Try
     End Sub
 
-    Private Sub Query()
+    Private Async Sub Query()
         Try
             Dim input = _view.GetUserInput
             If Not ValidateInput(input) Then Return
 
-            Dim datas = _purRep.GetForCheckout(input)
+            Dim purchases = Await _purRep.GetPurchasesWithoutCheckoutAsync(input)
+            Dim datas = purchases.Select(Function(x) New PurchaseVM(x))
             _view.ShowList(datas)
         Catch ex As Exception
             _view.ShowMessage(ex.Message)
         End Try
     End Sub
 
-    Private Function ValidateInput(input As GasCheckoutUserInput) As Boolean
+    Private Function ValidateInput(input As PurchaseCondition) As Boolean
         If input.IsDateSearch AndAlso input.StartDate > input.EndDate Then
             _view.ShowMessage("起始日期不能晚於結束日期")
             Return False
@@ -52,9 +58,9 @@
         Return True
     End Function
 
-    Private Async Sub Checkout(selectdDatas As List(Of Integer))
+    Private Async Sub Checkout()
         Try
-            Await _purRep.UpdateCheckoutStatusAsync(selectdDatas)
+            Await _purRep.UpdateCheckoutStatusAsync(_view.GetSelectedIds())
             Query()
         Catch ex As Exception
             _view.ShowMessage(ex.Message)

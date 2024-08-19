@@ -34,4 +34,11 @@
     ''' <param name="month"></param>
     ''' <returns></returns>
     Function GasUsageAndCylinderCount(month As Date) As List(Of GasUsageAndCylinderCount)
+
+    ''' <summary>
+    ''' 取得現金帳
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetCashAccount(month As Date) As List(Of CashAccount)
 End Interface

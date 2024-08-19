@@ -300,4 +300,40 @@ Public Class ReportPresenter
             MsgBox("列印失敗:" + ex.Message)
         End Try
     End Sub
+
+    ''' <summary>
+    ''' 產生現金帳
+    ''' </summary>
+    ''' <param name="month"></param>
+    Public Sub GenerateCashAccount(month As Date)
+        Try
+            '取得資料
+            Dim data = _rep.GetCashAccount(month)
+
+            '套版
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "現金帳範本檔.xlsx")
+
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+                    .WriteToCell(1, 1, $"{month.Year}年{month.Month}月")
+
+                    Dim rowIndex = 3
+                    For i As Integer = 0 To data.Count - 1
+                        .WriteToCell(rowIndex + i, 1, data(i).日)
+                        .WriteToCell(rowIndex + i, 2, data(i).科目)
+                        .WriteToCell(rowIndex + i, 3, data(i).摘要)
+                        .WriteToCell(rowIndex + i, 4, data(i).收入金額)
+                        .WriteToCell(rowIndex + i, 5, data(i).支出金額)
+                        .WriteToCell(rowIndex + i, 6, data(i).餘額)
+                    Next
+
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "現金帳.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox("列印失敗:" + ex.Message)
+        End Try
+    End Sub
 End Class

@@ -1,5 +1,5 @@
 ﻿Public Class BasicPriceRep
-    Inherits Repository(Of basic_price)
+    Inherits Repository_old(Of basic_price)
     Implements IBasicPriceRep
 
     Public Sub New(context As gas_accounting_systemEntities)

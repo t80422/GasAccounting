@@ -1,7 +1,17 @@
-﻿Public Class ChequeRepository
-    Implements IChequeRepository
+﻿Imports System.Data.Entity
 
-    Public Function GetState(cheNum As String) As String Implements IChequeRepository.GetState
+Public Class ChequeRep
+    Implements IChequeRep
+
+    Private ReadOnly _context As gas_accounting_systemEntities
+    Private ReadOnly _dbSet As DbSet(Of cheque)
+
+    Public Sub New(context As gas_accounting_systemEntities)
+        _context = context
+        _dbSet = context.Set(Of cheque)
+    End Sub
+
+    Public Function GetState(cheNum As String) As String Implements IChequeRep.GetState
         Try
             Using db As New gas_accounting_systemEntities
                 Dim che = db.cheques.FirstOrDefault(Function(x) x.che_Number = cheNum)
@@ -14,7 +24,7 @@
         Return Nothing
     End Function
 
-    Public Function Query(startDate As Date, endDate As Date, Optional filter As cheque = Nothing) As List(Of ChequeVM) Implements IChequeRepository.Query
+    Public Function Query(startDate As Date, endDate As Date, Optional filter As cheque = Nothing) As List(Of ChequeVM) Implements IChequeRep.Query
         Try
             Using db As New gas_accounting_systemEntities
                 Dim start = startDate.Date
@@ -38,6 +48,22 @@
             MsgBox(ex.StackTrace)
             Console.WriteLine(ex.Message)
             Return New List(Of ChequeVM)
+        End Try
+    End Function
+
+    Public Async Function UpdateCollectionStatusAsync(chequeIds As List(Of Integer), collectionDate As Date) As Task Implements IChequeRep.UpdateCollectionStatusAsync
+        Try
+            Dim cheques = Await _dbSet.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = "未兌現").ToListAsync
+
+            For Each cheque In cheques
+                cheque.chu_State = "已代收"
+                cheque.che_CollectionDate = collectionDate
+            Next
+
+            Await _context.SaveChangesAsync
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+            Throw New Exception("更新批量代收發生錯誤")
         End Try
     End Function
 End Class

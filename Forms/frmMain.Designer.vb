@@ -24,7 +24,7 @@ Partial Class frmMain
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage30 = New System.Windows.Forms.TabPage()
+        Me.tpBasic = New System.Windows.Forms.TabPage()
         Me.tcBasicInfo = New System.Windows.Forms.TabControl()
         Me.tpEmployee = New System.Windows.Forms.TabPage()
         Me.cmbRoles = New System.Windows.Forms.ComboBox()
@@ -126,6 +126,7 @@ Partial Class frmMain
         Me.btnAdd_manu = New System.Windows.Forms.Button()
         Me.dgvManufacturer = New System.Windows.Forms.DataGridView()
         Me.tpCustomer = New System.Windows.Forms.TabPage()
+        Me.Label119 = New System.Windows.Forms.Label()
         Me.grpCusStk = New System.Windows.Forms.GroupBox()
         Me.TextBox24 = New System.Windows.Forms.TextBox()
         Me.Label131 = New System.Windows.Forms.Label()
@@ -170,7 +171,7 @@ Partial Class frmMain
         Me.Label50 = New System.Windows.Forms.Label()
         Me.Label49 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.TextBox14 = New System.Windows.Forms.TextBox()
+        Me.txtTaxId_cus = New System.Windows.Forms.TextBox()
         Me.txtCusContactPerson = New System.Windows.Forms.TextBox()
         Me.txtcus_phone2 = New System.Windows.Forms.TextBox()
         Me.txtcus_tax_id = New System.Windows.Forms.TextBox()
@@ -332,9 +333,14 @@ Partial Class frmMain
         Me.Label296 = New System.Windows.Forms.Label()
         Me.txtId_subjects = New System.Windows.Forms.TextBox()
         Me.Label297 = New System.Windows.Forms.Label()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.tpGasPuchase = New System.Windows.Forms.TabPage()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.tpPurchase = New System.Windows.Forms.TabPage()
+        Me.grpDateRange_pur = New System.Windows.Forms.GroupBox()
+        Me.chkDateRange_pur = New System.Windows.Forms.CheckBox()
+        Me.dtpEndDate_pur = New System.Windows.Forms.DateTimePicker()
+        Me.dtpStartDate_pur = New System.Windows.Forms.DateTimePicker()
+        Me.btnPrint_pur = New System.Windows.Forms.Button()
         Me.Label141 = New System.Windows.Forms.Label()
         Me.cmbPayType_pur = New System.Windows.Forms.ComboBox()
         Me.lblPayType_pur = New System.Windows.Forms.Label()
@@ -402,7 +408,7 @@ Partial Class frmMain
         Me.Label139 = New System.Windows.Forms.Label()
         Me.dtpStart_gc = New System.Windows.Forms.DateTimePicker()
         Me.Label138 = New System.Windows.Forms.Label()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.tpPaymentManager = New System.Windows.Forms.TabPage()
         Me.TabControl3 = New System.Windows.Forms.TabControl()
         Me.tpPayment = New System.Windows.Forms.TabPage()
         Me.Label83 = New System.Windows.Forms.Label()
@@ -648,7 +654,7 @@ Partial Class frmMain
         Me.dtpo_date = New System.Windows.Forms.DateTimePicker()
         Me.Label151 = New System.Windows.Forms.Label()
         Me.Label153 = New System.Windows.Forms.Label()
-        Me.TabPage31 = New System.Windows.Forms.TabPage()
+        Me.tpRevenueManage = New System.Windows.Forms.TabPage()
         Me.TabControl5 = New System.Windows.Forms.TabControl()
         Me.tpCollection = New System.Windows.Forms.TabPage()
         Me.btnCashing = New System.Windows.Forms.Button()
@@ -702,12 +708,13 @@ Partial Class frmMain
         Me.Label112 = New System.Windows.Forms.Label()
         Me.Label109 = New System.Windows.Forms.Label()
         Me.Label106 = New System.Windows.Forms.Label()
-        Me.TabPage32 = New System.Windows.Forms.TabPage()
+        Me.tpAccountingManage = New System.Windows.Forms.TabPage()
         Me.TabControl6 = New System.Windows.Forms.TabControl()
         Me.tpCheque = New System.Windows.Forms.TabPage()
         Me.btnSelectAll = New System.Windows.Forms.Button()
         Me.btnChange = New System.Windows.Forms.Button()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.btnNotHonoredQuery = New System.Windows.Forms.Button()
         Me.Label94 = New System.Windows.Forms.Label()
         Me.dtpQueryEnd_che = New System.Windows.Forms.DateTimePicker()
         Me.dtpQueryStart_che = New System.Windows.Forms.DateTimePicker()
@@ -774,6 +781,7 @@ Partial Class frmMain
         Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.btnCashAccount = New System.Windows.Forms.Button()
         Me.btnGasUsageCylinderCount = New System.Windows.Forms.Button()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.txtCusCode_report = New System.Windows.Forms.TextBox()
@@ -788,9 +796,8 @@ Partial Class frmMain
         Me.btnCusGasPayCollect = New System.Windows.Forms.Button()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnNotHonoredQuery = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout
-        Me.TabPage30.SuspendLayout
+        Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
         Me.tpEmployee.SuspendLayout
         CType(Me.dgvEmployee, System.ComponentModel.ISupportInitialize).BeginInit
@@ -817,15 +824,16 @@ Partial Class frmMain
         CType(Me.dgvPricePlan, System.ComponentModel.ISupportInitialize).BeginInit
         Me.tpSubjects.SuspendLayout
         CType(Me.dgvSubject, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabPage2.SuspendLayout
+        Me.tpGasPuchase.SuspendLayout
         Me.TabControl2.SuspendLayout
         Me.tpPurchase.SuspendLayout
+        Me.grpDateRange_pur.SuspendLayout
         CType(Me.dgvPurchase, System.ComponentModel.ISupportInitialize).BeginInit
         Me.tpUPH.SuspendLayout
         CType(Me.dgvUPH, System.ComponentModel.ISupportInitialize).BeginInit
         Me.tpGasCheckout.SuspendLayout
         CType(Me.dgvGasCheckout, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabPage1.SuspendLayout
+        Me.tpPaymentManager.SuspendLayout
         Me.TabControl3.SuspendLayout
         Me.tpPayment.SuspendLayout
         Me.grpAmountDue.SuspendLayout
@@ -839,12 +847,12 @@ Partial Class frmMain
         Me.grpTransport.SuspendLayout
         Me.grpSearch_ord.SuspendLayout
         CType(Me.dgvOrder, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabPage31.SuspendLayout
+        Me.tpRevenueManage.SuspendLayout
         Me.TabControl5.SuspendLayout
         Me.tpCollection.SuspendLayout
         Me.GroupBox2.SuspendLayout
         CType(Me.dgvCollection, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabPage32.SuspendLayout
+        Me.tpAccountingManage.SuspendLayout
         Me.TabControl6.SuspendLayout
         Me.tpCheque.SuspendLayout
         Me.GroupBox5.SuspendLayout
@@ -861,12 +869,12 @@ Partial Class frmMain
         '
         'TabControl1
         '
-        Me.TabControl1.Controls.Add(Me.TabPage30)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.tpBasic)
+        Me.TabControl1.Controls.Add(Me.tpGasPuchase)
+        Me.TabControl1.Controls.Add(Me.tpPaymentManager)
         Me.TabControl1.Controls.Add(Me.tpOrder)
-        Me.TabControl1.Controls.Add(Me.TabPage31)
-        Me.TabControl1.Controls.Add(Me.TabPage32)
+        Me.TabControl1.Controls.Add(Me.tpRevenueManage)
+        Me.TabControl1.Controls.Add(Me.tpAccountingManage)
         Me.TabControl1.Controls.Add(Me.tpLogOut)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
@@ -877,16 +885,16 @@ Partial Class frmMain
         Me.TabControl1.Size = New System.Drawing.Size(1904, 1021)
         Me.TabControl1.TabIndex = 2
         '
-        'TabPage30
+        'tpBasic
         '
-        Me.TabPage30.Controls.Add(Me.tcBasicInfo)
-        Me.TabPage30.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage30.Name = "TabPage30"
-        Me.TabPage30.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage30.Size = New System.Drawing.Size(1896, 988)
-        Me.TabPage30.TabIndex = 25
-        Me.TabPage30.Text = "基本資料"
-        Me.TabPage30.UseVisualStyleBackColor = True
+        Me.tpBasic.Controls.Add(Me.tcBasicInfo)
+        Me.tpBasic.Location = New System.Drawing.Point(4, 29)
+        Me.tpBasic.Name = "tpBasic"
+        Me.tpBasic.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpBasic.Size = New System.Drawing.Size(1896, 988)
+        Me.tpBasic.TabIndex = 25
+        Me.tpBasic.Text = "基本資料"
+        Me.tpBasic.UseVisualStyleBackColor = True
         '
         'tcBasicInfo
         '
@@ -1999,6 +2007,7 @@ Partial Class frmMain
         '
         'tpCustomer
         '
+        Me.tpCustomer.Controls.Add(Me.Label119)
         Me.tpCustomer.Controls.Add(Me.grpCusStk)
         Me.tpCustomer.Controls.Add(Me.grpPricePlan)
         Me.tpCustomer.Controls.Add(Me.grpStock)
@@ -2011,7 +2020,7 @@ Partial Class frmMain
         Me.tpCustomer.Controls.Add(Me.Label50)
         Me.tpCustomer.Controls.Add(Me.Label49)
         Me.tpCustomer.Controls.Add(Me.Label19)
-        Me.tpCustomer.Controls.Add(Me.TextBox14)
+        Me.tpCustomer.Controls.Add(Me.txtTaxId_cus)
         Me.tpCustomer.Controls.Add(Me.txtCusContactPerson)
         Me.tpCustomer.Controls.Add(Me.txtcus_phone2)
         Me.tpCustomer.Controls.Add(Me.txtcus_tax_id)
@@ -2043,6 +2052,17 @@ Partial Class frmMain
         Me.tpCustomer.TabIndex = 30
         Me.tpCustomer.Text = "客戶管理"
         Me.tpCustomer.UseVisualStyleBackColor = True
+        '
+        'Label119
+        '
+        Me.Label119.AutoSize = True
+        Me.Label119.ForeColor = System.Drawing.Color.Red
+        Me.Label119.Location = New System.Drawing.Point(8, 142)
+        Me.Label119.Name = "Label119"
+        Me.Label119.Size = New System.Drawing.Size(20, 19)
+        Me.Label119.TabIndex = 352
+        Me.Label119.Text = "*"
+        Me.Label119.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'grpCusStk
         '
@@ -2514,14 +2534,14 @@ Partial Class frmMain
         Me.Label19.TabIndex = 330
         Me.Label19.Text = "統    編"
         '
-        'TextBox14
+        'txtTaxId_cus
         '
-        Me.TextBox14.Location = New System.Drawing.Point(138, 139)
-        Me.TextBox14.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
-        Me.TextBox14.Name = "TextBox14"
-        Me.TextBox14.Size = New System.Drawing.Size(150, 30)
-        Me.TextBox14.TabIndex = 329
-        Me.TextBox14.Tag = "cus_tax_id"
+        Me.txtTaxId_cus.Location = New System.Drawing.Point(138, 139)
+        Me.txtTaxId_cus.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.txtTaxId_cus.Name = "txtTaxId_cus"
+        Me.txtTaxId_cus.Size = New System.Drawing.Size(150, 30)
+        Me.txtTaxId_cus.TabIndex = 329
+        Me.txtTaxId_cus.Tag = "cus_tax_id"
         '
         'txtCusContactPerson
         '
@@ -4205,16 +4225,16 @@ Partial Class frmMain
         Me.Label297.TabIndex = 360
         Me.Label297.Text = "編    號"
         '
-        'TabPage2
+        'tpGasPuchase
         '
-        Me.TabPage2.Controls.Add(Me.TabControl2)
-        Me.TabPage2.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(1896, 988)
-        Me.TabPage2.TabIndex = 31
-        Me.TabPage2.Text = "大氣採購"
-        Me.TabPage2.UseVisualStyleBackColor = True
+        Me.tpGasPuchase.Controls.Add(Me.TabControl2)
+        Me.tpGasPuchase.Location = New System.Drawing.Point(4, 29)
+        Me.tpGasPuchase.Name = "tpGasPuchase"
+        Me.tpGasPuchase.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpGasPuchase.Size = New System.Drawing.Size(1896, 988)
+        Me.tpGasPuchase.TabIndex = 31
+        Me.tpGasPuchase.Text = "大氣採購"
+        Me.tpGasPuchase.UseVisualStyleBackColor = True
         '
         'TabControl2
         '
@@ -4230,6 +4250,8 @@ Partial Class frmMain
         '
         'tpPurchase
         '
+        Me.tpPurchase.Controls.Add(Me.grpDateRange_pur)
+        Me.tpPurchase.Controls.Add(Me.btnPrint_pur)
         Me.tpPurchase.Controls.Add(Me.Label141)
         Me.tpPurchase.Controls.Add(Me.cmbPayType_pur)
         Me.tpPurchase.Controls.Add(Me.lblPayType_pur)
@@ -4280,6 +4302,53 @@ Partial Class frmMain
         Me.tpPurchase.Text = "大氣採購"
         Me.tpPurchase.UseVisualStyleBackColor = True
         '
+        'grpDateRange_pur
+        '
+        Me.grpDateRange_pur.BackColor = System.Drawing.Color.Transparent
+        Me.grpDateRange_pur.Controls.Add(Me.chkDateRange_pur)
+        Me.grpDateRange_pur.Controls.Add(Me.dtpEndDate_pur)
+        Me.grpDateRange_pur.Controls.Add(Me.dtpStartDate_pur)
+        Me.grpDateRange_pur.Location = New System.Drawing.Point(934, 138)
+        Me.grpDateRange_pur.Name = "grpDateRange_pur"
+        Me.grpDateRange_pur.Size = New System.Drawing.Size(733, 76)
+        Me.grpDateRange_pur.TabIndex = 455
+        Me.grpDateRange_pur.TabStop = False
+        Me.grpDateRange_pur.Text = "日期起訖"
+        '
+        'chkDateRange_pur
+        '
+        Me.chkDateRange_pur.AutoSize = True
+        Me.chkDateRange_pur.Location = New System.Drawing.Point(438, 32)
+        Me.chkDateRange_pur.Name = "chkDateRange_pur"
+        Me.chkDateRange_pur.Size = New System.Drawing.Size(196, 23)
+        Me.chkDateRange_pur.TabIndex = 2
+        Me.chkDateRange_pur.Text = "是否設定日期範圍"
+        Me.chkDateRange_pur.UseVisualStyleBackColor = True
+        '
+        'dtpEndDate_pur
+        '
+        Me.dtpEndDate_pur.Location = New System.Drawing.Point(222, 29)
+        Me.dtpEndDate_pur.Name = "dtpEndDate_pur"
+        Me.dtpEndDate_pur.Size = New System.Drawing.Size(200, 30)
+        Me.dtpEndDate_pur.TabIndex = 1
+        '
+        'dtpStartDate_pur
+        '
+        Me.dtpStartDate_pur.Location = New System.Drawing.Point(6, 29)
+        Me.dtpStartDate_pur.Name = "dtpStartDate_pur"
+        Me.dtpStartDate_pur.Size = New System.Drawing.Size(200, 30)
+        Me.dtpStartDate_pur.TabIndex = 0
+        '
+        'btnPrint_pur
+        '
+        Me.btnPrint_pur.BackColor = System.Drawing.Color.Lime
+        Me.btnPrint_pur.Location = New System.Drawing.Point(788, 170)
+        Me.btnPrint_pur.Name = "btnPrint_pur"
+        Me.btnPrint_pur.Size = New System.Drawing.Size(140, 44)
+        Me.btnPrint_pur.TabIndex = 454
+        Me.btnPrint_pur.Text = "列  印"
+        Me.btnPrint_pur.UseVisualStyleBackColor = False
+        '
         'Label141
         '
         Me.Label141.AutoSize = True
@@ -4292,7 +4361,6 @@ Partial Class frmMain
         '
         'cmbPayType_pur
         '
-        Me.cmbPayType_pur.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbPayType_pur.FormattingEnabled = True
         Me.cmbPayType_pur.Items.AddRange(New Object() {"現金", "支票", "銀行"})
         Me.cmbPayType_pur.Location = New System.Drawing.Point(133, 92)
@@ -4313,7 +4381,6 @@ Partial Class frmMain
         'cmbSubject
         '
         Me.cmbSubject.FormattingEnabled = True
-        Me.cmbSubject.Items.AddRange(New Object() {"普氣", "丙氣"})
         Me.cmbSubject.Location = New System.Drawing.Point(1467, 92)
         Me.cmbSubject.Name = "cmbSubject"
         Me.cmbSubject.Size = New System.Drawing.Size(200, 27)
@@ -4621,17 +4688,17 @@ Partial Class frmMain
         Me.dgvPurchase.AllowUserToDeleteRows = False
         Me.dgvPurchase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPurchase.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvPurchase.Location = New System.Drawing.Point(5, 194)
+        Me.dgvPurchase.Location = New System.Drawing.Point(5, 234)
         Me.dgvPurchase.Name = "dgvPurchase"
         Me.dgvPurchase.ReadOnly = True
         Me.dgvPurchase.RowTemplate.Height = 24
-        Me.dgvPurchase.Size = New System.Drawing.Size(1872, 750)
+        Me.dgvPurchase.Size = New System.Drawing.Size(1872, 710)
         Me.dgvPurchase.TabIndex = 417
         '
         'btnQuery_pur
         '
         Me.btnQuery_pur.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_pur.Location = New System.Drawing.Point(600, 128)
+        Me.btnQuery_pur.Location = New System.Drawing.Point(632, 170)
         Me.btnQuery_pur.Name = "btnQuery_pur"
         Me.btnQuery_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_pur.TabIndex = 416
@@ -4641,7 +4708,7 @@ Partial Class frmMain
         'btnCancel_pur
         '
         Me.btnCancel_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_pur.Location = New System.Drawing.Point(452, 128)
+        Me.btnCancel_pur.Location = New System.Drawing.Point(476, 170)
         Me.btnCancel_pur.Name = "btnCancel_pur"
         Me.btnCancel_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_pur.TabIndex = 415
@@ -4651,7 +4718,7 @@ Partial Class frmMain
         'btnDelete_pur
         '
         Me.btnDelete_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete_pur.Location = New System.Drawing.Point(304, 128)
+        Me.btnDelete_pur.Location = New System.Drawing.Point(320, 170)
         Me.btnDelete_pur.Name = "btnDelete_pur"
         Me.btnDelete_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_pur.TabIndex = 414
@@ -4661,7 +4728,7 @@ Partial Class frmMain
         'btnEdit_pur
         '
         Me.btnEdit_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit_pur.Location = New System.Drawing.Point(156, 128)
+        Me.btnEdit_pur.Location = New System.Drawing.Point(164, 170)
         Me.btnEdit_pur.Name = "btnEdit_pur"
         Me.btnEdit_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_pur.TabIndex = 413
@@ -4671,7 +4738,7 @@ Partial Class frmMain
         'btnAdd_pur
         '
         Me.btnAdd_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnAdd_pur.Location = New System.Drawing.Point(8, 128)
+        Me.btnAdd_pur.Location = New System.Drawing.Point(8, 170)
         Me.btnAdd_pur.Name = "btnAdd_pur"
         Me.btnAdd_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnAdd_pur.TabIndex = 412
@@ -4933,16 +5000,16 @@ Partial Class frmMain
         Me.Label138.TabIndex = 0
         Me.Label138.Text = "日    期"
         '
-        'TabPage1
+        'tpPaymentManager
         '
-        Me.TabPage1.Controls.Add(Me.TabControl3)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(1896, 988)
-        Me.TabPage1.TabIndex = 26
-        Me.TabPage1.Text = "支出管理"
-        Me.TabPage1.UseVisualStyleBackColor = True
+        Me.tpPaymentManager.Controls.Add(Me.TabControl3)
+        Me.tpPaymentManager.Location = New System.Drawing.Point(4, 29)
+        Me.tpPaymentManager.Name = "tpPaymentManager"
+        Me.tpPaymentManager.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpPaymentManager.Size = New System.Drawing.Size(1896, 988)
+        Me.tpPaymentManager.TabIndex = 26
+        Me.tpPaymentManager.Text = "支出管理"
+        Me.tpPaymentManager.UseVisualStyleBackColor = True
         '
         'TabControl3
         '
@@ -7429,16 +7496,16 @@ Partial Class frmMain
         Me.Label153.TabIndex = 424
         Me.Label153.Text = "編    號"
         '
-        'TabPage31
+        'tpRevenueManage
         '
-        Me.TabPage31.Controls.Add(Me.TabControl5)
-        Me.TabPage31.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage31.Name = "TabPage31"
-        Me.TabPage31.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage31.Size = New System.Drawing.Size(1896, 988)
-        Me.TabPage31.TabIndex = 27
-        Me.TabPage31.Text = "收入管理"
-        Me.TabPage31.UseVisualStyleBackColor = True
+        Me.tpRevenueManage.Controls.Add(Me.TabControl5)
+        Me.tpRevenueManage.Location = New System.Drawing.Point(4, 29)
+        Me.tpRevenueManage.Name = "tpRevenueManage"
+        Me.tpRevenueManage.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpRevenueManage.Size = New System.Drawing.Size(1896, 988)
+        Me.tpRevenueManage.TabIndex = 27
+        Me.tpRevenueManage.Text = "收入管理"
+        Me.tpRevenueManage.UseVisualStyleBackColor = True
         '
         'TabControl5
         '
@@ -8021,16 +8088,16 @@ Partial Class frmMain
         Me.Label106.TabIndex = 384
         Me.Label106.Text = "編    號"
         '
-        'TabPage32
+        'tpAccountingManage
         '
-        Me.TabPage32.Controls.Add(Me.TabControl6)
-        Me.TabPage32.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage32.Name = "TabPage32"
-        Me.TabPage32.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage32.Size = New System.Drawing.Size(1896, 988)
-        Me.TabPage32.TabIndex = 28
-        Me.TabPage32.Text = "會計管理"
-        Me.TabPage32.UseVisualStyleBackColor = True
+        Me.tpAccountingManage.Controls.Add(Me.TabControl6)
+        Me.tpAccountingManage.Location = New System.Drawing.Point(4, 29)
+        Me.tpAccountingManage.Name = "tpAccountingManage"
+        Me.tpAccountingManage.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpAccountingManage.Size = New System.Drawing.Size(1896, 988)
+        Me.tpAccountingManage.TabIndex = 28
+        Me.tpAccountingManage.Text = "會計管理"
+        Me.tpAccountingManage.UseVisualStyleBackColor = True
         '
         'TabControl6
         '
@@ -8116,6 +8183,16 @@ Partial Class frmMain
         Me.GroupBox5.TabIndex = 360
         Me.GroupBox5.TabStop = False
         Me.GroupBox5.Text = "查詢"
+        '
+        'btnNotHonoredQuery
+        '
+        Me.btnNotHonoredQuery.BackColor = System.Drawing.Color.Lime
+        Me.btnNotHonoredQuery.Location = New System.Drawing.Point(164, 101)
+        Me.btnNotHonoredQuery.Name = "btnNotHonoredQuery"
+        Me.btnNotHonoredQuery.Size = New System.Drawing.Size(140, 44)
+        Me.btnNotHonoredQuery.TabIndex = 344
+        Me.btnNotHonoredQuery.Text = "未兌現查詢"
+        Me.btnNotHonoredQuery.UseVisualStyleBackColor = False
         '
         'Label94
         '
@@ -8255,7 +8332,6 @@ Partial Class frmMain
         Me.dtpCollectionDate.Size = New System.Drawing.Size(166, 30)
         Me.dtpCollectionDate.TabIndex = 353
         Me.dtpCollectionDate.Tag = "che_CollectionDate"
-        Me.dtpCollectionDate.Visible = False
         '
         'lblCollectionDate
         '
@@ -8265,7 +8341,6 @@ Partial Class frmMain
         Me.lblCollectionDate.Size = New System.Drawing.Size(93, 19)
         Me.lblCollectionDate.TabIndex = 352
         Me.lblCollectionDate.Text = "代收日期"
-        Me.lblCollectionDate.Visible = False
         '
         'Button1
         '
@@ -8703,6 +8778,7 @@ Partial Class frmMain
         '
         'TabPage3
         '
+        Me.TabPage3.Controls.Add(Me.btnCashAccount)
         Me.TabPage3.Controls.Add(Me.btnGasUsageCylinderCount)
         Me.TabPage3.Controls.Add(Me.GroupBox7)
         Me.TabPage3.Controls.Add(Me.GroupBox6)
@@ -8716,6 +8792,16 @@ Partial Class frmMain
         Me.TabPage3.TabIndex = 28
         Me.TabPage3.Text = "報表"
         Me.TabPage3.UseVisualStyleBackColor = True
+        '
+        'btnCashAccount
+        '
+        Me.btnCashAccount.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnCashAccount.Location = New System.Drawing.Point(13, 339)
+        Me.btnCashAccount.Name = "btnCashAccount"
+        Me.btnCashAccount.Size = New System.Drawing.Size(220, 30)
+        Me.btnCashAccount.TabIndex = 7
+        Me.btnCashAccount.Text = "現金帳"
+        Me.btnCashAccount.UseVisualStyleBackColor = False
         '
         'btnGasUsageCylinderCount
         '
@@ -8841,16 +8927,6 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'btnNotHonoredQuery
-        '
-        Me.btnNotHonoredQuery.BackColor = System.Drawing.Color.Lime
-        Me.btnNotHonoredQuery.Location = New System.Drawing.Point(164, 101)
-        Me.btnNotHonoredQuery.Name = "btnNotHonoredQuery"
-        Me.btnNotHonoredQuery.Size = New System.Drawing.Size(140, 44)
-        Me.btnNotHonoredQuery.TabIndex = 344
-        Me.btnNotHonoredQuery.Text = "未兌現查詢"
-        Me.btnNotHonoredQuery.UseVisualStyleBackColor = False
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -8859,10 +8935,10 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.9.5"
+        Me.Text = "豐原瓦斯會計系統 v0.9.6"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
-        Me.TabPage30.ResumeLayout(False)
+        Me.tpBasic.ResumeLayout(False)
         Me.tcBasicInfo.ResumeLayout(False)
         Me.tpEmployee.ResumeLayout(False)
         Me.tpEmployee.PerformLayout
@@ -8904,10 +8980,12 @@ Partial Class frmMain
         Me.tpSubjects.ResumeLayout(False)
         Me.tpSubjects.PerformLayout
         CType(Me.dgvSubject, System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabPage2.ResumeLayout(False)
+        Me.tpGasPuchase.ResumeLayout(False)
         Me.TabControl2.ResumeLayout(False)
         Me.tpPurchase.ResumeLayout(False)
         Me.tpPurchase.PerformLayout
+        Me.grpDateRange_pur.ResumeLayout(False)
+        Me.grpDateRange_pur.PerformLayout
         CType(Me.dgvPurchase, System.ComponentModel.ISupportInitialize).EndInit
         Me.tpUPH.ResumeLayout(False)
         Me.tpUPH.PerformLayout
@@ -8915,7 +8993,7 @@ Partial Class frmMain
         Me.tpGasCheckout.ResumeLayout(False)
         Me.tpGasCheckout.PerformLayout
         CType(Me.dgvGasCheckout, System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabPage1.ResumeLayout(False)
+        Me.tpPaymentManager.ResumeLayout(False)
         Me.TabControl3.ResumeLayout(False)
         Me.tpPayment.ResumeLayout(False)
         Me.tpPayment.PerformLayout
@@ -8936,14 +9014,14 @@ Partial Class frmMain
         Me.grpSearch_ord.ResumeLayout(False)
         Me.grpSearch_ord.PerformLayout
         CType(Me.dgvOrder, System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabPage31.ResumeLayout(False)
+        Me.tpRevenueManage.ResumeLayout(False)
         Me.TabControl5.ResumeLayout(False)
         Me.tpCollection.ResumeLayout(False)
         Me.tpCollection.PerformLayout
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout
         CType(Me.dgvCollection, System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabPage32.ResumeLayout(False)
+        Me.tpAccountingManage.ResumeLayout(False)
         Me.TabControl6.ResumeLayout(False)
         Me.tpCheque.ResumeLayout(False)
         Me.tpCheque.PerformLayout
@@ -8967,7 +9045,7 @@ Partial Class frmMain
     End Sub
 
     Friend WithEvents TabControl1 As TabControl
-    Friend WithEvents TabPage30 As TabPage
+    Friend WithEvents tpBasic As TabPage
     Friend WithEvents tcBasicInfo As TabControl
     Friend WithEvents tpEmployee As TabPage
     Friend WithEvents cmbRoles As ComboBox
@@ -9094,7 +9172,7 @@ Partial Class frmMain
     Friend WithEvents Label50 As Label
     Friend WithEvents Label49 As Label
     Friend WithEvents Label19 As Label
-    Friend WithEvents TextBox14 As TextBox
+    Friend WithEvents txtTaxId_cus As TextBox
     Friend WithEvents txtCusContactPerson As TextBox
     Friend WithEvents txtcus_phone2 As TextBox
     Friend WithEvents txtcus_tax_id As TextBox
@@ -9210,9 +9288,9 @@ Partial Class frmMain
     Friend WithEvents Label127 As Label
     Friend WithEvents txtId_bank As TextBox
     Friend WithEvents Label126 As Label
-    Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents TabPage31 As TabPage
-    Friend WithEvents TabPage32 As TabPage
+    Friend WithEvents tpPaymentManager As TabPage
+    Friend WithEvents tpRevenueManage As TabPage
+    Friend WithEvents tpAccountingManage As TabPage
     Friend WithEvents TabControl6 As TabControl
     Friend WithEvents TabPage6 As TabPage
     Friend WithEvents Label172 As Label
@@ -9543,7 +9621,7 @@ Partial Class frmMain
     Friend WithEvents Label296 As Label
     Friend WithEvents txtId_subjects As TextBox
     Friend WithEvents Label297 As Label
-    Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents tpGasPuchase As TabPage
     Friend WithEvents TabControl2 As TabControl
     Friend WithEvents tpPurchase As TabPage
     Friend WithEvents chkSp As CheckBox
@@ -9732,4 +9810,11 @@ Partial Class frmMain
     Friend WithEvents btnSelectAll As Button
     Friend WithEvents btnChange As Button
     Friend WithEvents btnNotHonoredQuery As Button
+    Friend WithEvents Label119 As Label
+    Friend WithEvents btnCashAccount As Button
+    Friend WithEvents btnPrint_pur As Button
+    Friend WithEvents grpDateRange_pur As GroupBox
+    Friend WithEvents dtpEndDate_pur As DateTimePicker
+    Friend WithEvents dtpStartDate_pur As DateTimePicker
+    Friend WithEvents chkDateRange_pur As CheckBox
 End Class

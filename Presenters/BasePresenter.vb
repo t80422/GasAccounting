@@ -1,5 +1,4 @@
 ﻿Imports System.Data.Entity.Infrastructure
-Imports System.Data.Entity.Validation
 
 Public MustInherit Class BasePresenter(Of TEntity As Class, TViewModel, TView As ICommonView(Of TEntity, TViewModel))
     Protected ReadOnly _view As TView

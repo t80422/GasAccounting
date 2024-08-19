@@ -10,11 +10,11 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class role
-    Public Property r_id As Integer
-    Public Property r_name As String
+Partial Public Class permission
+    Public Property per_Id As Integer
+    Public Property per_TabPageName As String
+    Public Property per_Name As String
 
-    Public Overridable Property employees As ICollection(Of employee) = New HashSet(Of employee)
     Public Overridable Property rolepermissions As ICollection(Of rolepermission) = New HashSet(Of rolepermission)
 
 End Class

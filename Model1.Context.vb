@@ -33,11 +33,13 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property manufacturers() As DbSet(Of manufacturer)
     Public Overridable Property payments() As DbSet(Of payment)
     Public Overridable Property priceplans() As DbSet(Of priceplan)
-    Public Overridable Property roles() As DbSet(Of role)
     Public Overridable Property stocks() As DbSet(Of stock)
     Public Overridable Property orders() As DbSet(Of order)
     Public Overridable Property banks() As DbSet(Of bank)
     Public Overridable Property subjects() As DbSet(Of subject)
     Public Overridable Property purchases() As DbSet(Of purchase)
+    Public Overridable Property permissions() As DbSet(Of permission)
+    Public Overridable Property roles() As DbSet(Of role)
+    Public Overridable Property rolepermissions() As DbSet(Of rolepermission)
 
 End Class

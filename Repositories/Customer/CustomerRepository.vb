@@ -1,5 +1,5 @@
 ﻿Public Class CustomerRepository
-    Inherits Repository(Of customer)
+    Inherits Repository_old(Of customer)
     Implements ICustomerRepository
 
     Public Sub New(context As gas_accounting_systemEntities)

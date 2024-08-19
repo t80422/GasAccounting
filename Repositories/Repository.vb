@@ -1,50 +1,64 @@
 ﻿Imports System.Data.Entity
 
-Public Class Repository(Of T As Class)
-    Implements IRepository(Of T)
+Public Class Repository(Of TEntity As Class)
+    Implements IRepository(Of TEntity)
 
-    Protected _context As gas_accounting_systemEntities
-    Protected _dbSet As DbSet(Of T)
+    Protected ReadOnly _context As gas_accounting_systemEntities
+    Protected ReadOnly _dbSet As DbSet(Of TEntity)
 
     Public Sub New(context As gas_accounting_systemEntities)
         _context = context
-        _dbSet = context.Set(Of T)
+        _dbSet = context.Set(Of TEntity)
     End Sub
 
-    Public ReadOnly Property Context As gas_accounting_systemEntities
-        Get
-            Return _context
-        End Get
-    End Property
-
-    Public Sub Insert(entity As T) Implements IRepository(Of T).Insert
-        _dbSet.Add(entity)
-    End Sub
-
-    Public Sub Update(entity As T) Implements IRepository(Of T).Update
-        _dbSet.Attach(entity)
-        _context.Entry(entity).State = EntityState.Modified
-    End Sub
-
-    Public Sub Delete(id As Integer) Implements IRepository(Of T).Delete
-        Dim entity As T = _dbSet.Find(id)
-
-        If _context.Entry(entity).State = EntityState.Detached Then
-            _dbSet.Attach(entity)
-        End If
-
-        _dbSet.Remove(entity)
-    End Sub
-
-    Public Sub Save() Implements IRepository(Of T).Save
-        _context.SaveChanges()
-    End Sub
-
-    Public Function GetAll() As IEnumerable(Of T) Implements IRepository(Of T).GetAll
-        Return _dbSet.ToList
+    Public Async Function GetAllAsync() As Task(Of IEnumerable(Of TEntity)) Implements IRepository(Of TEntity).GetAllAsync
+        Try
+            Return Await _dbSet.ToListAsync()
+        Catch ex As Exception
+            Throw New Exception("獲取所有實體時發生錯誤", ex)
+        End Try
     End Function
 
-    Public Function GetById(id As Integer) As T Implements IRepository(Of T).GetById
-        Return _dbSet.Find(id)
+    Public Async Function GetByIdAsync(id As Integer) As Task(Of TEntity) Implements IRepository(Of TEntity).GetByIdAsync
+        Try
+            Return Await _dbSet.FindAsync(id)
+        Catch ex As Exception
+            Throw New Exception($"獲取Id為{id}的實體時發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Async Function AddAsync(entity As TEntity) As Task Implements IRepository(Of TEntity).AddAsync
+        Try
+            _dbSet.Add(entity)
+            Await Task.CompletedTask
+        Catch ex As Exception
+            Throw New Exception("新增時發生錯誤", ex)
+        End Try
+    End Function
+
+    'Public Async Function UpdateAsync(entity As TEntity) As Task Implements IRepository(Of TEntity).UpdateAsync
+    '    Try
+    '        _context.Entry(entity).State = EntityState.Modified
+    '        Await Task.CompletedTask
+    '    Catch ex As Exception
+    '        Throw New Exception("更新時發生錯誤", ex)
+    '    End Try
+    'End Function
+
+    Public Async Function DeleteAsync(entity As TEntity) As Task Implements IRepository(Of TEntity).DeleteAsync
+        Try
+            If entity IsNot Nothing Then _dbSet.Remove(entity)
+            Await Task.CompletedTask
+        Catch ex As Exception
+            Throw New Exception($"刪除時發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Async Function SaveChangesAsync() As Task Implements IRepository(Of TEntity).SaveChangesAsync
+        Try
+            Await _context.SaveChangesAsync()
+        Catch ex As Exception
+            Throw New Exception("EF保存更變時發生錯誤", ex)
+        End Try
     End Function
 End Class

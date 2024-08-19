@@ -18,11 +18,6 @@ Public Class frmLogin
 
                 If user IsNot Nothing Then
                     If user.emp_psw = PasswordTextBox.Text Then
-                        'Hide()
-
-                        'frmMain.User.Id = user.emp_id
-                        'frmMain.User.Name = user.emp_name
-                        'frmMain.Show()
                         OpenMain(user)
                     Else
                         MsgBox("±K½X¿ù»~")
@@ -40,15 +35,14 @@ Public Class frmLogin
     End Sub
 
     Private Sub Cancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel.Click
-        Me.Close()
+        Close()
     End Sub
 
     Private Sub OpenMain(user As employee)
-        Me.Hide()
-
-        frmMain.User.Id = user.emp_id
-        frmMain.User.Name = user.emp_name
-        frmMain.Show()
+        Hide()
+        Dim permissions = GetUserPermissions(user.emp_id)
+        Dim mainForm = New frmMain(user, permissions)
+        mainForm.Show()
     End Sub
 
     Private Sub frmLogin_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -60,4 +54,12 @@ Public Class frmLogin
             OpenMain(user)
         End If
     End Sub
+
+    Private Function GetUserPermissions(empId As Integer) As List(Of String)
+        Using db As New gas_accounting_systemEntities
+            Return db.rolepermissions.Where(Function(x) x.role.employees.Any(Function(e) e.emp_id = empId)).
+                                      Select(Function(x) x.permission.per_TabPageName).
+                                      ToList
+        End Using
+    End Function
 End Class

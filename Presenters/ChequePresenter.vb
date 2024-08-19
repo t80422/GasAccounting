@@ -1,9 +1,10 @@
 ﻿Public Class ChequePresenter
     Private _view As ICheque
-    Private cheRep As IChequeRepository = New ChequeRepository
+    Private ReadOnly _cheRep As IChequeRep
 
-    Public Sub New(view As ICheque)
+    Public Sub New(view As ICheque, cheRep As IChequeRep)
         _view = view
+        _cheRep = cheRep
     End Sub
 
     ''' <summary>
@@ -30,17 +31,19 @@
     ''' <summary>
     ''' 批次代收
     ''' </summary>
-    ''' <param name="startDate"></param>
-    ''' <param name="endDate"></param>
-    Public Sub SetBatchCollection(chequeIds As List(Of Integer))
+    ''' <param name="chequeIds"></param>
+    ''' <param name="d"></param>
+    Public Async Sub SetBatchCollection(chequeIds As List(Of Integer), d As Date)
         Try
-            Using db As New gas_accounting_systemEntities
-                Dim datas = db.cheques.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = "未兌現").ToList
+            'Using db As New gas_accounting_systemEntities
+            '    Dim datas = db.cheques.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = "未兌現").ToList
 
-                datas.ForEach(Sub(x) x.chu_State = "已代收")
-                db.SaveChanges()
-                LoadList()
-            End Using
+            '    datas.ForEach(Sub(x) x.chu_State = "已代收" And x.che_CollectionDate = d)
+            '    db.SaveChanges()
+            '    LoadList()
+            'End Using
+            Await _cheRep.UpdateCollectionStatusAsync(chequeIds, d)
+            LoadList()
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -67,7 +70,7 @@
 
     Public Function IsCollected(cheNum As String) As Boolean
         Try
-            Dim state = cheRep.GetState(cheNum)
+            Dim state = _cheRep.GetState(cheNum)
             If state = "已代收" Then Return True
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -82,12 +85,12 @@
     ''' <param name="startDate"></param>
     ''' <param name="endDate"></param>
     Public Sub ShowCollectionYetList(startDate As Date, endDate As Date)
-        Dim list = cheRep.Query(startDate, endDate, New cheque With {.chu_State = "未兌現"})
+        Dim list = _cheRep.Query(startDate, endDate, New cheque With {.chu_State = "未兌現"})
         _view.ShowList(list)
     End Sub
 
     Public Sub Query(startDate As Date, endDate As Date)
-        _view.ShowList(cheRep.Query(startDate, endDate))
+        _view.ShowList(_cheRep.Query(startDate, endDate))
     End Sub
 
     Private Function SetSearchConditions(query As IQueryable(Of cheque), conditions As Object) As IQueryable(Of cheque)

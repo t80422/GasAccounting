@@ -4,12 +4,14 @@
     Private _companyService As CompanyService
     Private _colRep As ICollectionRep = New CollectionRep
     Private ReadOnly _bankRep As IBankRep
+    Private ReadOnly _cusRep As ICustomerRepository
 
-    Public Sub New(view As ICollectionView, subjectsService As SubjectsService, companyService As CompanyService, bankRep As IBankRep)
+    Public Sub New(view As ICollectionView, subjectsService As SubjectsService, companyService As CompanyService, bankRep As IBankRep, cusRep As ICustomerRepository)
         _view = view
         _subjectsService = subjectsService
         _companyService = companyService
         _bankRep = bankRep
+        _cusRep = cusRep
     End Sub
 
     ''' <summary>
@@ -132,6 +134,10 @@
             MsgBox(ex.Message)
         End Try
     End Sub
+
+    Public Function GetCustomer(cusCode As String) As customer
+        Return _cusRep.GetCusByCusCode(cusCode)
+    End Function
 
     Private Function SetSearchConditions(query As IQueryable(Of collection), conditions As CollectionQueryVM) As IQueryable(Of collection)
         conditions.EndDate = conditions.EndDate.AddDays(1).AddSeconds(-1)

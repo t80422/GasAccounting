@@ -1,5 +1,5 @@
 ﻿Public Class BankRep
-    Inherits Repository(Of bank)
+    Inherits Repository_old(Of bank)
     Implements IBankRep
 
     Public Sub New(context As gas_accounting_systemEntities)

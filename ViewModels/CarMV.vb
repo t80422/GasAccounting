@@ -1,6 +1,4 @@
-﻿Imports System.Data.Entity
-
-Public Class CarMV
+﻿Public Class CarMV
     Public Property 編號 As Integer
     Public Property 客戶名稱 As String
     Public Property 車號 As String

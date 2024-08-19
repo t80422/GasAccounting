@@ -1,3 +1,3 @@
 ﻿Public Interface IPricePlanRep
-    Inherits IRepository(Of priceplan)
+    Inherits IRepository_old(Of priceplan)
 End Interface

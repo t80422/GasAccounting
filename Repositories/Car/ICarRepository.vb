@@ -1,5 +1,5 @@
 ﻿Public Interface ICarRepository
-    Inherits IRepository(Of car)
+    Inherits IRepository_old(Of car)
 
     Function GetCmbByCusId(cusId As Integer) As List(Of ComboBoxItems)
     Function GetCarById(carId As Integer) As car

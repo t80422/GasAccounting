@@ -1,7 +1,5 @@
-﻿Imports System.Data.Entity.Infrastructure
-
-Public Class OrderRepository
-    Inherits Repository(Of order)
+﻿Public Class OrderRepository
+    Inherits Repository_old(Of order)
     Implements IOrderRepository
 
     Public Sub New(context As gas_accounting_systemEntities)

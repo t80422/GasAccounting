@@ -1,6 +1,4 @@
-﻿Imports System.Data.Entity
-
-Public Class UintPriceHistoryPresenter
+﻿Public Class UintPriceHistoryPresenter
     Private _view As IUnitPriceHistoryView
     Private _maunService As ManufacturerService
 
@@ -44,7 +42,7 @@ Public Class UintPriceHistoryPresenter
 
                 Dim result = monthlyUnitPrices.Select(Function(x) New UnitPriceHistoryVM With {
                     .單價 = x.pur_unit_price,
-                    .廠商 = x.manufacturer.manu_name,
+                    .廠商 = x.manufacturer?.manu_name,
                     .日期 = x.Group.First.pur_date,
                     .產品 = x.Group.First.pur_product,
                     .運費單價 = x.Group.First.pur_deli_unit_price
