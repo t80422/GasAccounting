@@ -30,7 +30,7 @@
     Public Sub GetRolesCmb()
         Try
             Using db As New gas_accounting_systemEntities
-                _view.SetRolesCmb(db.roles.Select(Function(x) New ComboBoxItems With {.Display = x.r_name, .Value = x.r_id}).ToList)
+                _view.SetRolesCmb(db.roles.Select(Function(x) New SelectListItem With {.Display = x.r_name, .Value = x.r_id}).ToList)
             End Using
         Catch ex As Exception
             MsgBox(ex.Message)

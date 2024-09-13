@@ -18,7 +18,7 @@ Partial Public Class order
     Public Property o_return_c As Integer
     Public Property o_memo As String
     Public Property o_sales_allowance As Integer
-    Public Property o_total_amount As Integer
+    Public Property o_total_amount As Single
     Public Property o_gas_50 As Integer
     Public Property o_gas_20 As Integer
     Public Property o_gas_16 As Integer
@@ -99,9 +99,14 @@ Partial Public Class order
     Public Property o_gas_c_total As Nullable(Of Integer)
     Public Property o_UnitPrice As Nullable(Of Single)
     Public Property o_UnitPriceC As Nullable(Of Single)
+    Public Property o_comp_Id As Nullable(Of Integer)
+    Public Property o_Insurance As Single
+    Public Property o_cus_Id As Nullable(Of Integer)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car
+    Public Overridable Property company As company
     Public Overridable Property employee As employee
+    Public Overridable Property customer As customer
 
 End Class

@@ -1,7 +1,7 @@
 ﻿Public Class frmQueryCustomer
     Implements IQueryCusView
 
-    Private _presenter As New QueryCusPresenter(Me, New CustomerRepository(New gas_accounting_systemEntities))
+    Private _presenter As New QueryCusPresenter(Me, New CustomerRep(New gas_accounting_systemEntities))
 
     Public ReadOnly Property CusCode As String
         Get
@@ -21,12 +21,15 @@
         End Get
     End Property
 
+    Public Property Customer As customer
+
     Public Sub ShowList(customers As List(Of QueryCusVM)) Implements IQueryCusView.ShowList
         dgvCustomer.DataSource = customers
     End Sub
 
     Public Sub ShowDetails(data As customer) Implements IQueryCusView.ShowDetails
         AutoMapEntityToControls(data, Me)
+        Customer = data
     End Sub
 
     Public Sub Reset() Implements IQueryCusView.Reset

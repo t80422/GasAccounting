@@ -41,4 +41,18 @@
     ''' <param name="month"></param>
     ''' <returns></returns>
     Function GetCashAccount(month As Date) As List(Of CashAccount)
+
+    ''' <summary>
+    ''' 取得銀行帳
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetBankAccount(month As Date, bankId As Integer) As Report_BankAccount
+
+    ''' <summary>
+    ''' 取得客戶寄桶結存瓶
+    ''' </summary>
+    ''' <param name="cusId"></param>
+    ''' <returns></returns>
+    Function GetCustomerGasCylinderInventory(cusId As Integer) As Report_CustomerGasCylinderInventory
 End Interface

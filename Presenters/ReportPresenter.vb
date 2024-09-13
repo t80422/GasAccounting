@@ -1,13 +1,15 @@
 ﻿Imports System.IO
 
 Public Class ReportPresenter
+    Private ReadOnly _view As IReportView
     Private _rep As IReportRep
     Private _manuRep As IManufacturerService = New ManufacturerService
-    Private _view As IReportView
+    Private ReadOnly _bankRep As IBankRep
 
-    Public Sub New(view As IReportView, reportRep As IReportRep)
+    Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep)
         _view = view
         _rep = reportRep
+        _bankRep = bankRep
     End Sub
 
     ''' <summary>
@@ -335,5 +337,103 @@ Public Class ReportPresenter
         Catch ex As Exception
             MsgBox("列印失敗:" + ex.Message)
         End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生銀行帳
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <param name="bankId"></param>
+    Public Sub GenerateBankAccount(month As Date, bankId As Integer)
+        Try
+            '取得資料
+            Dim data = _rep.GetBankAccount(month, bankId)
+
+            '套版
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "銀行帳範本檔.xlsx")
+
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+                    .WriteToCell(1, 1, $"{data.年月}")
+
+                    Dim rowIndex = 3
+
+                    For Each bankAccount In data.List
+                        .WriteToCell(rowIndex, 1, bankAccount.日期)
+                        .WriteToCell(rowIndex, 2, bankAccount.科目)
+                        .WriteToCell(rowIndex, 3, bankAccount.摘要)
+                        .WriteToCell(rowIndex, 4, bankAccount.借方)
+                        .WriteToCell(rowIndex, 5, bankAccount.貸方)
+                        .WriteToCell(rowIndex, 6, bankAccount.餘額)
+                        .SetBottomBorder(rowIndex, 1, rowIndex, 6)
+                        rowIndex += 1
+                    Next
+
+                    Dim totalDebit = data.List.Sum(Function(x) x.借方)
+                    Dim totalCredit = data.List.Sum(Function(x) x.貸方)
+
+                    .WriteToCell(rowIndex, 3, "合計")
+                    .WriteToCell(rowIndex, 4, totalDebit)
+                    .WriteToCell(rowIndex, 5, totalCredit)
+
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "銀行帳.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox("列印失敗:" + ex.Message)
+            Console.WriteLine(ex.InnerException.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生客戶寄桶結存瓶
+    ''' </summary>
+    ''' <param name="cusId"></param>
+    Public Sub GenerateCustomerGasCylinderInventory(cusId As Integer)
+        Try
+            '取得資料
+            Dim data = _rep.GetCustomerGasCylinderInventory(cusId)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "客戶寄桶結存瓶範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+                    .WriteToCell(1, 1, $"{data.CustomerName} 寄桶結存瓶")
+
+                    Dim rowIndex = 3
+
+                    For Each bankAccount In data.List
+                        .WriteToCell(rowIndex, 1, bankAccount.CarNo)
+                        .WriteToCell(rowIndex, 2, bankAccount.DriverName)
+                        .WriteToCell(rowIndex, 3, bankAccount.Barrel_50KG)
+                        .WriteToCell(rowIndex, 4, bankAccount.Barrel_20KG)
+                        .WriteToCell(rowIndex, 5, bankAccount.Barrel_16KG)
+                        .WriteToCell(rowIndex, 6, bankAccount.Barrel_10KG)
+                        .WriteToCell(rowIndex, 7, bankAccount.Barrel_4KG)
+                        .WriteToCell(rowIndex, 8, bankAccount.Barrel_15KG)
+                        .WriteToCell(rowIndex, 9, bankAccount.Barrel_14KG)
+                        .WriteToCell(rowIndex, 10, bankAccount.Barrel_5KG)
+                        .WriteToCell(rowIndex, 11, bankAccount.Barrel_2KG)
+                        .SetBottomBorder(rowIndex, 1, rowIndex, 11)
+                        rowIndex += 1
+                    Next
+
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶寄桶結存瓶.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub LoadBankAccount()
+        Dim items = Await _bankRep.GetBankDropdownAsync
+        _view.SetBankAccountCmb(items)
     End Sub
 End Class

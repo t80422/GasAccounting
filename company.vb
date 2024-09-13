@@ -22,5 +22,6 @@ Partial Public Class company
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property stocks As ICollection(Of stock) = New HashSet(Of stock)
     Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
+    Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
 
 End Class

@@ -1,3 +1,3 @@
 ﻿Public Interface IBankView
-    Inherits ICommonView(Of bank, BankVM)
+    Inherits ICommonView_old(Of bank, BankVM)
 End Interface

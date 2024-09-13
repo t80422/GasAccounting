@@ -1,6 +1,6 @@
 ﻿Imports System.Data.Entity.Infrastructure
 
-Public MustInherit Class BasePresenter(Of TEntity As Class, TViewModel, TView As ICommonView(Of TEntity, TViewModel))
+Public MustInherit Class BasePresenter(Of TEntity As Class, TViewModel, TView As ICommonView_old(Of TEntity, TViewModel))
     Protected ReadOnly _view As TView
     Protected _presenter As IPresenter(Of TEntity, TViewModel)
 

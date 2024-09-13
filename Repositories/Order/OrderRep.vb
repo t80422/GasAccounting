@@ -1,0 +1,61 @@
+﻿Imports System.Data.Entity
+
+Public Class OrderRep
+    'Inherits Repository_old(Of order)
+    Inherits Repository(Of order)
+    Implements IOrderRep
+
+    Public Sub New(context As gas_accounting_systemEntities)
+        MyBase.New(context)
+    End Sub
+
+    Public Function GetOrderVoucherData(orderId As Integer) As OrderVoucherVM Implements IOrderRep.GetOrderVoucherData
+        Try
+            Using db As New gas_accounting_systemEntities
+                Dim order = db.orders.AsNoTracking.FirstOrDefault(Function(x) x.o_id = orderId)
+
+                If order IsNot Nothing Then
+                    Dim result = New OrderVoucherVM(order)
+                    Dim year = order.o_date.Value.Year
+                    Dim month = order.o_date.Value.Month
+                    Dim startDate = New DateTime(year, month, 1)
+                    Dim endDate = startDate.AddMonths(1)
+                    Dim orderMonthData = db.orders.AsNoTracking.
+                                     Where(Function(x) x.o_date >= startDate AndAlso x.o_date < endDate).ToList
+                    Dim orderMonth = orderMonthData.Select(Function(x) New OrderVoucherVM(x))
+
+                    result.本月累計實提量 = orderMonth.Sum(Function(x) x.本日提量)
+                    result.本月累計退氣 = orderMonth.Sum(Function(x) x.本日退氣)
+
+                    '確認是當月還是全部
+                    result.尚欠氣款 = 0
+                    result.已收氣款 = 0
+                    Return result
+                End If
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        Return Nothing
+    End Function
+
+    Public Async Function SearchAsync(criteria As OrderSearchCriteria) As Task(Of List(Of order)) Implements IOrderRep.SearchAsync
+        Try
+            Dim query = _dbSet.AsNoTracking.AsQueryable
+            Dim startDate = criteria.StartDate.Date
+            Dim endDate = criteria.EndDate.Date.AddDays(1)
+
+            If criteria.IsDate Then
+                query = query.Where(Function(x) x.o_date >= startDate)
+                query = query.Where(Function(x) x.o_date < endDate)
+            End If
+
+            If criteria.CusId <> 0 Then query = query.Where(Function(x) x.car.c_cus_id = criteria.CusId)
+
+            Return Await query.OrderByDescending(Function(x) x.o_date).ToListAsync
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+End Class

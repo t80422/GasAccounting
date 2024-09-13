@@ -1,14 +1,11 @@
 ﻿Imports System.Data.Entity
 
 Public Class ChequeRep
+    Inherits Repository(Of cheque)
     Implements IChequeRep
 
-    Private ReadOnly _context As gas_accounting_systemEntities
-    Private ReadOnly _dbSet As DbSet(Of cheque)
-
     Public Sub New(context As gas_accounting_systemEntities)
-        _context = context
-        _dbSet = context.Set(Of cheque)
+        MyBase.New(context)
     End Sub
 
     Public Function GetState(cheNum As String) As String Implements IChequeRep.GetState
@@ -64,6 +61,14 @@ Public Class ChequeRep
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             Throw New Exception("更新批量代收發生錯誤")
+        End Try
+    End Function
+
+    Public Async Function GetByNumberAsync(chequeNum As String) As Task(Of cheque) Implements IChequeRep.GetByNumberAsync
+        Try
+            Return Await _dbSet.FirstOrDefaultAsync(Function(x) x.che_Number = chequeNum)
+        Catch ex As Exception
+            Throw New Exception("ChequeRep.GetByNumberAsync發生錯誤", ex)
         End Try
     End Function
 End Class

@@ -31,7 +31,7 @@ Public Class PurchasePresenter
 
     Private Async Function SetCompanyCmbAsync() As Task
         Try
-            Dim companies = Await _compRep.GetCmbDataAsync
+            Dim companies = Await _compRep.GetCompanyDropdownAsync
             _view.SetCompanyCmb(companies)
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -58,7 +58,7 @@ Public Class PurchasePresenter
 
     Private Async Function SetSubjectCmbAsync() As Task
         Try
-            Dim data = Await _subRep.GetCmbAsync
+            Dim data = Await _subRep.GetSubjectDropdownAsync
             _view.SetSubjectCmb(data)
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -81,7 +81,7 @@ Public Class PurchasePresenter
             Dim datas = purchases.Select(Function(x) New PurchaseVM(x)).ToList
             _view.ShowList(datas)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MsgBox(ex.StackTrace)
         End Try
     End Function
 
@@ -100,7 +100,7 @@ Public Class PurchasePresenter
             Dim purchase = _view.CurrentPurchase
             Validate(purchase)
             Await _purRep.AddAsync(purchase)
-            Await _purRep.SaveChangesAsync
+            Await _purRep.SaveChangesAsync()
             _view.ClearInput()
             Await LoadListAsync()
             MsgBox("新增成功")
@@ -124,9 +124,9 @@ Public Class PurchasePresenter
         End Try
     End Function
 
-    Public Async Function DeleteAsync() As Task
+    Public Async Function DeleteAsync(id As Integer) As Task
         Try
-            Await _purRep.DeleteAsync(_view.CurrentPurchase)
+            Await _purRep.DeleteAsync(id)
             Await _purRep.SaveChangesAsync
             _view.ClearInput()
             Await LoadListAsync()

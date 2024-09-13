@@ -42,7 +42,8 @@ Module modUtility
             ElseIf TypeOf control Is GroupBox Then
                 Dim grp As GroupBox = control
                 propName = grp.Tag
-                propValue = grp.Controls.OfType(Of RadioButton).FirstOrDefault(Function(rdo) rdo.Checked).Text
+                Dim radio = grp.Controls.OfType(Of RadioButton).FirstOrDefault(Function(rdo) rdo.Checked)
+                If radio IsNot Nothing Then propValue = radio.Text
 
             ElseIf TypeOf control Is TabControl Then
                 Dim tc As TabControl = control
@@ -79,6 +80,7 @@ Module modUtility
                         prop.SetValue(entity, convertedValue)
 
                     Catch ex As Exception
+                        Console.WriteLine(ex.StackTrace)
                         Throw New Exception(ex.Message & vbCrLf & "出問題的欄位:" & control.Tag)
                     End Try
                 End If
@@ -126,7 +128,7 @@ Module modUtility
                     Dim grp As GroupBox = control
                     Dim rdos = grp.Controls.OfType(Of RadioButton)
                     If rdos.Count > 0 Then
-                        rdos.FirstOrDefault(Function(x) x.Text = value).Checked = True
+                        rdos.FirstOrDefault(Function(x) x.Text = value.ToString).Checked = True
                     End If
 
                 ElseIf TypeOf control Is CheckBox Then

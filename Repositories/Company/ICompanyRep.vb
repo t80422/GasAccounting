@@ -1,5 +1,5 @@
 ﻿Public Interface ICompanyRep
     Inherits IRepository(Of company)
 
-    Function GetCmbDataAsync() As Task(Of IEnumerable(Of ComboBoxItems))
+    Function GetCompanyDropdownAsync() As Task(Of IEnumerable(Of SelectListItem))
 End Interface

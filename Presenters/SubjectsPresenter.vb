@@ -1,31 +1,73 @@
 ﻿Public Class SubjectsPresenter
-    Inherits BasePresenter(Of subject, SubjectsVM, ISubjectsView)
-    Implements IPresenter(Of subject, SubjectsVM)
+    Private ReadOnly _view As ISubjectsView
+    Private ReadOnly _subjectRep As ISubjectRep
 
-    Public Sub New(view As ISubjectsView)
-        MyBase.New(view)
-        _presenter = Me
+    Public Sub New(view As ISubjectsView, subjectRep As ISubjectRep)
+        _view = view
+        _subjectRep = subjectRep
     End Sub
 
-    Public Overrides Sub Delete(id As Integer)
-        Dim list = New List(Of Integer) From {1, 2}
-        If list.Contains(id) Then
-            MsgBox("此為基本選項,無法刪除")
-            Return
-        End If
+    Public Async Sub LoadList(Optional criteria As subject = Nothing)
+        Try
+            Dim lst As List(Of SubjectsVM) = Nothing
 
-        MyBase.Delete(id)
+            If criteria Is Nothing Then
+                Dim subjects = Await _subjectRep.GetAllAsync()
+                lst = subjects.Select(Function(x) New SubjectsVM(x)).ToList
+            End If
+
+            _view.ClearInput()
+            _view.ShowList(lst)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
-    Public Function SetSearchConditions(query As IQueryable(Of subject), conditions As Object) As IQueryable(Of subject) Implements IPresenter(Of subject, SubjectsVM).SetSearchConditions
-        Return Nothing
-    End Function
+    Public Async Sub Add()
+        Try
+            If Not CheckRequired(_view.SetRequired()) Then Exit Sub
 
-    Public Function SetListViewModel(query As IQueryable(Of subject)) As List(Of SubjectsVM) Implements IPresenter(Of subject, SubjectsVM).SetListViewModel
-        Return query.Select(Function(x) New SubjectsVM With {
-            .備註 = x.s_memo,
-            .名稱 = x.s_name,
-            .編號 = x.s_id
-        }).ToList
-    End Function
+            Dim data = _view.GetUserInput()
+            Await _subjectRep.AddAsync(data)
+            Await _subjectRep.SaveChangesAsync
+            _view.ClearInput()
+            LoadList()
+            MsgBox("新增成功")
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub LoadDetail(id As Integer)
+        Try
+            Dim data = Await _subjectRep.GetByIdAsync(id)
+            _view.ClearInput()
+            _view.SetDataToControl(data)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub Update()
+        Try
+            Dim data = _view.GetUserInput
+            Await _subjectRep.UpdateAsync(data.s_id, data)
+            _view.ClearInput()
+            LoadList()
+            MsgBox("修改成功")
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub Delete(id As Integer)
+        Try
+            Await _subjectRep.DeleteAsync(id)
+            _view.ClearInput()
+            LoadList()
+            MsgBox("刪除成功")
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
 End Class

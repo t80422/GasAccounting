@@ -30,25 +30,28 @@ Public Class Repository(Of TEntity As Class)
     Public Async Function AddAsync(entity As TEntity) As Task Implements IRepository(Of TEntity).AddAsync
         Try
             _dbSet.Add(entity)
-            Await Task.CompletedTask
+            Await SaveChangesAsync()
         Catch ex As Exception
             Throw New Exception("新增時發生錯誤", ex)
         End Try
     End Function
 
-    'Public Async Function UpdateAsync(entity As TEntity) As Task Implements IRepository(Of TEntity).UpdateAsync
-    '    Try
-    '        _context.Entry(entity).State = EntityState.Modified
-    '        Await Task.CompletedTask
-    '    Catch ex As Exception
-    '        Throw New Exception("更新時發生錯誤", ex)
-    '    End Try
-    'End Function
-
-    Public Async Function DeleteAsync(entity As TEntity) As Task Implements IRepository(Of TEntity).DeleteAsync
+    Public Async Function DeleteAsync(id As Integer) As Task Implements IRepository(Of TEntity).DeleteAsync
         Try
-            If entity IsNot Nothing Then _dbSet.Remove(entity)
-            Await Task.CompletedTask
+            Dim entity = Await GetByIdAsync(id)
+            If entity IsNot Nothing Then
+                _dbSet.Remove(entity)
+                Await SaveChangesAsync()
+            End If
+        Catch ex As Exception
+            Throw New Exception($"刪除時發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Async Function DeleteAsync(currentEntity As TEntity) As Task Implements IRepository(Of TEntity).DeleteAsync
+        Try
+            _dbSet.Remove(currentEntity)
+            Await SaveChangesAsync()
         Catch ex As Exception
             Throw New Exception($"刪除時發生錯誤", ex)
         End Try
@@ -60,5 +63,32 @@ Public Class Repository(Of TEntity As Class)
         Catch ex As Exception
             Throw New Exception("EF保存更變時發生錯誤", ex)
         End Try
+    End Function
+
+    Public Async Function UpdateAsync(id As Integer, updateEntity As TEntity) As Task Implements IRepository(Of TEntity).UpdateAsync
+        Try
+            Dim existingEntity = Await GetByIdAsync(id)
+            If existingEntity Is Nothing Then
+                Throw New Exception($"未找到ID為{id}的實體")
+            End If
+
+            _context.Entry(existingEntity).CurrentValues.SetValues(updateEntity)
+            Await SaveChangesAsync()
+        Catch ex As Exception
+            Throw New Exception("更新時發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Async Function UpdateAsync(currentEntity As TEntity, updateEntity As TEntity) As Task Implements IRepository(Of TEntity).UpdateAsync
+        Try
+            _context.Entry(currentEntity).CurrentValues.SetValues(updateEntity)
+            Await SaveChangesAsync()
+        Catch ex As Exception
+            Throw New Exception("更新時發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Function BeginTransaction() As DbContextTransaction Implements IRepository(Of TEntity).BeginTransaction
+        Return _context.Database.BeginTransaction
     End Function
 End Class

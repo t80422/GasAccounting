@@ -1,5 +1,5 @@
 ﻿Public Interface IEmployeeView
-    Inherits ICommonView(Of employee, EmployeeVM)
+    Inherits ICommonView_old(Of employee, EmployeeVM)
 
-    Sub SetRolesCmb(data As List(Of ComboBoxItems))
+    Sub SetRolesCmb(data As List(Of SelectListItem))
 End Interface

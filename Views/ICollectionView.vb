@@ -1,23 +1,23 @@
 ﻿Public Interface ICollectionView
-    Inherits ICommonView(Of collection, CollectionVM)
+    Inherits ICommonView_old(Of collection, CollectionVM)
 
     ''' <summary>
     ''' 設定科目選單
     ''' </summary>
     ''' <param name="data"></param>
-    Sub SetSubjectsCmb(data As List(Of ComboBoxItems))
+    Sub SetSubjectsCmb(data As IReadOnlyList(Of SelectListItem))
 
     ''' <summary>
     ''' 設定銀行選單
     ''' </summary>
     ''' <param name="data"></param>
-    Sub SetBankCmb(data As List(Of ComboBoxItems))
+    Sub SetBankCmb(data As List(Of SelectListItem))
 
     ''' <summary>
     ''' 設定公司選單
     ''' </summary>
     ''' <param name="data"></param>
-    Sub SetCompanyCmb(data As List(Of ComboBoxItems))
+    Sub SetCompanyCmb(data As List(Of SelectListItem))
 
     ''' <summary>
     ''' 取得搜尋條件

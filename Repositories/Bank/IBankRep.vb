@@ -1,5 +1,5 @@
 ﻿Public Interface IBankRep
-    Inherits IRepository_old(Of bank)
+    Inherits IRepository(Of bank)
 
-    Function GetBankCombobox() As List(Of ComboBoxItems)
+    Function GetBankDropdownAsync() As Task(Of List(Of SelectListItem))
 End Interface

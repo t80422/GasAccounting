@@ -1,7 +1,14 @@
-﻿Public Class CollectionRep
+﻿Imports System.Data.Entity
+
+Public Class CollectionRep
+    Inherits Repository(Of collection)
     Implements ICollectionRep
 
     Private _journalService As IJournalService = New JournalService
+
+    Public Sub New(context As gas_accounting_systemEntities)
+        MyBase.New(context)
+    End Sub
 
     Public Sub Add(collection As collection, Optional journal As journal = Nothing, Optional cheque As cheque = Nothing) Implements ICollectionRep.Add
         Using db As New gas_accounting_systemEntities
@@ -65,31 +72,6 @@
         End Using
     End Sub
 
-    Public Sub Delete(id As Integer) Implements ICollectionRep.Delete
-        Using db As New gas_accounting_systemEntities
-            Using transaction = db.Database.BeginTransaction
-                Try
-                    Dim col = db.collections.Find(id)
-
-                    '刪除傳票
-                    Dim jour = db.journals.FirstOrDefault(Function(x) x.j_SubpoenaNo = col.col_SubpoenaNo)
-                    If jour IsNot Nothing Then db.journals.Remove(jour)
-
-                    '刪除支票
-                    Dim che = db.cheques.FirstOrDefault(Function(x) x.che_Number = col.col_Cheque)
-                    If che IsNot Nothing Then db.cheques.Remove(che)
-
-                    db.collections.Remove(col)
-                    db.SaveChanges()
-                    transaction.Commit()
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Throw
-                End Try
-            End Using
-        End Using
-    End Sub
-
     Public Sub UpdateCheque(colId As Integer) Implements ICollectionRep.UpdateCheque
         Using db As New gas_accounting_systemEntities
             Using transaction = db.Database.BeginTransaction
@@ -118,4 +100,12 @@
             End Using
         End Using
     End Sub
+
+    Public Async Function GetByBankAndMonthAsync(bankId As Integer, month As Date) As Task(Of IEnumerable(Of collection)) Implements ICollectionRep.GetByBankAndMonthAsync
+        Try
+            Return Await _dbSet.AsNoTracking.Where(Function(x) x.col_AccountMonth = month AndAlso x.col_bank_Id = bankId).ToListAsync
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

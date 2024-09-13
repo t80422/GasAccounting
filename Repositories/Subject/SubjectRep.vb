@@ -8,9 +8,9 @@ Public Class SubjectRep
         MyBase.New(context)
     End Sub
 
-    Public Async Function GetCmbAsync() As Task(Of IEnumerable(Of ComboBoxItems)) Implements ISubjectRep.GetCmbAsync
+    Public Async Function GetSubjectDropdownAsync() As Task(Of IEnumerable(Of SelectListItem)) Implements ISubjectRep.GetSubjectDropdownAsync
         Try
-            Return Await _dbSet.Select(Function(x) New ComboBoxItems With {
+            Return Await _dbSet.Select(Function(x) New SelectListItem With {
                 .Display = x.s_name,
                 .Value = x.s_id
             }).ToListAsync

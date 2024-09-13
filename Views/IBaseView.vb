@@ -1,0 +1,24 @@
+﻿Public Interface IBaseView(Of TEntity, TViewModel)
+    ''' <summary>
+    ''' 顯示列表
+    ''' </summary>
+    ''' <param name="data"></param>
+    Sub DisplayList(data As List(Of TViewModel))
+
+    ''' <summary>
+    ''' 設定取得的資料到控制項
+    ''' </summary>
+    ''' <param name="data"></param>
+    Sub DisplayDetail(data As TEntity)
+
+    ''' <summary>
+    ''' 取得用戶輸入資料
+    ''' </summary>
+    ''' <returns></returns>
+    Function GetUserInput() As TEntity
+
+    ''' <summary>
+    ''' 重置用戶輸入
+    ''' </summary>
+    Sub ClearInput()
+End Interface

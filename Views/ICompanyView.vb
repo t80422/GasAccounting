@@ -1,3 +1,3 @@
 ﻿Public Interface ICompanyView
-    Inherits ICommonView(Of company, CompanyVM)
+    Inherits ICommonView_old(Of company, CompanyVM)
 End Interface

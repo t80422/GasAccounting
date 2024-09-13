@@ -17,5 +17,7 @@ Partial Public Class basic_price
     Public Property bp_c_in As Single
     Public Property bp_normal_out As Single
     Public Property bp_c_out As Single
+    Public Property bp_Delivery_Normal As Single
+    Public Property bp_Delivery_C As Single
 
 End Class

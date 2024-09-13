@@ -157,11 +157,13 @@ Module modFormControl
     ''' </summary>
     ''' <param name="dgvs"></param>
     Sub ReadDataGridWidth(dgvs As List(Of DataGridView))
+        Dim dgvName As String = ""
         Try
             Dim lines = File.ReadAllLines(Application.StartupPath + "\DGVWidth.set").ToList
             For Each dgv In dgvs
+                dgvName = dgv.Name
                 Dim line = lines.FirstOrDefault(Function(l) l.StartsWith(dgv.Name))
-                If line IsNot Nothing Then
+                If line IsNot Nothing AndAlso dgv.Columns.Count > 0 Then
                     Dim widths = line.Split(":")(1).Split(",")
                     For i As Integer = 0 To widths.Length - 1
                         dgv.Columns(i).Width = Integer.Parse(widths(i))
@@ -169,7 +171,8 @@ Module modFormControl
                 End If
             Next
         Catch ex As Exception
-
+            Console.WriteLine(dgvName)
+            MsgBox(ex.Message)
         End Try
     End Sub
 
@@ -261,6 +264,11 @@ Module modFormControl
         Return True
     End Function
 
+    ''' <summary>
+    ''' 高亮查詢欄位狀態
+    ''' </summary>
+    ''' <param name="btn"></param>
+    ''' <param name="ctrls"></param>
     Public Sub SetQueryControls(btn As Button, ctrls As List(Of Control))
         Dim c As Color
         If btn.Text = "查  詢" Then
@@ -339,7 +347,7 @@ Module modFormControl
         End If
     End Sub
 
-    Public Sub SetComboBox(cmb As ComboBox, data As List(Of ComboBoxItems))
+    Public Sub SetComboBox(cmb As ComboBox, data As List(Of SelectListItem))
         With cmb
             .DataSource = data
             .ValueMember = "Value"

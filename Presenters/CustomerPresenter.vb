@@ -1,65 +1,116 @@
 ﻿Public Class CustomerPresenter
-    Inherits BasePresenter(Of customer, CustomerVM, ICustomer)
-    Implements IPresenter(Of customer, CustomerVM)
+    Private ReadOnly _view As ICustomerView
+    Private ReadOnly _cusRep As ICustomerRep
+    Private ReadOnly _pricePlanRep As IPricePlanRep
 
-    Private _service As New Service
-
-    Public Sub New(view As ICustomer)
-        MyBase.New(view)
-        _presenter = Me
+    Public Sub New(view As ICustomerView, cusRep As ICustomerRep, pricePlanRep As IPricePlanRep)
+        _view = view
+        _cusRep = cusRep
+        _pricePlanRep = pricePlanRep
     End Sub
 
-    Public Function SetSearchConditions(query As IQueryable(Of customer), conditions As Object) As IQueryable(Of customer) Implements IPresenter(Of customer, CustomerVM).SetSearchConditions
-        Dim c As customer = conditions
-
-        query = query.Where(Function(x) x.cus_code.Contains(c.cus_code))
-        query = query.Where(Function(x) x.cus_name.Contains(c.cus_name))
-        query = query.Where(Function(x) x.cus_phone1.Contains(c.cus_phone1))
-
-        Return query
-    End Function
-
-    Public Function SetListViewModel(query As IQueryable(Of customer)) As List(Of CustomerVM) Implements IPresenter(Of customer, CustomerVM).SetListViewModel
-        Return query.Select(Function(x) New CustomerVM With {
-              .編號 = x.cus_id,
-              .代號 = x.cus_code,
-              .名稱 = x.cus_name,
-              .電話1 = x.cus_phone1,
-              .電話2 = x.cus_phone2,
-              .聯絡人 = x.cus_contact_person,
-              .統編 = x.cus_tax_id,
-              .負責人 = x.cus_principal,
-              .地址 = x.cus_address,
-              .傳真 = x.cus_fax,
-              .保險 = x.cus_insurance,
-              .瓦斯桶50Kg = x.cus_gas_50,
-              .瓦斯桶20Kg = x.cus_gas_20,
-              .瓦斯桶16Kg = x.cus_gas_16,
-              .瓦斯桶10Kg = x.cus_gas_10,
-              .瓦斯桶4Kg = x.cus_gas_4,
-              .瓦斯桶15Kg = x.cus_gas_15,
-              .瓦斯桶14Kg = x.cus_gas_14,
-              .瓦斯桶5Kg = x.cus_gas_5,
-              .瓦斯桶2Kg = x.cus_gas_2,
-              .備註 = x.cus_memo,
-              .價格方案 = x.priceplan.pp_Name,
-              .丙氣存氣 = x.cus_GasCStock,
-              .普氣存氣 = x.cus_GasStock
-            }).ToList
-    End Function
-
-    Public Sub PricePlan_Cmb()
-        _view.SetPricePlan_Cmb(_service.GetPricePlan_Cmb)
-    End Sub
-
-    Public Sub GetPricePlanDetails(id As Integer)
+    Public Async Sub InitializeAsync()
         Try
-            Using db As New gas_accounting_systemEntities
-                Dim pp = db.priceplans.Find(id)
-                _view.SetPricePlanDetails(pp)
-            End Using
+            _view.ClearInput()
+
+            Await Task.WhenAll(
+                LoadPricePlanDropdownAsync
+            )
+
+            Await SearchAsync()
         Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
         End Try
+    End Sub
+
+    Private Async Function LoadPricePlanDropdownAsync() As Task
+        Try
+            Dim data = Await _pricePlanRep.GetDropdownAsync
+            _view.PopulatePricePlanDropdown(data)
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Async Sub LoadPricePlanDetailsAsync(id As Integer)
+        Try
+            Dim data = Await _pricePlanRep.GetByIdAsync(id)
+            _view.ClearPricePlan()
+            _view.SetPricePlanDetails(data)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Function SearchAsync() As Task
+        Try
+            Dim criteria = _view.GetUserInput
+            Dim data = Await _cusRep.SearchAsync(criteria)
+            _view.DisplayList(data.Select(Function(x) New CustomerVM(x)).ToList)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Function
+
+    Public Async Sub AddAsync()
+        Try
+            Dim data = _view.GetUserInput
+            Validate(data)
+            Await _cusRep.AddAsync(data)
+            _view.ClearInput()
+            Await SearchAsync()
+            MsgBox("新增成功")
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub UpdateAsync()
+        Try
+            Dim data = _view.GetUserInput
+            Validate(data)
+            Await _cusRep.UpdateAsync(data.cus_id, data)
+            _view.ClearInput()
+            Await SearchAsync()
+            MsgBox("修改成功")
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub DeleteAsync(id As Integer)
+        Try
+            Await _cusRep.DeleteAsync(id)
+            _view.ClearInput()
+            Await SearchAsync()
+            MsgBox("刪除成功")
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub LoadDetailAsync(id As Integer)
+        Try
+            Dim data = Await _cusRep.GetByIdAsync(id)
+            _view.ClearInput()
+            _view.DisplayDetail(data)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Validate(data As customer)
+        If String.IsNullOrEmpty(data.cus_code) Then Throw New Exception("請填寫代號")
+        If String.IsNullOrEmpty(data.cus_name) Then Throw New Exception("請填寫名稱")
+        If String.IsNullOrEmpty(data.cus_contact_person) Then Throw New Exception("請填寫聯絡人")
+        If String.IsNullOrEmpty(data.cus_phone1) Then Throw New Exception("請填寫電話1")
+        If String.IsNullOrEmpty(data.cus_tax_id) Then Throw New Exception("請填寫統編")
     End Sub
 End Class

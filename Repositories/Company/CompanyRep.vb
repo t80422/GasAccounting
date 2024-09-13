@@ -8,9 +8,9 @@ Public Class CompanyRep
         MyBase.New(context)
     End Sub
 
-    Public Async Function GetCmbDataAsync() As Task(Of IEnumerable(Of ComboBoxItems)) Implements ICompanyRep.GetCmbDataAsync
+    Public Async Function GetCompanyDropdownAsync() As Task(Of IEnumerable(Of SelectListItem)) Implements ICompanyRep.GetCompanyDropdownAsync
         Try
-            Return Await _dbSet.Select(Function(x) New ComboBoxItems With {
+            Return Await _dbSet.Select(Function(x) New SelectListItem With {
                 .Display = x.comp_name,
                 .Value = x.comp_id
             }).ToListAsync

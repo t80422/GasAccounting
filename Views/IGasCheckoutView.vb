@@ -3,7 +3,7 @@
     Sub ShowList(datas As List(Of PurchaseVM))
     Sub ClearInput()
     Sub ShowMessage(message As String)
-    Sub LoadVendors(datas As List(Of ComboBoxItems))
+    Sub LoadVendors(datas As List(Of SelectListItem))
     Sub RefreshView()
     Function GetSelectedIds() As List(Of Integer)
 

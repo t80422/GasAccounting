@@ -8,10 +8,10 @@ Public Class ManufacturerRep
         MyBase.New(context)
     End Sub
 
-    Public Async Function GetGasVendorCmbDataAsync() As Task(Of IEnumerable(Of ComboBoxItems)) Implements IManufacturerRep.GetGasVendorCmbDataAsync
+    Public Async Function GetGasVendorCmbDataAsync() As Task(Of IEnumerable(Of SelectListItem)) Implements IManufacturerRep.GetGasVendorCmbDataAsync
         Try
             Return Await _dbSet.Where(Function(x) x.manu_GasVendor).
-                                Select(Function(x) New ComboBoxItems With {
+                                Select(Function(x) New SelectListItem With {
                                     .Display = x.manu_name,
                                     .Value = x.manu_id
                                 }).ToListAsync
@@ -20,15 +20,26 @@ Public Class ManufacturerRep
         End Try
     End Function
 
-    Public Async Function GetVendorCmbWithoutGasAsync() As Task(Of IEnumerable(Of ComboBoxItems)) Implements IManufacturerRep.GetVendorCmbWithoutGasAsync
+    Public Async Function GetVendorCmbWithoutGasAsync() As Task(Of IEnumerable(Of SelectListItem)) Implements IManufacturerRep.GetVendorCmbWithoutGasAsync
         Try
             Return Await _dbSet.Where(Function(x) Not x.manu_GasVendor).
-                                Select(Function(x) New ComboBoxItems With {
+                                Select(Function(x) New SelectListItem With {
                                     .Display = x.manu_name,
                                     .Value = x.manu_id
                                 }).ToListAsync
         Catch ex As Exception
             Throw New Exception("取得非瓦斯供應商的廠商下拉選單數據時發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Async Function GetVendorDropdownAsync() As Task(Of List(Of SelectListItem)) Implements IManufacturerRep.GetVendorDropdownAsync
+        Try
+            Return Await _dbSet.Select(Function(x) New SelectListItem With {
+                .Display = x.manu_name,
+                .Value = x.manu_id
+            }).ToListAsync
+        Catch ex As Exception
+            Throw
         End Try
     End Function
 End Class

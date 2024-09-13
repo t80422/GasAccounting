@@ -1,17 +1,23 @@
 ﻿Public Class CollectionPresenter
     Private _view As ICollectionView
-    Private _subjectsService As SubjectsService
+    Private ReadOnly _subjectRep As ISubjectRep
     Private _companyService As CompanyService
-    Private _colRep As ICollectionRep = New CollectionRep
+    Private ReadOnly _colRep As ICollectionRep
     Private ReadOnly _bankRep As IBankRep
-    Private ReadOnly _cusRep As ICustomerRepository
+    Private ReadOnly _cusRep As ICustomerRep
+    Private ReadOnly _bmbService As IBankMonthlyBalanceService
+    Private ReadOnly _chequeRep As IChequeRep
 
-    Public Sub New(view As ICollectionView, subjectsService As SubjectsService, companyService As CompanyService, bankRep As IBankRep, cusRep As ICustomerRepository)
+    Public Sub New(view As ICollectionView, subjectRep As ISubjectRep, companyService As CompanyService, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
+                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep)
         _view = view
-        _subjectsService = subjectsService
+        _subjectRep = subjectRep
         _companyService = companyService
+        _colRep = colRep
         _bankRep = bankRep
         _cusRep = cusRep
+        _bmbService = bmbService
+        _chequeRep = chequeRep
     End Sub
 
     ''' <summary>
@@ -58,15 +64,21 @@
     ''' <summary>
     ''' 取得科目選單
     ''' </summary>
-    Public Sub GetSubjectsCmb()
-        _view.SetSubjectsCmb(_subjectsService.GetSubjectsCmbItems("借"))
+    Public Async Sub GetSubjectsCmbAsync()
+        Try
+            Dim subjects = Await _subjectRep.GetSubjectDropdownAsync
+            _view.SetSubjectsCmb(subjects)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     ''' <summary>
     ''' 取得銀行選單
     ''' </summary>
-    Public Sub LoadBankList()
-        _view.SetBankCmb(_bankRep.GetBankCombobox)
+    Public Async Sub LoadBankList()
+        Dim banks = Await _bankRep.GetBankDropdownAsync
+        _view.SetBankCmb(banks)
     End Sub
 
     ''' <summary>
@@ -80,49 +92,95 @@
         LoadList(_view.GetQueryConditions)
     End Sub
 
-    Public Sub Add()
+    Public Async Sub Add()
         Dim ord = _view.GetUserInput
 
         If ord IsNot Nothing Then
             Dim journal As journal = If(ord.col_Type <> "支票", _view.GetJournalDatas, Nothing)
             Dim cheque As cheque = If(ord.col_Type = "支票", _view.GetChequeDatas, Nothing)
 
-            Try
-                _colRep.Add(ord, journal, cheque)
-                _view.Reset()
-                MsgBox("新增成功")
-            Catch ex As Exception
-                MsgBox(ex.Message)
-            End Try
+            Using transaction = _colRep.BeginTransaction
+                Try
+                    _colRep.Add(ord, journal, cheque)
+
+                    If ord.col_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(ord.col_bank_Id, ord.col_AccountMonth)
+
+                    transaction.Commit()
+                    _view.Reset()
+                    MsgBox("新增成功")
+                Catch ex As Exception
+                    transaction.Rollback()
+                    MsgBox(ex.Message)
+                End Try
+            End Using
         End If
     End Sub
 
-    Public Sub Edit()
+    Public Async Sub Edit()
         Dim col = _view.GetUserInput
 
         If col IsNot Nothing Then
             Dim journal As journal = If(col.col_Type <> "支票", _view.GetJournalDatas, Nothing)
             Dim cheque As cheque = If(col.col_Type = "支票", _view.GetChequeDatas, Nothing)
+            Using transaction = _colRep.BeginTransaction
+                Try
 
-            Try
-                _colRep.Edit(col, journal, cheque)
-                _view.Reset()
-                MsgBox("修改成功")
-            Catch ex As Exception
-                MsgBox(ex.Message)
-            End Try
+                    Dim orgCollection = Await _colRep.GetByIdAsync(col.col_Id)
+                    Dim orgAccountMonth = orgCollection.col_AccountMonth
+
+                    _colRep.Edit(col, journal, cheque)
+                    Dim bankId = orgCollection.col_bank_Id
+                    Dim updatedCollection = Await _colRep.GetByIdAsync(col.col_Id)
+
+                    '處理銀行月結餘額
+                    If bankId IsNot Nothing Then
+                        '如果修改帳款月份,就更新原始月份的借、貸總額
+                        If orgAccountMonth <> updatedCollection.col_AccountMonth Then Await _bmbService.UpdateMonthBalanceAsync(bankId, orgAccountMonth)
+
+                        Await _bmbService.UpdateMonthBalanceAsync(bankId, updatedCollection.col_AccountMonth)
+                    End If
+
+                    transaction.Commit()
+                    _view.Reset()
+                    MsgBox("修改成功")
+
+                Catch ex As Exception
+                    transaction.Rollback()
+                    MsgBox(ex.Message)
+                End Try
+            End Using
         End If
     End Sub
 
-    Public Sub Delete(id As Integer)
+    Public Async Sub DeleteAsync(id As Integer)
         If MsgBox("確定要刪除?", vbYesNo, "警告") = MsgBoxResult.No Then Exit Sub
-        Try
-            _colRep.Delete(id)
-            _view.Reset()
-            MsgBox("刪除成功")
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+        Using transaction = _colRep.BeginTransaction
+            Try
+                Dim collection = Await _colRep.GetByIdAsync(id)
+                Dim payType = collection.col_Type
+                Dim bankId = collection.col_bank_Id
+                Dim accountMonth = collection.col_AccountMonth
+
+                '刪除支票
+                If payType = "支票" Then
+                    Dim cheque = Await _chequeRep.GetByNumberAsync(collection.col_Cheque)
+                    Await _chequeRep.DeleteAsync(cheque.che_Id)
+                End If
+
+                '刪除資料
+                Await _colRep.DeleteAsync(id)
+
+                '更新月結餘額
+                If payType = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(bankId, accountMonth)
+
+                transaction.Commit()
+                _view.Reset()
+                MsgBox("刪除成功")
+            Catch ex As Exception
+                transaction.Rollback()
+                MsgBox(ex.Message)
+            End Try
+        End Using
     End Sub
 
     Public Sub UpdateCheque(colId As Integer)
@@ -136,7 +194,7 @@
     End Sub
 
     Public Function GetCustomer(cusCode As String) As customer
-        Return _cusRep.GetCusByCusCode(cusCode)
+        Return _cusRep.GetByCusCode(cusCode)
     End Function
 
     Private Function SetSearchConditions(query As IQueryable(Of collection), conditions As CollectionQueryVM) As IQueryable(Of collection)

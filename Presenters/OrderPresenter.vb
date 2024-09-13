@@ -6,207 +6,411 @@ Imports iText.Kernel.Geom
 Imports iText.Kernel.Pdf
 Imports Path = System.IO.Path
 
+''' <summary>
+''' 銷售管理
+''' </summary>
 Public Class OrderPresenter
-    Private _view As IOrderView
+    Private ReadOnly _view As IOrderView
+    Private ReadOnly _cusRep As ICustomerRep
+    Private ReadOnly _carRep As ICarRep
+    Private ReadOnly _gbRep As IGasBarrelRep
+    Private ReadOnly _bpRep As IBasicPriceRep
+    Private ReadOnly _compRep As ICompanyRep
+
+    Private currentCustomer As customer
+    Private currentOrder As order
+
+    Public CurrentCarIn As car
+    Public CurrentCarOut As car
+
+
+
+
     Private _service As ICusOrdByCarService
-    Private _ordRep As IOrderRepository
-    Private _cusRep As ICustomerRepository
-    Private _carRep As ICarRepository
-    Private _bpRep As IBasicPriceRep
+    Private _ordRep As IOrderRep
 
     Private gasReturn As New Dictionary(Of String, Integer) '儲存客戶訂單瓦斯退氣量
 
-    Private tempOrd As order
     Public OrgCarStk As car
-
-    Private tempCarStk As car
     Public Property GasBarrel As New Dictionary(Of String, Object) '儲存客戶訂單瓦斯桶數量
     Public Property InspectBarrel As New Dictionary(Of String, Object) '儲存客戶訂單檢驗瓶數量
     Public Property StockValues As New Dictionary(Of String, Object) '儲存客戶瓦斯桶庫存
     Public Property GasValues As New Dictionary(Of String, Integer) '用於存儲 txtGas_、txtGas_c_ 開頭的 TextBox 的初始值
     Public Property DepositValues As New Dictionary(Of String, Object) '用於存儲TextBox.Tag = o_deposit開頭的初始值
 
-    Public Sub New(view As IOrderView, service As ICusOrdByCarService)
+    Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, compRep As ICompanyRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, bpRep As IBasicPriceRep)
         _view = view
-        _service = service
-        _ordRep = service.OrdRep
-        _cusRep = service.CusRep
-        _carRep = service.CarRep
-        _bpRep = service.BPRep
+        _cusRep = cusRep
+        _carRep = carRep
+        _ordRep = ordRep
+        _compRep = compRep
+        _gbRep = gbRep
+        _bpRep = bpRep
     End Sub
 
-    ''' <summary>
-    ''' 取得客戶庫存
-    ''' </summary>
-    ''' <param name="cusId"></param>
-    Public Sub GetCusStk(cusId As Integer)
-        Dim data = _cusRep.GetCustomerById(cusId)
-
-        If data IsNot Nothing Then
-            StockValues = GetEntityFieldsByPrefix(data, "cus_gas", "cus_inspect_")
-            _view.ShowCusStk(data)
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' 取得車輛寄瓶
-    ''' </summary>
-    ''' <param name="carId"></param>
-    Public Sub GetCarStk(carId As Integer)
-        Dim data = _carRep.GetById(carId)
-        If data IsNot Nothing Then
-            tempCarStk = data
-            _view.ShowCarStk(data)
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' 載入車號選單
-    ''' </summary>
-    ''' <param name="cusId"></param>
-    Public Sub LoadCmbCar(cusId As Integer)
-        Dim data = _carRep.GetCmbByCusId(cusId)
-        If data IsNot Nothing Then _view.SetCmbCar(data)
-    End Sub
-
-    Public Sub Insert(container As Control)
+    Public Async Function InitializeAsync() As Task
         Try
-            Dim ord As New order
-            Dim car As New car
-            Dim cus As New customer
-
-            If GetData(ord, car, cus, container) Then
-                '新增退氣
-                cus.cus_GasStock += ord.o_return
-                cus.cus_GasCStock += ord.o_return_c
-
-                _service.Insert(ord, cus, car)
-
-                _view.Reset()
-                SearchOrders()
-                MsgBox("新增成功")
-            End If
+            Await LoadCompanyAsync()
+            _view.ClearInput()
+            Await LoadList()
+            currentOrder = Nothing
+            currentCustomer = Nothing
+            CurrentCarIn = Nothing
+            CurrentCarOut = Nothing
         Catch ex As Exception
-            MsgBox(ex.Message)
-            Console.WriteLine(ex.Message)
-        End Try
-    End Sub
-
-    Public Sub GetDetail(id As Integer)
-        Try
-            Dim order = _ordRep.GetById(id)
-
-            '保存客戶訂單瓦斯退氣量
-            gasReturn("Gas") = order.o_return
-            gasReturn("GasC") = order.o_return_c
-
-            GetCusStk(order.car.c_cus_id)
-            GetCarStk(order.car.c_id)
-
-            tempOrd = order
-            OrgCarStk = order.car
-
-            _view.ShowDetails(order)
-        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
         End Try
-    End Sub
-
-    Public Sub Update(container As Control, ordId As Integer)
-        Dim ord = _ordRep.GetById(ordId)
-        Dim car = ord.car
-        Dim cus = ord.car.customer
-
-        Try
-            If GetData(ord, car, cus, container) Then
-                '更新瓦斯存量
-                cus.cus_GasStock += ord.o_return - gasReturn("Gas")
-                cus.cus_GasCStock += ord.o_return_c - gasReturn("GasC")
-
-                _service.Update(ord, cus, car, OrgCarStk, tempOrd)
-
-                _view.Reset()
-                SearchOrders()
-                MsgBox("修改成功")
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    Public Sub Delete(orderId As Integer, orderName As String)
-        Dim ord = _ordRep.GetById(orderId)
-
-        If ord Is Nothing Then Exit Sub
-
-        Dim carId = ord.o_c_id
-        Dim car = _carRep.GetById(carId)
-        Dim cusId = car.c_cus_id
-        Dim cus = _cusRep.GetById(cusId)
-
-        If orderName = "進場單" Then
-            cus.cus_gas_50 -= GetOrderValue(ord, "50", True)
-            cus.cus_gas_20 -= GetOrderValue(ord, "20", True)
-            cus.cus_gas_16 -= GetOrderValue(ord, "16", True)
-            cus.cus_gas_10 -= GetOrderValue(ord, "10", True)
-            cus.cus_gas_4 -= GetOrderValue(ord, "4", True)
-            cus.cus_gas_15 -= GetOrderValue(ord, "15", True)
-            cus.cus_gas_14 -= GetOrderValue(ord, "14", True)
-            cus.cus_gas_5 -= GetOrderValue(ord, "5", True)
-            cus.cus_gas_2 -= GetOrderValue(ord, "2", True)
-
-            '取得寄瓶庫存
-            car.c_deposit_50 -= GetDepositValue(ord, "50", True)
-            car.c_deposit_20 -= GetDepositValue(ord, "20", True)
-            car.c_deposit_16 -= GetDepositValue(ord, "16", True)
-            car.c_deposit_10 -= GetDepositValue(ord, "10", True)
-            car.c_deposit_4 -= GetDepositValue(ord, "4", True)
-            car.c_deposit_15 -= GetDepositValue(ord, "15", True)
-            car.c_deposit_14 -= GetDepositValue(ord, "14", True)
-            car.c_deposit_5 -= GetDepositValue(ord, "5", True)
-            car.c_deposit_2 -= GetDepositValue(ord, "2", True)
-        Else
-            cus.cus_gas_50 += GetOrderValue(ord, "50", False)
-            cus.cus_gas_20 += GetOrderValue(ord, "20", False)
-            cus.cus_gas_16 += GetOrderValue(ord, "16", False)
-            cus.cus_gas_10 += GetOrderValue(ord, "10", False)
-            cus.cus_gas_4 += GetOrderValue(ord, "4", False)
-            cus.cus_gas_15 += GetOrderValue(ord, "15", False)
-            cus.cus_gas_14 += GetOrderValue(ord, "14", False)
-            cus.cus_gas_5 += GetOrderValue(ord, "5", False)
-            cus.cus_gas_2 += GetOrderValue(ord, "2", False)
-
-            '取得寄瓶庫存
-            car.c_deposit_50 -= GetDepositValue(ord, "50", False)
-            car.c_deposit_20 -= GetDepositValue(ord, "20", False)
-            car.c_deposit_16 -= GetDepositValue(ord, "16", False)
-            car.c_deposit_10 -= GetDepositValue(ord, "10", False)
-            car.c_deposit_4 -= GetDepositValue(ord, "4", False)
-            car.c_deposit_15 -= GetDepositValue(ord, "15", False)
-            car.c_deposit_14 -= GetDepositValue(ord, "14", False)
-            car.c_deposit_5 -= GetDepositValue(ord, "5", False)
-            car.c_deposit_2 -= GetDepositValue(ord, "2", False)
-        End If
-
-        '更新瓦斯存量
-        cus.cus_GasStock -= ord.o_return
-        cus.cus_GasCStock -= ord.o_return_c
-
-        Try
-            '_ordRep.Delete(ord.o_id, car, cus)
-            _service.Delete(ord, car, cus)
-            _view.Reset()
-            'LoadList(False)
-            SearchOrders()
-            MsgBox("刪除成功")
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    Public Function GetCusDataByCusCode(cusCode As String) As customer
-        Return _cusRep.GetCusByCusCode(cusCode)
     End Function
+
+    Public Async Function LoadList() As Task
+        Try
+            Dim criteria = _view.GetSearchCriteria()
+            Dim datas = Await _ordRep.SearchAsync(criteria)
+
+            _view.ClearInput()
+            _view.DisplayList(datas.Select(Function(x) New OrderVM(x)).ToList)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Function
+
+    Public Function LoadCustomerByCusCode(cusCode As String) As Boolean
+        Try
+            currentCustomer = _cusRep.GetByCusCode(cusCode)
+
+            If currentCustomer Is Nothing Then
+                MsgBox("查無此客戶")
+                Return False
+            End If
+
+            _view.DisplayCustomer(currentCustomer)
+            _view.DisplayCusStk(currentCustomer, True)
+            _view.DisplayCusStk(currentCustomer, False)
+            Return True
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+
+        Return False
+    End Function
+
+    Public Sub LoadCar()
+        Try
+            If currentCustomer Is Nothing Then Return
+
+            '設定車選單
+            Dim carsDropdown = currentCustomer.cars.Select(Function(x) New SelectListItem With {.Display = $"{x.c_no}-{x.c_driver}", .Value = x.c_id}).ToList
+            _view.SetCarDropdown(carsDropdown)
+
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub LoadCarStk_In(carId As Integer)
+        Try
+            CurrentCarIn = Await _carRep.GetByIdAsync(carId)
+            _view.DisplayCarStk(CurrentCarIn, True)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub LoadCarStk_Out(carId As Integer)
+        Try
+            currentCarOut = Await _carRep.GetByIdAsync(carId)
+            _view.DisplayCarStk(currentCarOut, False)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub CalculateStkAndPrice(isIn As Boolean)
+        Try
+            If currentCustomer Is Nothing Then
+                MsgBox("請先選擇客戶")
+                Return
+            End If
+
+            Dim result As New customer
+            Dim inputInOut = If(isIn, _view.GetInInput, _view.GetOutInput)
+            Dim inputOrder = _view.GetOrderInput
+            Dim cusProps = currentCustomer.GetType.GetProperties
+            Dim inputProps = inputInOut.GetType.GetProperties
+            Dim totalBarrelPrice As Integer '總瓦斯瓶價格
+            Dim totalGas As Integer '總普氣
+            Dim totalGasC As Integer '總丙氣
+            Dim currentOrderProps = currentOrder?.GetType.GetProperties
+
+            '計算瓦斯桶庫存
+            For Each prop In cusProps.Where(Function(x) x.Name.StartsWith("cus_gas_"))
+                Dim barrelType = prop.Name.Substring(8)
+                Dim currentStk = prop.GetValue(currentCustomer)
+                Dim newStk As Integer
+
+                If isIn Then
+                    Dim inQty As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_in_{barrelType}").GetValue(inputInOut)
+                    Dim newInQty As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_new_in_{barrelType}").GetValue(inputInOut)
+                    Dim orderInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_in_{barrelType}").GetValue(currentOrder)
+                    Dim ordernewInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_new_in_{barrelType}").GetValue(currentOrder)
+                    newStk = currentStk + inQty - orderInQty + newInQty - ordernewInQty
+
+                    Dim barrel = Await _gbRep.GetByIdAsync(Await _gbRep.GetIdByKgAsync(barrelType))
+                    totalBarrelPrice += newInQty * barrel.gb_SalesPrice
+                Else
+                    Dim gasC As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_gas_c_{barrelType}").GetValue(inputInOut)
+                    Dim gas As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_gas_{barrelType}").GetValue(inputInOut)
+                    Dim empty As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_empty_{barrelType}").GetValue(inputInOut)
+                    Dim orderGasC As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_gas_c_{barrelType}").GetValue(currentOrder)
+                    Dim orderGas As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_gas_{barrelType}").GetValue(currentOrder)
+                    Dim orderEmpty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_empty_{barrelType}").GetValue(currentOrder)
+
+                    newStk = currentStk - gasC + orderGasC - gas + orderGas - empty + orderEmpty
+                    totalGas += gas * CInt(barrelType)
+                    totalGasC += gasC * CInt(barrelType)
+                End If
+
+                prop.SetValue(result, newStk)
+            Next
+
+            '計算檢驗桶庫存
+            If isIn Then
+                For Each prop In cusProps.Where(Function(x) x.Name.StartsWith("cus_inspect_"))
+                    Dim barrelType = prop.Name.Substring(12)
+                    Dim currentStk = prop.GetValue(currentCustomer)
+                    Dim inValue As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_inspect_{barrelType}").GetValue(inputInOut)
+                    Dim orderInValue As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_inspect_{barrelType}").GetValue(currentOrder)
+                    Dim newStk As Integer = currentStk + inValue - orderInValue
+                    prop.SetValue(result, newStk)
+                Next
+            End If
+
+            _view.DisplayCusStk(result, isIn)
+
+            '計算瓦斯金額
+            Dim insurance = If(Not currentCustomer.cus_IsInsurance, (totalGas + totalGasC) * currentCustomer.cus_InsurancePrice, 0)
+            Dim basePrice = _bpRep.GetByMonth(inputOrder.o_date)
+            Dim cusGasUnitPrice As Single '客戶普氣單價
+            Dim cusGasCUnitPrice As Single '客戶丙氣單價
+
+            If inputOrder.o_delivery_type = "自運" Then
+                cusGasUnitPrice = basePrice.bp_normal_out + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_Gas, 0)
+                cusGasCUnitPrice = basePrice.bp_c_out + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_Gas_c, 0)
+            Else
+                cusGasUnitPrice = basePrice.bp_Delivery_Normal + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_GasDelivery, 0)
+                cusGasCUnitPrice = basePrice.bp_Delivery_C + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_GasDelivery_c, 0)
+            End If
+
+            Dim gasPrice = cusGasUnitPrice * totalGas '普氣金額
+            Dim gasCPrice = cusGasCUnitPrice * totalGasC '丙氣金額
+
+            '計算退氣
+            Dim returnGas = cusGasUnitPrice * inputOrder.o_return
+            Dim returnGasC = cusGasCUnitPrice * inputOrder.o_return_c
+
+            '計算總計
+            Dim amount As Single = totalBarrelPrice + gasPrice + gasCPrice + insurance - inputOrder.o_sales_allowance - returnGas - returnGasC
+
+            _view.DisplayGasAndPrice(totalGas, totalGasC, amount, insurance)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub CalculateCarStk(isIn As Boolean)
+        Dim result As New car
+        Dim carData = If(isIn, CurrentCarIn, CurrentCarOut)
+
+        If carData Is Nothing Then Return
+
+        Dim input = If(isIn, _view.GetInInput, _view.GetOutInput)
+        Dim inputProps = input.GetType.GetProperties
+        Dim currentOrderProps = currentOrder?.GetType.GetProperties
+
+        For Each prop In carData.GetType.GetProperties.Where(Function(x) x.Name.StartsWith("c_deposit_"))
+            Dim barrelType = prop.Name.Substring(10)
+            Dim currentStk = prop.GetValue(carData)
+            Dim newStk As Integer
+
+            If isIn Then
+                Dim inValue As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_deposit_in_{barrelType}").GetValue(input)
+                Dim orderInValue As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_deposit_in_{barrelType}").GetValue(currentOrder)
+                newStk = currentStk + inValue - orderInValue
+            Else
+                Dim outValue As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_deposit_out_{barrelType}").GetValue(input)
+                Dim orderOutValue As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_deposit_out_{barrelType}").GetValue(currentOrder)
+                newStk = currentStk - outValue + orderOutValue
+            End If
+
+            prop.SetValue(result, newStk)
+        Next
+
+        _view.DisplayCarStk(result, isIn)
+    End Sub
+
+    Public Async Sub Add()
+        Using transaction = _ordRep.BeginTransaction
+            Try
+                Dim orderInput = _view.GetUserInput()
+                Validate(orderInput)
+                Await _ordRep.AddAsync(orderInput)
+
+                _view.GetCusStkInput(currentCustomer)
+
+                If orderInput.o_delivery_type = "自運" Then
+                    If orderInput.o_in_out = "進場單" Then
+                        _view.GetCarStkInput(CurrentCarIn)
+                    Else
+                        _view.GetCarStkInput(CurrentCarOut)
+                    End If
+                End If
+
+                Await _cusRep.SaveChangesAsync
+
+                transaction.Commit()
+                _view.ClearInput()
+                Await LoadList()
+                MsgBox("新增成功")
+            Catch ex As Exception
+                transaction.Rollback()
+                Console.WriteLine(ex.StackTrace)
+                MsgBox(ex.Message)
+            End Try
+        End Using
+    End Sub
+
+    Public Async Sub LoadDetail(id As Integer)
+        Try
+            Dim order = Await _ordRep.GetByIdAsync(id)
+            _view.ClearInput()
+
+            currentOrder = order
+            currentCustomer = order.customer
+            CurrentCarIn = order.car
+            currentCarOut = order.car1
+
+            Dim isIn = order.o_in_out = "進場單"
+
+            _view.DisplayDetail(currentOrder)
+            _view.DisplayCusStk(currentCustomer, isIn)
+
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub Delete()
+        Using transaction = _ordRep.BeginTransaction
+            Try
+                If currentOrder Is Nothing Then
+                    Throw New Exception("沒有選擇要刪除的訂單")
+                End If
+
+                ' 更新客戶庫存
+                UpdateCustomerStock(currentOrder, currentCustomer)
+
+                ' 更新車輛庫存
+                If currentOrder.o_delivery_type = "自運" Then
+                    If currentOrder.o_in_out = "進場單" Then
+                        UpdateCarStock(currentOrder, CurrentCarIn, True)
+                    Else
+                        UpdateCarStock(currentOrder, CurrentCarOut, False)
+                    End If
+                End If
+
+                ' 刪除訂單
+                Await _ordRep.DeleteAsync(currentOrder.o_id)
+
+                ' 保存更改
+                Await _ordRep.SaveChangesAsync()
+
+                transaction.Commit()
+                _view.ClearInput()
+                Await LoadList()
+                MsgBox("刪除成功")
+
+                ' 重置當前訂單和相關對象
+                currentOrder = Nothing
+                currentCustomer = Nothing
+                CurrentCarIn = Nothing
+                CurrentCarOut = Nothing
+
+            Catch ex As Exception
+                transaction.Rollback()
+                Console.WriteLine(ex.StackTrace)
+                MsgBox("刪除失敗：" & ex.Message)
+            End Try
+        End Using
+    End Sub
+
+    Private Sub Validate(input As order)
+        If input.o_cus_Id Is Nothing Then Throw New Exception("請輸入客戶")
+    End Sub
+
+    Private Async Function LoadCompanyAsync() As Task
+        Try
+            Dim datas = Await _compRep.GetCompanyDropdownAsync
+            _view.SetCompanyDropdown(datas)
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Private Sub UpdateCustomerStock(order As order, customer As customer)
+        Dim orderProps = order.GetType().GetProperties()
+        Dim customerProps = customer.GetType().GetProperties()
+
+        If order.o_in_out = "進場單" Then
+            UpdateStockDynamic(order, customer, "o_in_", "cus_gas_", -1)
+            UpdateStockDynamic(order, customer, "o_new_in_", "cus_gas_", -1)
+            UpdateStockDynamic(order, customer, "o_inspect_", "cus_inspect_", -1)
+        Else
+            UpdateStockDynamic(order, customer, "o_gas_", "cus_gas_", 1)
+            UpdateStockDynamic(order, customer, "o_gas_c_", "cus_gas_", 1)
+            UpdateStockDynamic(order, customer, "o_empty_", "cus_gas_", 1)
+        End If
+
+        customer.cus_GasStock += order.o_return
+        customer.cus_GasCStock += order.o_return_c
+    End Sub
+
+    Private Sub UpdateCarStock(order As order, car As car, isIn As Boolean)
+        Dim prefix As String = If(isIn, "o_deposit_in_", "o_deposit_out_")
+        Dim factor As Integer = If(isIn, -1, 1)
+        UpdateStockDynamic(order, car, prefix, "c_deposit_", factor)
+    End Sub
+
+    Private Sub UpdateStockDynamic(source As Object, target As Object, sourcePrefix As String, targetPrefix As String, factor As Integer)
+        Dim sourceProps = source.GetType().GetProperties()
+        Dim targetProps = target.GetType().GetProperties()
+
+        For Each sourceProp In sourceProps
+            If sourceProp.Name.StartsWith(sourcePrefix) Then
+                Dim suffix = sourceProp.Name.Substring(sourcePrefix.Length)
+                Dim targetPropName = targetPrefix & suffix
+                Dim targetProp = targetProps.FirstOrDefault(Function(p) p.Name = targetPropName)
+
+                If targetProp IsNot Nothing Then
+                    Dim sourceValue = CInt(sourceProp.GetValue(source))
+                    Dim targetValue = CInt(targetProp.GetValue(target))
+                    targetProp.SetValue(target, targetValue + (sourceValue * factor))
+                End If
+            End If
+        Next
+    End Sub
+
+
+
+
+
 
     Public Sub Print(orderId As Integer)
         Dim data = _ordRep.GetOrderVoucherData(orderId)
@@ -256,202 +460,6 @@ Public Class OrderPresenter
             printDocument.Print()
         End Using
     End Sub
-
-    ''' <summary>
-    ''' 計算客戶庫存
-    ''' </summary>
-    ''' <param name="products"></param>
-    ''' <param name="orgStk"></param>
-    ''' <param name="isIn"></param>
-    ''' <returns></returns>
-    Public Function CalculateCusStock(products As List(Of TextBox), orgStk As Integer, isIn As Boolean) As Integer
-        '計算商品群組與暫存的差
-        Dim sum As Integer
-
-        For Each txt In products
-            Dim barrelValue As Integer
-            Dim txtValue = If(String.IsNullOrEmpty(txt.Text), 0, txt.Text)
-
-            If GasBarrel.TryGetValue(txt.Tag, barrelValue) Then
-                If isIn Then
-                    '入場單計算
-                    sum += txtValue - barrelValue
-                Else
-                    '出場單計算
-                    sum -= txtValue - barrelValue
-                End If
-            Else
-                If isIn Then
-                    '入場單計算
-                    sum += txtValue
-                Else
-                    '出場單計算
-                    sum -= txtValue
-                End If
-            End If
-
-            GasBarrel(txt.Tag.ToString) = If(String.IsNullOrEmpty(txt.Text), 0, txt.Text)
-        Next
-
-        Return orgStk + sum
-    End Function
-
-    ''' <summary>
-    ''' 計算檢驗瓶庫存
-    ''' </summary>
-    ''' <param name="txtInspect"></param>
-    ''' <param name="txtInspectStk"></param>
-    ''' <param name="isIn"></param>
-    ''' <returns></returns>
-    Public Function CalculateInspectStk(txtInspect As TextBox, txtInspectStk As TextBox, isIn As Boolean) As Integer
-        Dim orgStk As Integer
-        Dim orgOrder As Integer
-        Dim inspect As Integer = If(String.IsNullOrEmpty(txtInspect.Text), 0, txtInspect.Text)
-
-        If StockValues.TryGetValue(txtInspectStk.Tag, orgStk) Then
-            If InspectBarrel.TryGetValue(txtInspect.Tag, orgOrder) Then
-                If isIn Then
-                    Return orgStk + inspect - orgOrder
-                End If
-            Else
-                If isIn Then
-                    Return orgStk + inspect
-                End If
-            End If
-        End If
-
-        Return orgStk
-    End Function
-
-    ''' <summary>
-    ''' 計算寄存瓶
-    ''' </summary>
-    ''' <param name="products"></param>
-    ''' <param name="group"></param>
-    ''' <param name="isIn"></param>
-    ''' <param name="firstCount"></param>
-    ''' <returns></returns>
-    Public Function CalculateCarStk(products As List(Of TextBox), group As Integer, isIn As Boolean, Optional firstCount As Boolean = False) As Integer
-        Dim sum As Integer
-
-        For Each txt In products
-            Dim barrelValue As Integer = 0
-
-            If tempOrd IsNot Nothing And firstCount = False Then
-                barrelValue = GetEntityFieldsByPrefix(tempOrd, txt.Tag).First.Value
-            End If
-
-            Dim txtValue = If(String.IsNullOrEmpty(txt.Text), 0, txt.Text)
-
-            If isIn Then
-                '入場單計算
-                sum += txtValue - barrelValue
-            Else
-                '出場單計算
-                sum -= txtValue - barrelValue
-            End If
-        Next
-
-        Dim orgValue As Integer = 0
-
-        If tempCarStk IsNot Nothing Then
-            orgValue = GetEntityFields(tempCarStk, $"c_deposit_{group}").First.Value
-        End If
-
-        Return orgValue + sum
-    End Function
-
-    Public Function CalculateTotalPrice(gas As Integer, gasC As Integer, cusId As Integer, type As String, month As Date) As Integer
-        Dim cus = _cusRep.GetById(cusId)
-        Dim unitPrice = GetUnitPrice(cus, type, month)
-
-        Return (unitPrice.丙氣單價) * gasC + (unitPrice.普氣單價 * gas)
-    End Function
-
-    ''' <summary>
-    ''' 搜尋
-    ''' </summary>
-    ''' <param name="criteria"></param>
-    Public Sub SearchOrders(Optional criteria As OrderSearchCriteria = Nothing)
-        Try
-            Dim orders = _service.SearchOrders(criteria)
-            Dim orderVMs As IEnumerable(Of Object)
-
-            If criteria IsNot Nothing AndAlso Not String.IsNullOrEmpty(criteria.InOut) Then
-                If criteria.InOut = "進場單" Then
-                    orderVMs = orders.Select(Function(o) New OrderInVM(o)).ToList()
-                Else
-                    orderVMs = orders.Select(Function(o) New OrderOutVM(o)).ToList()
-                End If
-            Else
-                orderVMs = orders.Select(Function(o) New OrderVM(o)).ToList()
-            End If
-
-            _view.ShowOrderList(orderVMs)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    ''' <summary>
-    ''' 取得單價
-    ''' </summary>
-    ''' <param name="cus"></param>
-    ''' <param name="type"></param>
-    ''' <param name="month"></param>
-    ''' <returns></returns>
-    Private Function GetUnitPrice(cus As customer, type As String, month As Date) As OrderUnitPrice
-        '取得基礎價格
-        Dim basicUnitPrice = _bpRep.GetByMonth(month).LastOrDefault
-
-        If basicUnitPrice Is Nothing Then
-            Throw New Exception("找不到對應月份的基礎價格")
-            Return New OrderUnitPrice
-        End If
-
-        Dim gasBasicUnitPrice = basicUnitPrice.bp_normal_out
-        Dim gasCBasicUnitPrice = basicUnitPrice.bp_c_out
-
-        ' 取得價格方案
-        Dim pricePlan = cus.priceplan
-        Dim ppGas As Single = 0
-        Dim ppGasC As Single = 0
-
-        If pricePlan IsNot Nothing Then
-            Select Case type
-                Case "廠運"
-                    ppGas = pricePlan.pp_GasDelivery
-                    ppGasC = pricePlan.pp_GasDelivery_c
-                Case "自運"
-                    ppGas = pricePlan.pp_Gas
-                    ppGasC = pricePlan.pp_Gas_c
-            End Select
-        End If
-
-
-        Return New OrderUnitPrice With {
-            .丙氣單價 = gasCBasicUnitPrice + ppGasC,
-            .普氣單價 = gasBasicUnitPrice + ppGas
-        }
-    End Function
-
-    Private Function GetData(ByRef ord As order, ByRef car As car, ByRef cus As customer, container As Control) As Boolean
-        _view.GetUserInput_ord(ord)
-        If ord Is Nothing Then Return False
-
-        car = _carRep.GetById(ord.o_c_id)
-        _view.GetUserInput_car(car, container)
-
-        cus = car.customer
-        _view.GetUserInput_cus(cus, container)
-
-        '更新單價
-        Dim unitPrice = GetUnitPrice(cus, ord.o_delivery_type, ord.o_date)
-        ord.o_UnitPrice = unitPrice.普氣單價
-        ord.o_UnitPriceC = unitPrice.丙氣單價
-
-        Return True
-    End Function
 
     ''' <summary>
     ''' 取得訂單明細

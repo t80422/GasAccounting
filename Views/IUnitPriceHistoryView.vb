@@ -2,7 +2,7 @@
     ''' <summary>
     ''' 設定廠商下拉選單
     ''' </summary>
-    Sub SetManuCmb(data As List(Of ComboBoxItems))
+    Sub SetManuCmb(data As List(Of SelectListItem))
 
     ''' <summary>
     ''' 載入列表

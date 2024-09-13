@@ -1,3 +1,3 @@
 ﻿Public Interface ISubjectsView
-    Inherits ICommonView(Of subject, SubjectsVM)
+    Inherits ICommonView_old(Of subject, SubjectsVM)
 End Interface

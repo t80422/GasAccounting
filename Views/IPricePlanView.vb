@@ -1,3 +1,3 @@
 ﻿Public Interface IPricePlanView
-    Inherits ICommonView(Of priceplan, PricePlanVM)
+    Inherits ICommonView_old(Of priceplan, PricePlanVM)
 End Interface

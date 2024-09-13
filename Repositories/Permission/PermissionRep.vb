@@ -87,14 +87,6 @@ Public Class PermissionRep
         End Try
     End Function
 
-    Public Async Function SaveAsync() As Task Implements IPermissionRep.SaveAsync
-        Try
-            Await _context.SaveChangesAsync()
-        Catch ex As Exception
-            Throw New Exception("EF保存更變時發生錯誤", ex)
-        End Try
-    End Function
-
     Public Async Function GetRoleWithPermissionsAsync(roleId As Integer) As Task(Of RoleVM) Implements IPermissionRep.GetRoleWithPermissionsAsync
         Try
             Dim allPermissions = Await _context.permissions.Select(Function(x) x.per_Name).ToListAsync

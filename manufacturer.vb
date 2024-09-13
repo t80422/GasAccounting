@@ -35,5 +35,6 @@ Partial Public Class manufacturer
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
     Public Overridable Property purchases1 As ICollection(Of purchase) = New HashSet(Of purchase)
+    Public Overridable Property purchase_barrel As ICollection(Of purchase_barrel) = New HashSet(Of purchase_barrel)
 
 End Class

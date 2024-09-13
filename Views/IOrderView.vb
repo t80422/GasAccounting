@@ -1,31 +1,46 @@
 ﻿Public Interface IOrderView
-    ''' <summary>
-    ''' 顯示客戶庫存
-    ''' </summary>
-    ''' <param name="data"></param>
-    Sub ShowCusStk(data As customer)
+    Inherits IBaseView(Of order, OrderVM)
+
+    Sub DisplayCustomer(data As customer)
+
+    Sub DisplayCusStk(data As customer, isIn As Boolean)
+
+    Sub DisplayCarStk(data As car, isIn As Boolean)
+
+    Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single)
+
+    Sub DisplayInsurance(price As Single)
 
     ''' <summary>
-    ''' 顯示車庫存
+    ''' 取得進貨單輸入
     ''' </summary>
-    ''' <param name="data"></param>
-    Sub ShowCarStk(data As car)
+    Function GetInInput() As order
 
     ''' <summary>
-    ''' 設定車選單
+    ''' 取得出貨單輸入
     ''' </summary>
-    ''' <param name="list"></param>
-    Sub SetCmbCar(list As List(Of ComboBoxItems))
+    ''' <returns></returns>
+    Function GetOutInput() As order
 
-    Sub GetUserInput_ord(order As order)
+    Function GetOrderInput() As order
 
-    Function GetUserInput_cus(data As customer, container As Control) As customer
+    Sub GetCusStkInput(currentEntity As customer)
 
-    Function GetUserInput_car(data As car, container As Control) As car
+    Sub GetCarStkInput(currentEntity As car)
 
-    Sub Reset()
+    Sub SetCompanyDropdown(data As List(Of SelectListItem))
 
-    Sub ShowDetails(data As order)
+    Sub SetCarDropdown(list As List(Of SelectListItem))
 
-    Sub ShowOrderList(orders As IEnumerable(Of Object))
+    'Sub DisplayDetails(data As order)
+
+
+
+
+
+
+    Function GetSearchCriteria() As OrderSearchCriteria
+
+
+
 End Interface

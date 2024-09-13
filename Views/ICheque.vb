@@ -1,3 +1,3 @@
 ﻿Public Interface ICheque
-    Inherits ICommonView(Of cheque, ChequeVM)
+    Inherits ICommonView_old(Of cheque, ChequeVM)
 End Interface

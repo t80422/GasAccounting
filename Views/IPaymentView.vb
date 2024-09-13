@@ -1,41 +1,36 @@
 ﻿Public Interface IPaymentView
-    Inherits ICommonView(Of payment, PaymentVM)
+    Inherits IBaseView(Of payment, PaymentVM)
 
     ''' <summary>
     ''' 設定廠商下拉選單
     ''' </summary>
-    Sub SetManuCmb(data As List(Of ComboBoxItems))
+    Sub PopulateVendorDropdown(data As IReadOnlyList(Of SelectListItem))
 
     ''' <summary>
     ''' 設定銀行下拉選單
     ''' </summary>
-    Sub SetBankCmb(data As List(Of ComboBoxItems))
+    Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem))
 
     ''' <summary>
     ''' 設定科目下拉選單
     ''' </summary>
-    Sub SetSubjectsCmb(data As List(Of ComboBoxItems))
+    Sub PopulateSubjectDropdown(data As IReadOnlyList(Of SelectListItem))
 
     ''' <summary>
     ''' 設定公司下拉選單
     ''' </summary>
     ''' <param name="data"></param>
-    Sub SetCompanyCmb(data As List(Of ComboBoxItems))
+    Sub PopulateCompanyDropdown(data As IReadOnlyList(Of SelectListItem))
 
     ''' <summary>
     ''' 設定應付未付列表
     ''' </summary>
     ''' <param name="data"></param>
-    Sub SetAmountDueDGV(data As List(Of AmountDueVM))
+    Sub DisplayAmountDueList(data As IReadOnlyList(Of AmountDueVM))
 
     ''' <summary>
     ''' 取得搜尋條件
     ''' </summary>
     ''' <returns></returns>
-    Function GetQueryConditions() As PaymentQueryVM
-
-    ''' <summary>
-    ''' 取得支票資訊
-    ''' </summary>
-    Function GetChequeDatas() As cheque
+    Function GetSearchCriteria() As PaymentSearchCriteria
 End Interface

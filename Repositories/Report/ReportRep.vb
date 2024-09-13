@@ -301,7 +301,7 @@
                 Dim endDate = startDate.AddMonths(1)
 
                 '獲取收入數據
-                Dim collections = db.collections.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate).
+                Dim collections = db.collections.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate AndAlso x.col_Type = "現金").
                                                  Select(Function(x) New With {
                                                     .Date = x.col_Date,
                                                     .Subject = x.subject.s_name,
@@ -310,7 +310,7 @@
                                                     .IsIncome = True
                                                  })
                 '獲取支出數據
-                Dim payments = db.payments.Where(Function(x) x.p_Date >= startDate AndAlso x.p_Date < endDate).
+                Dim payments = db.payments.Where(Function(x) x.p_Date >= startDate AndAlso x.p_Date < endDate AndAlso x.p_Type = "現金").
                                            Select(Function(x) New With {
                                                 .Date = x.p_Date,
                                                 .Subject = x.subject.s_name,
@@ -342,5 +342,105 @@
         End Try
 
         Return result
+    End Function
+
+    Public Function GetBankAccount(month As Date, bankId As Integer) As Report_BankAccount Implements IReportRep.GetBankAccount
+        Dim result As New Report_BankAccount
+
+        Try
+            result.年月 = month.ToString("yyyy年MM月")
+
+            Dim startDate = New Date(month.Year, month.Month, 1)
+            Dim endDate = startDate.AddMonths(1)
+
+            '獲取收入數據
+            Dim collections = _context.collections.Where(Function(x) x.col_AccountMonth >= startDate AndAlso x.col_AccountMonth < endDate AndAlso x.col_Type = "銀行" AndAlso x.col_bank_Id = bankId).
+                                             Select(Function(x) New With {
+                                                .Date = x.col_Date,
+                                                .Subject = x.subject.s_name,
+                                                .Memo = x.col_Memo,
+                                                .Amount = x.col_Amount,
+                                                .IsIncome = True
+                                             })
+            '獲取支出數據
+            Dim payments = _context.payments.Where(Function(x) x.p_AccountMonth >= startDate AndAlso x.p_AccountMonth < endDate AndAlso x.p_Type = "銀行" AndAlso x.p_bank_Id = bankId).
+                                       Select(Function(x) New With {
+                                            .Date = x.p_Date,
+                                            .Subject = x.subject.s_name,
+                                            .Memo = x.p_Memo,
+                                            .Amount = x.p_Amount,
+                                            .IsIncome = False
+                                       })
+            '合併並排列數據
+            Dim allTransactions = collections.Union(payments) _
+                                             .OrderBy(Function(x) x.Date) _
+                                             .ThenBy(Function(x) x.IsIncome)
+
+#Region "計算餘額並填入模型"
+            '取得上期餘額,若沒有則取得該銀行的初始資金
+            Dim lastMonthlyBalance = _context.bank_monthly_balances.FirstOrDefault(Function(x) x.bm_Month < startDate)
+            Dim lastClosingBalance As Integer
+
+            If lastMonthlyBalance Is Nothing Then
+                lastClosingBalance = _context.banks.Find(bankId)?.bank_InitialBalance
+            Else
+                lastClosingBalance = lastMonthlyBalance.bm_ClosingBalance
+            End If
+
+            result.List = New List(Of BankAccountList) From {
+                New BankAccountList With {
+                    .摘要 = "上期結餘",
+                    .餘額 = lastClosingBalance
+                }
+            }
+
+            '填入模型
+            For Each transaction In allTransactions
+                lastClosingBalance += If(transaction.IsIncome, transaction.Amount, -transaction.Amount)
+                result.List.Add(New BankAccountList With {
+                    .借方 = If(transaction.IsIncome, transaction.Amount, 0),
+                    .摘要 = transaction.Memo,
+                    .日期 = transaction.Date.Day,
+                    .科目 = transaction.Subject,
+                    .貸方 = If(transaction.IsIncome, 0, transaction.Amount),
+                    .餘額 = lastClosingBalance
+                })
+            Next
+#End Region
+        Catch ex As Exception
+            Throw New Exception("取得銀行帳資料發生錯誤", ex)
+        End Try
+
+        Return result
+    End Function
+
+    Public Function GetCustomerGasCylinderInventory(cusId As Integer) As Report_CustomerGasCylinderInventory Implements IReportRep.GetCustomerGasCylinderInventory
+        Try
+            Dim result As New Report_CustomerGasCylinderInventory With {
+                .CustomerName = _context.customers.Find(cusId).cus_name,
+                .List = New List(Of Report_CustomerGasCylinderInventory.DepositList)
+            }
+
+            Dim depositList = _context.cars.Where(Function(x) x.c_cus_id = cusId).
+                                            Select(Function(x) New Report_CustomerGasCylinderInventory.DepositList With {
+                                                .Barrel_10KG = x.c_deposit_10,
+                                                .Barrel_14KG = x.c_deposit_14,
+                                                .Barrel_15KG = x.c_deposit_15,
+                                                .Barrel_16KG = x.c_deposit_16,
+                                                .Barrel_20KG = x.c_deposit_20,
+                                                .Barrel_2KG = x.c_deposit_2,
+                                                .Barrel_4KG = x.c_deposit_4,
+                                                .Barrel_50KG = x.c_deposit_50,
+                                                .Barrel_5KG = x.c_deposit_5,
+                                                .CarNo = x.c_no,
+                                                .DriverName = x.c_driver
+                                             }).ToList
+
+            result.List = depositList
+
+            Return result
+        Catch ex As Exception
+            Throw New Exception("取得客戶寄桶結存瓶資料發生錯誤", ex)
+        End Try
     End Function
 End Class

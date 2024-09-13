@@ -1,5 +1,5 @@
 ﻿Public Interface IManufacturerView
-    Inherits ICommonView(Of manufacturer, ManufacturerVM)
+    Inherits ICommonView_old(Of manufacturer, ManufacturerVM)
 
     ''' <summary>
     ''' 取得搜尋條件
