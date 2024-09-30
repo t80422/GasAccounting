@@ -107,7 +107,6 @@
             .發票人 = x.che_IssuerName,
             .金額 = x.che_Amount,
             .銀行帳號 = x.che_AccountNumber,
-            .借貸 = x.che_Type,
             .編號 = x.che_Id
         }).ToList
     End Function

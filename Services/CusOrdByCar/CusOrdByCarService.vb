@@ -71,7 +71,7 @@
                         orgCar.c_deposit_16 -= orgOrd.o_deposit_in_16
                         orgCar.c_deposit_10 -= orgOrd.o_deposit_in_10
                         orgCar.c_deposit_4 -= orgOrd.o_deposit_in_4
-                        orgCar.c_deposit_15 -= orgOrd.o_deposit_in_15
+                        orgCar.c_deposit_18 -= orgOrd.o_deposit_in_18
                         orgCar.c_deposit_14 -= orgOrd.o_deposit_in_14
                         orgCar.c_deposit_5 -= orgOrd.o_deposit_in_5
                         orgCar.c_deposit_2 -= orgOrd.o_deposit_in_2
@@ -84,7 +84,7 @@
                         orgCar.c_deposit_16 += orgOrd.o_deposit_out_16
                         orgCar.c_deposit_10 += orgOrd.o_deposit_out_10
                         orgCar.c_deposit_4 += orgOrd.o_deposit_out_4
-                        orgCar.c_deposit_15 += orgOrd.o_deposit_out_15
+                        orgCar.c_deposit_18 += orgOrd.o_deposit_out_18
                         orgCar.c_deposit_14 += orgOrd.o_deposit_out_14
                         orgCar.c_deposit_5 += orgOrd.o_deposit_out_5
                         orgCar.c_deposit_2 += orgOrd.o_deposit_out_2

@@ -85,8 +85,8 @@
                     detail.普氣4Kg = ordersToday.Sum(Function(x) x.o_gas_4)
                     detail.丙氣4Kg = ordersToday.Sum(Function(x) x.o_gas_c_4)
 
-                    detail.普氣15Kg = ordersToday.Sum(Function(x) x.o_gas_15)
-                    detail.丙氣15Kg = ordersToday.Sum(Function(x) x.o_gas_c_15)
+                    detail.普氣18Kg = ordersToday.Sum(Function(x) x.o_gas_18)
+                    detail.丙氣18Kg = ordersToday.Sum(Function(x) x.o_gas_c_18)
 
                     detail.普氣14Kg = ordersToday.Sum(Function(x) x.o_gas_14)
                     detail.丙氣14Kg = ordersToday.Sum(Function(x) x.o_gas_c_14)
@@ -97,8 +97,8 @@
                     detail.普氣2Kg = ordersToday.Sum(Function(x) x.o_gas_2)
                     detail.丙氣2Kg = ordersToday.Sum(Function(x) x.o_gas_c_2)
 
-                    detail.普氣瓶數 = detail.普氣50Kg + detail.普氣20Kg + detail.普氣16Kg + detail.普氣10Kg + detail.普氣4Kg + detail.普氣15Kg + detail.普氣14Kg + detail.普氣5Kg + detail.普氣2Kg
-                    detail.丙氣瓶數 = detail.丙氣50Kg + detail.丙氣20Kg + detail.丙氣16Kg + detail.丙氣10Kg + detail.丙氣4Kg + detail.丙氣15Kg + detail.丙氣14Kg + detail.丙氣5Kg + detail.丙氣2Kg
+                    detail.普氣瓶數 = detail.普氣50Kg + detail.普氣20Kg + detail.普氣16Kg + detail.普氣10Kg + detail.普氣4Kg + detail.普氣18Kg + detail.普氣14Kg + detail.普氣5Kg + detail.普氣2Kg
+                    detail.丙氣瓶數 = detail.丙氣50Kg + detail.丙氣20Kg + detail.丙氣16Kg + detail.丙氣10Kg + detail.丙氣4Kg + detail.丙氣18Kg + detail.丙氣14Kg + detail.丙氣5Kg + detail.丙氣2Kg
 
                     detail.普氣Kg數 = ordersToday.Sum(Function(x) x.o_gas_total)
                     detail.丙氣Kg數 = ordersToday.Sum(Function(x) x.o_gas_c_total)
@@ -272,12 +272,12 @@
                     data.瓦斯瓶20Kg = ordersToday.Sum(Function(x) x.o_gas_20 + x.o_gas_c_20 + x.o_empty_20)
                     data.瓦斯瓶16Kg = ordersToday.Sum(Function(x) x.o_gas_16 + x.o_gas_c_16 + x.o_empty_16)
                     data.瓦斯瓶4Kg = ordersToday.Sum(Function(x) x.o_gas_4 + x.o_gas_c_4 + x.o_empty_4)
-                    data.瓦斯瓶15Kg = ordersToday.Sum(Function(x) x.o_gas_15 + x.o_gas_c_15 + x.o_empty_15)
+                    data.瓦斯瓶18Kg = ordersToday.Sum(Function(x) x.o_gas_18 + x.o_gas_c_18 + x.o_empty_18)
                     data.瓦斯瓶14Kg = ordersToday.Sum(Function(x) x.o_gas_14 + x.o_gas_c_14 + x.o_empty_14)
                     data.瓦斯瓶5Kg = ordersToday.Sum(Function(x) x.o_gas_5 + x.o_gas_c_5 + x.o_empty_5)
                     data.瓦斯瓶2Kg = ordersToday.Sum(Function(x) x.o_gas_2 + x.o_gas_c_2 + x.o_empty_2)
 
-                    data.總支數 = data.瓦斯瓶50Kg + data.瓦斯瓶20Kg + data.瓦斯瓶16Kg + data.瓦斯瓶4Kg + data.瓦斯瓶15Kg + data.瓦斯瓶14Kg + data.瓦斯瓶5Kg + data.瓦斯瓶2Kg
+                    data.總支數 = data.瓦斯瓶50Kg + data.瓦斯瓶20Kg + data.瓦斯瓶16Kg + data.瓦斯瓶4Kg + data.瓦斯瓶18Kg + data.瓦斯瓶14Kg + data.瓦斯瓶5Kg + data.瓦斯瓶2Kg
 
                     result.Add(data)
                     currentDate = currentDate.AddDays(1)
@@ -344,8 +344,8 @@
         Return result
     End Function
 
-    Public Function GetBankAccount(month As Date, bankId As Integer) As Report_BankAccount Implements IReportRep.GetBankAccount
-        Dim result As New Report_BankAccount
+    Public Function GetBankAccount(month As Date, bankId As Integer) As BankAccount Implements IReportRep.GetBankAccount
+        Dim result As New BankAccount
 
         Try
             result.年月 = month.ToString("yyyy年MM月")
@@ -414,18 +414,18 @@
         Return result
     End Function
 
-    Public Function GetCustomerGasCylinderInventory(cusId As Integer) As Report_CustomerGasCylinderInventory Implements IReportRep.GetCustomerGasCylinderInventory
+    Public Function GetCustomerGasCylinderInventory(cusId As Integer) As CustomerGasCylinderInventory Implements IReportRep.GetCustomerGasCylinderInventory
         Try
-            Dim result As New Report_CustomerGasCylinderInventory With {
+            Dim result As New CustomerGasCylinderInventory With {
                 .CustomerName = _context.customers.Find(cusId).cus_name,
-                .List = New List(Of Report_CustomerGasCylinderInventory.DepositList)
+                .List = New List(Of CustomerGasCylinderInventory.DepositList)
             }
 
             Dim depositList = _context.cars.Where(Function(x) x.c_cus_id = cusId).
-                                            Select(Function(x) New Report_CustomerGasCylinderInventory.DepositList With {
+                                            Select(Function(x) New CustomerGasCylinderInventory.DepositList With {
                                                 .Barrel_10KG = x.c_deposit_10,
                                                 .Barrel_14KG = x.c_deposit_14,
-                                                .Barrel_15KG = x.c_deposit_15,
+                                                .Barrel_18KG = x.c_deposit_18,
                                                 .Barrel_16KG = x.c_deposit_16,
                                                 .Barrel_20KG = x.c_deposit_20,
                                                 .Barrel_2KG = x.c_deposit_2,
@@ -441,6 +441,273 @@
             Return result
         Catch ex As Exception
             Throw New Exception("取得客戶寄桶結存瓶資料發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Function GetNewBarrelDetails(month As Date) As NewBarrelDetails Implements IReportRep.GetNewBarrelDetails
+        Try
+            Dim result As New NewBarrelDetails
+            Dim barrelTypes = {"50Kg", "20Kg", "16Kg", "10Kg", "4Kg"}
+            Dim endDate = month.AddMonths(1)
+
+            '取得上期結餘
+            Dim lastBalances = _context.barrel_monthly_balances.Where(Function(x) x.barmb_Month < month).
+                                                                GroupBy(Function(x) x.gas_barrel.gb_Name).
+                                                                ToDictionary(Function(g) g.Key, Function(g) g.OrderByDescending(Function(x) x.barmb_Month).FirstOrDefault?.barmb_ClosingBalance)
+
+            Dim initInventories = _context.gas_barrel.ToDictionary(Function(x) x.gb_Name, Function(x) x.gb_InitialInventory)
+
+            For Each barrelType In barrelTypes
+                Dim lastBalance = If(lastBalances.ContainsKey(barrelType), lastBalances(barrelType), initInventories(barrelType))
+                SetLastBalance(result, barrelType, lastBalance)
+            Next
+
+            '取得購買價格
+            Dim payPrices = _context.purchase_barrel.Where(Function(x) x.pb_Date < endDate).
+                                                     OrderByDescending(Function(x) x.pb_Date).
+                                                     FirstOrDefault
+
+            If payPrices Is Nothing Then Throw New Exception("尚未有進貨資料")
+
+            With result
+                .PayUnitPrice50 = payPrices.pb_UnitPrice_50
+                .PayUnitPrice20 = payPrices.pb_UnitPrice_20
+                .PayUnitPrice16 = payPrices.pb_UnitPrice_16
+                .PayUnitPrice10 = payPrices.pb_UnitPrice_10
+                .PayUnitPrice4 = payPrices.pb_UnitPrice_4
+            End With
+
+
+            '取得銷售價格
+            Dim salePrices = _context.gas_barrel.ToDictionary(Function(x) x.gb_Name, Function(x) x.gb_SalesPrice)
+
+            With result
+                .IncomeUnitPrice50 = salePrices("50Kg")
+                .IncomeUnitPrice20 = salePrices("20Kg")
+                .IncomeUnitPrice16 = salePrices("16Kg")
+                .IncomeUnitPrice10 = salePrices("10Kg")
+                .IncomeUnitPrice4 = salePrices("4Kg")
+            End With
+
+
+            '取得進貨數據
+            Dim inData = _context.purchase_barrel.Where(Function(x) x.pb_Date.Year = month.Year AndAlso x.pb_Date.Month = month.Month).
+                                                  GroupBy(Function(x) New With {Key .Date = x.pb_Date, Key .ManuId = x.pb_manu_Id}).
+                                                  Select(Function(g) New With {
+                                                        .Day = g.Key.Date,
+                                                        g.Key.ManuId,
+                                                        .Qty50 = g.Sum(Function(x) x.pb_Qty_50),
+                                                        .Qty20 = g.Sum(Function(x) x.pb_Qty_20),
+                                                        .Qty16 = g.Sum(Function(x) x.pb_Qty_16),
+                                                        .Qty10 = g.Sum(Function(x) x.pb_Qty_10),
+                                                        .Qty4 = g.Sum(Function(x) x.pb_Qty_4),
+                                                        .Memo = g.Select(Function(x) x.manufacturer.manu_name).FirstOrDefault
+                                                  }).ToList
+
+            '取得出貨數據
+            Dim outData = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso x.o_date.Value.Month = month.Month).
+                                          GroupBy(Function(x) New With {Key .Date = x.o_date, Key .CusId = x.o_cus_Id}).
+                                          Select(Function(g) New With {
+                                                .Day = g.Key.Date,
+                                                g.Key.CusId,
+                                                .Qty50 = g.Sum(Function(x) x.o_new_in_50),
+                                                .Qty20 = g.Sum(Function(x) x.o_new_in_20),
+                                                .Qty16 = g.Sum(Function(x) x.o_new_in_16),
+                                                .Qty10 = g.Sum(Function(x) x.o_new_in_10),
+                                                .Qty4 = g.Sum(Function(x) x.o_new_in_4),
+                                                .Memo = g.Select(Function(x) x.customer.cus_name).FirstOrDefault
+                                          }).ToList
+
+            '合併數據
+            For Each item In inData
+                result.List.Add(New NewBarrelDetailsList With {
+                    .Day = item.Day.ToString("yyyy.MM.dd"),
+                    .In50 = item.Qty50,
+                    .In20 = item.Qty20,
+                    .In16 = item.Qty16,
+                    .In10 = item.Qty10,
+                    .In4 = item.Qty4,
+                    .Memo = item.Memo
+                })
+            Next
+
+            For Each item In outData
+                result.List.Add(New NewBarrelDetailsList With {
+                    .Day = item.Day.Value.ToString("yyyy.MM.dd"),
+                    .Out50 = item.Qty50,
+                    .Out20 = item.Qty20,
+                    .Out16 = item.Qty16,
+                    .Out10 = item.Qty10,
+                    .Out4 = item.Qty4,
+                    .Memo = item.Memo
+                })
+            Next
+
+            result.List = result.List.OrderBy(Function(x) x.Day).ToList
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetBillsReceivable(companyId As Integer, bankId As Integer, month As Date) As BillsReceivable Implements IReportRep.GetBillsReceivable
+        Try
+            Dim result As New BillsReceivable
+            result.CompanyName = _context.companies.Find(companyId).comp_name
+            result.BankAccount = _context.banks.Find(bankId).bank_Account
+            result.List = _context.cheques.Where(Function(x) x.che_ReceivedDate.Value.Year = month.Year _
+                                                     AndAlso x.che_ReceivedDate.Value.Month = month.Month _
+                                                     AndAlso x.collection.col_comp_Id = companyId _
+                                                     AndAlso x.collection.col_bank_Id = bankId).
+                                           Select(Function(x) New BillsReceivableList With {
+                                                .Amount = x.che_Amount,
+                                                .AvailableDate = x.che_AbleCashingDate,
+                                                .ChequeNumber = x.che_Number,
+                                                .CollectDate = x.che_CollectionDate,
+                                                .CusCode = x.collection.customer.cus_code,
+                                                .IssuerName = x.che_IssuerName,
+                                                .Memo = x.che_Memo,
+                                                .PayBankName = x.che_PayBankName,
+                                                .ReceiveDate = x.che_ReceivedDate
+                                           }).ToList
+
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetInvoice(month As Date) As List(Of Report_Invoice) Implements IReportRep.GetInvoice
+        Try
+            Dim query = From o In _context.orders
+                        Where o.o_date.Value.Year = month.Year AndAlso o.o_date.Value.Month = month.Month
+                        Group Join i In _context.invoices On o.o_cus_Id Equals i.i_cus_Id Into invoiceGroup = Group
+                        From invoice In invoiceGroup.DefaultIfEmpty()
+                        Group By Key = New With {
+                        .CusId = o.o_cus_Id,
+                        .CusCode = o.customer.cus_code,
+                        .CusName = o.customer.cus_name,
+                        .TaxId = o.customer.cus_tax_id
+                    } Into g = Group
+                        Select New Report_Invoice With {
+                        .CusCode = Key.CusCode,
+                        .CusName = Key.CusName,
+                        .TaxId = Key.TaxId,
+                        .Amount = g.Sum(Function(x) x.o.o_gas_total + x.o.o_gas_c_total),
+                        .IsInvoice = g.Sum(Function(x) If(x.invoice Is Nothing, 0, x.invoice.i_KG))
+                    }
+
+            Return query.ToList()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Private Sub SetLastBalance(result As NewBarrelDetails, barrelType As String, lastBalance As Integer)
+        Select Case barrelType
+            Case "50Kg" : result.Last50 = lastBalance
+            Case "20Kg" : result.Last20 = lastBalance
+            Case "16Kg" : result.Last16 = lastBalance
+            Case "10Kg" : result.Last10 = lastBalance
+            Case "4Kg" : result.Last4 = lastBalance
+        End Select
+    End Sub
+
+    Public Function GetMonthlyAccountsReceivable(month As Date) As MonthlyAccountsReceivable Implements IReportRep.GetMonthlyAccountsReceivable
+        Try
+            Dim result = New MonthlyAccountsReceivable With {
+                .Month = $"{month:yyyy年MM月} 應收帳明細表"
+            }
+
+            result.List = (From o In _context.orders
+                           Where o.o_date.Value.Year = month.Year AndAlso o.o_date.Value.Month = month.Month
+                           Group Join c In _context.collections On o.o_cus_Id Equals c.col_cus_Id Into collectionGroup = Group
+                           From collection In collectionGroup.DefaultIfEmpty
+                           Group By Key = New With {
+                             .CusCode = o.customer.cus_code
+                           } Into g = Group
+                           Select New MonthlyAccountsReceivableList With {
+                             .CusCode = Key.CusCode,
+                             .AccountsReceivable = g.Sum(Function(x) x.o.o_total_amount),
+                             .AccountsReceived = g.Sum(Function(x) If(x.collection Is Nothing, 0, x.collection.col_Amount)),
+                             .Discount = g.Sum(Function(x) x.o.o_sales_allowance)
+                           }).ToList
+
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetInventoryTransactionDetail(year As Date, compId As Integer, empId As Integer) As InventoryTransactionDetail Implements IReportRep.GetInventoryTransactionDetail
+        Try
+            Dim company = _context.companies.Find(compId)
+            Dim result = New InventoryTransactionDetail With {
+                .Company = company.comp_name,
+                .OperatorName = _context.employees.Find(empId).emp_name,
+                .Phone = company.comp_Phone,
+                .Year = year.Year.ToString() & " 年度",
+                .List = New List(Of InventoryTransactionDetailList)
+            }
+
+            '取得所有供應商
+            Dim allVendors = _context.manufacturers.Where(Function(x) x.manu_GasVendor).Select(Function(x) x.manu_name).ToList
+
+            ' 取得該年度每月數據
+            Dim monthlyData = _context.gas_monthly_balances.Where(Function(gmb) gmb.gmb_Month.Year = year.Year AndAlso gmb.gmb_comp_Id = compId).
+                                                            OrderBy(Function(x) x.gmb_Month).ToList
+
+            ' 預先獲取整年的進貨數據
+            Dim rawData = _context.purchases.Where(Function(x) x.pur_date.Value.Year = year.Year AndAlso x.pur_comp_id = compId).
+                                             Select(Function(x) New With {
+                                                 .Month = x.pur_date.Value.Month,
+                                                 .Vendor = x.manufacturer.manu_name,
+                                                 .Quantity = x.pur_quantity
+                                             }).ToList()
+
+            Dim yearPurchases = rawData.GroupBy(Function(x) New With {Key .Month = x.Month, Key .Vendor = x.Vendor}).
+                                        Select(Function(g) New With {
+                                            .Month = g.Key.Month,
+                                            .Vendor = g.Key.Vendor,
+                                            .Amount = g.Sum(Function(x) x.Quantity)
+                                        }).ToList()
+
+            For Each item In monthlyData
+                Dim purchasesByVendor = yearPurchases.Where(Function(x) x.Month = item.gmb_Month.Month).
+                                                      ToDictionary(Function(x) x.Vendor, Function(x) x.Amount.Value)
+                '確保所有廠商都在字典中,如果沒有購買則為0
+                For Each vendor In allVendors
+                    If Not purchasesByVendor.ContainsKey(vendor) Then purchasesByVendor(vendor) = 0
+                Next
+
+                result.List.Add(New InventoryTransactionDetailList With {
+                    .Month = item.gmb_Month.Month,
+                    .OpeningBalance = item.gmb_OpeningBalance,
+                    .Sale = item.gmb_SaleTotal,
+                    .CloseingBalance = item.gmb_ClosingBalance,
+                    .PurchasesByVendor = purchasesByVendor
+                })
+            Next
+
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetPayableCheck(month As Date) As List(Of PayableCheck) Implements IReportRep.GetPayableCheck
+        Try
+            Return _context.payments.Where(Function(x) x.p_Date.Year = month.Year AndAlso x.p_Date.Month = month.Month AndAlso x.p_Type = "支票").AsEnumerable.
+                                     Select(Function(x) New PayableCheck With {
+                                        .Amount = x.p_Amount,
+                                        .CashingDate = x.p_CashingDate.Value.ToString("yyyy/MM/dd"),
+                                        .ChequeNumber = x.p_Cheque,
+                                        .Day = x.p_Date.ToString("yyyy/MM/dd"),
+                                        .IsCashing = If(x.p_IsCashing, "是", "否"),
+                                        .Memo = x.p_Memo
+                                     }).ToList
+        Catch ex As Exception
+            Throw
         End Try
     End Function
 End Class

@@ -17,7 +17,7 @@
 
     Public Sub New(data As purchase)
         編號 = data.pur_id
-        廠商 = data.manufacturer1.manu_name
+        廠商 = data.manufacturer?.manu_name
         日期 = data.pur_date
         產品 = data.pur_product
         重量 = data.pur_quantity
@@ -28,7 +28,7 @@
         運費 = data.pur_delivery_fee
         特殊單價 = data.pur_SpecialUP
         特殊運費 = data.pur_SpecialDUP
-        運輸公司 = data.manufacturer?.manu_name
+        運輸公司 = data.manufacturer1?.manu_name
         科目 = data.subject?.s_name
         付款方式 = data.pur_PayType
     End Sub

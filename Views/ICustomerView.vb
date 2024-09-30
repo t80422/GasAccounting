@@ -6,4 +6,6 @@
     Sub PopulatePricePlanDropdown(data As List(Of SelectListItem))
 
     Sub ClearPricePlan()
+
+    Sub SetCompanyDropdown(data As List(Of SelectListItem))
 End Interface

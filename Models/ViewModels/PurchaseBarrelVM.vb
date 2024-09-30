@@ -13,8 +13,8 @@
     Public Property 單價_10 As Integer
     Public Property 數量_4 As Integer
     Public Property 單價_4 As Integer
-    Public Property 數量_15 As Integer
-    Public Property 單價_15 As Integer
+    Public Property 數量_18 As Integer
+    Public Property 單價_18 As Integer
     Public Property 數量_14 As Integer
     Public Property 單價_14 As Integer
     Public Property 數量_5 As Integer
@@ -37,8 +37,8 @@
         單價_10 = data.pb_UnitPrice_10
         數量_4 = data.pb_Qty_4
         單價_4 = data.pb_UnitPrice_4
-        數量_15 = data.pb_Qty_15
-        單價_15 = data.pb_UnitPrice_15
+        數量_18 = data.pb_Qty_18
+        單價_18 = data.pb_UnitPrice_18
         數量_14 = data.pb_Qty_14
         單價_14 = data.pb_UnitPrice_14
         數量_5 = data.pb_Qty_5

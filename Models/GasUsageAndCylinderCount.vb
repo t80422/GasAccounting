@@ -12,7 +12,7 @@ Public Class GasUsageAndCylinderCount
     Public Property 瓦斯瓶20Kg As Integer
     Public Property 瓦斯瓶16Kg As Integer
     Public Property 瓦斯瓶4Kg As Integer
-    Public Property 瓦斯瓶15Kg As Integer
+    Public Property 瓦斯瓶18Kg As Integer
     Public Property 瓦斯瓶14Kg As Integer
     Public Property 瓦斯瓶5Kg As Integer
     Public Property 瓦斯瓶2Kg As Integer

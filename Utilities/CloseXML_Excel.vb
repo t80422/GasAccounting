@@ -112,6 +112,17 @@ Public Class CloseXML_Excel
         Public Property VerticalText As Boolean = False
     End Class
 
+    ''' <summary>
+    ''' 在指定位置插入一列
+    ''' </summary>
+    ''' <param name="rowIndex">要插入新列的位置,從1開始</param>
+    Public Sub InsertRow(rowIndex As Integer)
+        Try
+            worksheet.Row(rowIndex).InsertRowsBelow(1)
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
     Private Function CmToPoints(cm As Double) As Double
         Return cm * 28.35
     End Function

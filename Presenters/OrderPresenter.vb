@@ -14,8 +14,9 @@ Public Class OrderPresenter
     Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _carRep As ICarRep
     Private ReadOnly _gbRep As IGasBarrelRep
-    Private ReadOnly _bpRep As IBasicPriceRep
-    Private ReadOnly _compRep As ICompanyRep
+    Private ReadOnly _ordRep As IOrderRep
+    Private ReadOnly _service As IBarrelMonthlyBalanceService
+    Private ReadOnly _priceCalSer As IPriceCalculationService
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -23,34 +24,19 @@ Public Class OrderPresenter
     Public CurrentCarIn As car
     Public CurrentCarOut As car
 
-
-
-
-    Private _service As ICusOrdByCarService
-    Private _ordRep As IOrderRep
-
-    Private gasReturn As New Dictionary(Of String, Integer) '儲存客戶訂單瓦斯退氣量
-
-    Public OrgCarStk As car
-    Public Property GasBarrel As New Dictionary(Of String, Object) '儲存客戶訂單瓦斯桶數量
-    Public Property InspectBarrel As New Dictionary(Of String, Object) '儲存客戶訂單檢驗瓶數量
-    Public Property StockValues As New Dictionary(Of String, Object) '儲存客戶瓦斯桶庫存
-    Public Property GasValues As New Dictionary(Of String, Integer) '用於存儲 txtGas_、txtGas_c_ 開頭的 TextBox 的初始值
-    Public Property DepositValues As New Dictionary(Of String, Object) '用於存儲TextBox.Tag = o_deposit開頭的初始值
-
-    Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, compRep As ICompanyRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, bpRep As IBasicPriceRep)
+    Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
+                   priceCalSer As IPriceCalculationService)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
         _ordRep = ordRep
-        _compRep = compRep
         _gbRep = gbRep
-        _bpRep = bpRep
+        _service = barMBService
+        _priceCalSer = priceCalSer
     End Sub
 
     Public Async Function InitializeAsync() As Task
         Try
-            Await LoadCompanyAsync()
             _view.ClearInput()
             Await LoadList()
             currentOrder = Nothing
@@ -58,8 +44,8 @@ Public Class OrderPresenter
             CurrentCarIn = Nothing
             CurrentCarOut = Nothing
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
+            MsgBox(ex.StackTrace)
         End Try
     End Function
 
@@ -123,8 +109,8 @@ Public Class OrderPresenter
 
     Public Async Sub LoadCarStk_Out(carId As Integer)
         Try
-            currentCarOut = Await _carRep.GetByIdAsync(carId)
-            _view.DisplayCarStk(currentCarOut, False)
+            CurrentCarOut = Await _carRep.GetByIdAsync(carId)
+            _view.DisplayCarStk(CurrentCarOut, False)
         Catch ex As Exception
             Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
@@ -195,16 +181,15 @@ Public Class OrderPresenter
 
             '計算瓦斯金額
             Dim insurance = If(Not currentCustomer.cus_IsInsurance, (totalGas + totalGasC) * currentCustomer.cus_InsurancePrice, 0)
-            Dim basePrice = _bpRep.GetByMonth(inputOrder.o_date)
             Dim cusGasUnitPrice As Single '客戶普氣單價
             Dim cusGasCUnitPrice As Single '客戶丙氣單價
 
             If inputOrder.o_delivery_type = "自運" Then
-                cusGasUnitPrice = basePrice.bp_normal_out + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_Gas, 0)
-                cusGasCUnitPrice = basePrice.bp_c_out + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_Gas_c, 0)
+                cusGasUnitPrice = _priceCalSer.CalculateUnitPrice(currentCustomer, inputOrder.o_date, False, True)
+                cusGasCUnitPrice = _priceCalSer.CalculateUnitPrice(currentCustomer, inputOrder.o_date, False, False)
             Else
-                cusGasUnitPrice = basePrice.bp_Delivery_Normal + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_GasDelivery, 0)
-                cusGasCUnitPrice = basePrice.bp_Delivery_C + If(currentCustomer.priceplan IsNot Nothing, currentCustomer.priceplan.pp_GasDelivery_c, 0)
+                cusGasUnitPrice = _priceCalSer.CalculateUnitPrice(currentCustomer, inputOrder.o_date, True, True)
+                cusGasCUnitPrice = _priceCalSer.CalculateUnitPrice(currentCustomer, inputOrder.o_date, True, False)
             End If
 
             Dim gasPrice = cusGasUnitPrice * totalGas '普氣金額
@@ -219,8 +204,8 @@ Public Class OrderPresenter
 
             _view.DisplayGasAndPrice(totalGas, totalGasC, amount, insurance)
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
+            MsgBox(ex.StackTrace)
         End Try
     End Sub
 
@@ -272,6 +257,7 @@ Public Class OrderPresenter
                     End If
                 End If
 
+                Await _service.UpdateOrAddAsync(orderInput.o_date)
                 Await _cusRep.SaveChangesAsync
 
                 transaction.Commit()
@@ -294,7 +280,7 @@ Public Class OrderPresenter
             currentOrder = order
             currentCustomer = order.customer
             CurrentCarIn = order.car
-            currentCarOut = order.car1
+            CurrentCarOut = order.car1
 
             Dim isIn = order.o_in_out = "進場單"
 
@@ -329,6 +315,8 @@ Public Class OrderPresenter
                 ' 刪除訂單
                 Await _ordRep.DeleteAsync(currentOrder.o_id)
 
+                Await _service.UpdateOrAddAsync(currentOrder.o_date)
+
                 ' 保存更改
                 Await _ordRep.SaveChangesAsync()
 
@@ -354,15 +342,6 @@ Public Class OrderPresenter
     Private Sub Validate(input As order)
         If input.o_cus_Id Is Nothing Then Throw New Exception("請輸入客戶")
     End Sub
-
-    Private Async Function LoadCompanyAsync() As Task
-        Try
-            Dim datas = Await _compRep.GetCompanyDropdownAsync
-            _view.SetCompanyDropdown(datas)
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
 
     Private Sub UpdateCustomerStock(order As order, customer As customer)
         Dim orderProps = order.GetType().GetProperties()
@@ -406,11 +385,6 @@ Public Class OrderPresenter
             End If
         Next
     End Sub
-
-
-
-
-
 
     Public Sub Print(orderId As Integer)
         Dim data = _ordRep.GetOrderVoucherData(orderId)
@@ -458,6 +432,38 @@ Public Class OrderPresenter
             printDocument.PrinterSettings = printerSettings
             printDocument.PrintController = New StandardPrintController()
             printDocument.Print()
+        End Using
+    End Sub
+
+    Public Async Sub Update()
+        Using transaction = _ordRep.BeginTransaction
+            Try
+                Dim orderInput = _view.GetUserInput()
+                Validate(orderInput)
+                Await _ordRep.UpdateAsync(currentOrder, orderInput)
+
+                _view.GetCusStkInput(currentCustomer)
+
+                If orderInput.o_delivery_type = "自運" Then
+                    If orderInput.o_in_out = "進場單" Then
+                        _view.GetCarStkInput(CurrentCarIn)
+                    Else
+                        _view.GetCarStkInput(CurrentCarOut)
+                    End If
+                End If
+
+                Await _service.UpdateOrAddAsync(orderInput.o_date)
+                Await _cusRep.SaveChangesAsync
+
+                transaction.Commit()
+                _view.ClearInput()
+                Await LoadList()
+                MsgBox("修改成功")
+            Catch ex As Exception
+                transaction.Rollback()
+                Console.WriteLine(ex.StackTrace)
+                MsgBox(ex.Message)
+            End Try
         End Using
     End Sub
 
@@ -512,7 +518,7 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{丙氣16kg}}", If(data.丙氣16kg = 0, "", data.丙氣16kg.ToString))
         htmlContent = htmlContent.Replace("{{丙氣10kg}}", If(data.丙氣10kg = 0, "", data.丙氣10kg.ToString))
         htmlContent = htmlContent.Replace("{{丙氣4kg}}", If(data.丙氣4kg = 0, "", data.丙氣4kg.ToString))
-        htmlContent = htmlContent.Replace("{{丙氣15kg}}", If(data.丙氣15kg = 0, "", data.丙氣15kg.ToString))
+        htmlContent = htmlContent.Replace("{{丙氣15kg}}", If(data.丙氣18kg = 0, "", data.丙氣18kg.ToString))
         htmlContent = htmlContent.Replace("{{丙氣2kg}}", If(data.丙氣2kg = 0, "", data.丙氣2kg.ToString))
         htmlContent = htmlContent.Replace("{{丙氣14kg}}", If(data.丙氣14kg = 0, "", data.丙氣14kg.ToString))
         htmlContent = htmlContent.Replace("{{丙氣5kg}}", If(data.丙氣5kg = 0, "", data.丙氣5kg.ToString))
@@ -523,7 +529,7 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{普氣16kg}}", If(data.普氣16kg = 0, "", data.普氣16kg.ToString))
         htmlContent = htmlContent.Replace("{{普氣10kg}}", If(data.普氣10kg = 0, "", data.普氣10kg.ToString))
         htmlContent = htmlContent.Replace("{{普氣4kg}}", If(data.普氣4kg = 0, "", data.普氣4kg.ToString))
-        htmlContent = htmlContent.Replace("{{普氣15kg}}", If(data.普氣15kg = 0, "", data.普氣15kg.ToString))
+        htmlContent = htmlContent.Replace("{{普氣15kg}}", If(data.普氣18kg = 0, "", data.普氣18kg.ToString))
         htmlContent = htmlContent.Replace("{{普氣2kg}}", If(data.普氣2kg = 0, "", data.普氣2kg.ToString))
         htmlContent = htmlContent.Replace("{{普氣14kg}}", If(data.普氣14kg = 0, "", data.普氣14kg.ToString))
         htmlContent = htmlContent.Replace("{{普氣5kg}}", If(data.普氣5kg = 0, "", data.普氣5kg.ToString))
@@ -534,7 +540,7 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{檢驗16kg}}", If(data.檢驗16kg = 0, "", data.檢驗16kg.ToString))
         htmlContent = htmlContent.Replace("{{檢驗10kg}}", If(data.檢驗10kg = 0, "", data.檢驗10kg.ToString))
         htmlContent = htmlContent.Replace("{{檢驗4kg}}", If(data.檢驗4kg = 0, "", data.檢驗4kg.ToString))
-        htmlContent = htmlContent.Replace("{{檢驗15kg}}", If(data.檢驗15kg = 0, "", data.檢驗15kg.ToString))
+        htmlContent = htmlContent.Replace("{{檢驗15kg}}", If(data.檢驗18kg = 0, "", data.檢驗18kg.ToString))
         htmlContent = htmlContent.Replace("{{檢驗2kg}}", If(data.檢驗2kg = 0, "", data.檢驗2kg.ToString))
         htmlContent = htmlContent.Replace("{{檢驗14kg}}", If(data.檢驗14kg = 0, "", data.檢驗14kg.ToString))
         htmlContent = htmlContent.Replace("{{檢驗5kg}}", If(data.檢驗5kg = 0, "", data.檢驗5kg.ToString))
@@ -544,7 +550,7 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{新瓶16kg}}", If(data.收空瓶16kg = 0, "", data.收空瓶16kg.ToString))
         htmlContent = htmlContent.Replace("{{新瓶10kg}}", If(data.收空瓶10kg = 0, "", data.收空瓶10kg.ToString))
         htmlContent = htmlContent.Replace("{{新瓶4kg}}", If(data.收空瓶4kg = 0, "", data.收空瓶4kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶15kg}}", If(data.收空瓶15kg = 0, "", data.收空瓶15kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶15kg}}", If(data.收空瓶18kg = 0, "", data.收空瓶18kg.ToString))
         htmlContent = htmlContent.Replace("{{新瓶2kg}}", If(data.收空瓶2kg = 0, "", data.收空瓶2kg.ToString))
         htmlContent = htmlContent.Replace("{{新瓶14kg}}", If(data.收空瓶14kg = 0, "", data.收空瓶14kg.ToString))
         htmlContent = htmlContent.Replace("{{新瓶5kg}}", If(data.收空瓶5kg = 0, "", data.收空瓶5kg.ToString))
@@ -554,7 +560,7 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{收空瓶16kg}}", If(data.收空瓶16kg = 0, "", data.收空瓶16kg.ToString))
         htmlContent = htmlContent.Replace("{{收空瓶10kg}}", If(data.收空瓶10kg = 0, "", data.收空瓶10kg.ToString))
         htmlContent = htmlContent.Replace("{{收空瓶4kg}}", If(data.收空瓶4kg = 0, "", data.收空瓶4kg.ToString))
-        htmlContent = htmlContent.Replace("{{收空瓶15kg}}", If(data.收空瓶15kg = 0, "", data.收空瓶15kg.ToString))
+        htmlContent = htmlContent.Replace("{{收空瓶15kg}}", If(data.收空瓶18kg = 0, "", data.收空瓶18kg.ToString))
         htmlContent = htmlContent.Replace("{{收空瓶2kg}}", If(data.收空瓶2kg = 0, "", data.收空瓶2kg.ToString))
         htmlContent = htmlContent.Replace("{{收空瓶14kg}}", If(data.收空瓶14kg = 0, "", data.收空瓶14kg.ToString))
         htmlContent = htmlContent.Replace("{{收空瓶5kg}}", If(data.收空瓶5kg = 0, "", data.收空瓶5kg.ToString))
@@ -564,7 +570,7 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{退空瓶16kg}}", If(data.退空瓶16kg = 0, "", data.退空瓶16kg.ToString))
         htmlContent = htmlContent.Replace("{{退空瓶10kg}}", If(data.退空瓶10kg = 0, "", data.退空瓶10kg.ToString))
         htmlContent = htmlContent.Replace("{{退空瓶4kg}}", If(data.退空瓶4kg = 0, "", data.退空瓶4kg.ToString))
-        htmlContent = htmlContent.Replace("{{退空瓶15kg}}", If(data.退空瓶15kg = 0, "", data.退空瓶15kg.ToString))
+        htmlContent = htmlContent.Replace("{{退空瓶15kg}}", If(data.退空瓶18kg = 0, "", data.退空瓶18kg.ToString))
         htmlContent = htmlContent.Replace("{{退空瓶2kg}}", If(data.退空瓶2kg = 0, "", data.退空瓶2kg.ToString))
         htmlContent = htmlContent.Replace("{{退空瓶14kg}}", If(data.退空瓶14kg = 0, "", data.退空瓶14kg.ToString))
         htmlContent = htmlContent.Replace("{{退空瓶5kg}}", If(data.退空瓶5kg = 0, "", data.退空瓶5kg.ToString))
@@ -574,7 +580,7 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{結存16kg}}", If(data.結存16kg = 0, "", data.結存16kg.ToString))
         htmlContent = htmlContent.Replace("{{結存10kg}}", If(data.結存10kg = 0, "", data.結存10kg.ToString))
         htmlContent = htmlContent.Replace("{{結存4kg}}", If(data.結存4kg = 0, "", data.結存4kg.ToString))
-        htmlContent = htmlContent.Replace("{{結存15kg}}", If(data.結存15kg = 0, "", data.結存15kg.ToString))
+        htmlContent = htmlContent.Replace("{{結存15kg}}", If(data.結存18kg = 0, "", data.結存18kg.ToString))
         htmlContent = htmlContent.Replace("{{結存2kg}}", If(data.結存2kg = 0, "", data.結存2kg.ToString))
         htmlContent = htmlContent.Replace("{{結存14kg}}", If(data.結存14kg = 0, "", data.結存14kg.ToString))
         htmlContent = htmlContent.Replace("{{結存5kg}}", If(data.結存5kg = 0, "", data.結存5kg.ToString))

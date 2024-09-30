@@ -10,7 +10,7 @@ Public Class GasBarrelRep
 
     Public Async Function GetIdByKgAsync(kg As String) As Task(Of Integer) Implements IGasBarrelRep.GetIdByKgAsync
         Try
-            Dim gb = Await _dbSet.FirstOrDefaultAsync(Function(x) x.gb_Name = kg + "Kg")
+            Dim gb = Await _dbSet.FirstOrDefaultAsync(Function(x) x.gb_Name = kg)
             Return gb.gb_Id
         Catch ex As Exception
             Throw

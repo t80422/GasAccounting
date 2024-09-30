@@ -17,11 +17,13 @@ Partial Public Class company
     Public Property comp_tax_id As String
     Public Property comp_memo As String
     Public Property comp_GasStock As Single
+    Public Property comp_Phone As String
 
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property customers As ICollection(Of customer) = New HashSet(Of customer)
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property stocks As ICollection(Of stock) = New HashSet(Of stock)
+    Public Overridable Property gas_monthly_balances As ICollection(Of gas_monthly_balances) = New HashSet(Of gas_monthly_balances)
     Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
-    Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
 
 End Class

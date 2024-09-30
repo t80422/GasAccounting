@@ -1,7 +1,6 @@
 ﻿Imports System.Data.Entity
 
 Public Class OrderRep
-    'Inherits Repository_old(Of order)
     Inherits Repository(Of order)
     Implements IOrderRep
 
@@ -54,6 +53,22 @@ Public Class OrderRep
             If criteria.CusId <> 0 Then query = query.Where(Function(x) x.car.c_cus_id = criteria.CusId)
 
             Return Await query.OrderByDescending(Function(x) x.o_date).ToListAsync
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetByMonth(month As Date) As List(Of order) Implements IOrderRep.GetByMonth
+        Try
+            Return _dbSet.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso x.o_date.Value.Month = month.Month).ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetByMonthAndCompany(month As Date, compId As Integer) As List(Of order) Implements IOrderRep.GetByMonthAndCompany
+        Try
+            Return _dbSet.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso x.o_date.Value.Month = month.Month AndAlso x.customer.cus_comp_Id = compId).ToList
         Catch ex As Exception
             Throw
         End Try

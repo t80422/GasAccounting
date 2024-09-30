@@ -20,7 +20,7 @@ Partial Public Class car
     Public Property c_deposit_16 As Integer
     Public Property c_deposit_10 As Integer
     Public Property c_deposit_4 As Integer
-    Public Property c_deposit_15 As Integer
+    Public Property c_deposit_18 As Integer
     Public Property c_deposit_14 As Integer
     Public Property c_deposit_5 As Integer
     Public Property c_deposit_2 As Integer

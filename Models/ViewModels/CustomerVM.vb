@@ -17,7 +17,7 @@
     Public Property 瓦斯桶16Kg As Integer
     Public Property 瓦斯桶10Kg As Integer
     Public Property 瓦斯桶4Kg As Integer
-    Public Property 瓦斯桶15Kg As Integer
+    Public Property 瓦斯桶18Kg As Integer
     Public Property 瓦斯桶14Kg As Integer
     Public Property 瓦斯桶5Kg As Integer
     Public Property 瓦斯桶2Kg As Integer
@@ -43,8 +43,8 @@
         瓦斯桶16Kg = data.cus_gas_16
         瓦斯桶10Kg = data.cus_gas_10
         瓦斯桶4Kg = data.cus_gas_4
-        瓦斯桶15Kg = data.cus_gas_15
-        瓦斯桶14Kg=data.cus_gas_14
+        瓦斯桶18Kg = data.cus_gas_18
+        瓦斯桶14Kg =data.cus_gas_14
         瓦斯桶5Kg = data.cus_gas_5
         瓦斯桶2Kg = data.cus_gas_2
         普氣存氣 = data.cus_GasStock

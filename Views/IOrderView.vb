@@ -28,19 +28,8 @@
 
     Sub GetCarStkInput(currentEntity As car)
 
-    Sub SetCompanyDropdown(data As List(Of SelectListItem))
-
     Sub SetCarDropdown(list As List(Of SelectListItem))
 
-    'Sub DisplayDetails(data As order)
-
-
-
-
-
-
     Function GetSearchCriteria() As OrderSearchCriteria
-
-
 
 End Interface

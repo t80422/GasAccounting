@@ -21,4 +21,12 @@ Public Class InvoiceRep
             Throw
         End Try
     End Function
+
+    Public Function GetByMonth(month As Date) As List(Of invoice) Implements IInvoiceRep.GetByMonth
+        Try
+            Return _dbSet.Where(Function(x) x.i_Month.Year = month.Year AndAlso x.i_Month.Month = month.Month).ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

@@ -23,10 +23,12 @@ Partial Public Class payment
     Public Property p_AccountMonth As Nullable(Of Date)
     Public Property p_comp_Id As Nullable(Of Integer)
     Public Property p_SubpoenaNo As Integer
+    Public Property p_IsCashing As Nullable(Of Boolean)
+    Public Property p_CashingDate As Nullable(Of Date)
 
+    Public Overridable Property bank As bank
     Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
-    Public Overridable Property bank As bank
     Public Overridable Property subject As subject
 
 End Class

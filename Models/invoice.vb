@@ -19,6 +19,7 @@ Partial Public Class invoice
     Public Property i_KG As Integer
     Public Property i_UnitPrice As Single
     Public Property i_Tax As Single
+    Public Property i_Type As String
 
     Public Overridable Property customer As customer
 

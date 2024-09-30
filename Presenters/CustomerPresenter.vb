@@ -2,11 +2,13 @@
     Private ReadOnly _view As ICustomerView
     Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _pricePlanRep As IPricePlanRep
+    Private ReadOnly _compRep As ICompanyRep
 
-    Public Sub New(view As ICustomerView, cusRep As ICustomerRep, pricePlanRep As IPricePlanRep)
+    Public Sub New(view As ICustomerView, cusRep As ICustomerRep, pricePlanRep As IPricePlanRep, compRep As ICompanyRep)
         _view = view
         _cusRep = cusRep
         _pricePlanRep = pricePlanRep
+        _compRep = compRep
     End Sub
 
     Public Async Sub InitializeAsync()
@@ -14,7 +16,8 @@
             _view.ClearInput()
 
             Await Task.WhenAll(
-                LoadPricePlanDropdownAsync
+                LoadPricePlanDropdownAsync,
+                LoadCompanyAsync
             )
 
             Await SearchAsync()
@@ -23,6 +26,15 @@
             MsgBox(ex.Message)
         End Try
     End Sub
+
+    Private Async Function LoadCompanyAsync() As Task
+        Try
+            Dim data = Await _compRep.GetCompanyDropdownAsync
+            _view.SetCompanyDropdown(data)
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 
     Private Async Function LoadPricePlanDropdownAsync() As Task
         Try

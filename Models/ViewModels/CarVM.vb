@@ -8,7 +8,7 @@
     Public Property 寄桶結存瓶_16KG As Integer
     Public Property 寄桶結存瓶_10KG As Integer
     Public Property 寄桶結存瓶_4KG As Integer
-    Public Property 寄桶結存瓶_15KG As Integer
+    Public Property 寄桶結存瓶_18KG As Integer
     Public Property 寄桶結存瓶_14KG As Integer
     Public Property 寄桶結存瓶_5KG As Integer
     Public Property 寄桶結存瓶_2KG As Integer
@@ -23,7 +23,7 @@
         寄桶結存瓶_16KG = entity.c_deposit_16
         寄桶結存瓶_10KG = entity.c_deposit_10
         寄桶結存瓶_4KG = entity.c_deposit_4
-        寄桶結存瓶_15KG = entity.c_deposit_15
+        寄桶結存瓶_18KG = entity.c_deposit_18
         寄桶結存瓶_14KG = entity.c_deposit_14
         寄桶結存瓶_5KG = entity.c_deposit_5
         寄桶結存瓶_2KG = entity.c_deposit_2

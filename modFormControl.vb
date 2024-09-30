@@ -349,7 +349,7 @@ Module modFormControl
 
     Public Sub SetComboBox(cmb As ComboBox, data As List(Of SelectListItem))
         With cmb
-            .DataSource = data
+            .DataSource = New List(Of SelectListItem)(data)
             .ValueMember = "Value"
             .DisplayMember = "Display"
             .SelectedIndex = -1

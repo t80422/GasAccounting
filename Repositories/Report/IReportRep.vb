@@ -47,12 +47,57 @@
     ''' </summary>
     ''' <param name="month"></param>
     ''' <returns></returns>
-    Function GetBankAccount(month As Date, bankId As Integer) As Report_BankAccount
+    Function GetBankAccount(month As Date, bankId As Integer) As BankAccount
 
     ''' <summary>
     ''' 取得客戶寄桶結存瓶
     ''' </summary>
     ''' <param name="cusId"></param>
     ''' <returns></returns>
-    Function GetCustomerGasCylinderInventory(cusId As Integer) As Report_CustomerGasCylinderInventory
+    Function GetCustomerGasCylinderInventory(cusId As Integer) As CustomerGasCylinderInventory
+
+    ''' <summary>
+    ''' 取得新桶明細
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetNewBarrelDetails(month As Date) As NewBarrelDetails
+
+    ''' <summary>
+    ''' 取得應收票據
+    ''' </summary>
+    ''' <param name="companyId"></param>
+    ''' <param name="bankId"></param>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetBillsReceivable(companyId As Integer, bankId As Integer, month As Date) As BillsReceivable
+
+    ''' <summary>
+    ''' 取得發票
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetInvoice(month As Date) As List(Of Report_Invoice)
+
+    ''' <summary>
+    ''' 取得月應收帳明細
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetMonthlyAccountsReceivable(month As Date) As MonthlyAccountsReceivable
+
+    ''' <summary>
+    ''' 取得進銷存明細
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <param name="compId"></param>
+    ''' <returns></returns>
+    Function GetInventoryTransactionDetail(year As Date, compId As Integer, empId As Integer) As InventoryTransactionDetail
+
+    ''' <summary>
+    ''' 取得應付票據
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetPayableCheck(month As Date) As List(Of PayableCheck)
 End Interface

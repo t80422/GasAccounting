@@ -13,14 +13,14 @@ Public Class OrderVoucherVM
     Public Property 丙氣16kg As Integer
     Public Property 丙氣10kg As Integer
     Public Property 丙氣4kg As Integer
-    Public Property 丙氣15kg As Integer
+    Public Property 丙氣18kg As Integer
     Public Property 丙氣2kg As Integer
     Public Property 丙氣14kg As Integer
     Public Property 丙氣5kg As Integer
 
     Public ReadOnly Property 丙氣kg數 As Integer
         Get
-            Return (丙氣10kg * 10) + (丙氣14kg * 14) + (丙氣15kg * 15) + (丙氣2kg * 2) + (丙氣16kg * 16) + (丙氣20kg * 20) + (丙氣4kg * 4) + (丙氣50kg * 50) + (丙氣5kg * 5)
+            Return (丙氣10kg * 10) + (丙氣14kg * 14) + (丙氣18kg * 18) + (丙氣2kg * 2) + (丙氣16kg * 16) + (丙氣20kg * 20) + (丙氣4kg * 4) + (丙氣50kg * 50) + (丙氣5kg * 5)
         End Get
     End Property
 
@@ -29,14 +29,14 @@ Public Class OrderVoucherVM
     Public Property 普氣16kg As Integer
     Public Property 普氣10kg As Integer
     Public Property 普氣4kg As Integer
-    Public Property 普氣15kg As Integer
+    Public Property 普氣18kg As Integer
     Public Property 普氣2kg As Integer
     Public Property 普氣14kg As Integer
     Public Property 普氣5kg As Integer
 
     Public ReadOnly Property 普氣kg數 As Integer
         Get
-            Return (普氣10kg * 10) + (普氣14kg * 14) + (普氣15kg * 15) + (普氣2kg * 2) + (普氣16kg * 16) + (普氣20kg * 20) + (普氣4kg * 4) + (普氣50kg * 50) + (普氣5kg * 5)
+            Return (普氣10kg * 10) + (普氣14kg * 14) + (普氣18kg * 18) + (普氣2kg * 2) + (普氣16kg * 16) + (普氣20kg * 20) + (普氣4kg * 4) + (普氣50kg * 50) + (普氣5kg * 5)
         End Get
     End Property
 
@@ -45,7 +45,7 @@ Public Class OrderVoucherVM
     Public Property 檢驗16kg As Integer
     Public Property 檢驗10kg As Integer
     Public Property 檢驗4kg As Integer
-    Public Property 檢驗15kg As Integer
+    Public Property 檢驗18kg As Integer
     Public Property 檢驗2kg As Integer
     Public Property 檢驗14kg As Integer
     Public Property 檢驗5kg As Integer
@@ -54,7 +54,7 @@ Public Class OrderVoucherVM
     Public Property 新瓶16kg As Integer
     Public Property 新瓶10kg As Integer
     Public Property 新瓶4kg As Integer
-    Public Property 新瓶15kg As Integer
+    Public Property 新瓶18kg As Integer
     Public Property 新瓶2kg As Integer
     Public Property 新瓶14kg As Integer
     Public Property 新瓶5kg As Integer
@@ -63,7 +63,7 @@ Public Class OrderVoucherVM
     Public Property 退空瓶16kg As Integer
     Public Property 退空瓶10kg As Integer
     Public Property 退空瓶4kg As Integer
-    Public Property 退空瓶15kg As Integer
+    Public Property 退空瓶18kg As Integer
     Public Property 退空瓶2kg As Integer
     Public Property 退空瓶14kg As Integer
     Public Property 退空瓶5kg As Integer
@@ -72,7 +72,7 @@ Public Class OrderVoucherVM
     Public Property 結存16kg As Integer
     Public Property 結存10kg As Integer
     Public Property 結存4kg As Integer
-    Public Property 結存15kg As Integer
+    Public Property 結存18kg As Integer
     Public Property 結存2kg As Integer
     Public Property 結存14kg As Integer
     Public Property 結存5kg As Integer
@@ -81,7 +81,7 @@ Public Class OrderVoucherVM
     Public Property 收空瓶16kg As Integer
     Public Property 收空瓶10kg As Integer
     Public Property 收空瓶4kg As Integer
-    Public Property 收空瓶15kg As Integer
+    Public Property 收空瓶18kg As Integer
     Public Property 收空瓶2kg As Integer
     Public Property 收空瓶14kg As Integer
     Public Property 收空瓶5kg As Integer
@@ -109,7 +109,7 @@ Public Class OrderVoucherVM
         提單編號 = order.o_id
         丙氣10kg = order.o_gas_c_10
         丙氣14kg = order.o_gas_c_14
-        丙氣15kg = order.o_gas_c_15
+        丙氣18kg = order.o_gas_c_18
         丙氣2kg = order.o_gas_c_2
         丙氣16kg = order.o_gas_c_16
         丙氣20kg = order.o_gas_c_20
@@ -118,7 +118,7 @@ Public Class OrderVoucherVM
         丙氣5kg = order.o_gas_c_5
         普氣10kg = order.o_gas_10
         普氣14kg = order.o_gas_14
-        普氣15kg = order.o_gas_15
+        普氣18kg = order.o_gas_18
         普氣2kg = order.o_gas_2
         普氣16kg = order.o_gas_16
         普氣20kg = order.o_gas_20
@@ -127,7 +127,7 @@ Public Class OrderVoucherVM
         普氣5kg = order.o_gas_5
         檢驗10kg = order.o_inspect_10
         檢驗14kg = order.o_inspect_14
-        檢驗15kg = order.o_inspect_15
+        檢驗18kg = order.o_inspect_18
         檢驗2kg = order.o_inspect_2
         檢驗16kg = order.o_inspect_16
         檢驗20kg = order.o_inspect_20
@@ -136,7 +136,7 @@ Public Class OrderVoucherVM
         檢驗5kg = order.o_inspect_5
         新瓶10kg = order.o_new_in_10
         新瓶14kg = order.o_new_in_14
-        新瓶15kg = order.o_new_in_15
+        新瓶18kg = order.o_new_in_18
         新瓶2kg = order.o_new_in_2
         新瓶16kg = order.o_new_in_16
         新瓶20kg = order.o_new_in_20
@@ -145,7 +145,7 @@ Public Class OrderVoucherVM
         新瓶5kg = order.o_new_in_5
         收空瓶10kg = order.o_empty_10
         收空瓶14kg = order.o_empty_14
-        收空瓶15kg = order.o_empty_15
+        收空瓶18kg = order.o_empty_18
         收空瓶16kg = order.o_empty_16
         收空瓶20kg = order.o_empty_20
         收空瓶2kg = order.o_empty_2
@@ -154,7 +154,7 @@ Public Class OrderVoucherVM
         收空瓶5kg = order.o_empty_5
         結存10kg = order.car.customer.cus_gas_10
         結存14kg = order.car.customer.cus_gas_14
-        結存15kg = order.car.customer.cus_gas_15
+        結存18kg = order.car.customer.cus_gas_18
         結存16kg = order.car.customer.cus_gas_16
         結存20kg = order.car.customer.cus_gas_20
         結存2kg = order.car.customer.cus_gas_2

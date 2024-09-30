@@ -2,11 +2,15 @@
     Private ReadOnly _view As IInvoiceView
     Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _invoiceRep As IInvoiceRep
+    Private ReadOnly _priceCalSer As IPriceCalculationService
+    Private ReadOnly _orderRep As IOrderRep
 
-    Public Sub New(view As IInvoiceView, cusRep As ICustomerRep, invoiceRep As IInvoiceRep)
+    Public Sub New(view As IInvoiceView, cusRep As ICustomerRep, invoiceRep As IInvoiceRep, priceCalSer As IPriceCalculationService, orderRep As IOrderRep)
         _view = view
         _cusRep = cusRep
         _invoiceRep = invoiceRep
+        _priceCalSer = priceCalSer
+        _orderRep = orderRep
     End Sub
 
     Public Sub GetCustomerByCusCode(cusCode As String)
@@ -35,12 +39,6 @@
             Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
         End Try
-    End Function
-
-    Public Function CalculateAmountAndTax(kg As Integer, unitPrice As Single) As (amount As Single, tax As Single)
-        Dim amount = kg * unitPrice
-        Dim tax = amount - amount / 1.05
-        Return (amount, tax)
     End Function
 
     Public Async Sub AddAsync()
@@ -94,11 +92,64 @@
         End Try
     End Sub
 
+    Public Async Sub CalculatePrices(type As String)
+        Try
+            Dim input = _view.GetUserInput
+            If String.IsNullOrEmpty(type) OrElse input.i_cus_Id = 0 Then Return
+
+            Dim cus = Await _cusRep.GetByIdAsync(input.i_cus_Id)
+            Dim unitPrice As Single
+
+            If type.Contains("廠運") Then
+                If type.Contains("普氣") Then
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, True, True)
+                Else
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, True, False)
+                End If
+            Else
+                If type.Contains("普氣") Then
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, False, True)
+                Else
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, False, False)
+                End If
+            End If
+
+            Dim amount = unitPrice * input.i_KG
+            Dim tax = amount - amount / 1.05
+
+            _view.DisplayPrices(unitPrice, tax.ToString("f2"), amount)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub LoadInvoiceInfo(cusId As Integer, d As Date)
+        Try
+            If cusId = 0 Then Return
+
+            Dim orders = _orderRep.GetByMonth(d).Where(Function(x) x.o_cus_Id = cusId)
+            Dim invoices = _invoiceRep.GetByMonth(d).Where(Function(x) x.i_cus_Id = cusId)
+            Dim result = New InvoiceInfoVM With {
+                .DeliNormTotal = orders.Where(Function(x) x.o_delivery_type = "廠運").Sum(Function(x) x.o_gas_total),
+                .DeliCTotal = orders.Where(Function(x) x.o_delivery_type = "廠運").Sum(Function(x) x.o_gas_c_total),
+                .PickNormTotal = orders.Where(Function(x) x.o_delivery_type = "自運").Sum(Function(x) x.o_gas_total),
+                .PickCTotal = orders.Where(Function(x) x.o_delivery_type = "自運").Sum(Function(x) x.o_gas_c_total),
+                .DeliNormInvoice = invoices.Where(Function(x) x.i_Type = "廠運普氣").Sum(Function(x) x.i_KG),
+                .DeliCInvoice = invoices.Where(Function(x) x.i_Type = "廠運丙氣").Sum(Function(x) x.i_KG),
+                .PickNormInvoice = invoices.Where(Function(x) x.i_Type = "廠運普氣").Sum(Function(x) x.i_KG),
+                .PickCInvoice = invoices.Where(Function(x) x.i_Type = "廠運丙氣").Sum(Function(x) x.i_KG)
+            }
+
+            _view.DisplayInvoiceInfo(result)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
     Private Sub Validate(data As invoice)
-        If data.i_Amount = 0 Then Throw New Exception("請填寫金額")
         If data.i_cus_Id = 0 Then Throw New Exception("請選擇客戶")
+        If String.IsNullOrEmpty(data.i_Type) Then Throw New Exception("請選擇種類")
         If data.i_KG = 0 Then Throw New Exception("請填寫KG")
         If String.IsNullOrEmpty(data.i_Number) Then Throw New Exception("請填寫發票號碼")
-        If data.i_UnitPrice = 0 Then Throw New Exception("請填寫單價")
     End Sub
 End Class

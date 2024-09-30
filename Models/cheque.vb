@@ -17,10 +17,14 @@ Partial Public Class cheque
     Public Property che_Amount As Integer
     Public Property che_CashingDate As Nullable(Of Date)
     Public Property che_Memo As String
-    Public Property che_Type As String
     Public Property che_IssuerName As String
     Public Property che_ReceivedDate As Nullable(Of Date)
     Public Property che_AccountNumber As String
     Public Property chu_State As String
+    Public Property che_AbleCashingDate As Nullable(Of Date)
+    Public Property che_PayBankName As String
+    Public Property che_col_Id As Nullable(Of Integer)
+
+    Public Overridable Property collection As collection
 
 End Class

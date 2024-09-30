@@ -10,7 +10,7 @@ Public Class PurchaseRep
 
     Public Async Function SearchPurchasesAsync(conditions As PurchaseCondition) As Task(Of IEnumerable(Of purchase)) Implements IPurchaseRep.SearchPurchasesAsync
         Try
-            Dim query = _dbSet.AsQueryable
+            Dim query = _dbSet.AsNoTracking.AsQueryable
 
             If conditions.CompanyId <> 0 Then query = query.Where(Function(x) x.pur_comp_id = conditions.CompanyId)
             If conditions.ManufacturerId <> 0 Then query = query.Where(Function(x) x.pur_manu_id = conditions.ManufacturerId)

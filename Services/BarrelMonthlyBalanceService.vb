@@ -4,11 +4,13 @@
     Private ReadOnly _barMBRep As IBarrelMonthlyBalancesRep
     Private ReadOnly _gbRep As IGasBarrelRep
     Private ReadOnly _pbRep As IPurchaseBarrelRep
+    Private ReadOnly _orderRep As IOrderRep
 
-    Public Sub New(barMBRep As IBarrelMonthlyBalancesRep, gbRep As IGasBarrelRep, pbRep As IPurchaseBarrelRep)
+    Public Sub New(barMBRep As IBarrelMonthlyBalancesRep, gbRep As IGasBarrelRep, pbRep As IPurchaseBarrelRep, orderRep As IOrderRep)
         _barMBRep = barMBRep
         _gbRep = gbRep
         _pbRep = pbRep
+        _orderRep = orderRep
     End Sub
 
     Public Async Function UpdateOrAddAsync(month As Date) As Task Implements IBarrelMonthlyBalanceService.UpdateOrAddAsync
@@ -18,7 +20,8 @@
             '取得當月所有新瓶採購資料
             Dim purDatas = Await _pbRep.GetByMonthAsync(thisMonth)
 
-            'todo:取得當月所有瓦斯瓶銷售資料
+            '取得當月所有瓦斯瓶銷售資料
+            Dim orderData = _orderRep.GetByMonth(thisMonth)
 
             '獲取所有瓦斯瓶類型
             Dim allBarrelTypes = Await _gbRep.GetAllAsync
@@ -28,7 +31,7 @@
 
                 '計算當月該類型瓦斯桶總採購量
                 Dim kg = barrelType.gb_Name.Replace("Kg", "")
-                Dim barrelTotals = CalculateTotalPurchase(purDatas, kg)
+                Dim barrelTotals = CalculateTotalPurchase(purDatas, kg) - CalculateTotalOrder(orderData, kg)
 
                 '取得上期結餘
                 Dim lastClosingBalance = Await GetLastClosingBalance(thisMonth, gbId)
@@ -95,5 +98,10 @@
     Private Function CalculateTotalPurchase(purchases As IEnumerable(Of purchase_barrel), kg As Integer) As Integer
         Dim propertyName = $"pb_Qty_{kg}"
         Return purchases.Sum(Function(x) x.GetType.GetProperty(propertyName).GetValue(x, Nothing))
+    End Function
+
+    Private Function CalculateTotalOrder(order As IEnumerable(Of order), kg As Integer) As Integer
+        Dim propertyName = $"o_new_in_{kg}"
+        Return order.Sum(Function(x) x.GetType.GetProperty(propertyName).GetValue(x, Nothing))
     End Function
 End Class

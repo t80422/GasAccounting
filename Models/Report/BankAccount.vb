@@ -1,4 +1,4 @@
-﻿Public Class Report_BankAccount
+﻿Public Class BankAccount
     Public Property 年月 As String
     Public Property List As List(Of BankAccountList)
 End Class

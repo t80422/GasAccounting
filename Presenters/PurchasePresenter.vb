@@ -7,13 +7,15 @@ Public Class PurchasePresenter
     Private ReadOnly _compRep As ICompanyRep
     Private ReadOnly _manuRep As IManufacturerRep
     Private ReadOnly _subRep As ISubjectRep
+    Private ReadOnly _gmbSer As IGasMonthlyBalanceService
 
-    Public Sub New(view As IPurchaseView, purRep As IPurchaseRep, compRep As ICompanyRep, manuRep As IManufacturerRep, subRep As ISubjectRep)
+    Public Sub New(view As IPurchaseView, purRep As IPurchaseRep, compRep As ICompanyRep, manuRep As IManufacturerRep, subRep As ISubjectRep, gmbSer As IGasMonthlyBalanceService)
         _view = view
         _purRep = purRep
         _compRep = compRep
         _manuRep = manuRep
         _subRep = subRep
+        _gmbSer = gmbSer
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -96,32 +98,46 @@ Public Class PurchasePresenter
 
     Public Async Function AddAsync() As Task
         _view.GetUserInput()
-        Try
-            Dim purchase = _view.CurrentPurchase
-            Validate(purchase)
-            Await _purRep.AddAsync(purchase)
-            Await _purRep.SaveChangesAsync()
-            _view.ClearInput()
-            Await LoadListAsync()
-            MsgBox("新增成功")
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+        Using transaction = _purRep.BeginTransaction
+            Try
+                Dim purchase = _view.CurrentPurchase
+                Validate(purchase)
+
+                Await _purRep.AddAsync(purchase)
+                Await _purRep.SaveChangesAsync()
+
+                _gmbSer.UpdateOrAdd(purchase.pur_date, purchase.pur_comp_id)
+
+                transaction.Commit()
+                _view.ClearInput()
+                Await LoadListAsync()
+                MsgBox("新增成功")
+            Catch ex As Exception
+                transaction.Rollback()
+                MsgBox(ex.Message)
+            End Try
+        End Using
     End Function
 
     Public Async Function EditAsync() As Task
         _view.GetUserInput()
+        Using transaction = _purRep.BeginTransaction
+            Try
+                Dim purchase = _view.CurrentPurchase
+                Validate(purchase)
+                Await _purRep.SaveChangesAsync
 
-        Try
-            Dim purchase = _view.CurrentPurchase
-            Validate(purchase)
-            Await _purRep.SaveChangesAsync
-            _view.ClearInput()
-            Await LoadListAsync()
-            MsgBox("修改成功")
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+                _gmbSer.UpdateOrAdd(purchase.pur_date, purchase.pur_comp_id)
+
+                transaction.Commit()
+                _view.ClearInput()
+                Await LoadListAsync()
+                MsgBox("修改成功")
+            Catch ex As Exception
+                transaction.Rollback()
+                MsgBox(ex.Message)
+            End Try
+        End Using
     End Function
 
     Public Async Function DeleteAsync(id As Integer) As Task

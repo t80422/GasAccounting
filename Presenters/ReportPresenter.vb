@@ -5,11 +5,13 @@ Public Class ReportPresenter
     Private _rep As IReportRep
     Private _manuRep As IManufacturerService = New ManufacturerService
     Private ReadOnly _bankRep As IBankRep
+    Private ReadOnly _compRep As ICompanyRep
 
-    Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep)
+    Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep)
         _view = view
         _rep = reportRep
         _bankRep = bankRep
+        _compRep = compRep
     End Sub
 
     ''' <summary>
@@ -103,8 +105,8 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 9, If(datas(i).丙氣10Kg <> Nothing, datas(i).丙氣10Kg.ToString("#,##"), ""))
                         .WriteToCell(rowIndex, 10, If(datas(i).普氣4Kg <> Nothing, datas(i).普氣4Kg.ToString("#,##"), ""))
                         .WriteToCell(rowIndex, 11, If(datas(i).丙氣4Kg <> Nothing, datas(i).丙氣4Kg.ToString("#,##"), ""))
-                        .WriteToCell(rowIndex, 12, If(datas(i).普氣15Kg <> Nothing, datas(i).普氣15Kg.ToString("#,##"), ""))
-                        .WriteToCell(rowIndex, 13, If(datas(i).丙氣15Kg <> Nothing, datas(i).丙氣15Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 12, If(datas(i).普氣18Kg <> Nothing, datas(i).普氣18Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 13, If(datas(i).丙氣18Kg <> Nothing, datas(i).丙氣18Kg.ToString("#,##"), ""))
                         .WriteToCell(rowIndex, 14, If(datas(i).普氣14Kg <> Nothing, datas(i).普氣14Kg.ToString("#,##"), ""))
                         .WriteToCell(rowIndex, 15, If(datas(i).丙氣14Kg <> Nothing, datas(i).丙氣14Kg.ToString("#,##"), ""))
                         .WriteToCell(rowIndex, 16, If(datas(i).普氣5Kg <> Nothing, datas(i).普氣5Kg.ToString("#,##"), ""))
@@ -288,7 +290,7 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 8, datas(i).瓦斯瓶20Kg)
                         .WriteToCell(rowIndex, 9, datas(i).瓦斯瓶16Kg)
                         .WriteToCell(rowIndex, 10, datas(i).瓦斯瓶4Kg)
-                        .WriteToCell(rowIndex, 11, datas(i).瓦斯瓶15Kg)
+                        .WriteToCell(rowIndex, 11, datas(i).瓦斯瓶18Kg)
                         .WriteToCell(rowIndex, 12, datas(i).瓦斯瓶14Kg)
                         .WriteToCell(rowIndex, 13, datas(i).瓦斯瓶5Kg)
                         .WriteToCell(rowIndex, 14, datas(i).瓦斯瓶2Kg)
@@ -415,7 +417,7 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 5, bankAccount.Barrel_16KG)
                         .WriteToCell(rowIndex, 6, bankAccount.Barrel_10KG)
                         .WriteToCell(rowIndex, 7, bankAccount.Barrel_4KG)
-                        .WriteToCell(rowIndex, 8, bankAccount.Barrel_15KG)
+                        .WriteToCell(rowIndex, 8, bankAccount.Barrel_18KG)
                         .WriteToCell(rowIndex, 9, bankAccount.Barrel_14KG)
                         .WriteToCell(rowIndex, 10, bankAccount.Barrel_5KG)
                         .WriteToCell(rowIndex, 11, bankAccount.Barrel_2KG)
@@ -432,8 +434,510 @@ Public Class ReportPresenter
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 產生新桶明細
+    ''' </summary>
+    ''' <param name="month"></param>
+    Public Sub GenerateNewBarrelDetails(month As Date)
+        Try
+            Dim formatMonth = New Date(month.Year, month.Month, 1)
+
+            '取得資料
+            Dim data = _rep.GetNewBarrelDetails(formatMonth)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "新桶明細範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    Dim total50 = data.Last50
+                    Dim total20 = data.Last20
+                    Dim total16 = data.Last16
+                    Dim total10 = data.Last10
+                    Dim total4 = data.Last4
+
+                    '上期結餘
+                    .WriteToCell(3, 12, total50)
+                    .WriteToCell(3, 13, total20)
+                    .WriteToCell(3, 14, total16)
+                    .WriteToCell(3, 15, total10)
+                    .WriteToCell(3, 16, total4)
+                    .InsertRow(3)
+
+                    '明細
+                    Dim rowIndex = 4
+                    Dim payAmount50 As Integer
+                    Dim payAmount20 As Integer
+                    Dim payAmount16 As Integer
+                    Dim payAmount10 As Integer
+                    Dim payAmount4 As Integer
+                    Dim incomingAmount50 As Integer
+                    Dim incomingAmount20 As Integer
+                    Dim incomingAmount16 As Integer
+                    Dim incomingAmount10 As Integer
+                    Dim incomingAmount4 As Integer
+
+                    For Each detail In data.List
+                        Dim in50 = If(detail.In50.HasValue, detail.In50, 0)
+                        Dim in20 = If(detail.In20.HasValue, detail.In20, 0)
+                        Dim in16 = If(detail.In16.HasValue, detail.In16, 0)
+                        Dim in10 = If(detail.In10.HasValue, detail.In10, 0)
+                        Dim in4 = If(detail.In4.HasValue, detail.In4, 0)
+                        Dim out50 = If(detail.Out50.HasValue, detail.Out50, 0)
+                        Dim out20 = If(detail.Out20.HasValue, detail.Out20, 0)
+                        Dim out16 = If(detail.Out16.HasValue, detail.Out16, 0)
+                        Dim out10 = If(detail.Out10.HasValue, detail.Out10, 0)
+                        Dim out4 = If(detail.Out4.HasValue, detail.Out4, 0)
+
+                        .WriteToCell(rowIndex, 1, detail.Day)
+
+                        '收入
+                        .WriteToCell(rowIndex, 2, in50)
+                        .WriteToCell(rowIndex, 3, in20)
+                        .WriteToCell(rowIndex, 4, in16)
+                        .WriteToCell(rowIndex, 5, in10)
+                        .WriteToCell(rowIndex, 6, in4)
+
+                        '支出
+                        .WriteToCell(rowIndex, 7, out50)
+                        .WriteToCell(rowIndex, 8, out20)
+                        .WriteToCell(rowIndex, 9, out16)
+                        .WriteToCell(rowIndex, 10, out10)
+                        .WriteToCell(rowIndex, 11, out4)
+
+                        '結餘
+                        total50 += in50 - out50
+                        total20 += in20 - out20
+                        total16 += in16 - out16
+                        total10 += in10 - out10
+                        total4 += in4 - out4
+
+                        .WriteToCell(rowIndex, 12, in50 - out50)
+                        .WriteToCell(rowIndex, 13, in20 - out20)
+                        .WriteToCell(rowIndex, 14, in16 - out16)
+                        .WriteToCell(rowIndex, 15, in10 - out10)
+                        .WriteToCell(rowIndex, 16, in4 - out4)
+
+                        .WriteToCell(rowIndex, 17, detail.Memo)
+                        .WriteToCell(rowIndex, 18, detail.PayDate)
+
+                        If detail.In50 <> 0 Then
+                            .WriteToCell(rowIndex, 19, data.PayUnitPrice50)
+
+                            Dim amount = data.PayUnitPrice50 * in50
+                            .WriteToCell(rowIndex, 20, amount)
+                            payAmount50 += amount
+                        End If
+
+                        If detail.In20 <> 0 Then
+                            .WriteToCell(rowIndex, 21, data.PayUnitPrice20)
+
+                            Dim amount = data.PayUnitPrice20 * in20
+                            .WriteToCell(rowIndex, 22, amount)
+                            payAmount20 += amount
+                        End If
+
+                        If detail.In16 <> 0 Then
+                            .WriteToCell(rowIndex, 23, data.PayUnitPrice16)
+
+                            Dim amount = data.PayUnitPrice16 * in16
+                            .WriteToCell(rowIndex, 24, amount)
+                            payAmount16 += amount
+                        End If
+
+                        If detail.In10 <> 0 Then
+                            .WriteToCell(rowIndex, 25, data.PayUnitPrice10)
+
+                            Dim amount = data.PayUnitPrice10 * in10
+                            .WriteToCell(rowIndex, 26, amount)
+                            payAmount10 += amount
+                        End If
+
+                        If detail.In4 <> 0 Then
+                            .WriteToCell(rowIndex, 27, data.PayUnitPrice4)
+
+                            Dim amount = data.PayUnitPrice4 * in4
+                            .WriteToCell(rowIndex, 28, amount)
+                            payAmount4 += amount
+                        End If
+
+                        If detail.Out50 <> 0 Then
+                            .WriteToCell(rowIndex, 29, data.IncomeUnitPrice50)
+
+                            Dim amount = data.IncomeUnitPrice50 * out50
+                            .WriteToCell(rowIndex, 30, amount)
+                            incomingAmount50 += amount
+                        End If
+
+                        If detail.Out20 <> 0 Then
+                            .WriteToCell(rowIndex, 31, data.IncomeUnitPrice20)
+
+                            Dim amount = data.IncomeUnitPrice20 * out20
+                            .WriteToCell(rowIndex, 32, amount)
+                            incomingAmount20 += amount
+                        End If
+
+                        If detail.Out16 <> 0 Then
+                            .WriteToCell(rowIndex, 33, data.IncomeUnitPrice16)
+
+                            Dim amount = data.IncomeUnitPrice16 * out16
+                            .WriteToCell(rowIndex, 34, amount)
+                            incomingAmount16 += amount
+                        End If
+
+                        If detail.Out10 <> 0 Then
+                            .WriteToCell(rowIndex, 35, data.IncomeUnitPrice10)
+
+                            Dim amount = data.IncomeUnitPrice10 * out10
+                            .WriteToCell(rowIndex, 36, amount)
+                            incomingAmount10 += amount
+                        End If
+
+                        If detail.Out4 <> 0 Then
+                            .WriteToCell(rowIndex, 37, data.IncomeUnitPrice4)
+
+                            Dim amount = data.IncomeUnitPrice4 * out4
+                            .WriteToCell(rowIndex, 38, amount)
+                            incomingAmount4 += amount
+                        End If
+
+                        .InsertRow(rowIndex)
+                        rowIndex += 1
+                    Next
+
+                    '總計
+                    .WriteToCell(rowIndex, 1, "總計")
+                    .WriteToCell(rowIndex, 2, data.List.Sum(Function(x) x.In50))
+                    .WriteToCell(rowIndex, 3, data.List.Sum(Function(x) x.In20))
+                    .WriteToCell(rowIndex, 4, data.List.Sum(Function(x) x.In16))
+                    .WriteToCell(rowIndex, 5, data.List.Sum(Function(x) x.In10))
+                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.In4))
+                    .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Out50))
+                    .WriteToCell(rowIndex, 8, data.List.Sum(Function(x) x.Out20))
+                    .WriteToCell(rowIndex, 9, data.List.Sum(Function(x) x.Out16))
+                    .WriteToCell(rowIndex, 10, data.List.Sum(Function(x) x.Out10))
+                    .WriteToCell(rowIndex, 11, data.List.Sum(Function(x) x.Out4))
+
+                    .WriteToCell(rowIndex, 12, total50)
+                    .WriteToCell(rowIndex, 13, total20)
+                    .WriteToCell(rowIndex, 14, total16)
+                    .WriteToCell(rowIndex, 15, total10)
+                    .WriteToCell(rowIndex, 16, total4)
+
+                    .WriteToCell(rowIndex, 20, payAmount50)
+                    .WriteToCell(rowIndex, 22, payAmount20)
+                    .WriteToCell(rowIndex, 24, payAmount16)
+                    .WriteToCell(rowIndex, 26, payAmount10)
+                    .WriteToCell(rowIndex, 28, payAmount4)
+
+                    .WriteToCell(rowIndex, 30, incomingAmount50)
+                    .WriteToCell(rowIndex, 32, incomingAmount20)
+                    .WriteToCell(rowIndex, 34, incomingAmount16)
+                    .WriteToCell(rowIndex, 36, incomingAmount10)
+                    .WriteToCell(rowIndex, 38, incomingAmount4)
+
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "新桶明細.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生應收票據
+    ''' </summary>
+    ''' <param name="companyId"></param>
+    ''' <param name="month"></param>
+    Public Sub GenerateBillsReceivable(companyId As Integer, bankId As Integer, month As Date)
+        Try
+            Dim formatDate = New Date(month.Year, month.Month, 1)
+
+            '取得資料
+            Dim data = _rep.GetBillsReceivable(companyId, bankId, formatDate)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "應收票據範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    .WriteToCell(1, 1, data.CompanyName)
+                    .WriteToCell(2, 2, data.BankAccount)
+
+                    Dim rowIndex = 4
+
+                    For Each item In data.List
+
+                        .WriteToCell(rowIndex, 1, rowIndex - 3)
+                        .WriteToCell(rowIndex, 2, item.ReceiveDate.ToString("yyyy/MM/dd"))
+                        .WriteToCell(rowIndex, 3, item.CusCode)
+                        .WriteToCell(rowIndex, 4, item.ChequeNumber)
+                        .WriteToCell(rowIndex, 5, item.IssuerName)
+                        .WriteToCell(rowIndex, 6, item.PayBankName)
+                        .WriteToCell(rowIndex, 7, item.AvailableDate.ToString("yyyy/MM/dd"))
+                        .WriteToCell(rowIndex, 8, item.Amount)
+                        .WriteToCell(rowIndex, 9, If(item.CollectDate.HasValue, item.CollectDate.ToString("yyyy/MM/dd"), ""))
+                        .WriteToCell(rowIndex, 11, item.Memo)
+
+                        .InsertRow(rowIndex)
+                        rowIndex += 1
+                    Next
+
+                    Dim total = data.List.Sum(Function(x) x.Amount)
+                    .WriteToCell(rowIndex, 7, "總計")
+                    .WriteToCell(rowIndex, 8, total)
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "應收票據.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生發票
+    ''' </summary>
+    ''' <param name="month"></param>
+    Public Sub GenerateInvoice(month As Date)
+        Try
+            '取得資料
+            Dim data = _rep.GetInvoice(month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "發票範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    Dim rowIndex = 2
+                    Dim totalNotInoice As Integer
+
+                    For Each item In data
+
+                        .WriteToCell(rowIndex, 1, item.CusCode)
+                        .WriteToCell(rowIndex, 2, item.CusName)
+                        .WriteToCell(rowIndex, 3, item.TaxId)
+                        .WriteToCell(rowIndex, 4, item.Amount)
+                        .WriteToCell(rowIndex, 5, item.IsInvoice)
+                        Dim notInvoice = item.Amount - item.IsInvoice
+                        .WriteToCell(rowIndex, 6, item.Amount - item.IsInvoice)
+
+                        totalNotInoice += notInvoice
+                        .InsertRow(rowIndex)
+                        rowIndex += 1
+                    Next
+
+                    .WriteToCell(rowIndex, 3, "總計")
+                    .WriteToCell(rowIndex, 4, data.Sum(Function(x) x.Amount))
+                    .WriteToCell(rowIndex, 5, data.Sum(Function(x) x.IsInvoice))
+                    .WriteToCell(rowIndex, 6, totalNotInoice)
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "發票.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生月應收帳明細
+    ''' </summary>
+    ''' <param name="month"></param>
+    Public Sub GenerateMonthlyAccountsReceivable(month As Date)
+        Try
+            '取得資料
+            Dim data = _rep.GetMonthlyAccountsReceivable(month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "月應收帳明細範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    .WriteToCell(1, 1, data.Month)
+
+                    Dim rowIndex = 3
+                    Dim totalOver As Single
+                    Dim totalNotCollect As Single
+
+                    For Each item In data.List
+
+                        .WriteToCell(rowIndex, 1, item.CusCode)
+                        .WriteToCell(rowIndex, 2, item.AccountsReceivable)
+                        .WriteToCell(rowIndex, 3, item.AccountsReceived)
+
+                        If item.AccountsReceivable < item.AccountsReceived Then
+                            Dim over = item.AccountsReceived - item.AccountsReceivable
+                            totalOver += over
+                            .WriteToCell(rowIndex, 4, over)
+                            .WriteToCell(rowIndex, 5, 0)
+                        Else
+                            Dim notCollect = item.AccountsReceivable - item.AccountsReceived
+                            totalNotCollect += notCollect
+                            .WriteToCell(rowIndex, 4, 0)
+                            .WriteToCell(rowIndex, 5, notCollect)
+                        End If
+
+                        .WriteToCell(rowIndex, 6, item.Discount)
+
+                        .InsertRow(rowIndex)
+                        rowIndex += 1
+                    Next
+
+                    .WriteToCell(rowIndex, 1, "合計")
+                    .WriteToCell(rowIndex, 2, data.List.Sum(Function(x) x.AccountsReceivable))
+                    .WriteToCell(rowIndex, 3, data.List.Sum(Function(x) x.AccountsReceived))
+                    .WriteToCell(rowIndex, 4, totalOver)
+                    .WriteToCell(rowIndex, 5, totalNotCollect)
+                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Discount))
+
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "月應收帳明細.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生進銷存明細
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <param name="compId"></param>
+    Public Sub GenerateInventoryTransactionDetail(year As Date, compId As Integer, empId As Integer)
+        Try
+            '取得資料
+            Dim data = _rep.GetInventoryTransactionDetail(year, compId, empId)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "進銷存明細表範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    .WriteToCell(2, 1, "公司名稱:" + data.Company)
+                    .WriteToCell(2, 3, "填表人:" + data.OperatorName)
+                    .WriteToCell(2, 12, "連絡電話:" + data.Phone)
+                    .WriteToCell(3, 1, data.Year)
+
+                    '取得所有廠商
+                    Dim allVendors = data.List.SelectMany(Function(x) x.PurchasesByVendor.Keys).
+                                               Distinct.
+                                               OrderBy(Function(x) x).
+                                               ToList
+
+                    '填寫廠商名稱
+                    For i As Integer = 0 To allVendors.Count - 1
+                        .WriteToCell(6 + i, 2, allVendors(i))
+                    Next
+
+                    '填寫每月數據
+                    For Each monthData In data.List
+                        Dim colIndex = monthData.Month + 2
+
+                        '期初存量
+                        .WriteToCell(5, colIndex, monthData.OpeningBalance)
+
+                        '各廠商的進貨量
+                        For i As Integer = 0 To allVendors.Count - 1
+                            Dim vendor = allVendors(i)
+
+                            If monthData.PurchasesByVendor.ContainsKey(vendor) Then .WriteToCell(6 + i, colIndex, monthData.PurchasesByVendor(vendor))
+                        Next
+
+                        '進貨總數
+                        Dim totalMonthlyPurchase = monthData.PurchasesByVendor.Sum(Function(x) x.Value)
+                        .WriteToCell(19, colIndex, totalMonthlyPurchase)
+
+                        '銷售總數
+                        .WriteToCell(20, colIndex, monthData.Sale)
+
+                        '期末存量
+                        .WriteToCell(21, colIndex, monthData.CloseingBalance)
+
+                        '差異
+                        .WriteToCell(22, colIndex, monthData.OpeningBalance + totalMonthlyPurchase - monthData.Sale - monthData.CloseingBalance)
+                    Next
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "進銷存明細表.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub GeneratePayableCheck(month As Date)
+        Try
+            '取得資料
+            Dim data = _rep.GetPayableCheck(month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "應付票據範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    For i As Integer = 0 To data.Count - 1
+                        .WriteToCell(i + 3, 1, data(i).Day)
+                        .WriteToCell(i + 3, 2, data(i).ChequeNumber)
+                        .WriteToCell(i + 3, 3, data(i).Amount)
+                        .WriteToCell(i + 3, 4, data(i).CashingDate)
+                        .WriteToCell(i + 3, 5, data(i).Memo)
+                        .WriteToCell(i + 3, 6, data(i).IsCashing)
+                    Next
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "應付票據.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
     Public Async Sub LoadBankAccount()
-        Dim items = Await _bankRep.GetBankDropdownAsync
-        _view.SetBankAccountCmb(items)
+        Try
+            Dim items = Await _bankRep.GetBankDropdownAsync
+            _view.SetBankAccountCmb(items)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub LoadCompany()
+        Try
+            Dim items = Await _compRep.GetCompanyDropdownAsync
+            _view.SetCompanyCmb(items)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 End Class

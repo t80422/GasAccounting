@@ -8,7 +8,6 @@
     Public Property 狀態 As String
     Public Property 兌現日期 As Date?
     Public Property 代收日期 As Date?
-    Public Property 借貸 As String
 
     Public Sub New()
 
@@ -24,6 +23,5 @@
         狀態 = data.chu_State
         兌現日期 = data.che_CashingDate
         代收日期 = data.che_CollectionDate
-        借貸 = data.che_Type
     End Sub
 End Class

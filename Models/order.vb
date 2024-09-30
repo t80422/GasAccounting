@@ -24,7 +24,7 @@ Partial Public Class order
     Public Property o_gas_16 As Integer
     Public Property o_gas_10 As Integer
     Public Property o_gas_4 As Integer
-    Public Property o_gas_15 As Integer
+    Public Property o_gas_18 As Integer
     Public Property o_gas_14 As Integer
     Public Property o_gas_5 As Integer
     Public Property o_gas_2 As Integer
@@ -33,7 +33,7 @@ Partial Public Class order
     Public Property o_gas_c_16 As Integer
     Public Property o_gas_c_10 As Integer
     Public Property o_gas_c_4 As Integer
-    Public Property o_gas_c_15 As Integer
+    Public Property o_gas_c_18 As Integer
     Public Property o_gas_c_14 As Integer
     Public Property o_gas_c_5 As Integer
     Public Property o_gas_c_2 As Integer
@@ -42,7 +42,7 @@ Partial Public Class order
     Public Property o_empty_16 As Integer
     Public Property o_empty_10 As Integer
     Public Property o_empty_4 As Integer
-    Public Property o_empty_15 As Integer
+    Public Property o_empty_18 As Integer
     Public Property o_empty_14 As Integer
     Public Property o_empty_5 As Integer
     Public Property o_empty_2 As Integer
@@ -51,7 +51,7 @@ Partial Public Class order
     Public Property o_deposit_out_16 As Integer
     Public Property o_deposit_out_10 As Integer
     Public Property o_deposit_out_4 As Integer
-    Public Property o_deposit_out_15 As Integer
+    Public Property o_deposit_out_18 As Integer
     Public Property o_deposit_out_14 As Integer
     Public Property o_deposit_out_5 As Integer
     Public Property o_deposit_out_2 As Integer
@@ -61,7 +61,7 @@ Partial Public Class order
     Public Property o_in_16 As Integer
     Public Property o_in_10 As Integer
     Public Property o_in_4 As Integer
-    Public Property o_in_15 As Integer
+    Public Property o_in_18 As Integer
     Public Property o_in_14 As Integer
     Public Property o_in_5 As Integer
     Public Property o_in_2 As Integer
@@ -70,7 +70,7 @@ Partial Public Class order
     Public Property o_new_in_16 As Integer
     Public Property o_new_in_10 As Integer
     Public Property o_new_in_4 As Integer
-    Public Property o_new_in_15 As Integer
+    Public Property o_new_in_18 As Integer
     Public Property o_new_in_14 As Integer
     Public Property o_new_in_5 As Integer
     Public Property o_new_in_2 As Integer
@@ -79,7 +79,7 @@ Partial Public Class order
     Public Property o_inspect_16 As Integer
     Public Property o_inspect_10 As Integer
     Public Property o_inspect_4 As Integer
-    Public Property o_inspect_15 As Integer
+    Public Property o_inspect_18 As Integer
     Public Property o_inspect_14 As Integer
     Public Property o_inspect_5 As Integer
     Public Property o_inspect_2 As Integer
@@ -88,7 +88,7 @@ Partial Public Class order
     Public Property o_deposit_in_16 As Integer
     Public Property o_deposit_in_10 As Integer
     Public Property o_deposit_in_4 As Integer
-    Public Property o_deposit_in_15 As Integer
+    Public Property o_deposit_in_18 As Integer
     Public Property o_deposit_in_14 As Integer
     Public Property o_deposit_in_5 As Integer
     Public Property o_deposit_in_2 As Integer
@@ -99,14 +99,12 @@ Partial Public Class order
     Public Property o_gas_c_total As Nullable(Of Integer)
     Public Property o_UnitPrice As Nullable(Of Single)
     Public Property o_UnitPriceC As Nullable(Of Single)
-    Public Property o_comp_Id As Nullable(Of Integer)
     Public Property o_Insurance As Single
     Public Property o_cus_Id As Nullable(Of Integer)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car
-    Public Overridable Property company As company
-    Public Overridable Property employee As employee
     Public Overridable Property customer As customer
+    Public Overridable Property employee As employee
 
 End Class
