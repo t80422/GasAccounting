@@ -205,11 +205,12 @@
           <Property Name="i_cus_Id" Type="int" Nullable="false" />
           <Property Name="i_Number" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="i_Amount" Type="float" Nullable="false" />
-          <Property Name="i_Month" Type="date" Nullable="false" />
+          <Property Name="i_Date" Type="date" Nullable="false" />
           <Property Name="i_KG" Type="int" Nullable="false" />
           <Property Name="i_UnitPrice" Type="float" Nullable="false" />
           <Property Name="i_Tax" Type="float" Nullable="false" />
           <Property Name="i_Type" Type="varchar" MaxLength="50" />
+          <Property Name="i_Memo" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="journal">
           <Key>
@@ -999,7 +1000,6 @@
           <EntitySet Name="customers" EntityType="gas_accounting_systemModel.customer" />
           <EntitySet Name="employees" EntityType="gas_accounting_systemModel.employee" />
           <EntitySet Name="gas_barrel" EntityType="gas_accounting_systemModel.gas_barrel" />
-          <EntitySet Name="invoices" EntityType="gas_accounting_systemModel.invoice" />
           <EntitySet Name="journals" EntityType="gas_accounting_systemModel.journal" />
           <EntitySet Name="manufacturers" EntityType="gas_accounting_systemModel.manufacturer" />
           <EntitySet Name="payments" EntityType="gas_accounting_systemModel.payment" />
@@ -1061,10 +1061,6 @@
           <AssociationSet Name="customer_ibfk_1" Association="gas_accounting_systemModel.customer_ibfk_1">
             <End Role="priceplan" EntitySet="priceplans" />
             <End Role="customer" EntitySet="customers" />
-          </AssociationSet>
-          <AssociationSet Name="invoice_ibfk_1" Association="gas_accounting_systemModel.invoice_ibfk_1">
-            <End Role="customer" EntitySet="customers" />
-            <End Role="invoice" EntitySet="invoices" />
           </AssociationSet>
           <AssociationSet Name="employee_ibfk_1" Association="gas_accounting_systemModel.employee_ibfk_1">
             <End Role="role" EntitySet="roles" />
@@ -1132,6 +1128,11 @@
           <AssociationSet Name="purchase_ibfk_4" Association="gas_accounting_systemModel.purchase_ibfk_4">
             <End Role="subject" EntitySet="subjects" />
             <End Role="purchase" EntitySet="purchases" />
+          </AssociationSet>
+          <EntitySet Name="invoices" EntityType="gas_accounting_systemModel.invoice" />
+          <AssociationSet Name="invoice_ibfk_1" Association="gas_accounting_systemModel.invoice_ibfk_1">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="invoice" EntitySet="invoices" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="bank">
@@ -1311,8 +1312,8 @@
           <NavigationProperty Name="collections" Relationship="gas_accounting_systemModel.collection_ibfk_1" FromRole="customer" ToRole="collection" />
           <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.customer_ibfk_2" FromRole="customer" ToRole="company" />
           <NavigationProperty Name="priceplan" Relationship="gas_accounting_systemModel.customer_ibfk_1" FromRole="customer" ToRole="priceplan" />
-          <NavigationProperty Name="invoices" Relationship="gas_accounting_systemModel.invoice_ibfk_1" FromRole="customer" ToRole="invoice" />
           <NavigationProperty Name="orders" Relationship="gas_accounting_systemModel.orders_ibfk_5" FromRole="customer" ToRole="order" />
+          <NavigationProperty Name="invoices" Relationship="gas_accounting_systemModel.invoice_ibfk_1" FromRole="customer" ToRole="invoice" />
         </EntityType>
         <EntityType Name="employee">
           <Key>
@@ -1342,21 +1343,6 @@
           <Property Name="gb_Inventory" Type="Int32" Nullable="false" />
           <Property Name="gb_SalesPrice" Type="Int32" Nullable="false" />
           <NavigationProperty Name="barrel_monthly_balances" Relationship="gas_accounting_systemModel.barrel_monthly_balances_ibfk_1" FromRole="gas_barrel" ToRole="barrel_monthly_balances" />
-        </EntityType>
-        <EntityType Name="invoice">
-          <Key>
-            <PropertyRef Name="i_Id" />
-          </Key>
-          <Property Name="i_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_cus_Id" Type="Int32" Nullable="false" />
-          <Property Name="i_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="i_Amount" Type="Single" Nullable="false" />
-          <Property Name="i_Month" Type="DateTime" Nullable="false" />
-          <Property Name="i_KG" Type="Int32" Nullable="false" />
-          <Property Name="i_UnitPrice" Type="Single" Nullable="false" />
-          <Property Name="i_Tax" Type="Single" Nullable="false" />
-          <Property Name="i_Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.invoice_ibfk_1" FromRole="invoice" ToRole="customer" />
         </EntityType>
         <EntityType Name="journal">
           <Key>
@@ -1672,20 +1658,6 @@
             </Principal>
             <Dependent Role="customer">
               <PropertyRef Name="cus_pp_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="invoice_ibfk_1">
-          <End Type="gas_accounting_systemModel.customer" Role="customer" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="gas_accounting_systemModel.invoice" Role="invoice" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="customer">
-              <PropertyRef Name="cus_id" />
-            </Principal>
-            <Dependent Role="invoice">
-              <PropertyRef Name="i_cus_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2025,6 +1997,36 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="invoice">
+          <Key>
+            <PropertyRef Name="i_Id" />
+          </Key>
+          <Property Name="i_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_cus_Id" Type="Int32" Nullable="false" />
+          <Property Name="i_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="i_Amount" Type="Single" Nullable="false" />
+          <Property Name="i_Date" Type="DateTime" Nullable="false" />
+          <Property Name="i_KG" Type="Int32" Nullable="false" />
+          <Property Name="i_UnitPrice" Type="Single" Nullable="false" />
+          <Property Name="i_Tax" Type="Single" Nullable="false" />
+          <Property Name="i_Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.invoice_ibfk_1" FromRole="invoice" ToRole="customer" />
+          <Property Name="i_Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="invoice_ibfk_1">
+          <End Type="gas_accounting_systemModel.customer" Role="customer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="gas_accounting_systemModel.invoice" Role="invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="cus_id" />
+            </Principal>
+            <Dependent Role="invoice">
+              <PropertyRef Name="i_cus_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2219,21 +2221,6 @@
                 <ScalarProperty Name="gb_InitialInventory" ColumnName="gb_InitialInventory" />
                 <ScalarProperty Name="gb_Name" ColumnName="gb_Name" />
                 <ScalarProperty Name="gb_Id" ColumnName="gb_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="invoices">
-            <EntityTypeMapping TypeName="gas_accounting_systemModel.invoice">
-              <MappingFragment StoreEntitySet="invoice">
-                <ScalarProperty Name="i_Type" ColumnName="i_Type" />
-                <ScalarProperty Name="i_Tax" ColumnName="i_Tax" />
-                <ScalarProperty Name="i_UnitPrice" ColumnName="i_UnitPrice" />
-                <ScalarProperty Name="i_KG" ColumnName="i_KG" />
-                <ScalarProperty Name="i_Month" ColumnName="i_Month" />
-                <ScalarProperty Name="i_Amount" ColumnName="i_Amount" />
-                <ScalarProperty Name="i_Number" ColumnName="i_Number" />
-                <ScalarProperty Name="i_cus_Id" ColumnName="i_cus_Id" />
-                <ScalarProperty Name="i_Id" ColumnName="i_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2510,6 +2497,22 @@
                 <ScalarProperty Name="pur_date" ColumnName="pur_date" />
                 <ScalarProperty Name="pur_manu_id" ColumnName="pur_manu_id" />
                 <ScalarProperty Name="pur_id" ColumnName="pur_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invoices">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.invoice">
+              <MappingFragment StoreEntitySet="invoice">
+                <ScalarProperty Name="i_Memo" ColumnName="i_Memo" />
+                <ScalarProperty Name="i_Type" ColumnName="i_Type" />
+                <ScalarProperty Name="i_Tax" ColumnName="i_Tax" />
+                <ScalarProperty Name="i_UnitPrice" ColumnName="i_UnitPrice" />
+                <ScalarProperty Name="i_KG" ColumnName="i_KG" />
+                <ScalarProperty Name="i_Date" ColumnName="i_Date" />
+                <ScalarProperty Name="i_Amount" ColumnName="i_Amount" />
+                <ScalarProperty Name="i_Number" ColumnName="i_Number" />
+                <ScalarProperty Name="i_cus_Id" ColumnName="i_cus_Id" />
+                <ScalarProperty Name="i_Id" ColumnName="i_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

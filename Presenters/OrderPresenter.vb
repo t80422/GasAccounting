@@ -240,12 +240,12 @@ Public Class OrderPresenter
         _view.DisplayCarStk(result, isIn)
     End Sub
 
-    Public Async Sub Add()
+    Public Async Function Add() As Task(Of Integer)
         Using transaction = _ordRep.BeginTransaction
             Try
                 Dim orderInput = _view.GetUserInput()
                 Validate(orderInput)
-                Await _ordRep.AddAsync(orderInput)
+                Dim insert = Await _ordRep.AddAsync(orderInput)
 
                 _view.GetCusStkInput(currentCustomer)
 
@@ -264,13 +264,16 @@ Public Class OrderPresenter
                 _view.ClearInput()
                 Await LoadList()
                 MsgBox("新增成功")
+
+                Return insert.o_id
             Catch ex As Exception
                 transaction.Rollback()
                 Console.WriteLine(ex.StackTrace)
                 MsgBox(ex.Message)
+                Return 0
             End Try
         End Using
-    End Sub
+    End Function
 
     Public Async Sub LoadDetail(id As Integer)
         Try
@@ -510,8 +513,8 @@ Public Class OrderPresenter
 
         htmlContent = htmlContent.Replace("{{客戶名稱}}", data.客戶名稱.ToString)
         htmlContent = htmlContent.Replace("{{車號}}", data.車號.ToString)
-        htmlContent = htmlContent.Replace("{{提氣時間}}", data.提氣時間.ToString)
-        htmlContent = htmlContent.Replace("{{提單編號}}", data.提單編號.ToString)
+        htmlContent = htmlContent.Replace("{{提氣時間}}", data.提氣時間.ToString("yyyy/MM/dd HH:mm"))
+        htmlContent = htmlContent.Replace("{{提單編號}}", data.提單編號.ToString("D6"))
 
         htmlContent = htmlContent.Replace("{{丙氣50kg}}", If(data.丙氣50kg = 0, "", data.丙氣50kg.ToString))
         htmlContent = htmlContent.Replace("{{丙氣20kg}}", If(data.丙氣20kg = 0, "", data.丙氣20kg.ToString))

@@ -12,7 +12,7 @@ Public Class InvoiceRep
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
 
-            If criteria.IsSearchMonth Then query = query.Where(Function(x) x.i_Month.Year = criteria.Month.Year AndAlso x.i_Month = criteria.Month)
+            If criteria.IsSearchMonth Then query = query.Where(Function(x) x.i_Date.Year = criteria.Month.Year AndAlso x.i_Date = criteria.Month)
             If criteria.CusId <> 0 Then query = query.Where(Function(x) x.i_cus_Id = criteria.CusId)
             If Not String.IsNullOrEmpty(criteria.Number) Then query = query.Where(Function(x) x.i_Number = criteria.Number)
 
@@ -24,7 +24,7 @@ Public Class InvoiceRep
 
     Public Function GetByMonth(month As Date) As List(Of invoice) Implements IInvoiceRep.GetByMonth
         Try
-            Return _dbSet.Where(Function(x) x.i_Month.Year = month.Year AndAlso x.i_Month.Month = month.Month).ToList
+            Return _dbSet.Where(Function(x) x.i_Date.Year = month.Year AndAlso x.i_Date.Month = month.Month).ToList
         Catch ex As Exception
             Throw
         End Try

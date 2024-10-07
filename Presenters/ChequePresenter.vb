@@ -1,5 +1,7 @@
-﻿Public Class ChequePresenter
-    Private _view As ICheque
+﻿Imports System.IO
+
+Public Class ChequePresenter
+    Private ReadOnly _view As ICheque
     Private ReadOnly _cheRep As IChequeRep
 
     Public Sub New(view As ICheque, cheRep As IChequeRep)
@@ -35,13 +37,6 @@
     ''' <param name="d"></param>
     Public Async Sub SetBatchCollection(chequeIds As List(Of Integer), d As Date)
         Try
-            'Using db As New gas_accounting_systemEntities
-            '    Dim datas = db.cheques.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = "未兌現").ToList
-
-            '    datas.ForEach(Sub(x) x.chu_State = "已代收" And x.che_CollectionDate = d)
-            '    db.SaveChanges()
-            '    LoadList()
-            'End Using
             Await _cheRep.UpdateCollectionStatusAsync(chequeIds, d)
             LoadList()
         Catch ex As Exception
@@ -91,6 +86,41 @@
 
     Public Sub Query(startDate As Date, endDate As Date)
         _view.ShowList(_cheRep.Query(startDate, endDate))
+    End Sub
+
+    Public Sub Print(datas As List(Of ChequeVM))
+        Try
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "支票管理範本檔.xlsx")
+
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    Dim rowIndex = 3
+
+                    For Each item In datas
+                        .WriteToCell(rowIndex, 1, item.收票日期.Value.ToString("yyyy/MM/dd"))
+                        .WriteToCell(rowIndex, 2, item.支票號碼)
+                        .WriteToCell(rowIndex, 3, item.銀行帳號)
+                        .WriteToCell(rowIndex, 4, item.發票人)
+                        .WriteToCell(rowIndex, 5, item.金額)
+                        .WriteToCell(rowIndex, 6, item.狀態)
+                        .WriteToCell(rowIndex, 7, If(item.兌現日期.HasValue, item.兌現日期.Value.ToString("yyyy/MM/dd"), ""))
+                        .WriteToCell(rowIndex, 8, If(item.代收日期.HasValue, item.代收日期.Value.ToString("yyyy/MM/dd"), ""))
+
+                        rowIndex += 1
+                    Next
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "支票管理.xlsx")
+                    .SaveAs(exportFilePath)
+                    .Print(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     Private Function SetSearchConditions(query As IQueryable(Of cheque), conditions As Object) As IQueryable(Of cheque)

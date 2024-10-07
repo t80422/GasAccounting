@@ -16,7 +16,6 @@
         <EntityTypeShape EntityType="gas_accounting_systemModel.customer" Width="1.5" PointX="9" PointY="18.625" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.employee" Width="1.5" PointX="11.25" PointY="14.25" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.gas_barrel" Width="1.5" PointX="0.75" PointY="1" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.invoice" Width="1.5" PointX="11.25" PointY="23.875" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.journal" Width="1.5" PointX="3" PointY="30" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.manufacturer" Width="1.5" PointX="0.75" PointY="12.5" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.payment" Width="1.5" PointX="6" PointY="21" />
@@ -40,7 +39,6 @@
         <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.stock_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.customer_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.invoice_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.employee_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.journal_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_1" />
@@ -60,6 +58,8 @@
         <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_4" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.invoice" Width="1.5" PointX="11.25" PointY="24.625" />
+        <AssociationConnector Association="gas_accounting_systemModel.invoice_ibfk_1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

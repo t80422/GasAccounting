@@ -46,6 +46,7 @@
             Dim data = _view.GetUserInput
             Validate(data)
             Await _invoiceRep.AddAsync(data)
+            _view.ClearInput()
             Await LoadList()
             MsgBox("新增成功")
         Catch ex As Exception
@@ -59,6 +60,7 @@
             Dim data = Await _invoiceRep.GetByIdAsync(id)
             _view.ClearInput()
             _view.DisplayDetail(data)
+            LoadInvoiceInfo(data.i_cus_Id, data.i_Date)
         Catch ex As Exception
             Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
@@ -102,15 +104,15 @@
 
             If type.Contains("廠運") Then
                 If type.Contains("普氣") Then
-                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, True, True)
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Date, True, True)
                 Else
-                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, True, False)
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Date, True, False)
                 End If
             Else
                 If type.Contains("普氣") Then
-                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, False, True)
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Date, False, True)
                 Else
-                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Month, False, False)
+                    unitPrice = _priceCalSer.CalculateUnitPrice(cus, input.i_Date, False, False)
                 End If
             End If
 

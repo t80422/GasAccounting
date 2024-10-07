@@ -822,8 +822,9 @@ Public Class ReportPresenter
     ''' <summary>
     ''' 產生進銷存明細
     ''' </summary>
-    ''' <param name="month"></param>
+    ''' <param name="year"></param>
     ''' <param name="compId"></param>
+    ''' <param name="empId"></param>
     Public Sub GenerateInventoryTransactionDetail(year As Date, compId As Integer, empId As Integer)
         Try
             '取得資料
@@ -891,6 +892,10 @@ Public Class ReportPresenter
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 產生應付票據
+    ''' </summary>
+    ''' <param name="month"></param>
     Public Sub GeneratePayableCheck(month As Date)
         Try
             '取得資料
@@ -915,6 +920,222 @@ Public Class ReportPresenter
 
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "應付票據.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生財稅
+    ''' </summary>
+    ''' <param name="month"></param>
+    Public Sub GenerateTax(month As Date)
+        Try
+            '取得資料
+            Dim data As Tax = _rep.GetTax(month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "財稅範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+                    .WriteToCell(1, 1, data.Month.ToString("yyyy年MM月") + " 財稅")
+
+                    Dim rowIndex = 3
+
+                    For Each item In data.List
+                        .WriteToCell(rowIndex, 1, item.Day.ToString("MM/dd"))
+                        .WriteToCell(rowIndex, 2, item.InvoiceNum)
+                        .WriteToCell(rowIndex, 3, item.TaxId)
+                        .WriteToCell(rowIndex, 4, item.UnitPrice)
+                        .WriteToCell(rowIndex, 5, item.Quantity)
+                        .WriteToCell(rowIndex, 6, item.Tax)
+                        .WriteToCell(rowIndex, 7, item.Amount)
+                        .WriteToCell(rowIndex, 8, item.Memo)
+
+                        rowIndex += 1
+                    Next
+
+                    .SetBottomBorder(rowIndex - 1, 1, rowIndex - 1, 8)
+                    .WriteToCell(rowIndex, 4, "合計")
+                    .WriteToCell(rowIndex, 5, data.List.Sum(Function(x) x.Quantity))
+                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Tax))
+                    .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Amount))
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "財稅.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生能源局
+    ''' </summary>
+    ''' <param name="month"></param>
+    Public Sub GenerateEnergyBureau(month As Date)
+        Try
+            '取得資料
+            Dim data As List(Of EnergyBureau) = _rep.GetBureau(month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "能源局範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    Dim leftColStart = 1
+                    Dim rightColStart = 5
+                    Dim currentRow = 1
+                    Dim rowsPerPage = 57
+                    Dim dataRowsPerPage = 55
+                    Dim currentPage = 1
+                    Dim dataIndex = 0
+
+                    While dataIndex < data.Count
+                        Dim leftSideTotal As Integer = 0
+                        Dim rightSideTotal As Integer = 0
+                        Dim leftSideRowCount = 0
+
+                        '添加標題行
+                        AddHeaderRow(xml, currentRow, leftColStart)
+                        AddHeaderRow(xml, currentRow, rightColStart)
+                        currentRow += 1
+
+                        '填充左側數據
+                        For i = 1 To dataRowsPerPage
+                            If dataIndex >= data.Count Then Exit For
+
+                            WriteItemToSheet(xml, currentRow, leftColStart, data(dataIndex))
+                            leftSideTotal += data(dataIndex).Quantity
+                            dataIndex += 1
+                            currentRow += 1
+                            leftSideRowCount += 1
+                        Next
+
+                        '重置行數以填充右側數據
+                        currentRow -= leftSideRowCount
+
+                        '填充右側數據
+                        For i = 1 To dataRowsPerPage
+                            If dataIndex >= data.Count Then Exit For
+                            WriteItemToSheet(xml, currentRow, rightColStart, data(dataIndex))
+                            rightSideTotal += data(dataIndex).Quantity
+                            dataIndex += 1
+                            currentRow += 1
+                        Next
+
+                        '確保currentRow到頁面底部
+                        currentRow = currentPage * rowsPerPage
+
+                        '添加總計行
+                        AddTotalRow(xml, currentRow, leftColStart, currentPage, leftSideTotal)
+                        AddTotalRow(xml, currentRow, rightColStart, currentPage, rightSideTotal)
+
+                        currentRow += 1
+                        currentPage += 1
+                    End While
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "能源局.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub AddHeaderRow(xml As CloseXML_Excel, rowIndex As Integer, colStart As Integer)
+        Dim headers() As String = {"日期", "發票號碼", "統一編號", "數量"}
+        For i As Integer = 0 To headers.Length - 1
+            xml.WriteToCell(rowIndex, colStart + i, headers(i))
+        Next
+
+        xml.SetCustomBorders(rowIndex, 1, rowIndex, 8, bottomStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+    End Sub
+
+    Private Sub WriteItemToSheet(xml As CloseXML_Excel, rowIndex As Integer, startCol As Integer, item As EnergyBureau)
+        With xml
+            .WriteToCell(rowIndex, startCol, item.Day.ToString("MM/dd"))
+            .WriteToCell(rowIndex, startCol + 1, item.InvoiceNum)
+            .WriteToCell(rowIndex, startCol + 2, item.TaxId)
+            .WriteToCell(rowIndex, startCol + 3, item.Quantity)
+        End With
+    End Sub
+
+    Private Sub AddTotalRow(xml As CloseXML_Excel, rowIndex As Integer, colStart As Integer, page As Integer, total As Integer)
+        With xml
+            .WriteToCell(rowIndex, colStart, "總計")
+            .WriteToCell(rowIndex, colStart + 3, total)
+            .SetCustomBorders(rowIndex, 1, rowIndex, 8, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+        End With
+    End Sub
+
+    ''' <summary>
+    ''' 產生月結帳單
+    ''' </summary>
+    ''' <param name="compId"></param>
+    ''' <param name="month"></param>
+    Public Sub GenerateMonthlyStatement(compId As Integer, month As Date)
+        Try
+            '取得資料
+            Dim data As MonthlyStatement = _rep.GetMonthlyStatement(compId, month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "月對帳單範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    '標題
+                    .WriteToCell(1, 1, data.CompanyName + $" {month.Year}年{month.Month}月對帳單:")
+                    .WriteToCell(1, 4, data.CusCode)
+
+                    '家用瓦斯(變動前)
+                    .WriteToCell(3, 2, data.GasNormalQuantity_First)
+                    .WriteToCell(3, 3, data.GasNormalUnitPrice_First)
+                    .WriteToCell(3, 4, data.GasNormalQuantity_First + data.GasNormalUnitPrice_First)
+
+                    '工業氣(變動前)
+                    .WriteToCell(4, 2, data.GasCQuantity_First)
+                    .WriteToCell(4, 3, data.GasCUnitPrice_First)
+                    .WriteToCell(4, 4, data.GasCQuantity_First + data.GasCUnitPrice_First)
+
+                    '家用瓦斯(變動後)
+                    .WriteToCell(5, 2, data.GasNormalQuantity)
+                    .WriteToCell(5, 3, data.GasNormalUnitPrice)
+                    .WriteToCell(5, 4, data.GasNormalQuantity + data.GasNormalUnitPrice)
+
+                    '工業氣(變動後)
+                    .WriteToCell(6, 2, data.GasCQuantity)
+                    .WriteToCell(6, 3, data.GasCUnitPrice)
+                    .WriteToCell(6, 4, data.GasCQuantity + data.GasCUnitPrice)
+
+                    '保險
+                    Dim totalQty = data.GasNormalQuantity_First + data.GasCQuantity_First + data.GasNormalQuantity + data.GasCQuantity
+                    .WriteToCell(7, 2, totalQty)
+                    .WriteToCell(7, 3, data.InsuranceUnitPrice)
+                    .WriteToCell(7, 4, totalQty * data.InsuranceUnitPrice)
+
+                    .WriteToCell(1, 4, data.CusCode)
+                    .WriteToCell(1, 4, data.CusCode)
+                    .WriteToCell(1, 4, data.CusCode)
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "月對帳單.xlsx")
                     .SaveAs(exportFilePath)
                 End With
             End Using

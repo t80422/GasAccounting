@@ -1,4 +1,5 @@
 ﻿Imports ClosedXML.Excel
+Imports Microsoft.Office.Interop.Excel
 
 Public Class CloseXML_Excel
     Implements IDisposable
@@ -81,9 +82,35 @@ Public Class CloseXML_Excel
     ''' <param name="endRowIndex">結束行索引，從1開始</param>
     ''' <param name="endColIndex">結束列索引，從1開始</param>
     ''' <param name="borderStyle">下底線樣式</param>
+    <Obsolete("改用 SetCustomBorders")>
     Public Sub SetBottomBorder(startRowIndex As Integer, startColIndex As Integer, endRowIndex As Integer, endColIndex As Integer, Optional borderStyle As XLBorderStyleValues = XLBorderStyleValues.Thin)
         Dim range = worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
         range.Style.Border.BottomBorder = borderStyle
+    End Sub
+
+    Public Sub SetCustomBorders(startRowIndex As Integer, startColIndex As Integer, endRowIndex As Integer, endColIndex As Integer,
+                            Optional topStyle As XLBorderStyleValues? = Nothing,
+                            Optional bottomStyle As XLBorderStyleValues? = Nothing,
+                            Optional leftStyle As XLBorderStyleValues? = Nothing,
+                            Optional rightStyle As XLBorderStyleValues? = Nothing)
+
+        Dim range = worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
+
+        If topStyle.HasValue Then
+            range.Style.Border.TopBorder = topStyle.Value
+        End If
+
+        If bottomStyle.HasValue Then
+            range.Style.Border.BottomBorder = bottomStyle.Value
+        End If
+
+        If leftStyle.HasValue Then
+            range.Style.Border.LeftBorder = leftStyle.Value
+        End If
+
+        If rightStyle.HasValue Then
+            range.Style.Border.RightBorder = rightStyle.Value
+        End If
     End Sub
 
     Public Class CellFormatOptions
@@ -123,6 +150,21 @@ Public Class CloseXML_Excel
             Throw
         End Try
     End Sub
+
+    Public Sub Print(filePath As String)
+        Try
+            Dim app As New Application
+            Dim workbook = app.Workbooks.Open(filePath)
+
+            workbook.PrintOutEx()
+            workbook.Close()
+            app.Quit()
+
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
+
     Private Function CmToPoints(cm As Double) As Double
         Return cm * 28.35
     End Function

@@ -100,4 +100,26 @@
     ''' <param name="month"></param>
     ''' <returns></returns>
     Function GetPayableCheck(month As Date) As List(Of PayableCheck)
+
+    ''' <summary>
+    ''' 取得財稅
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetTax(month As Date) As Tax
+
+    ''' <summary>
+    ''' 取得能源局
+    ''' </summary>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetBureau(month As Date) As List(Of EnergyBureau)
+
+    ''' <summary>
+    ''' 取得月對帳單
+    ''' </summary>
+    ''' <param name="compId"></param>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetMonthlyStatement(compId As Integer, month As Date) As MonthlyStatement
 End Interface

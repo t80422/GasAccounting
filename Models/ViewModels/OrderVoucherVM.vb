@@ -7,7 +7,7 @@ Public Class OrderVoucherVM
     Public Property 客戶名稱 As String
     Public Property 車號 As String
     Public Property 提氣時間 As Date
-    Public Property 提單編號 As String
+    Public Property 提單編號 As Integer
     Public Property 丙氣50kg As Integer
     Public Property 丙氣20kg As Integer
     Public Property 丙氣16kg As Integer

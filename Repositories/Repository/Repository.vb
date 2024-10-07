@@ -21,16 +21,24 @@ Public Class Repository(Of TEntity As Class)
 
     Public Async Function GetByIdAsync(id As Integer) As Task(Of TEntity) Implements IRepository(Of TEntity).GetByIdAsync
         Try
+            Dim entity = Await _dbSet.FindAsync(id)
+
+            If entity Is Nothing Then Return Nothing
+
+            '刷新實體,加載所有導航屬性
+            Await _context.Entry(entity).ReloadAsync
+
             Return Await _dbSet.FindAsync(id)
         Catch ex As Exception
             Throw New Exception($"獲取Id為{id}的實體時發生錯誤", ex)
         End Try
     End Function
 
-    Public Async Function AddAsync(entity As TEntity) As Task Implements IRepository(Of TEntity).AddAsync
+    Public Async Function AddAsync(entity As TEntity) As Task(Of TEntity) Implements IRepository(Of TEntity).AddAsync
         Try
             _dbSet.Add(entity)
             Await SaveChangesAsync()
+            Return entity
         Catch ex As Exception
             Throw New Exception("新增時發生錯誤", ex)
         End Try

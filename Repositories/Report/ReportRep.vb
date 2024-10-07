@@ -710,4 +710,47 @@
             Throw
         End Try
     End Function
+
+    Public Function GetTax(month As Date) As Tax Implements IReportRep.GetTax
+        Try
+            Dim result = New Tax With {.Month = month}
+
+            result.List = _context.invoices.Where(Function(x) x.i_Date.Year = month.Year AndAlso x.i_Date.Month = month.Month).
+                                            Select(Function(x) New TaxList With {
+                                                .Amount = x.i_Amount,
+                                                .Day = x.i_Date,
+                                                .InvoiceNum = x.i_Number,
+                                                .Memo = x.i_Memo,
+                                                .Quantity = x.i_KG,
+                                                .Tax = x.i_Tax,
+                                                .TaxId = x.customer.cus_tax_id,
+                                                .UnitPrice = x.i_UnitPrice
+                                            }).ToList
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetBureau(month As Date) As List(Of EnergyBureau) Implements IReportRep.GetBureau
+        Try
+            Return _context.invoices.Where(Function(x) x.i_Date.Year = month.Year AndAlso x.i_Date.Month = month.Month).
+                                     Select(Function(x) New EnergyBureau With {
+                                         .Day = x.i_Date,
+                                         .InvoiceNum = x.i_Number,
+                                         .Quantity = x.i_KG,
+                                         .TaxId = x.customer.cus_tax_id
+                                     }).ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetMonthlyStatement(compId As Integer, month As Date) As MonthlyStatement Implements IReportRep.GetMonthlyStatement
+        Try
+
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

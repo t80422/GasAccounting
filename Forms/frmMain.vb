@@ -36,16 +36,16 @@
     Private _gasCheckout As GasCheckoutPresenter
 
     Private inputTxts As String(,) = {
-        {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_15", "txto_in_14", "txto_in_5", "txto_in_2"},
-        {"txto_new_in_50", "txto_new_in_20", "txto_new_in_16", "txto_new_in_10", "txto_new_in_4", "txto_new_in_15", "txto_new_in_14", "txto_new_in_5", "txto_new_in_2"},
-        {"txto_inspect_50", "txto_inspect_20", "txto_inspect_16", "txto_inspect_10", "txto_inspect_4", "txto_inspect_15", "txto_inspect_14", "txto_inspect_5", "txto_inspect_2"},
-        {"txtDepositIn_50", "txtDepositIn_20", "txtDepositIn_16", "txtDepositIn_10", "txtDepositIn_4", "txtDepositIn_15", "txtDepositIn_14", "txtDepositIn_5", "txtDepositIn_2"}
+        {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_18", "txto_in_14", "txto_in_5", "txto_in_2"},
+        {"txto_new_in_50", "txto_new_in_20", "txto_new_in_16", "txto_new_in_10", "txto_new_in_4", "txto_new_in_18", "txto_new_in_14", "txto_new_in_5", "txto_new_in_2"},
+        {"txto_inspect_50", "txto_inspect_20", "txto_inspect_16", "txto_inspect_10", "txto_inspect_4", "txto_inspect_18", "txto_inspect_14", "txto_inspect_5", "txto_inspect_2"},
+        {"txtDepositIn_50", "txtDepositIn_20", "txtDepositIn_16", "txtDepositIn_10", "txtDepositIn_4", "txtDepositIn_18", "txtDepositIn_14", "txtDepositIn_5", "txtDepositIn_2"}
     }
     Private outputTxts As String(,) = {
-        {"txtGas_c_50", "txtGas_c_20", "txtGas_c_16", "txtGas_c_10", "txtGas_c_4", "txtGas_c_15", "txtGas_c_14", "txtGas_c_5", "txtGas_c_2"},
-        {"txtGas_50", "txtGas_20", "txtGas_16", "txtGas_10", "txtGas_4", "txtGas_15", "txtGas_14", "txtGas_5", "txtGas_2"},
-        {"txtEmpty_50", "txtEmpty_20", "txtEmpty_16", "txtEmpty_10", "txtEmpty_4", "txtEmpty_15", "txtEmpty_14", "txtEmpty_5", "txtEmpty_2"},
-        {"txtDepositOut_50", "txtDepositOut_20", "txtDepositOut_16", "txtDepositOut_10", "txtDepositOut_4", "txtDepositOut_15", "txtDepositOut_14", "txtDepositOut_5", "txtDepositOut_2"}
+        {"txtGas_c_50", "txtGas_c_20", "txtGas_c_16", "txtGas_c_10", "txtGas_c_4", "txtGas_c_18", "txtGas_c_14", "txtGas_c_5", "txtGas_c_2"},
+        {"txtGas_50", "txtGas_20", "txtGas_16", "txtGas_10", "txtGas_4", "txtGas_18", "txtGas_14", "txtGas_5", "txtGas_2"},
+        {"txtEmpty_50", "txtEmpty_20", "txtEmpty_16", "txtEmpty_10", "txtEmpty_4", "txtEmpty_18", "txtEmpty_14", "txtEmpty_5", "txtEmpty_2"},
+        {"txtDepositOut_50", "txtDepositOut_20", "txtDepositOut_16", "txtDepositOut_10", "txtDepositOut_4", "txtDepositOut_18", "txtDepositOut_14", "txtDepositOut_5", "txtDepositOut_2"}
     }
 
     Private _currentPurchase As purchase
@@ -998,7 +998,7 @@
         AutoMapEntityToControls(data.customer, tpOrder)
         _order.LoadCar()
         AutoMapEntityToControls(data, tpOrder)
-        txtOperator.Text = data.employee.emp_name
+        txtOperator.Text = data.employee?.emp_name
 
         If data.o_in_out = "進場單" Then
             AutoMapEntityToControls(data, tpIn)
@@ -1048,6 +1048,8 @@
     Private Async Sub btnCancel_order_Click(sender As Object, e As EventArgs) Handles btnCancel_order.Click
         SetButtonState(sender, True)
         Await _order.InitializeAsync()
+        dgvOrder.ClearSelection()
+        IOrderView_ClearInput()
         txtOperator.Text = User.Name
         dtpOrder.Value = Now
         txtCusCode_ord.Focus()
@@ -1339,16 +1341,21 @@
     End Sub
 
     '銷售管理-新增
-    Private Sub btnCreate_ord_Click(sender As Object, e As EventArgs) Handles btnCreate_ord.Click
-        _order.Add()
+    Private Async Sub btnCreate_ord_Click(sender As Object, e As EventArgs) Handles btnCreate_ord.Click
+        Dim id = Await _order.Add()
+
+        If id <> 0 Then GetDetail(id)
     End Sub
 
     '銷售管理-dgv
     Private Sub dgvOrder_SelectionChanged(sender As Object, e As EventArgs) Handles dgvOrder.SelectionChanged, dgvOrder.CellMouseClick
         If Not dgvOrder.Focused Then Return
-        Dim ordId As Integer = dgvOrder.SelectedRows(0).Cells("編號").Value
-        _order.LoadDetail(ordId)
-        SetButtonState(sender, False)
+        GetDetail(dgvOrder.SelectedRows(0).Cells("編號").Value)
+    End Sub
+
+    Private Sub GetDetail(id As Integer)
+        _order.LoadDetail(id)
+        SetButtonState(dgvOrder, False)
         dgvOrder.Focus()
         txtCusCode_ord.ReadOnly = True
         btnQueryCus_ord.Enabled = False
@@ -1363,18 +1370,24 @@
     End Sub
 
     '銷售管理-快捷鍵
-    Private Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+    Private Async Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If TabControl1.SelectedTab.Name <> "tpOrder" Then Exit Sub
 
         Select Case e.KeyCode
             Case Keys.F1
-                If btnCreate_ord.Enabled = True Then _order.Add()
+                If btnCreate_ord.Enabled = True Then Await _order.Add()
+
+            Case Keys.F2
+                If btnEdit_ord.Enabled = True Then _order.Update()
 
             Case Keys.F3
                 If btnDelete_order.Enabled = True Then _order.Delete()
 
             Case Keys.F4
                 btnCancel_order.PerformClick()
+
+            Case Keys.F5
+                btnPrint.PerformClick()
         End Select
     End Sub
 
@@ -2308,6 +2321,11 @@
         _cheque.SetBatchCollection(selectedIds, dtpCollectionDate.Value.Date)
     End Sub
 
+    '會計管理-支票管理-列印
+    Private Sub btnPrint_cheque_Click(sender As Object, e As EventArgs) Handles btnPrint_cheque.Click
+        _cheque.Print(dgvCheque.DataSource)
+    End Sub
+
     ''' <summary>
     ''' 取得勾選的Id
     ''' </summary>
@@ -2334,6 +2352,7 @@
     Private Sub IReportView_SetCompanyCmb(items As List(Of SelectListItem)) Implements IReportView.SetCompanyCmb
         SetComboBox(cmbCompany_br, items)
         SetComboBox(cmbCompany_ITD, items)
+        SetComboBox(cmbCompany_MS, items)
     End Sub
 
     '會計管理-報表-刷新
@@ -2448,6 +2467,21 @@
     '會計管理-報表-應付票據
     Private Sub btnPayableCheck_Click(sender As Object, e As EventArgs) Handles btnPayableCheck.Click
         _report.GeneratePayableCheck(dtpMonth_PayableCheck.Value)
+    End Sub
+
+    '會計管理-報表-財稅
+    Private Sub btnTax_Click(sender As Object, e As EventArgs) Handles btnTax.Click
+        _report.GenerateTax(dtpMonth_tax.Value)
+    End Sub
+
+    '會計管理-報表-能源局
+    Private Sub btnEnergyBureau_Click(sender As Object, e As EventArgs) Handles btnEnergyBureau.Click
+        _report.GenerateEnergyBureau(dtpMonth_EB.Value)
+    End Sub
+
+    '會計管理-報表-月結帳單
+    Private Sub btnMonthlyStatement_Click(sender As Object, e As EventArgs) Handles btnMonthlyStatement.Click
+
     End Sub
 
     Private Function IGasCheckoutView_GetUserInput() As PurchaseCondition Implements IGasCheckoutView.GetUserInput

@@ -52,7 +52,7 @@ Partial Public Class customer
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property company As company
     Public Overridable Property priceplan As priceplan
-    Public Overridable Property invoices As ICollection(Of invoice) = New HashSet(Of invoice)
     Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
+    Public Overridable Property invoices As ICollection(Of invoice) = New HashSet(Of invoice)
 
 End Class

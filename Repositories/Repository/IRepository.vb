@@ -3,7 +3,7 @@
 Public Interface IRepository(Of TEntity As Class)
     Function GetAllAsync() As Task(Of IEnumerable(Of TEntity))
     Function GetByIdAsync(id As Integer) As Task(Of TEntity)
-    Function AddAsync(entity As TEntity) As Task
+    Function AddAsync(entity As TEntity) As Task(Of TEntity)
     Function UpdateAsync(id As Integer, updateEntity As TEntity) As Task
     Function UpdateAsync(currentEntity As TEntity, updateEntity As TEntity) As Task
     Function DeleteAsync(id As Integer) As Task

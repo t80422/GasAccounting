@@ -15,11 +15,12 @@ Partial Public Class invoice
     Public Property i_cus_Id As Integer
     Public Property i_Number As String
     Public Property i_Amount As Single
-    Public Property i_Month As Date
+    Public Property i_Date As Date
     Public Property i_KG As Integer
     Public Property i_UnitPrice As Single
     Public Property i_Tax As Single
     Public Property i_Type As String
+    Public Property i_Memo As String
 
     Public Overridable Property customer As customer
 
