@@ -17,7 +17,7 @@
     ''' 設定公司選單
     ''' </summary>
     ''' <param name="data"></param>
-    Sub SetCompanyCmb(data As List(Of SelectListItem))
+    Sub ICollectionView_SetCompanyCmb(data As List(Of SelectListItem))
 
     ''' <summary>
     ''' 取得搜尋條件

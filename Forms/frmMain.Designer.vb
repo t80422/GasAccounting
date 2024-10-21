@@ -440,6 +440,8 @@ Partial Class frmMain
         Me.dtpStart_gc = New System.Windows.Forms.DateTimePicker()
         Me.Label138 = New System.Windows.Forms.Label()
         Me.tpPurchaseBarrel = New System.Windows.Forms.TabPage()
+        Me.cmbCompany_pb = New System.Windows.Forms.ComboBox()
+        Me.Label248 = New System.Windows.Forms.Label()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.chkIsDate_pb = New System.Windows.Forms.CheckBox()
         Me.dtpEndDate_pb = New System.Windows.Forms.DateTimePicker()
@@ -535,6 +537,12 @@ Partial Class frmMain
         Me.Label191 = New System.Windows.Forms.Label()
         Me.Label192 = New System.Windows.Forms.Label()
         Me.tpOrder = New System.Windows.Forms.TabPage()
+        Me.txtGasCUnitPrice = New System.Windows.Forms.TextBox()
+        Me.Label241 = New System.Windows.Forms.Label()
+        Me.txtGasUnitPrice = New System.Windows.Forms.TextBox()
+        Me.Label240 = New System.Windows.Forms.Label()
+        Me.txtBarrelAmount = New System.Windows.Forms.TextBox()
+        Me.Label238 = New System.Windows.Forms.Label()
         Me.btnEdit_ord = New System.Windows.Forms.Button()
         Me.txtInsurance = New System.Windows.Forms.TextBox()
         Me.Label153 = New System.Windows.Forms.Label()
@@ -831,22 +839,19 @@ Partial Class frmMain
         Me.DateTimePicker7 = New System.Windows.Forms.DateTimePicker()
         Me.Label146 = New System.Windows.Forms.Label()
         Me.dgvCheque = New System.Windows.Forms.DataGridView()
-        Me.tpInvoice = New System.Windows.Forms.TabPage()
+        Me.tpInvoice_Out = New System.Windows.Forms.TabPage()
+        Me.chkIsInvalid = New System.Windows.Forms.CheckBox()
+        Me.cmbInvoiceType = New System.Windows.Forms.ComboBox()
+        Me.Label247 = New System.Windows.Forms.Label()
         Me.Label235 = New System.Windows.Forms.Label()
         Me.TextBox13 = New System.Windows.Forms.TextBox()
         Me.GroupBox11 = New System.Windows.Forms.GroupBox()
-        Me.txtPickCInvoice = New System.Windows.Forms.TextBox()
-        Me.txtPickNormInvoice = New System.Windows.Forms.TextBox()
         Me.txtDeliCInvoice = New System.Windows.Forms.TextBox()
         Me.txtDeliNormInvoice = New System.Windows.Forms.TextBox()
-        Me.txtPickCTotal = New System.Windows.Forms.TextBox()
-        Me.txtPickNormTotal = New System.Windows.Forms.TextBox()
         Me.txtDeliCTotal = New System.Windows.Forms.TextBox()
         Me.txtDeliNormTotal = New System.Windows.Forms.TextBox()
-        Me.Label195 = New System.Windows.Forms.Label()
         Me.Label194 = New System.Windows.Forms.Label()
         Me.Label193 = New System.Windows.Forms.Label()
-        Me.Label189 = New System.Windows.Forms.Label()
         Me.Label188 = New System.Windows.Forms.Label()
         Me.Label187 = New System.Windows.Forms.Label()
         Me.Label186 = New System.Windows.Forms.Label()
@@ -879,7 +884,73 @@ Partial Class frmMain
         Me.Label86 = New System.Windows.Forms.Label()
         Me.dgvInvoice = New System.Windows.Forms.DataGridView()
         Me.txtCusName_invoice = New System.Windows.Forms.TextBox()
+        Me.tpInvoice_In = New System.Windows.Forms.TabPage()
+        Me.cmbComp_is = New System.Windows.Forms.ComboBox()
+        Me.lblComp_is = New System.Windows.Forms.Label()
+        Me.cmbType = New System.Windows.Forms.ComboBox()
+        Me.Label195 = New System.Windows.Forms.Label()
+        Me.GroupBox25 = New System.Windows.Forms.GroupBox()
+        Me.chkIsDate_ii = New System.Windows.Forms.CheckBox()
+        Me.dtpEnd_ii = New System.Windows.Forms.DateTimePicker()
+        Me.Label254 = New System.Windows.Forms.Label()
+        Me.dtpStart_ii = New System.Windows.Forms.DateTimePicker()
+        Me.Label253 = New System.Windows.Forms.Label()
+        Me.TextBox28 = New System.Windows.Forms.TextBox()
+        Me.dgvInvoiceIn = New System.Windows.Forms.DataGridView()
+        Me.btnQuery_ii = New System.Windows.Forms.Button()
+        Me.btnCancel_ii = New System.Windows.Forms.Button()
+        Me.btnDelete_ii = New System.Windows.Forms.Button()
+        Me.btnEdit_ii = New System.Windows.Forms.Button()
+        Me.btnAdd_ii = New System.Windows.Forms.Button()
+        Me.txtTaxId_is = New System.Windows.Forms.TextBox()
+        Me.lblTaxId_is = New System.Windows.Forms.Label()
+        Me.txtAmount_ii = New System.Windows.Forms.TextBox()
+        Me.Label251 = New System.Windows.Forms.Label()
+        Me.txtTax_ii = New System.Windows.Forms.TextBox()
+        Me.Label250 = New System.Windows.Forms.Label()
+        Me.txtName_is = New System.Windows.Forms.TextBox()
+        Me.lblName_ii = New System.Windows.Forms.Label()
+        Me.txtNumber_ii = New System.Windows.Forms.TextBox()
+        Me.lblNumber_ii = New System.Windows.Forms.Label()
+        Me.dtpDate_ii = New System.Windows.Forms.DateTimePicker()
+        Me.Label189 = New System.Windows.Forms.Label()
         Me.tpReport = New System.Windows.Forms.TabPage()
+        Me.GroupBox26 = New System.Windows.Forms.GroupBox()
+        Me.btnInOut = New System.Windows.Forms.Button()
+        Me.cmbMonth_InOut = New System.Windows.Forms.ComboBox()
+        Me.dtpYear_InOut = New System.Windows.Forms.DateTimePicker()
+        Me.GroupBox24 = New System.Windows.Forms.GroupBox()
+        Me.dtpDate_ca = New System.Windows.Forms.DateTimePicker()
+        Me.btnCashAccount = New System.Windows.Forms.Button()
+        Me.GroupBox23 = New System.Windows.Forms.GroupBox()
+        Me.dtpDate_gucc = New System.Windows.Forms.DateTimePicker()
+        Me.btnGasUsageCylinderCount = New System.Windows.Forms.Button()
+        Me.GroupBox22 = New System.Windows.Forms.GroupBox()
+        Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
+        Me.btnCusGetGasList = New System.Windows.Forms.Button()
+        Me.GroupBox21 = New System.Windows.Forms.GroupBox()
+        Me.dtpDate_cgpc = New System.Windows.Forms.DateTimePicker()
+        Me.btnCusGasPayCollect = New System.Windows.Forms.Button()
+        Me.GroupBox20 = New System.Windows.Forms.GroupBox()
+        Me.cmbCompany_IS = New System.Windows.Forms.ComboBox()
+        Me.Label246 = New System.Windows.Forms.Label()
+        Me.btnIncomeStatement = New System.Windows.Forms.Button()
+        Me.dtpEnd_IS = New System.Windows.Forms.DateTimePicker()
+        Me.Label245 = New System.Windows.Forms.Label()
+        Me.dtpStart_IS = New System.Windows.Forms.DateTimePicker()
+        Me.Label243 = New System.Windows.Forms.Label()
+        Me.GroupBox19 = New System.Windows.Forms.GroupBox()
+        Me.btnInsurance = New System.Windows.Forms.Button()
+        Me.dtpMonth_insurance = New System.Windows.Forms.DateTimePicker()
+        Me.Label242 = New System.Windows.Forms.Label()
+        Me.cmbCompany_insurance = New System.Windows.Forms.ComboBox()
+        Me.Label244 = New System.Windows.Forms.Label()
+        Me.GroupBox18 = New System.Windows.Forms.GroupBox()
+        Me.txtCusCode_MS = New System.Windows.Forms.TextBox()
+        Me.Label239 = New System.Windows.Forms.Label()
+        Me.btnMonthlyStatement = New System.Windows.Forms.Button()
+        Me.dtpMonth_MS = New System.Windows.Forms.DateTimePicker()
+        Me.Label237 = New System.Windows.Forms.Label()
         Me.GroupBox17 = New System.Windows.Forms.GroupBox()
         Me.btnEnergyBureau = New System.Windows.Forms.Button()
         Me.dtpMonth_EB = New System.Windows.Forms.DateTimePicker()
@@ -933,8 +1004,6 @@ Partial Class frmMain
         Me.dtpMonth_BankAccount = New System.Windows.Forms.DateTimePicker()
         Me.Label120 = New System.Windows.Forms.Label()
         Me.cmbBankAccount_BankAccount = New System.Windows.Forms.ComboBox()
-        Me.btnCashAccount = New System.Windows.Forms.Button()
-        Me.btnGasUsageCylinderCount = New System.Windows.Forms.Button()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.txtCusCode_report = New System.Windows.Forms.TextBox()
         Me.btnDailyCusReceivable = New System.Windows.Forms.Button()
@@ -943,17 +1012,8 @@ Partial Class frmMain
         Me.btnGasPayableDetail = New System.Windows.Forms.Button()
         Me.cmbManu = New System.Windows.Forms.ComboBox()
         Me.Label132 = New System.Windows.Forms.Label()
-        Me.dtpReport = New System.Windows.Forms.DateTimePicker()
-        Me.btnCusGetGasList = New System.Windows.Forms.Button()
-        Me.btnCusGasPayCollect = New System.Windows.Forms.Button()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.GroupBox18 = New System.Windows.Forms.GroupBox()
-        Me.btnMonthlyStatement = New System.Windows.Forms.Button()
-        Me.dtpMonth_MS = New System.Windows.Forms.DateTimePicker()
-        Me.Label237 = New System.Windows.Forms.Label()
-        Me.cmbCompany_MS = New System.Windows.Forms.ComboBox()
-        Me.Label239 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -1022,10 +1082,21 @@ Partial Class frmMain
         Me.tpCheque.SuspendLayout
         Me.GroupBox5.SuspendLayout
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.tpInvoice.SuspendLayout
+        Me.tpInvoice_Out.SuspendLayout
         Me.GroupBox11.SuspendLayout
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.tpInvoice_In.SuspendLayout
+        Me.GroupBox25.SuspendLayout
+        CType(Me.dgvInvoiceIn, System.ComponentModel.ISupportInitialize).BeginInit
         Me.tpReport.SuspendLayout
+        Me.GroupBox26.SuspendLayout
+        Me.GroupBox24.SuspendLayout
+        Me.GroupBox23.SuspendLayout
+        Me.GroupBox22.SuspendLayout
+        Me.GroupBox21.SuspendLayout
+        Me.GroupBox20.SuspendLayout
+        Me.GroupBox19.SuspendLayout
+        Me.GroupBox18.SuspendLayout
         Me.GroupBox17.SuspendLayout
         Me.GroupBox16.SuspendLayout
         Me.GroupBox15.SuspendLayout
@@ -1038,7 +1109,6 @@ Partial Class frmMain
         Me.GroupBox3.SuspendLayout
         Me.GroupBox7.SuspendLayout
         Me.GroupBox6.SuspendLayout
-        Me.GroupBox18.SuspendLayout
         Me.SuspendLayout
         '
         'TabControl1
@@ -4452,7 +4522,7 @@ Partial Class frmMain
         'cmbSubjectType
         '
         Me.cmbSubjectType.FormattingEnabled = True
-        Me.cmbSubjectType.Items.AddRange(New Object() {"營業收入", "營業費用(上)", "銷貨毛利", "營業費用(下)", "營業外收益"})
+        Me.cmbSubjectType.Items.AddRange(New Object() {"營業收入", "營業費用(上)", "營業費用(下)", "營業外收益"})
         Me.cmbSubjectType.Location = New System.Drawing.Point(390, 10)
         Me.cmbSubjectType.Name = "cmbSubjectType"
         Me.cmbSubjectType.Size = New System.Drawing.Size(150, 27)
@@ -5051,7 +5121,7 @@ Partial Class frmMain
         Me.txtSum_pur.Location = New System.Drawing.Point(1144, 92)
         Me.txtSum_pur.Name = "txtSum_pur"
         Me.txtSum_pur.ReadOnly = True
-        Me.txtSum_pur.Size = New System.Drawing.Size(200, 30)
+        Me.txtSum_pur.Size = New System.Drawing.Size(216, 30)
         Me.txtSum_pur.TabIndex = 428
         Me.txtSum_pur.Tag = "pur_price"
         '
@@ -5506,6 +5576,8 @@ Partial Class frmMain
         '
         'tpPurchaseBarrel
         '
+        Me.tpPurchaseBarrel.Controls.Add(Me.cmbCompany_pb)
+        Me.tpPurchaseBarrel.Controls.Add(Me.Label248)
         Me.tpPurchaseBarrel.Controls.Add(Me.GroupBox8)
         Me.tpPurchaseBarrel.Controls.Add(Me.dtpDate_pb)
         Me.tpPurchaseBarrel.Controls.Add(Me.Label178)
@@ -5530,13 +5602,31 @@ Partial Class frmMain
         Me.tpPurchaseBarrel.Text = "新瓶採購"
         Me.tpPurchaseBarrel.UseVisualStyleBackColor = True
         '
+        'cmbCompany_pb
+        '
+        Me.cmbCompany_pb.FormattingEnabled = True
+        Me.cmbCompany_pb.Location = New System.Drawing.Point(109, 51)
+        Me.cmbCompany_pb.Name = "cmbCompany_pb"
+        Me.cmbCompany_pb.Size = New System.Drawing.Size(485, 27)
+        Me.cmbCompany_pb.TabIndex = 427
+        Me.cmbCompany_pb.Tag = "pb_comp_Id"
+        '
+        'Label248
+        '
+        Me.Label248.AutoSize = True
+        Me.Label248.Location = New System.Drawing.Point(8, 55)
+        Me.Label248.Name = "Label248"
+        Me.Label248.Size = New System.Drawing.Size(95, 19)
+        Me.Label248.TabIndex = 426
+        Me.Label248.Text = "公    司"
+        '
         'GroupBox8
         '
         Me.GroupBox8.Controls.Add(Me.chkIsDate_pb)
         Me.GroupBox8.Controls.Add(Me.dtpEndDate_pb)
         Me.GroupBox8.Controls.Add(Me.dtpStartDate_pb)
         Me.GroupBox8.Controls.Add(Me.Label179)
-        Me.GroupBox8.Location = New System.Drawing.Point(1132, 8)
+        Me.GroupBox8.Location = New System.Drawing.Point(1267, 8)
         Me.GroupBox8.Name = "GroupBox8"
         Me.GroupBox8.Size = New System.Drawing.Size(502, 89)
         Me.GroupBox8.TabIndex = 425
@@ -5580,7 +5670,7 @@ Partial Class frmMain
         '
         'dtpDate_pb
         '
-        Me.dtpDate_pb.Location = New System.Drawing.Point(109, 51)
+        Me.dtpDate_pb.Location = New System.Drawing.Point(109, 92)
         Me.dtpDate_pb.Name = "dtpDate_pb"
         Me.dtpDate_pb.Size = New System.Drawing.Size(189, 30)
         Me.dtpDate_pb.TabIndex = 424
@@ -5589,7 +5679,7 @@ Partial Class frmMain
         'Label178
         '
         Me.Label178.AutoSize = True
-        Me.Label178.Location = New System.Drawing.Point(8, 57)
+        Me.Label178.Location = New System.Drawing.Point(8, 98)
         Me.Label178.Name = "Label178"
         Me.Label178.Size = New System.Drawing.Size(95, 19)
         Me.Label178.TabIndex = 423
@@ -5661,7 +5751,7 @@ Partial Class frmMain
         '
         'txtAmount_pb
         '
-        Me.txtAmount_pb.Location = New System.Drawing.Point(109, 97)
+        Me.txtAmount_pb.Location = New System.Drawing.Point(405, 92)
         Me.txtAmount_pb.Name = "txtAmount_pb"
         Me.txtAmount_pb.ReadOnly = True
         Me.txtAmount_pb.Size = New System.Drawing.Size(189, 30)
@@ -5671,7 +5761,7 @@ Partial Class frmMain
         'Label177
         '
         Me.Label177.AutoSize = True
-        Me.Label177.Location = New System.Drawing.Point(8, 103)
+        Me.Label177.Location = New System.Drawing.Point(304, 98)
         Me.Label177.Name = "Label177"
         Me.Label177.Size = New System.Drawing.Size(95, 19)
         Me.Label177.TabIndex = 22
@@ -5708,7 +5798,7 @@ Partial Class frmMain
         Me.grpBarrel.Controls.Add(Me.Label168)
         Me.grpBarrel.Controls.Add(Me.Label167)
         Me.grpBarrel.Controls.Add(Me.Label163)
-        Me.grpBarrel.Location = New System.Drawing.Point(467, 10)
+        Me.grpBarrel.Location = New System.Drawing.Point(602, 10)
         Me.grpBarrel.Margin = New System.Windows.Forms.Padding(5)
         Me.grpBarrel.Name = "grpBarrel"
         Me.grpBarrel.Padding = New System.Windows.Forms.Padding(5)
@@ -5965,13 +6055,13 @@ Partial Class frmMain
         Me.cmbVendor_pb.FormattingEnabled = True
         Me.cmbVendor_pb.Location = New System.Drawing.Point(109, 8)
         Me.cmbVendor_pb.Name = "cmbVendor_pb"
-        Me.cmbVendor_pb.Size = New System.Drawing.Size(350, 27)
+        Me.cmbVendor_pb.Size = New System.Drawing.Size(485, 27)
         Me.cmbVendor_pb.TabIndex = 2
         Me.cmbVendor_pb.Tag = "pb_manu_Id"
         '
         'txtId_pb
         '
-        Me.txtId_pb.Location = New System.Drawing.Point(304, 97)
+        Me.txtId_pb.Location = New System.Drawing.Point(778, 169)
         Me.txtId_pb.Name = "txtId_pb"
         Me.txtId_pb.ReadOnly = True
         Me.txtId_pb.Size = New System.Drawing.Size(121, 30)
@@ -6463,7 +6553,7 @@ Partial Class frmMain
         Me.lblPayType_payment.Name = "lblPayType_payment"
         Me.lblPayType_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblPayType_payment.TabIndex = 398
-        Me.lblPayType_payment.Text = "付款類型"
+        Me.lblPayType_payment.Text = "貸方科目"
         '
         'Label190
         '
@@ -6497,6 +6587,12 @@ Partial Class frmMain
         '
         'tpOrder
         '
+        Me.tpOrder.Controls.Add(Me.txtGasCUnitPrice)
+        Me.tpOrder.Controls.Add(Me.Label241)
+        Me.tpOrder.Controls.Add(Me.txtGasUnitPrice)
+        Me.tpOrder.Controls.Add(Me.Label240)
+        Me.tpOrder.Controls.Add(Me.txtBarrelAmount)
+        Me.tpOrder.Controls.Add(Me.Label238)
         Me.tpOrder.Controls.Add(Me.btnEdit_ord)
         Me.tpOrder.Controls.Add(Me.txtInsurance)
         Me.tpOrder.Controls.Add(Me.Label153)
@@ -6544,6 +6640,60 @@ Partial Class frmMain
         Me.tpOrder.Text = "銷售管理"
         Me.tpOrder.UseVisualStyleBackColor = True
         '
+        'txtGasCUnitPrice
+        '
+        Me.txtGasCUnitPrice.Location = New System.Drawing.Point(519, 180)
+        Me.txtGasCUnitPrice.Name = "txtGasCUnitPrice"
+        Me.txtGasCUnitPrice.ReadOnly = True
+        Me.txtGasCUnitPrice.Size = New System.Drawing.Size(100, 30)
+        Me.txtGasCUnitPrice.TabIndex = 472
+        Me.txtGasCUnitPrice.Tag = "o_UnitPriceC"
+        '
+        'Label241
+        '
+        Me.Label241.AutoSize = True
+        Me.Label241.Location = New System.Drawing.Point(420, 186)
+        Me.Label241.Name = "Label241"
+        Me.Label241.Size = New System.Drawing.Size(93, 19)
+        Me.Label241.TabIndex = 471
+        Me.Label241.Text = "丙氣單價"
+        '
+        'txtGasUnitPrice
+        '
+        Me.txtGasUnitPrice.Location = New System.Drawing.Point(519, 137)
+        Me.txtGasUnitPrice.Name = "txtGasUnitPrice"
+        Me.txtGasUnitPrice.ReadOnly = True
+        Me.txtGasUnitPrice.Size = New System.Drawing.Size(100, 30)
+        Me.txtGasUnitPrice.TabIndex = 470
+        Me.txtGasUnitPrice.Tag = "o_UnitPrice"
+        '
+        'Label240
+        '
+        Me.Label240.AutoSize = True
+        Me.Label240.Location = New System.Drawing.Point(420, 143)
+        Me.Label240.Name = "Label240"
+        Me.Label240.Size = New System.Drawing.Size(93, 19)
+        Me.Label240.TabIndex = 469
+        Me.Label240.Text = "普氣單價"
+        '
+        'txtBarrelAmount
+        '
+        Me.txtBarrelAmount.Location = New System.Drawing.Point(108, 223)
+        Me.txtBarrelAmount.Name = "txtBarrelAmount"
+        Me.txtBarrelAmount.ReadOnly = True
+        Me.txtBarrelAmount.Size = New System.Drawing.Size(100, 30)
+        Me.txtBarrelAmount.TabIndex = 468
+        Me.txtBarrelAmount.Tag = "o_BarrelPrice"
+        '
+        'Label238
+        '
+        Me.Label238.AutoSize = True
+        Me.Label238.Location = New System.Drawing.Point(8, 229)
+        Me.Label238.Name = "Label238"
+        Me.Label238.Size = New System.Drawing.Size(94, 19)
+        Me.Label238.TabIndex = 467
+        Me.Label238.Text = "桶 金 額"
+        '
         'btnEdit_ord
         '
         Me.btnEdit_ord.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
@@ -6556,7 +6706,7 @@ Partial Class frmMain
         '
         'txtInsurance
         '
-        Me.txtInsurance.Location = New System.Drawing.Point(109, 223)
+        Me.txtInsurance.Location = New System.Drawing.Point(726, 180)
         Me.txtInsurance.Name = "txtInsurance"
         Me.txtInsurance.ReadOnly = True
         Me.txtInsurance.Size = New System.Drawing.Size(100, 30)
@@ -6566,7 +6716,7 @@ Partial Class frmMain
         'Label153
         '
         Me.Label153.AutoSize = True
-        Me.Label153.Location = New System.Drawing.Point(8, 229)
+        Me.Label153.Location = New System.Drawing.Point(625, 186)
         Me.Label153.Name = "Label153"
         Me.Label153.Size = New System.Drawing.Size(93, 19)
         Me.Label153.TabIndex = 464
@@ -6593,7 +6743,7 @@ Partial Class frmMain
         '
         'txtOperator
         '
-        Me.txtOperator.Location = New System.Drawing.Point(315, 223)
+        Me.txtOperator.Location = New System.Drawing.Point(519, 223)
         Me.txtOperator.Name = "txtOperator"
         Me.txtOperator.ReadOnly = True
         Me.txtOperator.Size = New System.Drawing.Size(100, 30)
@@ -6603,7 +6753,7 @@ Partial Class frmMain
         'Label107
         '
         Me.Label107.AutoSize = True
-        Me.Label107.Location = New System.Drawing.Point(215, 229)
+        Me.Label107.Location = New System.Drawing.Point(420, 229)
         Me.Label107.Name = "Label107"
         Me.Label107.Size = New System.Drawing.Size(93, 19)
         Me.Label107.TabIndex = 458
@@ -6613,7 +6763,7 @@ Partial Class frmMain
         '
         Me.tcInOut.Controls.Add(Me.tpIn)
         Me.tcInOut.Controls.Add(Me.tpOut)
-        Me.tcInOut.Location = New System.Drawing.Point(826, 8)
+        Me.tcInOut.Location = New System.Drawing.Point(832, 8)
         Me.tcInOut.Name = "tcInOut"
         Me.tcInOut.SelectedIndex = 0
         Me.tcInOut.Size = New System.Drawing.Size(1017, 389)
@@ -8167,7 +8317,7 @@ Partial Class frmMain
         '
         'txto_return_c
         '
-        Me.txto_return_c.Location = New System.Drawing.Point(315, 137)
+        Me.txto_return_c.Location = New System.Drawing.Point(108, 180)
         Me.txto_return_c.Name = "txto_return_c"
         Me.txto_return_c.Size = New System.Drawing.Size(100, 30)
         Me.txto_return_c.TabIndex = 455
@@ -8175,7 +8325,7 @@ Partial Class frmMain
         '
         'txtTotalGas_c
         '
-        Me.txtTotalGas_c.Location = New System.Drawing.Point(315, 180)
+        Me.txtTotalGas_c.Location = New System.Drawing.Point(314, 180)
         Me.txtTotalGas_c.Name = "txtTotalGas_c"
         Me.txtTotalGas_c.ReadOnly = True
         Me.txtTotalGas_c.Size = New System.Drawing.Size(100, 30)
@@ -8184,7 +8334,7 @@ Partial Class frmMain
         '
         'txtTotalGas
         '
-        Me.txtTotalGas.Location = New System.Drawing.Point(109, 180)
+        Me.txtTotalGas.Location = New System.Drawing.Point(314, 137)
         Me.txtTotalGas.Name = "txtTotalGas"
         Me.txtTotalGas.ReadOnly = True
         Me.txtTotalGas.Size = New System.Drawing.Size(100, 30)
@@ -8193,7 +8343,7 @@ Partial Class frmMain
         '
         'txto_sales_allowance
         '
-        Me.txto_sales_allowance.Location = New System.Drawing.Point(522, 137)
+        Me.txto_sales_allowance.Location = New System.Drawing.Point(726, 137)
         Me.txto_sales_allowance.Name = "txto_sales_allowance"
         Me.txto_sales_allowance.Size = New System.Drawing.Size(100, 30)
         Me.txto_sales_allowance.TabIndex = 448
@@ -8201,7 +8351,7 @@ Partial Class frmMain
         '
         'txto_return
         '
-        Me.txto_return.Location = New System.Drawing.Point(109, 137)
+        Me.txto_return.Location = New System.Drawing.Point(108, 137)
         Me.txto_return.Name = "txto_return"
         Me.txto_return.Size = New System.Drawing.Size(100, 30)
         Me.txto_return.TabIndex = 447
@@ -8226,7 +8376,7 @@ Partial Class frmMain
         '
         'txtAmount_ord
         '
-        Me.txtAmount_ord.Location = New System.Drawing.Point(522, 180)
+        Me.txtAmount_ord.Location = New System.Drawing.Point(314, 223)
         Me.txtAmount_ord.Name = "txtAmount_ord"
         Me.txtAmount_ord.ReadOnly = True
         Me.txtAmount_ord.Size = New System.Drawing.Size(100, 30)
@@ -8256,7 +8406,7 @@ Partial Class frmMain
         'Label204
         '
         Me.Label204.AutoSize = True
-        Me.Label204.Location = New System.Drawing.Point(215, 143)
+        Me.Label204.Location = New System.Drawing.Point(9, 186)
         Me.Label204.Name = "Label204"
         Me.Label204.Size = New System.Drawing.Size(94, 19)
         Me.Label204.TabIndex = 454
@@ -8265,7 +8415,7 @@ Partial Class frmMain
         'Label203
         '
         Me.Label203.AutoSize = True
-        Me.Label203.Location = New System.Drawing.Point(215, 186)
+        Me.Label203.Location = New System.Drawing.Point(214, 186)
         Me.Label203.Name = "Label203"
         Me.Label203.Size = New System.Drawing.Size(94, 19)
         Me.Label203.TabIndex = 452
@@ -8274,7 +8424,7 @@ Partial Class frmMain
         'Label202
         '
         Me.Label202.AutoSize = True
-        Me.Label202.Location = New System.Drawing.Point(8, 186)
+        Me.Label202.Location = New System.Drawing.Point(214, 143)
         Me.Label202.Name = "Label202"
         Me.Label202.Size = New System.Drawing.Size(94, 19)
         Me.Label202.TabIndex = 450
@@ -8310,7 +8460,7 @@ Partial Class frmMain
         Me.grpSearch_ord.Controls.Add(Me.dtpEnd_order)
         Me.grpSearch_ord.Controls.Add(Me.Label166)
         Me.grpSearch_ord.Controls.Add(Me.dtpStart_order)
-        Me.grpSearch_ord.Location = New System.Drawing.Point(8, 313)
+        Me.grpSearch_ord.Location = New System.Drawing.Point(8, 317)
         Me.grpSearch_ord.Name = "grpSearch_ord"
         Me.grpSearch_ord.Size = New System.Drawing.Size(804, 80)
         Me.grpSearch_ord.TabIndex = 446
@@ -8374,7 +8524,7 @@ Partial Class frmMain
         'Label77
         '
         Me.Label77.AutoSize = True
-        Me.Label77.Location = New System.Drawing.Point(421, 143)
+        Me.Label77.Location = New System.Drawing.Point(625, 143)
         Me.Label77.Name = "Label77"
         Me.Label77.Size = New System.Drawing.Size(95, 19)
         Me.Label77.TabIndex = 445
@@ -8421,7 +8571,7 @@ Partial Class frmMain
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(421, 186)
+        Me.Label1.Location = New System.Drawing.Point(214, 229)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(94, 19)
         Me.Label1.TabIndex = 437
@@ -9161,7 +9311,8 @@ Partial Class frmMain
         'TabControl6
         '
         Me.TabControl6.Controls.Add(Me.tpCheque)
-        Me.TabControl6.Controls.Add(Me.tpInvoice)
+        Me.TabControl6.Controls.Add(Me.tpInvoice_Out)
+        Me.TabControl6.Controls.Add(Me.tpInvoice_In)
         Me.TabControl6.Controls.Add(Me.tpReport)
         Me.TabControl6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl6.Location = New System.Drawing.Point(3, 3)
@@ -9522,48 +9673,81 @@ Partial Class frmMain
         Me.dgvCheque.Size = New System.Drawing.Size(1872, 790)
         Me.dgvCheque.TabIndex = 346
         '
-        'tpInvoice
+        'tpInvoice_Out
         '
-        Me.tpInvoice.Controls.Add(Me.Label235)
-        Me.tpInvoice.Controls.Add(Me.TextBox13)
-        Me.tpInvoice.Controls.Add(Me.GroupBox11)
-        Me.tpInvoice.Controls.Add(Me.Label186)
-        Me.tpInvoice.Controls.Add(Me.txtInvoiceMemo_invoice)
-        Me.tpInvoice.Controls.Add(Me.cmbType_invoice)
-        Me.tpInvoice.Controls.Add(Me.Label183)
-        Me.tpInvoice.Controls.Add(Me.chkSearchMonth)
-        Me.tpInvoice.Controls.Add(Me.btnSearch_invoice)
-        Me.tpInvoice.Controls.Add(Me.Label89)
-        Me.tpInvoice.Controls.Add(Me.txtTax)
-        Me.tpInvoice.Controls.Add(Me.Label88)
-        Me.tpInvoice.Controls.Add(Me.txtUnitPrice_invoice)
-        Me.tpInvoice.Controls.Add(Me.Label87)
-        Me.tpInvoice.Controls.Add(Me.txtKg_invoice)
-        Me.tpInvoice.Controls.Add(Me.dtpMonth_invoice)
-        Me.tpInvoice.Controls.Add(Me.lblMonth_invoice)
-        Me.tpInvoice.Controls.Add(Me.Label164)
-        Me.tpInvoice.Controls.Add(Me.txtAmount_invoice)
-        Me.tpInvoice.Controls.Add(Me.lblNumber_invoice)
-        Me.tpInvoice.Controls.Add(Me.txtNumber_invoice)
-        Me.tpInvoice.Controls.Add(Me.btnSearchCus_invoice)
-        Me.tpInvoice.Controls.Add(Me.lblCusCode_invoice)
-        Me.tpInvoice.Controls.Add(Me.txtCusCode_invoice)
-        Me.tpInvoice.Controls.Add(Me.txtId_invoice)
-        Me.tpInvoice.Controls.Add(Me.txtCusId_invoice)
-        Me.tpInvoice.Controls.Add(Me.btnCancel_invoice)
-        Me.tpInvoice.Controls.Add(Me.btnDelete_invoice)
-        Me.tpInvoice.Controls.Add(Me.btnEdit_invoice)
-        Me.tpInvoice.Controls.Add(Me.btnAdd_invoice)
-        Me.tpInvoice.Controls.Add(Me.Label86)
-        Me.tpInvoice.Controls.Add(Me.dgvInvoice)
-        Me.tpInvoice.Controls.Add(Me.txtCusName_invoice)
-        Me.tpInvoice.Location = New System.Drawing.Point(4, 29)
-        Me.tpInvoice.Name = "tpInvoice"
-        Me.tpInvoice.Padding = New System.Windows.Forms.Padding(5)
-        Me.tpInvoice.Size = New System.Drawing.Size(1882, 949)
-        Me.tpInvoice.TabIndex = 27
-        Me.tpInvoice.Text = "發票管理"
-        Me.tpInvoice.UseVisualStyleBackColor = True
+        Me.tpInvoice_Out.Controls.Add(Me.chkIsInvalid)
+        Me.tpInvoice_Out.Controls.Add(Me.cmbInvoiceType)
+        Me.tpInvoice_Out.Controls.Add(Me.Label247)
+        Me.tpInvoice_Out.Controls.Add(Me.Label235)
+        Me.tpInvoice_Out.Controls.Add(Me.TextBox13)
+        Me.tpInvoice_Out.Controls.Add(Me.GroupBox11)
+        Me.tpInvoice_Out.Controls.Add(Me.Label186)
+        Me.tpInvoice_Out.Controls.Add(Me.txtInvoiceMemo_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.cmbType_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.Label183)
+        Me.tpInvoice_Out.Controls.Add(Me.chkSearchMonth)
+        Me.tpInvoice_Out.Controls.Add(Me.btnSearch_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.Label89)
+        Me.tpInvoice_Out.Controls.Add(Me.txtTax)
+        Me.tpInvoice_Out.Controls.Add(Me.Label88)
+        Me.tpInvoice_Out.Controls.Add(Me.txtUnitPrice_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.Label87)
+        Me.tpInvoice_Out.Controls.Add(Me.txtKg_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.dtpMonth_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.lblMonth_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.Label164)
+        Me.tpInvoice_Out.Controls.Add(Me.txtAmount_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.lblNumber_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.txtNumber_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.btnSearchCus_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.lblCusCode_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.txtCusCode_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.txtId_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.txtCusId_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.btnCancel_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.btnDelete_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.btnEdit_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.btnAdd_invoice)
+        Me.tpInvoice_Out.Controls.Add(Me.Label86)
+        Me.tpInvoice_Out.Controls.Add(Me.dgvInvoice)
+        Me.tpInvoice_Out.Controls.Add(Me.txtCusName_invoice)
+        Me.tpInvoice_Out.Location = New System.Drawing.Point(4, 29)
+        Me.tpInvoice_Out.Name = "tpInvoice_Out"
+        Me.tpInvoice_Out.Padding = New System.Windows.Forms.Padding(5)
+        Me.tpInvoice_Out.Size = New System.Drawing.Size(1882, 949)
+        Me.tpInvoice_Out.TabIndex = 27
+        Me.tpInvoice_Out.Text = "發票管理"
+        Me.tpInvoice_Out.UseVisualStyleBackColor = True
+        '
+        'chkIsInvalid
+        '
+        Me.chkIsInvalid.AutoSize = True
+        Me.chkIsInvalid.Location = New System.Drawing.Point(1031, 100)
+        Me.chkIsInvalid.Name = "chkIsInvalid"
+        Me.chkIsInvalid.Size = New System.Drawing.Size(70, 23)
+        Me.chkIsInvalid.TabIndex = 456
+        Me.chkIsInvalid.Tag = "i_IsInvalid"
+        Me.chkIsInvalid.Text = "作廢"
+        Me.chkIsInvalid.UseVisualStyleBackColor = True
+        '
+        'cmbInvoiceType
+        '
+        Me.cmbInvoiceType.FormattingEnabled = True
+        Me.cmbInvoiceType.Items.AddRange(New Object() {"機開二聯", "機開三聯", "手開二聯", "手開三聯"})
+        Me.cmbInvoiceType.Location = New System.Drawing.Point(727, 55)
+        Me.cmbInvoiceType.Name = "cmbInvoiceType"
+        Me.cmbInvoiceType.Size = New System.Drawing.Size(121, 27)
+        Me.cmbInvoiceType.TabIndex = 455
+        Me.cmbInvoiceType.Tag = "i_InvoiceType"
+        '
+        'Label247
+        '
+        Me.Label247.AutoSize = True
+        Me.Label247.Location = New System.Drawing.Point(626, 59)
+        Me.Label247.Name = "Label247"
+        Me.Label247.Size = New System.Drawing.Size(93, 19)
+        Me.Label247.TabIndex = 454
+        Me.Label247.Text = "發票類型"
         '
         'Label235
         '
@@ -9579,47 +9763,25 @@ Partial Class frmMain
         Me.TextBox13.Location = New System.Drawing.Point(727, 96)
         Me.TextBox13.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.TextBox13.Name = "TextBox13"
-        Me.TextBox13.Size = New System.Drawing.Size(291, 30)
+        Me.TextBox13.Size = New System.Drawing.Size(293, 30)
         Me.TextBox13.TabIndex = 452
         Me.TextBox13.Tag = "i_Memo"
         '
         'GroupBox11
         '
-        Me.GroupBox11.Controls.Add(Me.txtPickCInvoice)
-        Me.GroupBox11.Controls.Add(Me.txtPickNormInvoice)
         Me.GroupBox11.Controls.Add(Me.txtDeliCInvoice)
         Me.GroupBox11.Controls.Add(Me.txtDeliNormInvoice)
-        Me.GroupBox11.Controls.Add(Me.txtPickCTotal)
-        Me.GroupBox11.Controls.Add(Me.txtPickNormTotal)
         Me.GroupBox11.Controls.Add(Me.txtDeliCTotal)
         Me.GroupBox11.Controls.Add(Me.txtDeliNormTotal)
-        Me.GroupBox11.Controls.Add(Me.Label195)
         Me.GroupBox11.Controls.Add(Me.Label194)
         Me.GroupBox11.Controls.Add(Me.Label193)
-        Me.GroupBox11.Controls.Add(Me.Label189)
         Me.GroupBox11.Controls.Add(Me.Label188)
         Me.GroupBox11.Controls.Add(Me.Label187)
         Me.GroupBox11.Location = New System.Drawing.Point(1262, 8)
         Me.GroupBox11.Name = "GroupBox11"
-        Me.GroupBox11.Size = New System.Drawing.Size(513, 134)
+        Me.GroupBox11.Size = New System.Drawing.Size(295, 134)
         Me.GroupBox11.TabIndex = 451
         Me.GroupBox11.TabStop = False
-        '
-        'txtPickCInvoice
-        '
-        Me.txtPickCInvoice.Location = New System.Drawing.Point(411, 94)
-        Me.txtPickCInvoice.Name = "txtPickCInvoice"
-        Me.txtPickCInvoice.ReadOnly = True
-        Me.txtPickCInvoice.Size = New System.Drawing.Size(93, 30)
-        Me.txtPickCInvoice.TabIndex = 14
-        '
-        'txtPickNormInvoice
-        '
-        Me.txtPickNormInvoice.Location = New System.Drawing.Point(302, 94)
-        Me.txtPickNormInvoice.Name = "txtPickNormInvoice"
-        Me.txtPickNormInvoice.ReadOnly = True
-        Me.txtPickNormInvoice.Size = New System.Drawing.Size(93, 30)
-        Me.txtPickNormInvoice.TabIndex = 13
         '
         'txtDeliCInvoice
         '
@@ -9637,22 +9799,6 @@ Partial Class frmMain
         Me.txtDeliNormInvoice.Size = New System.Drawing.Size(93, 30)
         Me.txtDeliNormInvoice.TabIndex = 10
         '
-        'txtPickCTotal
-        '
-        Me.txtPickCTotal.Location = New System.Drawing.Point(411, 48)
-        Me.txtPickCTotal.Name = "txtPickCTotal"
-        Me.txtPickCTotal.ReadOnly = True
-        Me.txtPickCTotal.Size = New System.Drawing.Size(93, 30)
-        Me.txtPickCTotal.TabIndex = 9
-        '
-        'txtPickNormTotal
-        '
-        Me.txtPickNormTotal.Location = New System.Drawing.Point(302, 48)
-        Me.txtPickNormTotal.Name = "txtPickNormTotal"
-        Me.txtPickNormTotal.ReadOnly = True
-        Me.txtPickNormTotal.Size = New System.Drawing.Size(93, 30)
-        Me.txtPickNormTotal.TabIndex = 8
-        '
         'txtDeliCTotal
         '
         Me.txtDeliCTotal.Location = New System.Drawing.Point(193, 48)
@@ -9668,15 +9814,6 @@ Partial Class frmMain
         Me.txtDeliNormTotal.ReadOnly = True
         Me.txtDeliNormTotal.Size = New System.Drawing.Size(93, 30)
         Me.txtDeliNormTotal.TabIndex = 6
-        '
-        'Label195
-        '
-        Me.Label195.AutoSize = True
-        Me.Label195.Location = New System.Drawing.Point(411, 26)
-        Me.Label195.Name = "Label195"
-        Me.Label195.Size = New System.Drawing.Size(93, 19)
-        Me.Label195.TabIndex = 5
-        Me.Label195.Text = "自運丙氣"
         '
         'Label194
         '
@@ -9696,37 +9833,28 @@ Partial Class frmMain
         Me.Label193.TabIndex = 3
         Me.Label193.Text = "總氣量"
         '
-        'Label189
-        '
-        Me.Label189.AutoSize = True
-        Me.Label189.Location = New System.Drawing.Point(302, 26)
-        Me.Label189.Name = "Label189"
-        Me.Label189.Size = New System.Drawing.Size(93, 19)
-        Me.Label189.TabIndex = 2
-        Me.Label189.Text = "自運普氣"
-        '
         'Label188
         '
         Me.Label188.AutoSize = True
-        Me.Label188.Location = New System.Drawing.Point(193, 26)
+        Me.Label188.Location = New System.Drawing.Point(214, 26)
         Me.Label188.Name = "Label188"
-        Me.Label188.Size = New System.Drawing.Size(93, 19)
+        Me.Label188.Size = New System.Drawing.Size(51, 19)
         Me.Label188.TabIndex = 1
-        Me.Label188.Text = "廠運丙氣"
+        Me.Label188.Text = "丙氣"
         '
         'Label187
         '
         Me.Label187.AutoSize = True
-        Me.Label187.Location = New System.Drawing.Point(84, 26)
+        Me.Label187.Location = New System.Drawing.Point(105, 26)
         Me.Label187.Name = "Label187"
-        Me.Label187.Size = New System.Drawing.Size(93, 19)
+        Me.Label187.Size = New System.Drawing.Size(51, 19)
         Me.Label187.TabIndex = 0
-        Me.Label187.Text = "廠運普氣"
+        Me.Label187.Text = "普氣"
         '
         'Label186
         '
         Me.Label186.AutoSize = True
-        Me.Label186.Location = New System.Drawing.Point(626, 59)
+        Me.Label186.Location = New System.Drawing.Point(243, 102)
         Me.Label186.Name = "Label186"
         Me.Label186.Size = New System.Drawing.Size(93, 19)
         Me.Label186.TabIndex = 450
@@ -9734,18 +9862,18 @@ Partial Class frmMain
         '
         'txtInvoiceMemo_invoice
         '
-        Me.txtInvoiceMemo_invoice.Location = New System.Drawing.Point(727, 53)
+        Me.txtInvoiceMemo_invoice.Location = New System.Drawing.Point(345, 96)
         Me.txtInvoiceMemo_invoice.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtInvoiceMemo_invoice.Name = "txtInvoiceMemo_invoice"
         Me.txtInvoiceMemo_invoice.ReadOnly = True
-        Me.txtInvoiceMemo_invoice.Size = New System.Drawing.Size(291, 30)
+        Me.txtInvoiceMemo_invoice.Size = New System.Drawing.Size(275, 30)
         Me.txtInvoiceMemo_invoice.TabIndex = 449
         Me.txtInvoiceMemo_invoice.Tag = "cus_InvoiceMemo"
         '
         'cmbType_invoice
         '
         Me.cmbType_invoice.FormattingEnabled = True
-        Me.cmbType_invoice.Items.AddRange(New Object() {"廠運丙氣", "廠運普氣", "自運丙氣", "自運普氣"})
+        Me.cmbType_invoice.Items.AddRange(New Object() {"丙氣", "普氣", "分裝費"})
         Me.cmbType_invoice.Location = New System.Drawing.Point(727, 12)
         Me.cmbType_invoice.Name = "cmbType_invoice"
         Me.cmbType_invoice.Size = New System.Drawing.Size(121, 27)
@@ -9764,7 +9892,7 @@ Partial Class frmMain
         'chkSearchMonth
         '
         Me.chkSearchMonth.AutoSize = True
-        Me.chkSearchMonth.Location = New System.Drawing.Point(778, 147)
+        Me.chkSearchMonth.Location = New System.Drawing.Point(778, 145)
         Me.chkSearchMonth.Name = "chkSearchMonth"
         Me.chkSearchMonth.Size = New System.Drawing.Size(154, 23)
         Me.chkSearchMonth.TabIndex = 446
@@ -9784,7 +9912,7 @@ Partial Class frmMain
         'Label89
         '
         Me.Label89.AutoSize = True
-        Me.Label89.Location = New System.Drawing.Point(331, 102)
+        Me.Label89.Location = New System.Drawing.Point(854, 59)
         Me.Label89.Name = "Label89"
         Me.Label89.Size = New System.Drawing.Size(30, 19)
         Me.Label89.TabIndex = 444
@@ -9792,11 +9920,11 @@ Partial Class frmMain
         '
         'txtTax
         '
-        Me.txtTax.Location = New System.Drawing.Point(432, 96)
+        Me.txtTax.Location = New System.Drawing.Point(896, 53)
         Me.txtTax.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtTax.Name = "txtTax"
         Me.txtTax.ReadOnly = True
-        Me.txtTax.Size = New System.Drawing.Size(188, 30)
+        Me.txtTax.Size = New System.Drawing.Size(124, 30)
         Me.txtTax.TabIndex = 443
         Me.txtTax.Tag = "i_Tax"
         '
@@ -9811,7 +9939,7 @@ Partial Class frmMain
         '
         'txtUnitPrice_invoice
         '
-        Me.txtUnitPrice_invoice.Location = New System.Drawing.Point(1131, 53)
+        Me.txtUnitPrice_invoice.Location = New System.Drawing.Point(1129, 53)
         Me.txtUnitPrice_invoice.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtUnitPrice_invoice.Name = "txtUnitPrice_invoice"
         Me.txtUnitPrice_invoice.ReadOnly = True
@@ -9830,7 +9958,7 @@ Partial Class frmMain
         '
         'txtKg_invoice
         '
-        Me.txtKg_invoice.Location = New System.Drawing.Point(894, 10)
+        Me.txtKg_invoice.Location = New System.Drawing.Point(896, 10)
         Me.txtKg_invoice.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtKg_invoice.Name = "txtKg_invoice"
         Me.txtKg_invoice.Size = New System.Drawing.Size(124, 30)
@@ -9870,7 +9998,7 @@ Partial Class frmMain
         Me.txtAmount_invoice.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtAmount_invoice.Name = "txtAmount_invoice"
         Me.txtAmount_invoice.ReadOnly = True
-        Me.txtAmount_invoice.Size = New System.Drawing.Size(185, 30)
+        Me.txtAmount_invoice.Size = New System.Drawing.Size(122, 30)
         Me.txtAmount_invoice.TabIndex = 435
         Me.txtAmount_invoice.Tag = "i_Amount"
         '
@@ -9924,7 +10052,7 @@ Partial Class frmMain
         '
         'txtId_invoice
         '
-        Me.txtId_invoice.Location = New System.Drawing.Point(1077, 140)
+        Me.txtId_invoice.Location = New System.Drawing.Point(1077, 141)
         Me.txtId_invoice.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtId_invoice.Name = "txtId_invoice"
         Me.txtId_invoice.ReadOnly = True
@@ -9935,14 +10063,13 @@ Partial Class frmMain
         '
         'txtCusId_invoice
         '
-        Me.txtCusId_invoice.Location = New System.Drawing.Point(941, 140)
+        Me.txtCusId_invoice.Location = New System.Drawing.Point(941, 141)
         Me.txtCusId_invoice.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCusId_invoice.Name = "txtCusId_invoice"
         Me.txtCusId_invoice.ReadOnly = True
         Me.txtCusId_invoice.Size = New System.Drawing.Size(124, 30)
         Me.txtCusId_invoice.TabIndex = 428
         Me.txtCusId_invoice.Tag = "i_cus_Id"
-        Me.txtCusId_invoice.Visible = False
         '
         'btnCancel_invoice
         '
@@ -10014,8 +10141,322 @@ Partial Class frmMain
         Me.txtCusName_invoice.TabIndex = 410
         Me.txtCusName_invoice.Tag = "cus_name"
         '
+        'tpInvoice_In
+        '
+        Me.tpInvoice_In.Controls.Add(Me.cmbComp_is)
+        Me.tpInvoice_In.Controls.Add(Me.lblComp_is)
+        Me.tpInvoice_In.Controls.Add(Me.cmbType)
+        Me.tpInvoice_In.Controls.Add(Me.Label195)
+        Me.tpInvoice_In.Controls.Add(Me.GroupBox25)
+        Me.tpInvoice_In.Controls.Add(Me.TextBox28)
+        Me.tpInvoice_In.Controls.Add(Me.dgvInvoiceIn)
+        Me.tpInvoice_In.Controls.Add(Me.btnQuery_ii)
+        Me.tpInvoice_In.Controls.Add(Me.btnCancel_ii)
+        Me.tpInvoice_In.Controls.Add(Me.btnDelete_ii)
+        Me.tpInvoice_In.Controls.Add(Me.btnEdit_ii)
+        Me.tpInvoice_In.Controls.Add(Me.btnAdd_ii)
+        Me.tpInvoice_In.Controls.Add(Me.txtTaxId_is)
+        Me.tpInvoice_In.Controls.Add(Me.lblTaxId_is)
+        Me.tpInvoice_In.Controls.Add(Me.txtAmount_ii)
+        Me.tpInvoice_In.Controls.Add(Me.Label251)
+        Me.tpInvoice_In.Controls.Add(Me.txtTax_ii)
+        Me.tpInvoice_In.Controls.Add(Me.Label250)
+        Me.tpInvoice_In.Controls.Add(Me.txtName_is)
+        Me.tpInvoice_In.Controls.Add(Me.lblName_ii)
+        Me.tpInvoice_In.Controls.Add(Me.txtNumber_ii)
+        Me.tpInvoice_In.Controls.Add(Me.lblNumber_ii)
+        Me.tpInvoice_In.Controls.Add(Me.dtpDate_ii)
+        Me.tpInvoice_In.Controls.Add(Me.Label189)
+        Me.tpInvoice_In.Location = New System.Drawing.Point(4, 29)
+        Me.tpInvoice_In.Name = "tpInvoice_In"
+        Me.tpInvoice_In.Padding = New System.Windows.Forms.Padding(5)
+        Me.tpInvoice_In.Size = New System.Drawing.Size(1882, 949)
+        Me.tpInvoice_In.TabIndex = 29
+        Me.tpInvoice_In.Text = "發票管理(分裝場)"
+        Me.tpInvoice_In.UseVisualStyleBackColor = True
+        '
+        'cmbComp_is
+        '
+        Me.cmbComp_is.FormattingEnabled = True
+        Me.cmbComp_is.Items.AddRange(New Object() {"進項", "銷項"})
+        Me.cmbComp_is.Location = New System.Drawing.Point(406, 53)
+        Me.cmbComp_is.Name = "cmbComp_is"
+        Me.cmbComp_is.Size = New System.Drawing.Size(190, 27)
+        Me.cmbComp_is.TabIndex = 457
+        Me.cmbComp_is.Tag = "is_comp_Id"
+        Me.cmbComp_is.Visible = False
+        '
+        'lblComp_is
+        '
+        Me.lblComp_is.AutoSize = True
+        Me.lblComp_is.Location = New System.Drawing.Point(305, 57)
+        Me.lblComp_is.Name = "lblComp_is"
+        Me.lblComp_is.Size = New System.Drawing.Size(95, 19)
+        Me.lblComp_is.TabIndex = 456
+        Me.lblComp_is.Text = "公    司"
+        Me.lblComp_is.Visible = False
+        '
+        'cmbType
+        '
+        Me.cmbType.FormattingEnabled = True
+        Me.cmbType.Items.AddRange(New Object() {"進項", "銷項"})
+        Me.cmbType.Location = New System.Drawing.Point(406, 10)
+        Me.cmbType.Name = "cmbType"
+        Me.cmbType.Size = New System.Drawing.Size(190, 27)
+        Me.cmbType.TabIndex = 455
+        Me.cmbType.Tag = "is_Type"
+        '
+        'Label195
+        '
+        Me.Label195.AutoSize = True
+        Me.Label195.Location = New System.Drawing.Point(305, 14)
+        Me.Label195.Name = "Label195"
+        Me.Label195.Size = New System.Drawing.Size(95, 19)
+        Me.Label195.TabIndex = 454
+        Me.Label195.Text = "分    類"
+        '
+        'GroupBox25
+        '
+        Me.GroupBox25.Controls.Add(Me.chkIsDate_ii)
+        Me.GroupBox25.Controls.Add(Me.dtpEnd_ii)
+        Me.GroupBox25.Controls.Add(Me.Label254)
+        Me.GroupBox25.Controls.Add(Me.dtpStart_ii)
+        Me.GroupBox25.Controls.Add(Me.Label253)
+        Me.GroupBox25.Location = New System.Drawing.Point(778, 60)
+        Me.GroupBox25.Name = "GroupBox25"
+        Me.GroupBox25.Size = New System.Drawing.Size(677, 70)
+        Me.GroupBox25.TabIndex = 453
+        Me.GroupBox25.TabStop = False
+        Me.GroupBox25.Text = "查詢條件"
+        '
+        'chkIsDate_ii
+        '
+        Me.chkIsDate_ii.AutoSize = True
+        Me.chkIsDate_ii.Location = New System.Drawing.Point(6, 33)
+        Me.chkIsDate_ii.Name = "chkIsDate_ii"
+        Me.chkIsDate_ii.Size = New System.Drawing.Size(196, 23)
+        Me.chkIsDate_ii.TabIndex = 4
+        Me.chkIsDate_ii.Text = "是否使用日期查詢"
+        Me.chkIsDate_ii.UseVisualStyleBackColor = True
+        '
+        'dtpEnd_ii
+        '
+        Me.dtpEnd_ii.Location = New System.Drawing.Point(476, 29)
+        Me.dtpEnd_ii.Name = "dtpEnd_ii"
+        Me.dtpEnd_ii.Size = New System.Drawing.Size(190, 30)
+        Me.dtpEnd_ii.TabIndex = 3
+        '
+        'Label254
+        '
+        Me.Label254.AutoSize = True
+        Me.Label254.Location = New System.Drawing.Point(440, 35)
+        Me.Label254.Name = "Label254"
+        Me.Label254.Size = New System.Drawing.Size(30, 19)
+        Me.Label254.TabIndex = 2
+        Me.Label254.Text = "迄"
+        '
+        'dtpStart_ii
+        '
+        Me.dtpStart_ii.Location = New System.Drawing.Point(244, 29)
+        Me.dtpStart_ii.Name = "dtpStart_ii"
+        Me.dtpStart_ii.Size = New System.Drawing.Size(190, 30)
+        Me.dtpStart_ii.TabIndex = 1
+        '
+        'Label253
+        '
+        Me.Label253.AutoSize = True
+        Me.Label253.Location = New System.Drawing.Point(208, 35)
+        Me.Label253.Name = "Label253"
+        Me.Label253.Size = New System.Drawing.Size(30, 19)
+        Me.Label253.TabIndex = 0
+        Me.Label253.Text = "起"
+        '
+        'TextBox28
+        '
+        Me.TextBox28.Location = New System.Drawing.Point(1461, 100)
+        Me.TextBox28.Name = "TextBox28"
+        Me.TextBox28.ReadOnly = True
+        Me.TextBox28.Size = New System.Drawing.Size(190, 30)
+        Me.TextBox28.TabIndex = 452
+        Me.TextBox28.Tag = "is_Id"
+        Me.TextBox28.Visible = False
+        '
+        'dgvInvoiceIn
+        '
+        Me.dgvInvoiceIn.AllowUserToAddRows = False
+        Me.dgvInvoiceIn.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvInvoiceIn.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgvInvoiceIn.Location = New System.Drawing.Point(5, 154)
+        Me.dgvInvoiceIn.Name = "dgvInvoiceIn"
+        Me.dgvInvoiceIn.ReadOnly = True
+        Me.dgvInvoiceIn.RowTemplate.Height = 24
+        Me.dgvInvoiceIn.Size = New System.Drawing.Size(1872, 790)
+        Me.dgvInvoiceIn.TabIndex = 451
+        '
+        'btnQuery_ii
+        '
+        Me.btnQuery_ii.BackColor = System.Drawing.Color.Lime
+        Me.btnQuery_ii.Location = New System.Drawing.Point(632, 86)
+        Me.btnQuery_ii.Name = "btnQuery_ii"
+        Me.btnQuery_ii.Size = New System.Drawing.Size(140, 44)
+        Me.btnQuery_ii.TabIndex = 450
+        Me.btnQuery_ii.Text = "查  詢"
+        Me.btnQuery_ii.UseVisualStyleBackColor = False
+        '
+        'btnCancel_ii
+        '
+        Me.btnCancel_ii.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancel_ii.Location = New System.Drawing.Point(476, 86)
+        Me.btnCancel_ii.Name = "btnCancel_ii"
+        Me.btnCancel_ii.Size = New System.Drawing.Size(140, 44)
+        Me.btnCancel_ii.TabIndex = 449
+        Me.btnCancel_ii.Text = "取  消"
+        Me.btnCancel_ii.UseVisualStyleBackColor = False
+        '
+        'btnDelete_ii
+        '
+        Me.btnDelete_ii.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnDelete_ii.Location = New System.Drawing.Point(320, 86)
+        Me.btnDelete_ii.Name = "btnDelete_ii"
+        Me.btnDelete_ii.Size = New System.Drawing.Size(140, 44)
+        Me.btnDelete_ii.TabIndex = 448
+        Me.btnDelete_ii.Text = "刪  除"
+        Me.btnDelete_ii.UseVisualStyleBackColor = False
+        '
+        'btnEdit_ii
+        '
+        Me.btnEdit_ii.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnEdit_ii.Location = New System.Drawing.Point(164, 86)
+        Me.btnEdit_ii.Name = "btnEdit_ii"
+        Me.btnEdit_ii.Size = New System.Drawing.Size(140, 44)
+        Me.btnEdit_ii.TabIndex = 447
+        Me.btnEdit_ii.Text = "修  改"
+        Me.btnEdit_ii.UseVisualStyleBackColor = False
+        '
+        'btnAdd_ii
+        '
+        Me.btnAdd_ii.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnAdd_ii.Location = New System.Drawing.Point(8, 86)
+        Me.btnAdd_ii.Name = "btnAdd_ii"
+        Me.btnAdd_ii.Size = New System.Drawing.Size(140, 44)
+        Me.btnAdd_ii.TabIndex = 446
+        Me.btnAdd_ii.Tag = ""
+        Me.btnAdd_ii.Text = "新  增"
+        Me.btnAdd_ii.UseVisualStyleBackColor = False
+        '
+        'txtTaxId_is
+        '
+        Me.txtTaxId_is.Location = New System.Drawing.Point(107, 51)
+        Me.txtTaxId_is.Name = "txtTaxId_is"
+        Me.txtTaxId_is.Size = New System.Drawing.Size(190, 30)
+        Me.txtTaxId_is.TabIndex = 11
+        Me.txtTaxId_is.Tag = "is_VendorTaxId"
+        Me.txtTaxId_is.Visible = False
+        '
+        'lblTaxId_is
+        '
+        Me.lblTaxId_is.AutoSize = True
+        Me.lblTaxId_is.Location = New System.Drawing.Point(8, 57)
+        Me.lblTaxId_is.Name = "lblTaxId_is"
+        Me.lblTaxId_is.Size = New System.Drawing.Size(93, 19)
+        Me.lblTaxId_is.TabIndex = 10
+        Me.lblTaxId_is.Text = "廠商統編"
+        Me.lblTaxId_is.Visible = False
+        '
+        'txtAmount_ii
+        '
+        Me.txtAmount_ii.Location = New System.Drawing.Point(1297, 8)
+        Me.txtAmount_ii.Name = "txtAmount_ii"
+        Me.txtAmount_ii.Size = New System.Drawing.Size(190, 30)
+        Me.txtAmount_ii.TabIndex = 9
+        Me.txtAmount_ii.Tag = "is_Amount"
+        '
+        'Label251
+        '
+        Me.Label251.AutoSize = True
+        Me.Label251.Location = New System.Drawing.Point(1196, 14)
+        Me.Label251.Name = "Label251"
+        Me.Label251.Size = New System.Drawing.Size(95, 19)
+        Me.Label251.TabIndex = 8
+        Me.Label251.Text = "金    額"
+        '
+        'txtTax_ii
+        '
+        Me.txtTax_ii.Location = New System.Drawing.Point(1000, 8)
+        Me.txtTax_ii.Name = "txtTax_ii"
+        Me.txtTax_ii.Size = New System.Drawing.Size(190, 30)
+        Me.txtTax_ii.TabIndex = 7
+        Me.txtTax_ii.Tag = "is_Tax"
+        '
+        'Label250
+        '
+        Me.Label250.AutoSize = True
+        Me.Label250.Location = New System.Drawing.Point(899, 14)
+        Me.Label250.Name = "Label250"
+        Me.Label250.Size = New System.Drawing.Size(95, 19)
+        Me.Label250.TabIndex = 6
+        Me.Label250.Text = "稅    金"
+        '
+        'txtName_is
+        '
+        Me.txtName_is.Location = New System.Drawing.Point(703, 8)
+        Me.txtName_is.Name = "txtName_is"
+        Me.txtName_is.Size = New System.Drawing.Size(190, 30)
+        Me.txtName_is.TabIndex = 5
+        Me.txtName_is.Tag = "is_Name"
+        '
+        'lblName_ii
+        '
+        Me.lblName_ii.AutoSize = True
+        Me.lblName_ii.Location = New System.Drawing.Point(602, 14)
+        Me.lblName_ii.Name = "lblName_ii"
+        Me.lblName_ii.Size = New System.Drawing.Size(95, 19)
+        Me.lblName_ii.TabIndex = 4
+        Me.lblName_ii.Text = "品    名"
+        '
+        'txtNumber_ii
+        '
+        Me.txtNumber_ii.Location = New System.Drawing.Point(1594, 8)
+        Me.txtNumber_ii.Name = "txtNumber_ii"
+        Me.txtNumber_ii.Size = New System.Drawing.Size(190, 30)
+        Me.txtNumber_ii.TabIndex = 3
+        Me.txtNumber_ii.Tag = "is_Number"
+        '
+        'lblNumber_ii
+        '
+        Me.lblNumber_ii.AutoSize = True
+        Me.lblNumber_ii.Location = New System.Drawing.Point(1493, 14)
+        Me.lblNumber_ii.Name = "lblNumber_ii"
+        Me.lblNumber_ii.Size = New System.Drawing.Size(93, 19)
+        Me.lblNumber_ii.TabIndex = 2
+        Me.lblNumber_ii.Text = "發票號碼"
+        '
+        'dtpDate_ii
+        '
+        Me.dtpDate_ii.Location = New System.Drawing.Point(109, 8)
+        Me.dtpDate_ii.Name = "dtpDate_ii"
+        Me.dtpDate_ii.Size = New System.Drawing.Size(190, 30)
+        Me.dtpDate_ii.TabIndex = 1
+        Me.dtpDate_ii.Tag = "is_Date"
+        '
+        'Label189
+        '
+        Me.Label189.AutoSize = True
+        Me.Label189.Location = New System.Drawing.Point(8, 14)
+        Me.Label189.Name = "Label189"
+        Me.Label189.Size = New System.Drawing.Size(95, 19)
+        Me.Label189.TabIndex = 0
+        Me.Label189.Text = "日    期"
+        '
         'tpReport
         '
+        Me.tpReport.Controls.Add(Me.GroupBox26)
+        Me.tpReport.Controls.Add(Me.GroupBox24)
+        Me.tpReport.Controls.Add(Me.GroupBox23)
+        Me.tpReport.Controls.Add(Me.GroupBox22)
+        Me.tpReport.Controls.Add(Me.GroupBox21)
+        Me.tpReport.Controls.Add(Me.GroupBox20)
+        Me.tpReport.Controls.Add(Me.GroupBox19)
         Me.tpReport.Controls.Add(Me.GroupBox18)
         Me.tpReport.Controls.Add(Me.GroupBox17)
         Me.tpReport.Controls.Add(Me.GroupBox16)
@@ -10028,13 +10469,8 @@ Partial Class frmMain
         Me.tpReport.Controls.Add(Me.GroupBox4)
         Me.tpReport.Controls.Add(Me.btnRefresh)
         Me.tpReport.Controls.Add(Me.GroupBox3)
-        Me.tpReport.Controls.Add(Me.btnCashAccount)
-        Me.tpReport.Controls.Add(Me.btnGasUsageCylinderCount)
         Me.tpReport.Controls.Add(Me.GroupBox7)
         Me.tpReport.Controls.Add(Me.GroupBox6)
-        Me.tpReport.Controls.Add(Me.dtpReport)
-        Me.tpReport.Controls.Add(Me.btnCusGetGasList)
-        Me.tpReport.Controls.Add(Me.btnCusGasPayCollect)
         Me.tpReport.Location = New System.Drawing.Point(4, 29)
         Me.tpReport.Name = "tpReport"
         Me.tpReport.Padding = New System.Windows.Forms.Padding(10)
@@ -10043,12 +10479,356 @@ Partial Class frmMain
         Me.tpReport.Text = "報表"
         Me.tpReport.UseVisualStyleBackColor = True
         '
+        'GroupBox26
+        '
+        Me.GroupBox26.Controls.Add(Me.btnInOut)
+        Me.GroupBox26.Controls.Add(Me.cmbMonth_InOut)
+        Me.GroupBox26.Controls.Add(Me.dtpYear_InOut)
+        Me.GroupBox26.Location = New System.Drawing.Point(483, 649)
+        Me.GroupBox26.Name = "GroupBox26"
+        Me.GroupBox26.Size = New System.Drawing.Size(505, 71)
+        Me.GroupBox26.TabIndex = 36
+        Me.GroupBox26.TabStop = False
+        Me.GroupBox26.Text = "進項銷項"
+        '
+        'btnInOut
+        '
+        Me.btnInOut.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnInOut.Location = New System.Drawing.Point(245, 29)
+        Me.btnInOut.Name = "btnInOut"
+        Me.btnInOut.Size = New System.Drawing.Size(72, 30)
+        Me.btnInOut.TabIndex = 9
+        Me.btnInOut.Text = "產生"
+        Me.btnInOut.UseVisualStyleBackColor = False
+        '
+        'cmbMonth_InOut
+        '
+        Me.cmbMonth_InOut.FormattingEnabled = True
+        Me.cmbMonth_InOut.Items.AddRange(New Object() {"1/2", "3/4", "5/6", "7/8", "9/10", "11/12"})
+        Me.cmbMonth_InOut.Location = New System.Drawing.Point(118, 31)
+        Me.cmbMonth_InOut.Name = "cmbMonth_InOut"
+        Me.cmbMonth_InOut.Size = New System.Drawing.Size(121, 27)
+        Me.cmbMonth_InOut.TabIndex = 1
+        '
+        'dtpYear_InOut
+        '
+        Me.dtpYear_InOut.CustomFormat = "yyyy年"
+        Me.dtpYear_InOut.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpYear_InOut.Location = New System.Drawing.Point(10, 29)
+        Me.dtpYear_InOut.Name = "dtpYear_InOut"
+        Me.dtpYear_InOut.Size = New System.Drawing.Size(102, 30)
+        Me.dtpYear_InOut.TabIndex = 0
+        '
+        'GroupBox24
+        '
+        Me.GroupBox24.Controls.Add(Me.dtpDate_ca)
+        Me.GroupBox24.Controls.Add(Me.btnCashAccount)
+        Me.GroupBox24.Location = New System.Drawing.Point(13, 391)
+        Me.GroupBox24.Name = "GroupBox24"
+        Me.GroupBox24.Size = New System.Drawing.Size(464, 70)
+        Me.GroupBox24.TabIndex = 35
+        Me.GroupBox24.TabStop = False
+        Me.GroupBox24.Text = "現金帳"
+        '
+        'dtpDate_ca
+        '
+        Me.dtpDate_ca.Location = New System.Drawing.Point(6, 29)
+        Me.dtpDate_ca.Name = "dtpDate_ca"
+        Me.dtpDate_ca.Size = New System.Drawing.Size(200, 30)
+        Me.dtpDate_ca.TabIndex = 7
+        '
+        'btnCashAccount
+        '
+        Me.btnCashAccount.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnCashAccount.Location = New System.Drawing.Point(212, 29)
+        Me.btnCashAccount.Name = "btnCashAccount"
+        Me.btnCashAccount.Size = New System.Drawing.Size(73, 30)
+        Me.btnCashAccount.TabIndex = 7
+        Me.btnCashAccount.Text = "產生"
+        Me.btnCashAccount.UseVisualStyleBackColor = False
+        '
+        'GroupBox23
+        '
+        Me.GroupBox23.Controls.Add(Me.dtpDate_gucc)
+        Me.GroupBox23.Controls.Add(Me.btnGasUsageCylinderCount)
+        Me.GroupBox23.Location = New System.Drawing.Point(13, 315)
+        Me.GroupBox23.Name = "GroupBox23"
+        Me.GroupBox23.Size = New System.Drawing.Size(464, 70)
+        Me.GroupBox23.TabIndex = 34
+        Me.GroupBox23.TabStop = False
+        Me.GroupBox23.Text = "提量支數統計"
+        '
+        'dtpDate_gucc
+        '
+        Me.dtpDate_gucc.Location = New System.Drawing.Point(6, 29)
+        Me.dtpDate_gucc.Name = "dtpDate_gucc"
+        Me.dtpDate_gucc.Size = New System.Drawing.Size(200, 30)
+        Me.dtpDate_gucc.TabIndex = 7
+        '
+        'btnGasUsageCylinderCount
+        '
+        Me.btnGasUsageCylinderCount.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnGasUsageCylinderCount.Location = New System.Drawing.Point(212, 29)
+        Me.btnGasUsageCylinderCount.Name = "btnGasUsageCylinderCount"
+        Me.btnGasUsageCylinderCount.Size = New System.Drawing.Size(73, 30)
+        Me.btnGasUsageCylinderCount.TabIndex = 6
+        Me.btnGasUsageCylinderCount.Text = "產生"
+        Me.btnGasUsageCylinderCount.UseVisualStyleBackColor = False
+        '
+        'GroupBox22
+        '
+        Me.GroupBox22.Controls.Add(Me.DateTimePicker1)
+        Me.GroupBox22.Controls.Add(Me.btnCusGetGasList)
+        Me.GroupBox22.Location = New System.Drawing.Point(13, 162)
+        Me.GroupBox22.Name = "GroupBox22"
+        Me.GroupBox22.Size = New System.Drawing.Size(464, 68)
+        Me.GroupBox22.TabIndex = 33
+        Me.GroupBox22.TabStop = False
+        Me.GroupBox22.Text = "客戶提氣清冊"
+        '
+        'DateTimePicker1
+        '
+        Me.DateTimePicker1.Location = New System.Drawing.Point(6, 29)
+        Me.DateTimePicker1.Name = "DateTimePicker1"
+        Me.DateTimePicker1.Size = New System.Drawing.Size(200, 30)
+        Me.DateTimePicker1.TabIndex = 3
+        '
+        'btnCusGetGasList
+        '
+        Me.btnCusGetGasList.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnCusGetGasList.Location = New System.Drawing.Point(212, 29)
+        Me.btnCusGetGasList.Name = "btnCusGetGasList"
+        Me.btnCusGetGasList.Size = New System.Drawing.Size(73, 30)
+        Me.btnCusGetGasList.TabIndex = 2
+        Me.btnCusGetGasList.Text = "產生"
+        Me.btnCusGetGasList.UseVisualStyleBackColor = False
+        '
+        'GroupBox21
+        '
+        Me.GroupBox21.Controls.Add(Me.dtpDate_cgpc)
+        Me.GroupBox21.Controls.Add(Me.btnCusGasPayCollect)
+        Me.GroupBox21.Location = New System.Drawing.Point(13, 13)
+        Me.GroupBox21.Name = "GroupBox21"
+        Me.GroupBox21.Size = New System.Drawing.Size(464, 69)
+        Me.GroupBox21.TabIndex = 32
+        Me.GroupBox21.TabStop = False
+        Me.GroupBox21.Text = "氣量氣款收付明細表"
+        '
+        'dtpDate_cgpc
+        '
+        Me.dtpDate_cgpc.Location = New System.Drawing.Point(6, 29)
+        Me.dtpDate_cgpc.Name = "dtpDate_cgpc"
+        Me.dtpDate_cgpc.Size = New System.Drawing.Size(200, 30)
+        Me.dtpDate_cgpc.TabIndex = 1
+        '
+        'btnCusGasPayCollect
+        '
+        Me.btnCusGasPayCollect.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnCusGasPayCollect.Location = New System.Drawing.Point(212, 29)
+        Me.btnCusGasPayCollect.Name = "btnCusGasPayCollect"
+        Me.btnCusGasPayCollect.Size = New System.Drawing.Size(73, 30)
+        Me.btnCusGasPayCollect.TabIndex = 0
+        Me.btnCusGasPayCollect.Text = "產生"
+        Me.btnCusGasPayCollect.UseVisualStyleBackColor = False
+        '
+        'GroupBox20
+        '
+        Me.GroupBox20.Controls.Add(Me.cmbCompany_IS)
+        Me.GroupBox20.Controls.Add(Me.Label246)
+        Me.GroupBox20.Controls.Add(Me.btnIncomeStatement)
+        Me.GroupBox20.Controls.Add(Me.dtpEnd_IS)
+        Me.GroupBox20.Controls.Add(Me.Label245)
+        Me.GroupBox20.Controls.Add(Me.dtpStart_IS)
+        Me.GroupBox20.Controls.Add(Me.Label243)
+        Me.GroupBox20.Location = New System.Drawing.Point(483, 451)
+        Me.GroupBox20.Name = "GroupBox20"
+        Me.GroupBox20.Size = New System.Drawing.Size(450, 116)
+        Me.GroupBox20.TabIndex = 31
+        Me.GroupBox20.TabStop = False
+        Me.GroupBox20.Text = "損益表"
+        '
+        'cmbCompany_IS
+        '
+        Me.cmbCompany_IS.FormattingEnabled = True
+        Me.cmbCompany_IS.Location = New System.Drawing.Point(63, 74)
+        Me.cmbCompany_IS.Name = "cmbCompany_IS"
+        Me.cmbCompany_IS.Size = New System.Drawing.Size(167, 27)
+        Me.cmbCompany_IS.TabIndex = 27
+        '
+        'Label246
+        '
+        Me.Label246.AutoSize = True
+        Me.Label246.Location = New System.Drawing.Point(6, 78)
+        Me.Label246.Name = "Label246"
+        Me.Label246.Size = New System.Drawing.Size(51, 19)
+        Me.Label246.TabIndex = 26
+        Me.Label246.Text = "公司"
+        '
+        'btnIncomeStatement
+        '
+        Me.btnIncomeStatement.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnIncomeStatement.Location = New System.Drawing.Point(236, 72)
+        Me.btnIncomeStatement.Name = "btnIncomeStatement"
+        Me.btnIncomeStatement.Size = New System.Drawing.Size(72, 30)
+        Me.btnIncomeStatement.TabIndex = 25
+        Me.btnIncomeStatement.Text = "產生"
+        Me.btnIncomeStatement.UseVisualStyleBackColor = False
+        '
+        'dtpEnd_IS
+        '
+        Me.dtpEnd_IS.Location = New System.Drawing.Point(270, 29)
+        Me.dtpEnd_IS.Name = "dtpEnd_IS"
+        Me.dtpEnd_IS.Size = New System.Drawing.Size(171, 30)
+        Me.dtpEnd_IS.TabIndex = 3
+        '
+        'Label245
+        '
+        Me.Label245.AutoSize = True
+        Me.Label245.Location = New System.Drawing.Point(236, 35)
+        Me.Label245.Name = "Label245"
+        Me.Label245.Size = New System.Drawing.Size(30, 19)
+        Me.Label245.TabIndex = 2
+        Me.Label245.Text = "迄"
+        '
+        'dtpStart_IS
+        '
+        Me.dtpStart_IS.Location = New System.Drawing.Point(63, 29)
+        Me.dtpStart_IS.Name = "dtpStart_IS"
+        Me.dtpStart_IS.Size = New System.Drawing.Size(167, 30)
+        Me.dtpStart_IS.TabIndex = 1
+        '
+        'Label243
+        '
+        Me.Label243.AutoSize = True
+        Me.Label243.Location = New System.Drawing.Point(6, 35)
+        Me.Label243.Name = "Label243"
+        Me.Label243.Size = New System.Drawing.Size(30, 19)
+        Me.Label243.TabIndex = 0
+        Me.Label243.Text = "起"
+        '
+        'GroupBox19
+        '
+        Me.GroupBox19.Controls.Add(Me.btnInsurance)
+        Me.GroupBox19.Controls.Add(Me.dtpMonth_insurance)
+        Me.GroupBox19.Controls.Add(Me.Label242)
+        Me.GroupBox19.Controls.Add(Me.cmbCompany_insurance)
+        Me.GroupBox19.Controls.Add(Me.Label244)
+        Me.GroupBox19.Location = New System.Drawing.Point(483, 382)
+        Me.GroupBox19.Name = "GroupBox19"
+        Me.GroupBox19.Size = New System.Drawing.Size(468, 63)
+        Me.GroupBox19.TabIndex = 30
+        Me.GroupBox19.TabStop = False
+        Me.GroupBox19.Text = "保險"
+        '
+        'btnInsurance
+        '
+        Me.btnInsurance.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnInsurance.Location = New System.Drawing.Point(386, 27)
+        Me.btnInsurance.Name = "btnInsurance"
+        Me.btnInsurance.Size = New System.Drawing.Size(72, 30)
+        Me.btnInsurance.TabIndex = 24
+        Me.btnInsurance.Text = "產生"
+        Me.btnInsurance.UseVisualStyleBackColor = False
+        '
+        'dtpMonth_insurance
+        '
+        Me.dtpMonth_insurance.CustomFormat = "yyyy年MM月"
+        Me.dtpMonth_insurance.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpMonth_insurance.Location = New System.Drawing.Point(253, 27)
+        Me.dtpMonth_insurance.Name = "dtpMonth_insurance"
+        Me.dtpMonth_insurance.Size = New System.Drawing.Size(127, 30)
+        Me.dtpMonth_insurance.TabIndex = 23
+        '
+        'Label242
+        '
+        Me.Label242.AutoSize = True
+        Me.Label242.Location = New System.Drawing.Point(196, 33)
+        Me.Label242.Name = "Label242"
+        Me.Label242.Size = New System.Drawing.Size(51, 19)
+        Me.Label242.TabIndex = 22
+        Me.Label242.Text = "月份"
+        '
+        'cmbCompany_insurance
+        '
+        Me.cmbCompany_insurance.FormattingEnabled = True
+        Me.cmbCompany_insurance.Location = New System.Drawing.Point(63, 29)
+        Me.cmbCompany_insurance.Name = "cmbCompany_insurance"
+        Me.cmbCompany_insurance.Size = New System.Drawing.Size(127, 27)
+        Me.cmbCompany_insurance.TabIndex = 19
+        '
+        'Label244
+        '
+        Me.Label244.AutoSize = True
+        Me.Label244.Location = New System.Drawing.Point(6, 33)
+        Me.Label244.Name = "Label244"
+        Me.Label244.Size = New System.Drawing.Size(51, 19)
+        Me.Label244.TabIndex = 18
+        Me.Label244.Text = "公司"
+        '
+        'GroupBox18
+        '
+        Me.GroupBox18.Controls.Add(Me.txtCusCode_MS)
+        Me.GroupBox18.Controls.Add(Me.Label239)
+        Me.GroupBox18.Controls.Add(Me.btnMonthlyStatement)
+        Me.GroupBox18.Controls.Add(Me.dtpMonth_MS)
+        Me.GroupBox18.Controls.Add(Me.Label237)
+        Me.GroupBox18.Location = New System.Drawing.Point(483, 307)
+        Me.GroupBox18.Name = "GroupBox18"
+        Me.GroupBox18.Size = New System.Drawing.Size(489, 69)
+        Me.GroupBox18.TabIndex = 29
+        Me.GroupBox18.TabStop = False
+        Me.GroupBox18.Text = "月對帳單"
+        '
+        'txtCusCode_MS
+        '
+        Me.txtCusCode_MS.Location = New System.Drawing.Point(105, 29)
+        Me.txtCusCode_MS.Name = "txtCusCode_MS"
+        Me.txtCusCode_MS.Size = New System.Drawing.Size(108, 30)
+        Me.txtCusCode_MS.TabIndex = 26
+        '
+        'Label239
+        '
+        Me.Label239.AutoSize = True
+        Me.Label239.Location = New System.Drawing.Point(6, 35)
+        Me.Label239.Name = "Label239"
+        Me.Label239.Size = New System.Drawing.Size(93, 19)
+        Me.Label239.TabIndex = 25
+        Me.Label239.Text = "客戶代號"
+        '
+        'btnMonthlyStatement
+        '
+        Me.btnMonthlyStatement.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnMonthlyStatement.Location = New System.Drawing.Point(407, 29)
+        Me.btnMonthlyStatement.Name = "btnMonthlyStatement"
+        Me.btnMonthlyStatement.Size = New System.Drawing.Size(72, 30)
+        Me.btnMonthlyStatement.TabIndex = 24
+        Me.btnMonthlyStatement.Text = "產生"
+        Me.btnMonthlyStatement.UseVisualStyleBackColor = False
+        '
+        'dtpMonth_MS
+        '
+        Me.dtpMonth_MS.CustomFormat = "yyyy年MM月"
+        Me.dtpMonth_MS.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpMonth_MS.Location = New System.Drawing.Point(276, 29)
+        Me.dtpMonth_MS.Name = "dtpMonth_MS"
+        Me.dtpMonth_MS.Size = New System.Drawing.Size(125, 30)
+        Me.dtpMonth_MS.TabIndex = 23
+        '
+        'Label237
+        '
+        Me.Label237.AutoSize = True
+        Me.Label237.Location = New System.Drawing.Point(219, 35)
+        Me.Label237.Name = "Label237"
+        Me.Label237.Size = New System.Drawing.Size(51, 19)
+        Me.Label237.TabIndex = 22
+        Me.Label237.Text = "月份"
+        '
         'GroupBox17
         '
         Me.GroupBox17.Controls.Add(Me.btnEnergyBureau)
         Me.GroupBox17.Controls.Add(Me.dtpMonth_EB)
         Me.GroupBox17.Controls.Add(Me.Label236)
-        Me.GroupBox17.Location = New System.Drawing.Point(524, 233)
+        Me.GroupBox17.Location = New System.Drawing.Point(483, 233)
         Me.GroupBox17.Name = "GroupBox17"
         Me.GroupBox17.Size = New System.Drawing.Size(279, 68)
         Me.GroupBox17.TabIndex = 28
@@ -10088,7 +10868,7 @@ Partial Class frmMain
         Me.GroupBox16.Controls.Add(Me.btnTax)
         Me.GroupBox16.Controls.Add(Me.dtpMonth_tax)
         Me.GroupBox16.Controls.Add(Me.Label234)
-        Me.GroupBox16.Location = New System.Drawing.Point(524, 159)
+        Me.GroupBox16.Location = New System.Drawing.Point(483, 159)
         Me.GroupBox16.Name = "GroupBox16"
         Me.GroupBox16.Size = New System.Drawing.Size(279, 68)
         Me.GroupBox16.TabIndex = 27
@@ -10128,7 +10908,7 @@ Partial Class frmMain
         Me.GroupBox15.Controls.Add(Me.btnPayableCheck)
         Me.GroupBox15.Controls.Add(Me.dtpMonth_PayableCheck)
         Me.GroupBox15.Controls.Add(Me.Label61)
-        Me.GroupBox15.Location = New System.Drawing.Point(524, 85)
+        Me.GroupBox15.Location = New System.Drawing.Point(483, 85)
         Me.GroupBox15.Name = "GroupBox15"
         Me.GroupBox15.Size = New System.Drawing.Size(279, 68)
         Me.GroupBox15.TabIndex = 26
@@ -10170,7 +10950,7 @@ Partial Class frmMain
         Me.GroupBox14.Controls.Add(Me.Label197)
         Me.GroupBox14.Controls.Add(Me.cmbCompany_ITD)
         Me.GroupBox14.Controls.Add(Me.Label233)
-        Me.GroupBox14.Location = New System.Drawing.Point(524, 13)
+        Me.GroupBox14.Location = New System.Drawing.Point(483, 13)
         Me.GroupBox14.Name = "GroupBox14"
         Me.GroupBox14.Size = New System.Drawing.Size(450, 66)
         Me.GroupBox14.TabIndex = 25
@@ -10227,9 +11007,9 @@ Partial Class frmMain
         Me.GroupBox13.Controls.Add(Me.btnMAR)
         Me.GroupBox13.Controls.Add(Me.dtpMonth_MAR)
         Me.GroupBox13.Controls.Add(Me.Label196)
-        Me.GroupBox13.Location = New System.Drawing.Point(13, 828)
+        Me.GroupBox13.Location = New System.Drawing.Point(13, 844)
         Me.GroupBox13.Name = "GroupBox13"
-        Me.GroupBox13.Size = New System.Drawing.Size(279, 68)
+        Me.GroupBox13.Size = New System.Drawing.Size(464, 68)
         Me.GroupBox13.TabIndex = 26
         Me.GroupBox13.TabStop = False
         Me.GroupBox13.Text = "月應收帳明細"
@@ -10267,12 +11047,13 @@ Partial Class frmMain
         Me.GroupBox12.Controls.Add(Me.btnGenerate_RI)
         Me.GroupBox12.Controls.Add(Me.dtpMonth_RI)
         Me.GroupBox12.Controls.Add(Me.Label101)
-        Me.GroupBox12.Location = New System.Drawing.Point(13, 754)
+        Me.GroupBox12.Location = New System.Drawing.Point(13, 770)
         Me.GroupBox12.Name = "GroupBox12"
-        Me.GroupBox12.Size = New System.Drawing.Size(279, 68)
+        Me.GroupBox12.Size = New System.Drawing.Size(464, 68)
         Me.GroupBox12.TabIndex = 25
         Me.GroupBox12.TabStop = False
         Me.GroupBox12.Text = "發票"
+        Me.GroupBox12.Visible = False
         '
         'btnGenerate_RI
         '
@@ -10311,9 +11092,9 @@ Partial Class frmMain
         Me.GroupBox10.Controls.Add(Me.Label181)
         Me.GroupBox10.Controls.Add(Me.cmbCompany_br)
         Me.GroupBox10.Controls.Add(Me.Label180)
-        Me.GroupBox10.Location = New System.Drawing.Point(13, 648)
+        Me.GroupBox10.Location = New System.Drawing.Point(13, 664)
         Me.GroupBox10.Name = "GroupBox10"
-        Me.GroupBox10.Size = New System.Drawing.Size(416, 100)
+        Me.GroupBox10.Size = New System.Drawing.Size(464, 100)
         Me.GroupBox10.TabIndex = 17
         Me.GroupBox10.TabStop = False
         Me.GroupBox10.Text = "應收票據"
@@ -10385,9 +11166,9 @@ Partial Class frmMain
         Me.GroupBox9.Controls.Add(Me.btnNewBarrel)
         Me.GroupBox9.Controls.Add(Me.Label106)
         Me.GroupBox9.Controls.Add(Me.dtpMonth_newBarrel)
-        Me.GroupBox9.Location = New System.Drawing.Point(13, 573)
+        Me.GroupBox9.Location = New System.Drawing.Point(13, 589)
         Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(279, 69)
+        Me.GroupBox9.Size = New System.Drawing.Size(464, 69)
         Me.GroupBox9.TabIndex = 16
         Me.GroupBox9.TabStop = False
         Me.GroupBox9.Text = "新桶明細"
@@ -10429,7 +11210,7 @@ Partial Class frmMain
         Me.GroupBox4.Controls.Add(Me.Label60)
         Me.GroupBox4.Controls.Add(Me.Label95)
         Me.GroupBox4.Controls.Add(Me.btnCGCI)
-        Me.GroupBox4.Location = New System.Drawing.Point(13, 451)
+        Me.GroupBox4.Location = New System.Drawing.Point(13, 467)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(464, 116)
         Me.GroupBox4.TabIndex = 15
@@ -10496,7 +11277,7 @@ Partial Class frmMain
         'btnCGCI
         '
         Me.btnCGCI.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnCGCI.Location = New System.Drawing.Point(384, 29)
+        Me.btnCGCI.Location = New System.Drawing.Point(384, 28)
         Me.btnCGCI.Name = "btnCGCI"
         Me.btnCGCI.Size = New System.Drawing.Size(72, 30)
         Me.btnCGCI.TabIndex = 8
@@ -10521,7 +11302,7 @@ Partial Class frmMain
         Me.GroupBox3.Controls.Add(Me.dtpMonth_BankAccount)
         Me.GroupBox3.Controls.Add(Me.Label120)
         Me.GroupBox3.Controls.Add(Me.cmbBankAccount_BankAccount)
-        Me.GroupBox3.Location = New System.Drawing.Point(13, 375)
+        Me.GroupBox3.Location = New System.Drawing.Point(483, 573)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(505, 70)
         Me.GroupBox3.TabIndex = 11
@@ -10573,34 +11354,14 @@ Partial Class frmMain
         Me.cmbBankAccount_BankAccount.Size = New System.Drawing.Size(121, 27)
         Me.cmbBankAccount_BankAccount.TabIndex = 10
         '
-        'btnCashAccount
-        '
-        Me.btnCashAccount.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnCashAccount.Location = New System.Drawing.Point(13, 339)
-        Me.btnCashAccount.Name = "btnCashAccount"
-        Me.btnCashAccount.Size = New System.Drawing.Size(220, 30)
-        Me.btnCashAccount.TabIndex = 7
-        Me.btnCashAccount.Text = "現金帳"
-        Me.btnCashAccount.UseVisualStyleBackColor = False
-        '
-        'btnGasUsageCylinderCount
-        '
-        Me.btnGasUsageCylinderCount.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnGasUsageCylinderCount.Location = New System.Drawing.Point(13, 303)
-        Me.btnGasUsageCylinderCount.Name = "btnGasUsageCylinderCount"
-        Me.btnGasUsageCylinderCount.Size = New System.Drawing.Size(220, 30)
-        Me.btnGasUsageCylinderCount.TabIndex = 6
-        Me.btnGasUsageCylinderCount.Text = "提量支數統計"
-        Me.btnGasUsageCylinderCount.UseVisualStyleBackColor = False
-        '
         'GroupBox7
         '
         Me.GroupBox7.Controls.Add(Me.txtCusCode_report)
         Me.GroupBox7.Controls.Add(Me.btnDailyCusReceivable)
         Me.GroupBox7.Controls.Add(Me.Label133)
-        Me.GroupBox7.Location = New System.Drawing.Point(13, 224)
+        Me.GroupBox7.Location = New System.Drawing.Point(13, 236)
         Me.GroupBox7.Name = "GroupBox7"
-        Me.GroupBox7.Size = New System.Drawing.Size(298, 73)
+        Me.GroupBox7.Size = New System.Drawing.Size(464, 73)
         Me.GroupBox7.TabIndex = 5
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "單一客戶每日的應收帳明細表"
@@ -10636,9 +11397,9 @@ Partial Class frmMain
         Me.GroupBox6.Controls.Add(Me.btnGasPayableDetail)
         Me.GroupBox6.Controls.Add(Me.cmbManu)
         Me.GroupBox6.Controls.Add(Me.Label132)
-        Me.GroupBox6.Location = New System.Drawing.Point(13, 121)
+        Me.GroupBox6.Location = New System.Drawing.Point(13, 88)
         Me.GroupBox6.Name = "GroupBox6"
-        Me.GroupBox6.Size = New System.Drawing.Size(298, 97)
+        Me.GroupBox6.Size = New System.Drawing.Size(464, 68)
         Me.GroupBox6.TabIndex = 3
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "大氣進貨明細"
@@ -10646,7 +11407,7 @@ Partial Class frmMain
         'btnGasPayableDetail
         '
         Me.btnGasPayableDetail.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnGasPayableDetail.Location = New System.Drawing.Point(10, 56)
+        Me.btnGasPayableDetail.Location = New System.Drawing.Point(298, 27)
         Me.btnGasPayableDetail.Name = "btnGasPayableDetail"
         Me.btnGasPayableDetail.Size = New System.Drawing.Size(73, 30)
         Me.btnGasPayableDetail.TabIndex = 4
@@ -10656,7 +11417,7 @@ Partial Class frmMain
         'cmbManu
         '
         Me.cmbManu.FormattingEnabled = True
-        Me.cmbManu.Location = New System.Drawing.Point(63, 23)
+        Me.cmbManu.Location = New System.Drawing.Point(63, 29)
         Me.cmbManu.Name = "cmbManu"
         Me.cmbManu.Size = New System.Drawing.Size(229, 27)
         Me.cmbManu.TabIndex = 4
@@ -10664,38 +11425,11 @@ Partial Class frmMain
         'Label132
         '
         Me.Label132.AutoSize = True
-        Me.Label132.Location = New System.Drawing.Point(6, 26)
+        Me.Label132.Location = New System.Drawing.Point(6, 33)
         Me.Label132.Name = "Label132"
         Me.Label132.Size = New System.Drawing.Size(51, 19)
         Me.Label132.TabIndex = 4
         Me.Label132.Text = "廠商"
-        '
-        'dtpReport
-        '
-        Me.dtpReport.Location = New System.Drawing.Point(13, 13)
-        Me.dtpReport.Name = "dtpReport"
-        Me.dtpReport.Size = New System.Drawing.Size(200, 30)
-        Me.dtpReport.TabIndex = 1
-        '
-        'btnCusGetGasList
-        '
-        Me.btnCusGetGasList.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnCusGetGasList.Location = New System.Drawing.Point(13, 85)
-        Me.btnCusGetGasList.Name = "btnCusGetGasList"
-        Me.btnCusGetGasList.Size = New System.Drawing.Size(220, 30)
-        Me.btnCusGetGasList.TabIndex = 2
-        Me.btnCusGetGasList.Text = "客戶提氣清冊"
-        Me.btnCusGetGasList.UseVisualStyleBackColor = False
-        '
-        'btnCusGasPayCollect
-        '
-        Me.btnCusGasPayCollect.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnCusGasPayCollect.Location = New System.Drawing.Point(13, 49)
-        Me.btnCusGasPayCollect.Name = "btnCusGasPayCollect"
-        Me.btnCusGasPayCollect.Size = New System.Drawing.Size(220, 30)
-        Me.btnCusGasPayCollect.TabIndex = 0
-        Me.btnCusGasPayCollect.Text = "氣量氣款收付明細表"
-        Me.btnCusGasPayCollect.UseVisualStyleBackColor = False
         '
         'tpLogOut
         '
@@ -10707,65 +11441,6 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'GroupBox18
-        '
-        Me.GroupBox18.Controls.Add(Me.btnMonthlyStatement)
-        Me.GroupBox18.Controls.Add(Me.dtpMonth_MS)
-        Me.GroupBox18.Controls.Add(Me.Label237)
-        Me.GroupBox18.Controls.Add(Me.cmbCompany_MS)
-        Me.GroupBox18.Controls.Add(Me.Label239)
-        Me.GroupBox18.Location = New System.Drawing.Point(524, 307)
-        Me.GroupBox18.Name = "GroupBox18"
-        Me.GroupBox18.Size = New System.Drawing.Size(468, 62)
-        Me.GroupBox18.TabIndex = 29
-        Me.GroupBox18.TabStop = False
-        Me.GroupBox18.Text = "月對帳單"
-        '
-        'btnMonthlyStatement
-        '
-        Me.btnMonthlyStatement.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnMonthlyStatement.Location = New System.Drawing.Point(386, 27)
-        Me.btnMonthlyStatement.Name = "btnMonthlyStatement"
-        Me.btnMonthlyStatement.Size = New System.Drawing.Size(72, 30)
-        Me.btnMonthlyStatement.TabIndex = 24
-        Me.btnMonthlyStatement.Text = "產生"
-        Me.btnMonthlyStatement.UseVisualStyleBackColor = False
-        '
-        'dtpMonth_MS
-        '
-        Me.dtpMonth_MS.CustomFormat = "yyyy年MM月"
-        Me.dtpMonth_MS.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpMonth_MS.Location = New System.Drawing.Point(253, 27)
-        Me.dtpMonth_MS.Name = "dtpMonth_MS"
-        Me.dtpMonth_MS.Size = New System.Drawing.Size(127, 30)
-        Me.dtpMonth_MS.TabIndex = 23
-        '
-        'Label237
-        '
-        Me.Label237.AutoSize = True
-        Me.Label237.Location = New System.Drawing.Point(196, 33)
-        Me.Label237.Name = "Label237"
-        Me.Label237.Size = New System.Drawing.Size(51, 19)
-        Me.Label237.TabIndex = 22
-        Me.Label237.Text = "月份"
-        '
-        'cmbCompany_MS
-        '
-        Me.cmbCompany_MS.FormattingEnabled = True
-        Me.cmbCompany_MS.Location = New System.Drawing.Point(63, 29)
-        Me.cmbCompany_MS.Name = "cmbCompany_MS"
-        Me.cmbCompany_MS.Size = New System.Drawing.Size(127, 27)
-        Me.cmbCompany_MS.TabIndex = 19
-        '
-        'Label239
-        '
-        Me.Label239.AutoSize = True
-        Me.Label239.Location = New System.Drawing.Point(6, 33)
-        Me.Label239.Name = "Label239"
-        Me.Label239.Size = New System.Drawing.Size(51, 19)
-        Me.Label239.TabIndex = 18
-        Me.Label239.Text = "公司"
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -10774,7 +11449,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.10.0"
+        Me.Text = "豐原瓦斯會計系統 v0.11.1"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -10879,13 +11554,29 @@ Partial Class frmMain
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).EndInit
-        Me.tpInvoice.ResumeLayout(False)
-        Me.tpInvoice.PerformLayout
+        Me.tpInvoice_Out.ResumeLayout(False)
+        Me.tpInvoice_Out.PerformLayout
         Me.GroupBox11.ResumeLayout(False)
         Me.GroupBox11.PerformLayout
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).EndInit
+        Me.tpInvoice_In.ResumeLayout(False)
+        Me.tpInvoice_In.PerformLayout
+        Me.GroupBox25.ResumeLayout(False)
+        Me.GroupBox25.PerformLayout
+        CType(Me.dgvInvoiceIn, System.ComponentModel.ISupportInitialize).EndInit
         Me.tpReport.ResumeLayout(False)
         Me.tpReport.PerformLayout
+        Me.GroupBox26.ResumeLayout(False)
+        Me.GroupBox24.ResumeLayout(False)
+        Me.GroupBox23.ResumeLayout(False)
+        Me.GroupBox22.ResumeLayout(False)
+        Me.GroupBox21.ResumeLayout(False)
+        Me.GroupBox20.ResumeLayout(False)
+        Me.GroupBox20.PerformLayout
+        Me.GroupBox19.ResumeLayout(False)
+        Me.GroupBox19.PerformLayout
+        Me.GroupBox18.ResumeLayout(False)
+        Me.GroupBox18.PerformLayout
         Me.GroupBox17.ResumeLayout(False)
         Me.GroupBox17.PerformLayout
         Me.GroupBox16.ResumeLayout(False)
@@ -10910,8 +11601,6 @@ Partial Class frmMain
         Me.GroupBox7.PerformLayout
         Me.GroupBox6.ResumeLayout(False)
         Me.GroupBox6.PerformLayout
-        Me.GroupBox18.ResumeLayout(False)
-        Me.GroupBox18.PerformLayout
         Me.ResumeLayout(False)
 
     End Sub
@@ -11161,7 +11850,7 @@ Partial Class frmMain
     Friend WithEvents tpRevenueManage As TabPage
     Friend WithEvents tpAccountingManage As TabPage
     Friend WithEvents TabControl6 As TabControl
-    Friend WithEvents tpInvoice As TabPage
+    Friend WithEvents tpInvoice_Out As TabPage
     Friend WithEvents btnCancel_invoice As Button
     Friend WithEvents btnDelete_invoice As Button
     Friend WithEvents btnEdit_invoice As Button
@@ -11587,24 +12276,11 @@ Partial Class frmMain
     Friend WithEvents dtpQueryEnd_che As DateTimePicker
     Friend WithEvents dtpQueryStart_che As DateTimePicker
     Friend WithEvents Label116 As Label
-    Friend WithEvents tpReport As TabPage
-    Friend WithEvents btnCusGasPayCollect As Button
-    Friend WithEvents dtpReport As DateTimePicker
     Friend WithEvents grpCusStk As GroupBox
     Friend WithEvents TextBox24 As TextBox
     Friend WithEvents Label131 As Label
     Friend WithEvents TextBox22 As TextBox
     Friend WithEvents Label130 As Label
-    Friend WithEvents btnCusGetGasList As Button
-    Friend WithEvents GroupBox6 As GroupBox
-    Friend WithEvents btnGasPayableDetail As Button
-    Friend WithEvents cmbManu As ComboBox
-    Friend WithEvents Label132 As Label
-    Friend WithEvents GroupBox7 As GroupBox
-    Friend WithEvents btnDailyCusReceivable As Button
-    Friend WithEvents Label133 As Label
-    Friend WithEvents txtCusCode_report As TextBox
-    Friend WithEvents btnGasUsageCylinderCount As Button
     Friend WithEvents btnCusGasCylinderInventory As Button
     Friend WithEvents Label135 As Label
     Friend WithEvents txtAccount_bank As TextBox
@@ -11645,30 +12321,14 @@ Partial Class frmMain
     Friend WithEvents btnChange As Button
     Friend WithEvents btnNotHonoredQuery As Button
     Friend WithEvents Label119 As Label
-    Friend WithEvents btnCashAccount As Button
     Friend WithEvents btnPrint_pur As Button
     Friend WithEvents grpDateRange_pur As GroupBox
     Friend WithEvents dtpEndDate_pur As DateTimePicker
     Friend WithEvents dtpStartDate_pur As DateTimePicker
     Friend WithEvents chkDateRange_pur As CheckBox
-    Friend WithEvents btnBankAccount As Button
-    Friend WithEvents GroupBox3 As GroupBox
-    Friend WithEvents Label143 As Label
-    Friend WithEvents dtpMonth_BankAccount As DateTimePicker
-    Friend WithEvents Label120 As Label
-    Friend WithEvents cmbBankAccount_BankAccount As ComboBox
-    Friend WithEvents btnRefresh As Button
     Friend WithEvents chkIsSearchDate_payment As CheckBox
     Friend WithEvents Label144 As Label
     Friend WithEvents lblReqBankAccount_col As Label
-    Friend WithEvents GroupBox4 As GroupBox
-    Friend WithEvents btnCGCI As Button
-    Friend WithEvents txtCusCode_cgci As TextBox
-    Friend WithEvents txtCusName_cgci As TextBox
-    Friend WithEvents btnSearchCus_cgci As Button
-    Friend WithEvents Label60 As Label
-    Friend WithEvents Label95 As Label
-    Friend WithEvents txtCusId_cgci As TextBox
     Friend WithEvents Label149 As Label
     Friend WithEvents Label150 As Label
     Friend WithEvents txtDelivery_C As TextBox
@@ -11771,18 +12431,6 @@ Partial Class frmMain
     Friend WithEvents lblAbleCashingDate As Label
     Friend WithEvents txtPayBank As TextBox
     Friend WithEvents lblPayBank As Label
-    Friend WithEvents GroupBox9 As GroupBox
-    Friend WithEvents btnNewBarrel As Button
-    Friend WithEvents Label106 As Label
-    Friend WithEvents dtpMonth_newBarrel As DateTimePicker
-    Friend WithEvents GroupBox10 As GroupBox
-    Friend WithEvents cmbCompany_br As ComboBox
-    Friend WithEvents Label180 As Label
-    Friend WithEvents btnGenerate_br As Button
-    Friend WithEvents dtpMonth_br As DateTimePicker
-    Friend WithEvents Label182 As Label
-    Friend WithEvents cmbBankAccount_br As ComboBox
-    Friend WithEvents Label181 As Label
     Friend WithEvents cmbType_invoice As ComboBox
     Friend WithEvents Label183 As Label
     Friend WithEvents RadioButton2 As RadioButton
@@ -11793,58 +12441,159 @@ Partial Class frmMain
     Friend WithEvents Label186 As Label
     Friend WithEvents txtInvoiceMemo_invoice As TextBox
     Friend WithEvents GroupBox11 As GroupBox
-    Friend WithEvents txtPickCInvoice As TextBox
-    Friend WithEvents txtPickNormInvoice As TextBox
     Friend WithEvents txtDeliCInvoice As TextBox
     Friend WithEvents txtDeliNormInvoice As TextBox
-    Friend WithEvents txtPickCTotal As TextBox
-    Friend WithEvents txtPickNormTotal As TextBox
     Friend WithEvents txtDeliCTotal As TextBox
     Friend WithEvents txtDeliNormTotal As TextBox
-    Friend WithEvents Label195 As Label
     Friend WithEvents Label194 As Label
     Friend WithEvents Label193 As Label
-    Friend WithEvents Label189 As Label
     Friend WithEvents Label188 As Label
     Friend WithEvents Label187 As Label
-    Friend WithEvents GroupBox12 As GroupBox
-    Friend WithEvents btnGenerate_RI As Button
-    Friend WithEvents dtpMonth_RI As DateTimePicker
-    Friend WithEvents Label101 As Label
-    Friend WithEvents GroupBox13 As GroupBox
-    Friend WithEvents btnMAR As Button
-    Friend WithEvents dtpMonth_MAR As DateTimePicker
-    Friend WithEvents Label196 As Label
     Friend WithEvents btnEdit_ord As Button
+    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents Label232 As Label
+    Friend WithEvents chkCashing As CheckBox
+    Friend WithEvents dtpCashing As DateTimePicker
+    Friend WithEvents lblCashingDate_payment As Label
+    Friend WithEvents Label235 As Label
+    Friend WithEvents TextBox13 As TextBox
+    Friend WithEvents txtBarrelAmount As TextBox
+    Friend WithEvents Label238 As Label
+    Friend WithEvents txtGasCUnitPrice As TextBox
+    Friend WithEvents Label241 As Label
+    Friend WithEvents txtGasUnitPrice As TextBox
+    Friend WithEvents Label240 As Label
+    Friend WithEvents cmbInvoiceType As ComboBox
+    Friend WithEvents Label247 As Label
+    Friend WithEvents cmbCompany_pb As ComboBox
+    Friend WithEvents Label248 As Label
+    Friend WithEvents chkIsInvalid As CheckBox
+    Friend WithEvents tpInvoice_In As TabPage
+    Friend WithEvents btnQuery_ii As Button
+    Friend WithEvents btnCancel_ii As Button
+    Friend WithEvents btnDelete_ii As Button
+    Friend WithEvents btnEdit_ii As Button
+    Friend WithEvents btnAdd_ii As Button
+    Friend WithEvents txtTaxId_is As TextBox
+    Friend WithEvents lblTaxId_is As Label
+    Friend WithEvents txtAmount_ii As TextBox
+    Friend WithEvents Label251 As Label
+    Friend WithEvents txtTax_ii As TextBox
+    Friend WithEvents Label250 As Label
+    Friend WithEvents txtName_is As TextBox
+    Friend WithEvents lblName_ii As Label
+    Friend WithEvents txtNumber_ii As TextBox
+    Friend WithEvents lblNumber_ii As Label
+    Friend WithEvents dtpDate_ii As DateTimePicker
+    Friend WithEvents Label189 As Label
+    Friend WithEvents TextBox28 As TextBox
+    Friend WithEvents dgvInvoiceIn As DataGridView
+    Friend WithEvents GroupBox25 As GroupBox
+    Friend WithEvents chkIsDate_ii As CheckBox
+    Friend WithEvents dtpEnd_ii As DateTimePicker
+    Friend WithEvents Label254 As Label
+    Friend WithEvents dtpStart_ii As DateTimePicker
+    Friend WithEvents Label253 As Label
+    Friend WithEvents tpReport As TabPage
+    Friend WithEvents GroupBox26 As GroupBox
+    Friend WithEvents btnInOut As Button
+    Friend WithEvents cmbMonth_InOut As ComboBox
+    Friend WithEvents dtpYear_InOut As DateTimePicker
+    Friend WithEvents GroupBox24 As GroupBox
+    Friend WithEvents dtpDate_ca As DateTimePicker
+    Friend WithEvents btnCashAccount As Button
+    Friend WithEvents GroupBox23 As GroupBox
+    Friend WithEvents dtpDate_gucc As DateTimePicker
+    Friend WithEvents btnGasUsageCylinderCount As Button
+    Friend WithEvents GroupBox22 As GroupBox
+    Friend WithEvents DateTimePicker1 As DateTimePicker
+    Friend WithEvents btnCusGetGasList As Button
+    Friend WithEvents GroupBox21 As GroupBox
+    Friend WithEvents dtpDate_cgpc As DateTimePicker
+    Friend WithEvents btnCusGasPayCollect As Button
+    Friend WithEvents GroupBox20 As GroupBox
+    Friend WithEvents cmbCompany_IS As ComboBox
+    Friend WithEvents Label246 As Label
+    Friend WithEvents btnIncomeStatement As Button
+    Friend WithEvents dtpEnd_IS As DateTimePicker
+    Friend WithEvents Label245 As Label
+    Friend WithEvents dtpStart_IS As DateTimePicker
+    Friend WithEvents Label243 As Label
+    Friend WithEvents GroupBox19 As GroupBox
+    Friend WithEvents btnInsurance As Button
+    Friend WithEvents dtpMonth_insurance As DateTimePicker
+    Friend WithEvents Label242 As Label
+    Friend WithEvents cmbCompany_insurance As ComboBox
+    Friend WithEvents Label244 As Label
+    Friend WithEvents GroupBox18 As GroupBox
+    Friend WithEvents txtCusCode_MS As TextBox
+    Friend WithEvents Label239 As Label
+    Friend WithEvents btnMonthlyStatement As Button
+    Friend WithEvents dtpMonth_MS As DateTimePicker
+    Friend WithEvents Label237 As Label
+    Friend WithEvents GroupBox17 As GroupBox
+    Friend WithEvents btnEnergyBureau As Button
+    Friend WithEvents dtpMonth_EB As DateTimePicker
+    Friend WithEvents Label236 As Label
+    Friend WithEvents GroupBox16 As GroupBox
+    Friend WithEvents btnTax As Button
+    Friend WithEvents dtpMonth_tax As DateTimePicker
+    Friend WithEvents Label234 As Label
+    Friend WithEvents GroupBox15 As GroupBox
+    Friend WithEvents btnPayableCheck As Button
+    Friend WithEvents dtpMonth_PayableCheck As DateTimePicker
+    Friend WithEvents Label61 As Label
     Friend WithEvents GroupBox14 As GroupBox
     Friend WithEvents btnITD As Button
     Friend WithEvents dtpYear_ITD As DateTimePicker
     Friend WithEvents Label197 As Label
     Friend WithEvents cmbCompany_ITD As ComboBox
     Friend WithEvents Label233 As Label
-    Friend WithEvents TextBox2 As TextBox
-    Friend WithEvents Label232 As Label
-    Friend WithEvents GroupBox15 As GroupBox
-    Friend WithEvents btnPayableCheck As Button
-    Friend WithEvents dtpMonth_PayableCheck As DateTimePicker
-    Friend WithEvents Label61 As Label
-    Friend WithEvents chkCashing As CheckBox
-    Friend WithEvents dtpCashing As DateTimePicker
-    Friend WithEvents lblCashingDate_payment As Label
-    Friend WithEvents GroupBox16 As GroupBox
-    Friend WithEvents btnTax As Button
-    Friend WithEvents dtpMonth_tax As DateTimePicker
-    Friend WithEvents Label234 As Label
-    Friend WithEvents Label235 As Label
-    Friend WithEvents TextBox13 As TextBox
-    Friend WithEvents GroupBox17 As GroupBox
-    Friend WithEvents btnEnergyBureau As Button
-    Friend WithEvents dtpMonth_EB As DateTimePicker
-    Friend WithEvents Label236 As Label
-    Friend WithEvents GroupBox18 As GroupBox
-    Friend WithEvents btnMonthlyStatement As Button
-    Friend WithEvents dtpMonth_MS As DateTimePicker
-    Friend WithEvents Label237 As Label
-    Friend WithEvents cmbCompany_MS As ComboBox
-    Friend WithEvents Label239 As Label
+    Friend WithEvents GroupBox13 As GroupBox
+    Friend WithEvents btnMAR As Button
+    Friend WithEvents dtpMonth_MAR As DateTimePicker
+    Friend WithEvents Label196 As Label
+    Friend WithEvents GroupBox12 As GroupBox
+    Friend WithEvents btnGenerate_RI As Button
+    Friend WithEvents dtpMonth_RI As DateTimePicker
+    Friend WithEvents Label101 As Label
+    Friend WithEvents GroupBox10 As GroupBox
+    Friend WithEvents btnGenerate_br As Button
+    Friend WithEvents dtpMonth_br As DateTimePicker
+    Friend WithEvents Label182 As Label
+    Friend WithEvents cmbBankAccount_br As ComboBox
+    Friend WithEvents Label181 As Label
+    Friend WithEvents cmbCompany_br As ComboBox
+    Friend WithEvents Label180 As Label
+    Friend WithEvents GroupBox9 As GroupBox
+    Friend WithEvents btnNewBarrel As Button
+    Friend WithEvents Label106 As Label
+    Friend WithEvents dtpMonth_newBarrel As DateTimePicker
+    Friend WithEvents GroupBox4 As GroupBox
+    Friend WithEvents txtCusId_cgci As TextBox
+    Friend WithEvents txtCusCode_cgci As TextBox
+    Friend WithEvents txtCusName_cgci As TextBox
+    Friend WithEvents btnSearchCus_cgci As Button
+    Friend WithEvents Label60 As Label
+    Friend WithEvents Label95 As Label
+    Friend WithEvents btnCGCI As Button
+    Friend WithEvents btnRefresh As Button
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents Label143 As Label
+    Friend WithEvents btnBankAccount As Button
+    Friend WithEvents dtpMonth_BankAccount As DateTimePicker
+    Friend WithEvents Label120 As Label
+    Friend WithEvents cmbBankAccount_BankAccount As ComboBox
+    Friend WithEvents GroupBox7 As GroupBox
+    Friend WithEvents txtCusCode_report As TextBox
+    Friend WithEvents btnDailyCusReceivable As Button
+    Friend WithEvents Label133 As Label
+    Friend WithEvents GroupBox6 As GroupBox
+    Friend WithEvents btnGasPayableDetail As Button
+    Friend WithEvents cmbManu As ComboBox
+    Friend WithEvents Label132 As Label
+    Friend WithEvents cmbType As ComboBox
+    Friend WithEvents Label195 As Label
+    Friend WithEvents cmbComp_is As ComboBox
+    Friend WithEvents lblComp_is As Label
 End Class

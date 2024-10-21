@@ -11,6 +11,10 @@
         Try
             Dim baseUnitPrice As Single
             Dim customerPriceAdjustment As Single
+
+            '每個月2號才是當月的開始
+            If month.Day = 1 Then month = month.AddDays(-1)
+
             Dim basePrice = _bpRep.GetByMonth(month)
 
             If basePrice Is Nothing Then Throw New Exception("請先設定當月基礎價格")

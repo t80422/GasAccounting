@@ -29,4 +29,17 @@ Public Class InvoiceRep
             Throw
         End Try
     End Function
+
+    Public Function GetLastInvoiceNumberByType(invoiceType As String) As String Implements IInvoiceRep.GetLastInvoiceNumberByType
+        Try
+            Dim datas = _dbSet.Where(Function(x) x.i_InvoiceType = invoiceType).OrderByDescending(Function(x) x.i_Number).FirstOrDefault
+            Dim result As String = Nothing
+
+            If datas IsNot Nothing Then result = datas.i_Number
+
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

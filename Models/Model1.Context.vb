@@ -47,5 +47,6 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property gas_monthly_balances() As DbSet(Of gas_monthly_balances)
     Public Overridable Property purchases() As DbSet(Of purchase)
     Public Overridable Property invoices() As DbSet(Of invoice)
+    Public Overridable Property invoice_split() As DbSet(Of invoice_split)
 
 End Class

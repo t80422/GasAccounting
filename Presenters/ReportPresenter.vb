@@ -1085,12 +1085,12 @@ Public Class ReportPresenter
     ''' <summary>
     ''' 產生月結帳單
     ''' </summary>
-    ''' <param name="compId"></param>
+    ''' <param name="cusId"></param>
     ''' <param name="month"></param>
-    Public Sub GenerateMonthlyStatement(compId As Integer, month As Date)
+    Public Sub GenerateMonthlyStatement(cusCode As String, month As Date)
         Try
             '取得資料
-            Dim data As MonthlyStatement = _rep.GetMonthlyStatement(compId, month)
+            Dim data As MonthlyStatement = _rep.GetMonthlyStatement(cusCode, month)
 
             '取得範本檔
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "月對帳單範本檔.xlsx")
@@ -1107,32 +1107,49 @@ Public Class ReportPresenter
                     '家用瓦斯(變動前)
                     .WriteToCell(3, 2, data.GasNormalQuantity_First)
                     .WriteToCell(3, 3, data.GasNormalUnitPrice_First)
-                    .WriteToCell(3, 4, data.GasNormalQuantity_First + data.GasNormalUnitPrice_First)
+
+                    Dim gasAmount_1 = data.GasNormalQuantity_First * data.GasNormalUnitPrice_First
+                    .WriteToCell(3, 4, gasAmount_1)
 
                     '工業氣(變動前)
                     .WriteToCell(4, 2, data.GasCQuantity_First)
                     .WriteToCell(4, 3, data.GasCUnitPrice_First)
-                    .WriteToCell(4, 4, data.GasCQuantity_First + data.GasCUnitPrice_First)
+
+                    Dim gasCAmount_1 = data.GasCQuantity_First * data.GasCUnitPrice_First
+                    .WriteToCell(4, 4, gasCAmount_1)
 
                     '家用瓦斯(變動後)
                     .WriteToCell(5, 2, data.GasNormalQuantity)
                     .WriteToCell(5, 3, data.GasNormalUnitPrice)
-                    .WriteToCell(5, 4, data.GasNormalQuantity + data.GasNormalUnitPrice)
+
+                    Dim gasAmount = data.GasNormalQuantity * data.GasNormalUnitPrice
+                    .WriteToCell(5, 4, gasAmount)
 
                     '工業氣(變動後)
                     .WriteToCell(6, 2, data.GasCQuantity)
                     .WriteToCell(6, 3, data.GasCUnitPrice)
-                    .WriteToCell(6, 4, data.GasCQuantity + data.GasCUnitPrice)
+
+                    Dim gasCAmount = data.GasCQuantity * data.GasCUnitPrice
+                    .WriteToCell(6, 4, gasCAmount)
 
                     '保險
                     Dim totalQty = data.GasNormalQuantity_First + data.GasCQuantity_First + data.GasNormalQuantity + data.GasCQuantity
                     .WriteToCell(7, 2, totalQty)
                     .WriteToCell(7, 3, data.InsuranceUnitPrice)
-                    .WriteToCell(7, 4, totalQty * data.InsuranceUnitPrice)
 
-                    .WriteToCell(1, 4, data.CusCode)
-                    .WriteToCell(1, 4, data.CusCode)
-                    .WriteToCell(1, 4, data.CusCode)
+                    Dim insuranceAmount = totalQty * data.InsuranceUnitPrice
+                    .WriteToCell(7, 4, insuranceAmount)
+
+
+                    Dim gasAccountsRecievable = gasAmount_1 + gasCAmount_1 + gasAmount + gasCAmount
+
+                    If Not data.IsInsurance Then gasAccountsRecievable += insuranceAmount
+
+                    .WriteToCell(8, 2, gasAccountsRecievable)
+                    .WriteToCell(9, 2, data.GasAccountsReceived)
+                    .WriteToCell(10, 2, data.NewBerralAccountsReceivable)
+                    .WriteToCell(11, 2, gasAccountsRecievable + data.NewBerralAccountsReceivable - data.GasAccountsReceived)
+                    .WriteToCell(12, 2, data.NewBerralTypesCount)
 
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "月對帳單.xlsx")
@@ -1143,6 +1160,283 @@ Public Class ReportPresenter
             MsgBox(ex.Message)
         End Try
     End Sub
+
+    ''' <summary>
+    ''' 產生保險
+    ''' </summary>
+    ''' <param name="compId"></param>
+    ''' <param name="month"></param>
+    Public Sub GenerateInsurance(compId As Integer, month As Date)
+        Try
+            '取得資料
+            Dim data As Insurance = _rep.GetInsurance(compId, month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "保險範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    '標題
+                    .WriteToCell(1, 2, data.CompanyName)
+                    .WriteToCell(1, 4, data.Month.ToString("yyyy年MM月"))
+
+                    Dim rowIndex = 3
+
+                    For Each item In data.List
+                        .WriteToCell(rowIndex, 1, item.CusCode)
+                        .WriteToCell(rowIndex, 2, item.CusName)
+                        .WriteToCell(rowIndex, 3, item.TaxId)
+                        .WriteToCell(rowIndex, 4, item.Amount)
+
+                        rowIndex += 1
+                    Next
+
+                    .WriteToCell(rowIndex, 3, "合計")
+                    .WriteToCell(rowIndex, 4, data.List.Sum(Function(x) x.Amount))
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 4, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "保險.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生損益表
+    ''' </summary>
+    ''' <param name="startDate"></param>
+    ''' <param name="endDate"></param>
+    ''' <param name="compId"></param>
+    Public Sub GenerateIncomeStatement(startDate As Date, endDate As Date, compId As Integer)
+        Try
+            '取得資料
+            Dim data As IncomeStatement = _rep.GetIncomeStatement(startDate, endDate, compId)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "損益表範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    '標題
+                    .WriteToCell(1, 1, data.CompanyName)
+                    .WriteToCell(3, 1, $"起訖年月日 {data.DateRange}")
+
+                    Dim rowIndex = 5
+                    Dim totalRevenue As Single = 0
+                    Dim totalCostOfSales As Single = 0
+                    Dim totalOperatingExpenses As Single = 0
+                    Dim totalNonOperatingIncome As Single = 0
+
+                    .WriteToCell(rowIndex, 1, "營業收入")
+                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業收入").ToList, rowIndex, totalRevenue)
+
+                    .WriteToCell(rowIndex, 1, "營業費用(上)")
+                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業費用(上)").ToList, rowIndex, totalCostOfSales)
+
+                    Dim grossProfit As Single = totalRevenue - totalCostOfSales
+                    .WriteToCell(rowIndex, 1, "銷貨毛利")
+                    .WriteToCell(rowIndex, 4, grossProfit)
+                    rowIndex += 1
+
+                    .WriteToCell(rowIndex, 1, "營業費用(下)")
+                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業費用(下)").ToList, rowIndex, totalOperatingExpenses)
+
+                    .WriteToCell(rowIndex, 1, "營業外收益")
+                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業外收益").ToList, rowIndex, totalNonOperatingIncome)
+
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 4, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+                    .WriteToCell(rowIndex, 1, "存貨")
+                    rowIndex += 1
+
+                    Dim netIncome As Single = grossProfit - totalOperatingExpenses + totalNonOperatingIncome
+                    .WriteToCell(rowIndex, 1, "本期損益")
+                    .WriteToCell(rowIndex, 4, netIncome)
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "損益表.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 產生進項銷項
+    ''' </summary>
+    ''' <param name="year"></param>
+    ''' <param name="month"></param>
+    Public Sub GenerateInOut(year As Date, month As String)
+        Try
+            '取得資料
+            Dim outData As OutInvoice = _rep.GetOutInvoice(year.Year, month)
+            Dim splitCompanyData As SplitCompanyInvoice = _rep.GetSplitCompany(year.Year, month)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "進項銷項範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    .WriteToCell(1, 1, $"{year.Year}年{month}月")
+
+                    '處理兩家公司的數據
+                    For i As Integer = 0 To Math.Min(1, outData.Companies.Count - 1)
+                        Dim company = outData.Companies(i)
+                        Dim startColumn = If(i = 0, 1, 6) ' 第一家公司從第1列開始，第二家從第6列開始
+                        Dim rowIndex As Integer = 4
+                        Dim kgTotal As Integer = 0
+                        Dim taxAmountTotal As Single = 0
+                        Dim amountTotal As Single = 0
+
+                        For Each monthData In company.MonthlyData
+                            For Each group In monthData.RegularInvoices
+                                .WriteToCell(rowIndex, startColumn, $"{monthData.Month}/{group.GroupNumber}")
+                                .WriteToCell(rowIndex, startColumn + 1, group.Qty)
+                                .WriteToCell(rowIndex, startColumn + 2, group.TaxAmount)
+                                .WriteToCell(rowIndex, startColumn + 3, group.Amount)
+                                rowIndex += 1
+                            Next
+
+                            rowIndex += 5 - monthData.RegularInvoices.Count
+
+                            Dim kgSubTotal = monthData.RegularInvoices.Sum(Function(x) x.Qty)
+                            Dim taxAmountSubTotal = monthData.RegularInvoices.Sum(Function(x) x.TaxAmount)
+                            Dim amountSubTotal = monthData.RegularInvoices.Sum(Function(x) x.Amount)
+
+                            Dim twoPartMachine = monthData.SpecialInvoices.TwoPartMachine
+                            .WriteToCell(rowIndex, startColumn + 1, twoPartMachine.Qty)
+                            kgSubTotal += twoPartMachine.Qty
+                            .WriteToCell(rowIndex, startColumn + 2, twoPartMachine.TaxAmount)
+                            taxAmountSubTotal += twoPartMachine.TaxAmount
+                            .WriteToCell(rowIndex, startColumn + 3, twoPartMachine.Amount)
+                            amountSubTotal += twoPartMachine.Amount
+                            rowIndex += 1
+
+                            Dim threePartHandwritten = monthData.SpecialInvoices.ThreePartHandwritten
+                            .WriteToCell(rowIndex, startColumn + 1, threePartHandwritten.Qty)
+                            kgSubTotal += threePartHandwritten.Qty
+                            .WriteToCell(rowIndex, startColumn + 2, threePartHandwritten.TaxAmount)
+                            taxAmountSubTotal += threePartHandwritten.TaxAmount
+                            .WriteToCell(rowIndex, startColumn + 3, threePartHandwritten.Amount)
+                            amountSubTotal += threePartHandwritten.Amount
+                            rowIndex += 1
+
+                            Dim twoPartHandwritten = monthData.SpecialInvoices.TwoPartHandwritten
+                            .WriteToCell(rowIndex, startColumn + 1, twoPartHandwritten.Qty)
+                            kgSubTotal += twoPartHandwritten.Qty
+                            .WriteToCell(rowIndex, startColumn + 2, twoPartHandwritten.TaxAmount)
+                            taxAmountSubTotal += twoPartHandwritten.TaxAmount
+                            .WriteToCell(rowIndex, startColumn + 3, twoPartHandwritten.Amount)
+                            amountSubTotal += twoPartHandwritten.Amount
+                            rowIndex += 1
+
+                            '小計
+                            .WriteToCell(rowIndex, startColumn + 1, kgSubTotal)
+                            kgTotal += kgSubTotal
+                            .WriteToCell(rowIndex, startColumn + 2, taxAmountSubTotal)
+                            taxAmountTotal += taxAmountSubTotal
+                            .WriteToCell(rowIndex, startColumn + 3, amountSubTotal)
+                            amountTotal += amountSubTotal
+
+                            rowIndex += 2
+                        Next
+
+                        '合計
+                        .WriteToCell(rowIndex - 1, startColumn + 1, kgTotal)
+                        .WriteToCell(rowIndex - 1, startColumn + 2, taxAmountTotal)
+                        .WriteToCell(rowIndex - 1, startColumn + 3, amountTotal)
+                    Next
+
+                    '分裝場
+                    Dim taxSubTotal As Single = 0
+                    Dim amountSubTotal_split As Single = 0
+
+                    .WriteToCell(4, 11, splitCompanyData.FrontDate1)
+                    .WriteToCell(4, 14, splitCompanyData.FrontTax1)
+                    taxSubTotal += splitCompanyData.FrontTax1
+                    .WriteToCell(4, 15, splitCompanyData.FrontAmount1)
+                    amountSubTotal_split += splitCompanyData.FrontAmount1
+                    .WriteToCell(4, 16, splitCompanyData.FrontVendorTaxId1)
+
+                    .WriteToCell(5, 11, splitCompanyData.FrontDate2)
+                    .WriteToCell(5, 14, splitCompanyData.FrontTax2)
+                    taxSubTotal += splitCompanyData.FrontTax2
+                    .WriteToCell(5, 15, splitCompanyData.FrontAmount2)
+                    amountSubTotal_split += splitCompanyData.FrontAmount2
+                    .WriteToCell(5, 16, splitCompanyData.FrontVendorTaxId2)
+
+                    .WriteToCell(6, 11, splitCompanyData.EndDate1)
+                    .WriteToCell(6, 14, splitCompanyData.EndTax1)
+                    taxSubTotal += splitCompanyData.EndTax1
+                    .WriteToCell(6, 15, splitCompanyData.EndAmount1)
+                    amountSubTotal_split += splitCompanyData.EndAmount1
+                    .WriteToCell(6, 16, splitCompanyData.EndVendorTaxId1)
+
+                    .WriteToCell(7, 11, splitCompanyData.EndDate2)
+                    .WriteToCell(7, 14, splitCompanyData.EndTax2)
+                    taxSubTotal += splitCompanyData.EndTax2
+                    .WriteToCell(7, 15, splitCompanyData.EndAmount2)
+                    amountSubTotal_split += splitCompanyData.EndAmount2
+                    .WriteToCell(7, 16, splitCompanyData.EndVendorTaxId2)
+
+                    '小計
+                    .WriteToCell(8, 14, taxSubTotal)
+                    .WriteToCell(8, 15, amountSubTotal_split)
+
+                    Dim rowIndex_split As Integer = 10
+
+                    For Each item In splitCompanyData.InList
+                        .WriteToCell(rowIndex_split, 11, item.Day)
+                        .WriteToCell(rowIndex_split, 12, item.InvoiceNum)
+                        .WriteToCell(rowIndex_split, 13, item.Name)
+                        .WriteToCell(rowIndex_split, 14, item.Tax)
+                        .WriteToCell(rowIndex_split, 15, item.Amount)
+                        .WriteToCell(rowIndex_split, 16, item.VendorTaxId)
+                        .SetCustomBorders(rowIndex_split, 11, rowIndex_split, 16, ClosedXML.Excel.XLBorderStyleValues.Thin, ClosedXML.Excel.XLBorderStyleValues.Thin,
+                                          ClosedXML.Excel.XLBorderStyleValues.Thin, ClosedXML.Excel.XLBorderStyleValues.Thin)
+                        rowIndex_split += 1
+                    Next
+
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "進項銷項.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Function WriteSubjectGroup(xml As CloseXML_Excel, subjects As List(Of IncomeStatementList), rowIndex As Integer, ByRef total As Single) As Integer
+        total = subjects.Sum(Function(x) x.Amount)
+
+        With xml
+            .WriteToCell(rowIndex, 4, total)
+            rowIndex += 1
+
+            For Each item In subjects
+                .WriteToCell(rowIndex, 2, item.Subject)
+                .WriteToCell(rowIndex, 3, item.Amount)
+                rowIndex += 1
+            Next
+        End With
+
+        Return rowIndex
+    End Function
 
     Public Async Sub LoadBankAccount()
         Try

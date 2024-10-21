@@ -211,6 +211,22 @@
           <Property Name="i_Tax" Type="float" Nullable="false" />
           <Property Name="i_Type" Type="varchar" MaxLength="50" />
           <Property Name="i_Memo" Type="varchar" MaxLength="50" />
+          <Property Name="i_InvoiceType" Type="text" Nullable="false" />
+          <Property Name="i_IsInvalid" Type="bool" Nullable="false" />
+        </EntityType>
+        <EntityType Name="invoice_split">
+          <Key>
+            <PropertyRef Name="is_Id" />
+          </Key>
+          <Property Name="is_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="is_Date" Type="date" Nullable="false" />
+          <Property Name="is_Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="is_Tax" Type="float" Nullable="false" />
+          <Property Name="is_Amount" Type="float" Nullable="false" />
+          <Property Name="is_VendorTaxId" Type="varchar" MaxLength="50" />
+          <Property Name="is_Number" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="is_Type" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="is_comp_Id" Type="int" />
         </EntityType>
         <EntityType Name="journal">
           <Key>
@@ -341,6 +357,7 @@
           <Property Name="o_UnitPriceC" Type="float" />
           <Property Name="o_Insurance" Type="float" Nullable="false" />
           <Property Name="o_cus_Id" Type="int" />
+          <Property Name="o_BarrelPrice" Type="int" />
         </EntityType>
         <EntityType Name="payment">
           <Key>
@@ -428,6 +445,7 @@
           <Property Name="pb_UnitPrice_2" Type="int" />
           <Property Name="pb_Amount" Type="int" Nullable="false" />
           <Property Name="pb_Date" Type="date" Nullable="false" />
+          <Property Name="pb_comp_Id" Type="int" />
         </EntityType>
         <EntityType Name="rolepermission">
           <Key>
@@ -629,6 +647,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="invoice_split_ibfk_1">
+          <End Role="company" Type="Self.company" Multiplicity="0..1" />
+          <End Role="invoice_split" Type="Self.invoice_split" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="comp_id" />
+            </Principal>
+            <Dependent Role="invoice_split">
+              <PropertyRef Name="is_comp_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="journal_ibfk_1">
           <End Role="subjects" Type="Self.subjects" Multiplicity="0..1" />
           <End Role="journal" Type="Self.journal" Multiplicity="*" />
@@ -749,6 +779,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="purchase_barrel_ibfk_2">
+          <End Role="company" Type="Self.company" Multiplicity="0..1" />
+          <End Role="purchase_barrel" Type="Self.purchase_barrel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="comp_id" />
+            </Principal>
+            <Dependent Role="purchase_barrel">
+              <PropertyRef Name="pb_comp_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="purchase_ibfk_1">
           <End Role="company" Type="Self.company" Multiplicity="1" />
           <End Role="purchase" Type="Self.purchase" Multiplicity="*" />
@@ -851,6 +893,7 @@
           <EntitySet Name="gas_barrel" EntityType="Self.gas_barrel" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="gas_monthly_balances" EntityType="Self.gas_monthly_balances" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="invoice" EntityType="Self.invoice" Schema="gas_accounting_system" store:Type="Tables" />
+          <EntitySet Name="invoice_split" EntityType="Self.invoice_split" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="journal" EntityType="Self.journal" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="manufacturer" EntityType="Self.manufacturer" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="orders" EntityType="Self.orders" Schema="gas_accounting_system" store:Type="Tables" />
@@ -915,6 +958,10 @@
             <End Role="customer" EntitySet="customer" />
             <End Role="invoice" EntitySet="invoice" />
           </AssociationSet>
+          <AssociationSet Name="invoice_split_ibfk_1" Association="Self.invoice_split_ibfk_1">
+            <End Role="company" EntitySet="company" />
+            <End Role="invoice_split" EntitySet="invoice_split" />
+          </AssociationSet>
           <AssociationSet Name="journal_ibfk_1" Association="Self.journal_ibfk_1">
             <End Role="subjects" EntitySet="subjects" />
             <End Role="journal" EntitySet="journal" />
@@ -953,6 +1000,10 @@
           </AssociationSet>
           <AssociationSet Name="purchase_barrel_ibfk_1" Association="Self.purchase_barrel_ibfk_1">
             <End Role="manufacturer" EntitySet="manufacturer" />
+            <End Role="purchase_barrel" EntitySet="purchase_barrel" />
+          </AssociationSet>
+          <AssociationSet Name="purchase_barrel_ibfk_2" Association="Self.purchase_barrel_ibfk_2">
+            <End Role="company" EntitySet="company" />
             <End Role="purchase_barrel" EntitySet="purchase_barrel" />
           </AssociationSet>
           <AssociationSet Name="purchase_ibfk_1" Association="Self.purchase_ibfk_1">
@@ -1134,6 +1185,15 @@
             <End Role="customer" EntitySet="customers" />
             <End Role="invoice" EntitySet="invoices" />
           </AssociationSet>
+          <AssociationSet Name="purchase_barrel_ibfk_2" Association="gas_accounting_systemModel.purchase_barrel_ibfk_2">
+            <End Role="company" EntitySet="companies" />
+            <End Role="purchase_barrel" EntitySet="purchase_barrel" />
+          </AssociationSet>
+          <EntitySet Name="invoice_split" EntityType="gas_accounting_systemModel.invoice_split" />
+          <AssociationSet Name="invoice_split_ibfk_1" Association="gas_accounting_systemModel.invoice_split_ibfk_1">
+            <End Role="company" EntitySet="companies" />
+            <End Role="invoice_split" EntitySet="invoice_split" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="bank">
           <Key>
@@ -1267,6 +1327,8 @@
           <Property Name="comp_Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="gas_monthly_balances" Relationship="gas_accounting_systemModel.gas_monthly_balances_ibfk_1" FromRole="company" ToRole="gas_monthly_balances" />
           <NavigationProperty Name="purchases" Relationship="gas_accounting_systemModel.purchase_ibfk_1" FromRole="company" ToRole="purchase" />
+          <NavigationProperty Name="purchase_barrel" Relationship="gas_accounting_systemModel.purchase_barrel_ibfk_2" FromRole="company" ToRole="purchase_barrel" />
+          <NavigationProperty Name="invoice_split" Relationship="gas_accounting_systemModel.invoice_split_ibfk_1" FromRole="company" ToRole="invoice_split" />
         </EntityType>
         <EntityType Name="customer">
           <Key>
@@ -1455,6 +1517,8 @@
           <Property Name="pb_Amount" Type="Int32" Nullable="false" />
           <Property Name="pb_Date" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="manufacturer" Relationship="gas_accounting_systemModel.purchase_barrel_ibfk_1" FromRole="purchase_barrel" ToRole="manufacturer" />
+          <Property Name="pb_comp_Id" Type="Int32" />
+          <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.purchase_barrel_ibfk_2" FromRole="purchase_barrel" ToRole="company" />
         </EntityType>
         <EntityType Name="rolepermission">
           <Key>
@@ -1847,6 +1911,7 @@
           <NavigationProperty Name="car1" Relationship="gas_accounting_systemModel.orders_ibfk_2" FromRole="order" ToRole="car" />
           <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.orders_ibfk_5" FromRole="order" ToRole="customer" />
           <NavigationProperty Name="employee" Relationship="gas_accounting_systemModel.orders_ibfk_3" FromRole="order" ToRole="employee" />
+          <Property Name="o_BarrelPrice" Type="Int32" />
         </EntityType>
         <Association Name="orders_ibfk_1">
           <End Type="gas_accounting_systemModel.car" Role="car" Multiplicity="0..1" />
@@ -2012,6 +2077,8 @@
           <Property Name="i_Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.invoice_ibfk_1" FromRole="invoice" ToRole="customer" />
           <Property Name="i_Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="i_InvoiceType" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="i_IsInvalid" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="invoice_ibfk_1">
           <End Type="gas_accounting_systemModel.customer" Role="customer" Multiplicity="1">
@@ -2024,6 +2091,45 @@
             </Principal>
             <Dependent Role="invoice">
               <PropertyRef Name="i_cus_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="purchase_barrel_ibfk_2">
+          <End Type="gas_accounting_systemModel.company" Role="company" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.purchase_barrel" Role="purchase_barrel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="comp_id" />
+            </Principal>
+            <Dependent Role="purchase_barrel">
+              <PropertyRef Name="pb_comp_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="invoice_split">
+          <Key>
+            <PropertyRef Name="is_Id" />
+          </Key>
+          <Property Name="is_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="is_Date" Type="DateTime" Nullable="false" />
+          <Property Name="is_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="is_Tax" Type="Single" Nullable="false" />
+          <Property Name="is_Amount" Type="Single" Nullable="false" />
+          <Property Name="is_VendorTaxId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="is_Number" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="is_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="is_comp_Id" Type="Int32" />
+          <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.invoice_split_ibfk_1" FromRole="invoice_split" ToRole="company" />
+        </EntityType>
+        <Association Name="invoice_split_ibfk_1">
+          <End Type="gas_accounting_systemModel.company" Role="company" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.invoice_split" Role="invoice_split" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="comp_id" />
+            </Principal>
+            <Dependent Role="invoice_split">
+              <PropertyRef Name="is_comp_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2305,6 +2411,7 @@
           <EntitySetMapping Name="purchase_barrel">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.purchase_barrel">
               <MappingFragment StoreEntitySet="purchase_barrel">
+                <ScalarProperty Name="pb_comp_Id" ColumnName="pb_comp_Id" />
                 <ScalarProperty Name="pb_Date" ColumnName="pb_Date" />
                 <ScalarProperty Name="pb_Amount" ColumnName="pb_Amount" />
                 <ScalarProperty Name="pb_UnitPrice_2" ColumnName="pb_UnitPrice_2" />
@@ -2371,6 +2478,7 @@
           <EntitySetMapping Name="orders">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.order">
               <MappingFragment StoreEntitySet="orders">
+                <ScalarProperty Name="o_BarrelPrice" ColumnName="o_BarrelPrice" />
                 <ScalarProperty Name="o_cus_Id" ColumnName="o_cus_Id" />
                 <ScalarProperty Name="o_Insurance" ColumnName="o_Insurance" />
                 <ScalarProperty Name="o_UnitPriceC" ColumnName="o_UnitPriceC" />
@@ -2503,6 +2611,8 @@
           <EntitySetMapping Name="invoices">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.invoice">
               <MappingFragment StoreEntitySet="invoice">
+                <ScalarProperty Name="i_IsInvalid" ColumnName="i_IsInvalid" />
+                <ScalarProperty Name="i_InvoiceType" ColumnName="i_InvoiceType" />
                 <ScalarProperty Name="i_Memo" ColumnName="i_Memo" />
                 <ScalarProperty Name="i_Type" ColumnName="i_Type" />
                 <ScalarProperty Name="i_Tax" ColumnName="i_Tax" />
@@ -2513,6 +2623,21 @@
                 <ScalarProperty Name="i_Number" ColumnName="i_Number" />
                 <ScalarProperty Name="i_cus_Id" ColumnName="i_cus_Id" />
                 <ScalarProperty Name="i_Id" ColumnName="i_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invoice_split">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.invoice_split">
+              <MappingFragment StoreEntitySet="invoice_split">
+                <ScalarProperty Name="is_comp_Id" ColumnName="is_comp_Id" />
+                <ScalarProperty Name="is_Type" ColumnName="is_Type" />
+                <ScalarProperty Name="is_Number" ColumnName="is_Number" />
+                <ScalarProperty Name="is_VendorTaxId" ColumnName="is_VendorTaxId" />
+                <ScalarProperty Name="is_Amount" ColumnName="is_Amount" />
+                <ScalarProperty Name="is_Tax" ColumnName="is_Tax" />
+                <ScalarProperty Name="is_Name" ColumnName="is_Name" />
+                <ScalarProperty Name="is_Date" ColumnName="is_Date" />
+                <ScalarProperty Name="is_Id" ColumnName="is_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

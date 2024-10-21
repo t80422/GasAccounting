@@ -85,7 +85,7 @@
     ''' 取得公司選單
     ''' </summary>
     Public Sub GetCompanyCmb()
-        _view.SetCompanyCmb(_companyService.GetCompanyComboBoxData)
+        _view.ICollectionView_SetCompanyCmb(_companyService.GetCompanyComboBoxData)
     End Sub
 
     Public Sub Query()

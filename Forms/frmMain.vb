@@ -1,6 +1,6 @@
 ﻿Public Class frmMain
     Implements ISubjectsView, ICompanyView, IManufacturerView, IPurchaseView, ICustomerView, IPricePlanView, IEmployeeView, IBankView, IPaymentView, IUnitPriceHistoryView, ICollectionView, ICheque, IOrderView,
-        IReportView, IGasCheckoutView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, IPurchaseBarrelView, ICarView
+        IReportView, IGasCheckoutView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, IPurchaseBarrelView, ICarView, IInvoiceSplitView
 
     Public Structure UserData
         Public Id As Integer
@@ -19,6 +19,7 @@
     Private _customer As CustomerPresenter
     Private _gasBarrel As GasBarrelPresenter
     Private _invoice As InvoicePresenter
+    Private _invoiceIn As InvoiceSplitPresenters
     Private _permission As PermissionPresenter
     Private _purchaseBarrel As PurBarrelPresenter
     Private _subjects As SubjectsPresenter
@@ -86,6 +87,7 @@
         Dim gbRep As New GasBarrelRep(context)
         Dim gmbRep As New GasMonthlyBalanceRep(context)
         Dim invoiceRep As New InvoiceRep(context)
+        Dim invoiceInRep As New InvoiceSplitRep(context)
         Dim ordRep As New OrderRep(context)
         Dim pbRep As New PurchaseBarrelRep(context)
         Dim bpRep As New BasicPriceRep(context)
@@ -108,9 +110,10 @@
         _customer = New CustomerPresenter(Me, cusRep, ppRep, compRep)
         _gasBarrel = New GasBarrelPresenter(Me, gbRep)
         _invoice = New InvoicePresenter(Me, cusRep, invoiceRep, priceCalSer, ordRep)
+        _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
         _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer)
         _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep)
-        _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, gbRep)
+        _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep)
         _report = New ReportPresenter(Me, reportRep, bankRep, compRep)
         _subjects = New SubjectsPresenter(Me, subjectRep)
         _cheque = New ChequePresenter(Me, cheRep)
@@ -184,6 +187,7 @@
         btnCancel_invoice_Click(btnCancel_invoice, EventArgs.Empty)
         btnCancel_gb_Click(btnCancel_gb, EventArgs.Empty)
         btnCancel_pb_Click(btnCancel_pb, EventArgs.Empty)
+        btnCancel_ii_Click(btnCancel_ii, EventArgs.Empty)
     End Sub
 
     ''' <summary>
@@ -194,7 +198,7 @@
         Dim lstFreight As New List(Of TextBox) From {txtWeight_pur, txtDeliUnitPrice}
         lstFreight.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateFreight())
 
-        Dim lstSum_pur As New List(Of TextBox) From {txtWeight_pur, txtUnitPrice_pur, txtFreight}
+        Dim lstSum_pur As New List(Of TextBox) From {txtWeight_pur, txtUnitPrice_pur}
         lstSum_pur.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateSum_Purchase())
 #End Region
 
@@ -228,7 +232,7 @@
             txto_inspect_50, txto_inspect_20, txto_inspect_16, txto_inspect_10, txto_inspect_4, txto_inspect_18, txto_inspect_14, txto_inspect_5, txto_inspect_2,
             txtDepositIn_50, txtDepositIn_20, txtDepositIn_16, txtDepositIn_10, txtDepositIn_4, txtDepositIn_18, txtDepositIn_14, txtDepositIn_5, txtDepositIn_2,
             txto_return, txto_return_c, txto_sales_allowance, txtWeight_pur, txtAmount, txtKg_invoice, txtQty_50, txtQty_20, txtQty_16, txtQty_10, txtQty_4, txtQty_15, txtQty_14, txtQty_5,
-            txtQty_2, txtUnitPrice_50, txtUnitPrice_20, txtUnitPrice_16, txtUnitPrice_10, txtUnitPrice_4, txtUnitPrice_15, txtUnitPrice_14, txtUnitPrice_5, txtUnitPrice_2}
+            txtQty_2, txtUnitPrice_50, txtUnitPrice_20, txtUnitPrice_16, txtUnitPrice_10, txtUnitPrice_4, txtUnitPrice_15, txtUnitPrice_14, txtUnitPrice_5, txtUnitPrice_2, txtAmount_ii}
 
         textBoxes.ForEach(Sub(txt) AddHandler txt.KeyPress, AddressOf PositiveIntegerOnly_TextBox)
     End Sub
@@ -302,6 +306,7 @@
         AutoMapEntityToControls(data, grpStock)
         AutoMapEntityToControls(data, grpCusStk)
         AutoMapEntityToControls(data, grpPricePlan)
+        AutoMapEntityToControls(data, grpInsurance)
     End Sub
 
     Private Function ICustomerView_GetUserInput() As customer Implements IBaseView(Of customer, CustomerVM).GetUserInput
@@ -310,6 +315,7 @@
         AutoMapControlsToEntity(data, grpStock)
         AutoMapControlsToEntity(data, grpCusStk)
         AutoMapControlsToEntity(data, grpPricePlan)
+        AutoMapControlsToEntity(data, grpInsurance)
         Return data
     End Function
 
@@ -750,7 +756,7 @@
 
     '採購管理-大氣採購-列印
     Private Sub btnPrint_pur_Click(sender As Object, e As EventArgs) Handles btnPrint_pur.Click
-
+        _purchase.Print(dgvPurchase.DataSource)
     End Sub
 
     ''' <summary>
@@ -776,8 +782,7 @@
     Private Sub CalculateSum_Purchase()
         Dim weight As Integer = If(String.IsNullOrEmpty(txtWeight_pur.Text), 0, txtWeight_pur.Text)
         Dim unitPrice As Single = If(String.IsNullOrEmpty(txtUnitPrice_pur.Text), 0, txtUnitPrice_pur.Text)
-        Dim Frieght As Single = If(String.IsNullOrEmpty(txtFreight.Text), 0, txtFreight.Text)
-        txtSum_pur.Text = weight * unitPrice + Frieght
+        txtSum_pur.Text = weight * unitPrice
     End Sub
 
     Public Sub SetManuCmb_uph(data As List(Of SelectListItem)) Implements IUnitPriceHistoryView.SetManuCmb
@@ -833,6 +838,10 @@
             .VendorId = cmbVendor_pb.SelectedItem?.Value
         }
     End Function
+
+    Private Sub IPurchaseBarrelView_SetCompanyCmb(data As List(Of SelectListItem)) Implements IPurchaseBarrelView.SetCompanyCmb
+        SetComboBox(cmbCompany_pb, data)
+    End Sub
 
     '採購管理-新瓶採購-新增
     Private Sub btnAdd_pb_Click(sender As Object, e As EventArgs) Handles btnAdd_pb.Click
@@ -972,11 +981,15 @@
         Return data
     End Function
 
-    Public Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single) Implements IOrderView.DisplayGasAndPrice
+    Public Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single, barrelAmount As Integer, gasUnitPrice As Single,
+                                  gasCUnitPrice As Single) Implements IOrderView.DisplayGasAndPrice
         txtTotalGas.Text = gas
         txtTotalGas_c.Text = gasC
         txtAmount_ord.Text = amount
         txtInsurance.Text = insurance
+        txtBarrelAmount.Text = barrelAmount
+        txtGasUnitPrice.Text = gasUnitPrice
+        txtGasCUnitPrice.Text = gasCUnitPrice
     End Sub
 
     Public Function GetOrderInput() As order Implements IOrderView.GetOrderInput
@@ -1046,7 +1059,7 @@
 
     '銷售管理-取消
     Private Async Sub btnCancel_order_Click(sender As Object, e As EventArgs) Handles btnCancel_order.Click
-        SetButtonState(sender, True)
+        SetButtonState(btnCancel_order, True)
         Await _order.InitializeAsync()
         dgvOrder.ClearSelection()
         IOrderView_ClearInput()
@@ -1282,20 +1295,6 @@
         _order.CalculateStkAndPrice(isIn)
     End Sub
 
-    '銷售管理-客戶編號改變時
-    Private Sub txtCusID_order_TextChanged(sender As Object, e As EventArgs) Handles txtCusID_order.TextChanged
-        'Dim txt As TextBox = sender
-        'Dim id As Integer
-
-        'ClearControls(tpIn)
-        'ClearControls(tpOut)
-
-        'If Integer.TryParse(txt.Text, id) Then
-        '    _order.GetCusStk(id)
-        '    _order.LoadCmbCar(id)
-        'End If
-    End Sub
-
     '銷售管理-選擇廠運時
     Private Sub rdoDelivery_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDelivery.CheckedChanged
         Dim rdo As RadioButton = sender
@@ -1349,8 +1348,10 @@
 
     '銷售管理-dgv
     Private Sub dgvOrder_SelectionChanged(sender As Object, e As EventArgs) Handles dgvOrder.SelectionChanged, dgvOrder.CellMouseClick
-        If Not dgvOrder.Focused Then Return
-        GetDetail(dgvOrder.SelectedRows(0).Cells("編號").Value)
+        If Not dgvOrder.Focused OrElse dgvOrder.SelectedRows.Count = 0 Then Return
+        Dim row = dgvOrder.SelectedRows(0)
+        Dim id As Integer = row.Cells("編號").Value
+        GetDetail(id)
     End Sub
 
     Private Sub GetDetail(id As Integer)
@@ -1384,7 +1385,7 @@
                 If btnDelete_order.Enabled = True Then _order.Delete()
 
             Case Keys.F4
-                btnCancel_order.PerformClick()
+                btnCancel_order_Click(btnCancel_order, EventArgs.Empty)
 
             Case Keys.F5
                 btnPrint.PerformClick()
@@ -2093,7 +2094,7 @@
         SetComboBox(cmbBank_col, data)
     End Sub
 
-    Public Sub SetCompanyCmb(data As List(Of SelectListItem)) Implements ICollectionView.SetCompanyCmb
+    Public Sub ICollectionView_SetCompanyCmb(data As List(Of SelectListItem)) Implements ICollectionView.ICollectionView_SetCompanyCmb
         SetComboBox(cmbCompany_col, data)
     End Sub
 
@@ -2352,7 +2353,8 @@
     Private Sub IReportView_SetCompanyCmb(items As List(Of SelectListItem)) Implements IReportView.SetCompanyCmb
         SetComboBox(cmbCompany_br, items)
         SetComboBox(cmbCompany_ITD, items)
-        SetComboBox(cmbCompany_MS, items)
+        SetComboBox(cmbCompany_insurance, items)
+        SetComboBox(cmbCompany_IS, items)
     End Sub
 
     '會計管理-報表-刷新
@@ -2363,18 +2365,18 @@
 
     '會計管理-報表-氣量氣款收付明細表
     Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
-        _report.GenerateCustomersGasDetailByDay(dtpReport.Value)
+        _report.GenerateCustomersGasDetailByDay(dtpDate_cgpc.Value)
     End Sub
 
     '會計管理-報表-客戶提氣清冊
     Private Sub btnCusGetGasList_Click(sender As Object, e As EventArgs) Handles btnCusGetGasList.Click
-        _report.GenerateCustomersGetGasList(dtpReport.Value)
+        _report.GenerateCustomersGetGasList(dtpDate_cgpc.Value)
     End Sub
 
     '會計管理-報表-大氣進貨明細
     Private Sub btnGasPayableDetail_Click(sender As Object, e As EventArgs) Handles btnGasPayableDetail.Click
         If Not (cmbManu.SelectedIndex = -1 And String.IsNullOrEmpty(cmbManu.Text)) Then
-            _report.GenerateGasPayableDetail(dtpReport.Value, cmbManu.SelectedValue)
+            _report.GenerateGasPayableDetail(dtpDate_cgpc.Value, cmbManu.SelectedValue)
         End If
 
     End Sub
@@ -2384,7 +2386,7 @@
         Dim cusCode As Integer
 
         If Integer.TryParse(txtCusCode_report.Text, cusCode) Then
-            _report.GenerateDailyCustomerReceivable(dtpReport.Value, cusCode)
+            _report.GenerateDailyCustomerReceivable(dtpDate_cgpc.Value, cusCode)
         Else
             MsgBox("無效的客戶代號")
         End If
@@ -2392,12 +2394,12 @@
 
     '會計管理-報表-提量支數統計
     Private Sub btnGasUsageCylinderCount_Click(sender As Object, e As EventArgs) Handles btnGasUsageCylinderCount.Click
-        _report.GenerateGasUsageAndCylinderCount(dtpReport.Value)
+        _report.GenerateGasUsageAndCylinderCount(dtpDate_cgpc.Value)
     End Sub
 
     '會計管理-報表-現金帳
     Private Sub btnCashAccount_Click(sender As Object, e As EventArgs) Handles btnCashAccount.Click
-        _report.GenerateCashAccount(dtpReport.Value)
+        _report.GenerateCashAccount(dtpDate_cgpc.Value)
     End Sub
 
     '會計管理-報表-銀行帳
@@ -2481,7 +2483,22 @@
 
     '會計管理-報表-月結帳單
     Private Sub btnMonthlyStatement_Click(sender As Object, e As EventArgs) Handles btnMonthlyStatement.Click
+        _report.GenerateMonthlyStatement(txtCusCode_MS.Text, dtpMonth_MS.Value)
+    End Sub
 
+    '會計管理-報表-保險
+    Private Sub btnInsurance_Click(sender As Object, e As EventArgs) Handles btnInsurance.Click
+        _report.GenerateInsurance(cmbCompany_insurance.SelectedItem.Value, dtpMonth_insurance.Value)
+    End Sub
+
+    '會計管理-報表-損益表
+    Private Sub btnIncomeStatement_Click(sender As Object, e As EventArgs) Handles btnIncomeStatement.Click
+        _report.GenerateIncomeStatement(dtpStart_IS.Value, dtpEnd_IS.Value, cmbCompany_IS.SelectedItem.Value)
+    End Sub
+
+    '會計管理-報表-進項銷項
+    Private Sub btnInOut_Click(sender As Object, e As EventArgs) Handles btnInOut.Click
+        _report.GenerateInOut(dtpYear_InOut.Value, cmbMonth_InOut.SelectedItem)
     End Sub
 
     Private Function IGasCheckoutView_GetUserInput() As PurchaseCondition Implements IGasCheckoutView.GetUserInput
@@ -2546,18 +2563,18 @@
     End Sub
 
     Public Sub DisplayDetail(data As invoice) Implements IBaseView(Of invoice, InvioceVM).DisplayDetail
-        AutoMapEntityToControls(data, tpInvoice)
-        AutoMapEntityToControls(data.customer, tpInvoice)
+        AutoMapEntityToControls(data, tpInvoice_Out)
+        AutoMapEntityToControls(data.customer, tpInvoice_Out)
     End Sub
 
     Private Function IInvoice_GetUserInput() As invoice Implements IBaseView(Of invoice, InvioceVM).GetUserInput
         Dim data As New invoice
-        AutoMapControlsToEntity(data, tpInvoice)
+        AutoMapControlsToEntity(data, tpInvoice_Out)
         Return data
     End Function
 
     Private Sub IInvoice_ClearInput() Implements IBaseView(Of invoice, InvioceVM).ClearInput
-        ClearControls(tpInvoice)
+        ClearControls(tpInvoice_Out)
     End Sub
 
     Public Sub SetCustomer(data As customer) Implements IInvoiceView.SetCustomer
@@ -2582,15 +2599,9 @@
         txtAmount_invoice.Text = amount
     End Sub
 
-    Public Sub DisplayInvoiceInfo(info As InvoiceInfoVM) Implements IInvoiceView.DisplayInvoiceInfo
-        txtDeliNormTotal.Text = info.DeliNormTotal
-        txtDeliCTotal.Text = info.DeliCTotal
-        txtDeliNormInvoice.Text = info.DeliNormInvoice
-        txtDeliCInvoice.Text = info.DeliCInvoice
-        txtPickNormTotal.Text = info.PickNormTotal
-        txtPickCTotal.Text = info.PickCTotal
-        txtPickNormInvoice.Text = info.PickNormInvoice
-        txtPickCInvoice.Text = info.PickCInvoice
+    Public Sub DisplayInvoiceInfo(info As (Integer, Integer)) Implements IInvoiceView.DisplayInvoiceInfo
+        txtDeliNormTotal.Text = info.Item1
+        txtDeliCTotal.Text = info.Item2
     End Sub
 
     '會計管理-發票管理-客戶代號
@@ -2599,7 +2610,11 @@
         If e.KeyCode = Keys.Enter AndAlso Not String.IsNullOrEmpty(txtCusCode_invoice.Text) Then
             _invoice.GetCustomerByCusCode(txtCusCode_invoice.Text)
             _invoice.CalculatePrices(cmbType_invoice.SelectedItem)
-            _invoice.LoadInvoiceInfo(txtCusId_invoice.Text, dtpMonth_invoice.Value)
+
+            Dim id As Integer = 0
+
+            Integer.TryParse(txtCusId_invoice.Text, id)
+            _invoice.LoadInvoiceInfo(id, dtpMonth_invoice.Value)
         End If
     End Sub
 
@@ -2682,5 +2697,116 @@
         Dim lst As New List(Of Control) From {lblCusCode_invoice, lblMonth_invoice, lblNumber_invoice}
 
         SetQueryControls(btnSearch_invoice, lst)
+    End Sub
+
+    '會計管理-發票管理(銷項)-客戶編號、發票類型
+    Private Sub DisplayDefaultInvoiceNumber(sender As Object, e As EventArgs) Handles cmbInvoiceType.SelectionChangeCommitted
+        txtNumber_invoice.Text = _invoice.GetInvoiceDefaultNumber(cmbInvoiceType.SelectedItem)
+    End Sub
+
+    Public Sub DisplayList(data As List(Of InvoiceSplitVM)) Implements IBaseView(Of invoice_split, InvoiceSplitVM).DisplayList
+        dgvInvoiceIn.DataSource = data
+    End Sub
+
+    Public Sub DisplayDetail(data As invoice_split) Implements IBaseView(Of invoice_split, InvoiceSplitVM).DisplayDetail
+        AutoMapEntityToControls(data, tpInvoice_In)
+    End Sub
+
+    Private Function IBaseView_GetUserInput3() As invoice_split Implements IBaseView(Of invoice_split, InvoiceSplitVM).GetUserInput
+        Dim data As New invoice_split
+        AutoMapControlsToEntity(data, tpInvoice_In)
+        Return data
+    End Function
+
+    Private Sub IBaseView_ClearInput3() Implements IBaseView(Of invoice_split, InvoiceSplitVM).ClearInput
+        ClearControls(tpInvoice_In)
+    End Sub
+
+    Public Sub SetCompanyCmb(datas As List(Of SelectListItem)) Implements IInvoiceSplitView.SetCompanyCmb
+        SetComboBox(cmbComp_is, datas)
+    End Sub
+
+    Private Function IInvoiceInView_GetSearchCriteria() As InvoiceSplitSearchCriteria Implements IInvoiceSplitView.GetSearchCriteria
+        Return New InvoiceSplitSearchCriteria With {
+            .EndDate = dtpEnd_ii.Value,
+            .IsDate = chkIsDate_ii.Checked,
+            .Name = txtName_is.Text,
+            .Number = txtNumber_ii.Text,
+            .StartDate = dtpStart_ii.Value,
+            .TaxId = txtTaxId_is.Text
+        }
+    End Function
+
+    '會計管理-發票管理(分裝場)-取消
+    Private Sub btnCancel_ii_Click(sender As Object, e As EventArgs) Handles btnCancel_ii.Click
+        SetButtonState(sender, True)
+        _invoiceIn.Initialize()
+    End Sub
+
+    '會計管理-發票管理(分裝場)-新增
+    Private Sub btnAdd_ii_Click(sender As Object, e As EventArgs) Handles btnAdd_ii.Click
+        _invoiceIn.AddAsync()
+    End Sub
+
+    '會計管理-發票管理(分裝場)-dgv
+    Private Sub dgvInvoiceIn_CellMouseClick(sender As Object, e As EventArgs) Handles dgvInvoiceIn.CellMouseClick, dgvInvoiceIn.SelectionChanged
+        Dim ctrl As DataGridView = sender
+
+        If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
+
+        SetButtonState(ctrl, False)
+
+        Dim id = ctrl.SelectedRows(0).Cells(0).Value
+        _invoiceIn.LoadDetailAsync(id)
+    End Sub
+
+    '會計管理-發票管理(分裝場)-修改
+    Private Sub btnEdit_ii_Click(sender As Object, e As EventArgs) Handles btnEdit_ii.Click
+        SetButtonState(sender, True)
+        _invoiceIn.UpdateAsync()
+    End Sub
+
+    '會計管理-發票管理(分裝場)-刪除
+    Private Sub btnDelete_ii_Click(sender As Object, e As EventArgs) Handles btnDelete_ii.Click
+        If MsgBox("確定要刪除", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            _invoiceIn.DeleteAsync()
+            SetButtonState(sender, True)
+        End If
+    End Sub
+
+    '會計管理-發票管理(分裝場)-查詢
+    Private Sub btnQuery_ii_Click(sender As Object, e As EventArgs) Handles btnQuery_ii.Click
+        Dim lst As New List(Of Control) From {lblNumber_ii, lblName_ii, lblTaxId_is}
+
+        SetQueryControls(btnQuery_ii, lst)
+
+        If sender.Text = "查  詢" Then _invoiceIn.LoadList()
+    End Sub
+
+    '會計管理-發票管理(分裝場)-金額
+    Private Sub txtAmount_ii_KeyUp(sender As Object, e As KeyEventArgs) Handles txtAmount_ii.KeyUp
+        Dim amount As Integer
+        If Integer.TryParse(txtAmount_ii.Text, amount) Then
+            txtTax_ii.Text = amount * 0.05
+        End If
+    End Sub
+
+    '會計管理-發票管理(分裝場)-分類
+    Private Sub cmbType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbType.SelectedIndexChanged
+        Dim isInvoice = TryCast(sender, ComboBox)?.SelectedItem?.ToString()
+        Dim isInput = isInvoice = "進項"
+        Dim isOutput = isInvoice = "銷項"
+
+        lblTaxId_is.Visible = isInput
+        txtTaxId_is.Visible = isInput
+        lblComp_is.Visible = isOutput
+        cmbComp_is.Visible = isOutput
+
+        If Not isOutput Then
+            cmbComp_is.SelectedIndex = -1
+            txtName_is.Clear()
+        Else
+            txtName_is.Text = "分裝費"
+        End If
     End Sub
 End Class

@@ -21,6 +21,8 @@ Partial Public Class invoice
     Public Property i_Tax As Single
     Public Property i_Type As String
     Public Property i_Memo As String
+    Public Property i_InvoiceType As String
+    Public Property i_IsInvalid As Boolean
 
     Public Overridable Property customer As customer
 

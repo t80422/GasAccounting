@@ -121,5 +121,38 @@
     ''' <param name="compId"></param>
     ''' <param name="month"></param>
     ''' <returns></returns>
-    Function GetMonthlyStatement(compId As Integer, month As Date) As MonthlyStatement
+    Function GetMonthlyStatement(cusCode As String, month As Date) As MonthlyStatement
+
+    ''' <summary>
+    ''' 取得保險
+    ''' </summary>
+    ''' <param name="compId"></param>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetInsurance(compId As Integer, month As Date) As Insurance
+
+    ''' <summary>
+    ''' 取得損益表
+    ''' </summary>
+    ''' <param name="startDate"></param>
+    ''' <param name="endDate"></param>
+    ''' <param name="compId"></param>
+    ''' <returns></returns>
+    Function GetIncomeStatement(startDate As Date, endDate As Date, compId As Integer) As IncomeStatement
+
+    ''' <summary>
+    ''' 取得銷項
+    ''' </summary>
+    ''' <param name="year"></param>
+    ''' <param name="months"></param>
+    ''' <returns></returns>
+    Function GetOutInvoice(year As Integer, months As String) As OutInvoice
+
+    ''' <summary>
+    ''' 取得分裝場進銷項
+    ''' </summary>
+    ''' <param name="year"></param>
+    ''' <param name="months"></param>
+    ''' <returns></returns>
+    Function GetSplitCompany(year As Integer, months As String) As SplitCompanyInvoice
 End Interface

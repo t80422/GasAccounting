@@ -313,8 +313,15 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CashAccount.vb" />
+    <Compile Include="Models\invoice_split.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Report\BillsReceivable.vb" />
     <Compile Include="Models\Report\EnergyBureau.vb" />
+    <Compile Include="Models\Report\SplitCompanyInvoice.vb" />
+    <Compile Include="Models\Report\IncomeStatement.vb" />
+    <Compile Include="Models\Report\OutInvoice.vb" />
+    <Compile Include="Models\Report\Insurance.vb" />
     <Compile Include="Models\Report\InventoryDetail.vb" />
     <Compile Include="Models\Report\InventoryTransactionDetail.vb" />
     <Compile Include="Models\Report\Invoice.vb" />
@@ -325,6 +332,7 @@
     <Compile Include="Models\Report\Tax.vb" />
     <Compile Include="Models\SearchCriteria\CarSC.vb" />
     <Compile Include="Models\SearchCriteria\ChequeSearchCriteria.vb" />
+    <Compile Include="Models\SearchCriteria\InvoiceSplitSearchCriteria.vb" />
     <Compile Include="Models\SearchCriteria\InvoiceSearchCriteria.vb" />
     <Compile Include="Models\PurchaseCondition.vb" />
     <Compile Include="Models\Report\BankAccount.vb" />
@@ -334,7 +342,7 @@
     <Compile Include="Models\SearchCriteria\PurBarrelSC.vb" />
     <Compile Include="Models\ViewModels\GasBarrelVM.vb" />
     <Compile Include="Models\ViewModels\InvioceVM.vb" />
-    <Compile Include="Models\ViewModels\InvoiceInfoVM.vb" />
+    <Compile Include="Models\ViewModels\InvoiceSplitVM.vb" />
     <Compile Include="Models\ViewModels\PurchaseBarrelVM.vb" />
     <Compile Include="Models\permission.vb">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -343,6 +351,7 @@
     <Compile Include="Presenters\CarPresenter.vb" />
     <Compile Include="Presenters\GasBarrelPresenter.vb" />
     <Compile Include="Presenters\GasCheckoutPresenter.vb" />
+    <Compile Include="Presenters\InvoiceSplitPresenters.vb" />
     <Compile Include="Presenters\InvoicePresenter.vb" />
     <Compile Include="Presenters\PermissionPresenter.vb" />
     <Compile Include="Presenters\PurBarrelPresenter.vb" />
@@ -367,8 +376,10 @@
     <Compile Include="Repositories\GasBarrel\GasBarrelRep.vb" />
     <Compile Include="Repositories\GasBarrel\IGasBarrelRep.vb" />
     <Compile Include="Repositories\BarrelMonthlyBalance\IBarrelMonthlyBalancesRep.vb" />
-    <Compile Include="Repositories\GasMonthlyBalanceRep.vb" />
-    <Compile Include="Repositories\IGasMonthlyBalanceRep.vb" />
+    <Compile Include="Repositories\GasMonthlyBalance\GasMonthlyBalanceRep.vb" />
+    <Compile Include="Repositories\GasMonthlyBalance\IGasMonthlyBalanceRep.vb" />
+    <Compile Include="Repositories\IInvoiceSplitRep.vb" />
+    <Compile Include="Repositories\InvoiceSplitRep.vb" />
     <Compile Include="Repositories\Invoice\IInvoiceRep.vb" />
     <Compile Include="Repositories\Invoice\InvoiceRep.vb" />
     <Compile Include="Repositories\PurchaseBarrel\IPurchaseBarrelRep.vb" />
@@ -402,6 +413,7 @@
     <Compile Include="Views\ICarView.vb" />
     <Compile Include="Views\IGasBarrelView.vb" />
     <Compile Include="Views\IGasCheckoutView.vb" />
+    <Compile Include="Views\IInvoiceSplitView.vb" />
     <Compile Include="Views\IInvoiceView.vb" />
     <Compile Include="Views\IPermissionView.vb" />
     <Compile Include="Views\IPurchaseBarrelView.vb" />
@@ -409,12 +421,10 @@
     <Compile Include="Presenters\ReportPresenter.vb" />
     <Compile Include="Repositories\BasicPrice\BasicPriceRep.vb" />
     <Compile Include="Repositories\BasicPrice\IBasicPriceRep.vb" />
-    <Compile Include="Repositories\IRepository_old.vb" />
     <Compile Include="Repositories\PricePlan\IPricePlanRep.vb" />
     <Compile Include="Repositories\PricePlan\PricePlanRep.vb" />
     <Compile Include="Repositories\Report\IReportRep.vb" />
     <Compile Include="Repositories\Report\ReportRep.vb" />
-    <Compile Include="Repositories\Repository_old.vb" />
     <Compile Include="Utilities\CloseXML_Excel.vb" />
     <Compile Include="Services\CusOrdByCar\CusOrdByCarService.vb" />
     <Compile Include="Utilities\HtmlToPDF.vb" />

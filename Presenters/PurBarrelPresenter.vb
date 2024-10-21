@@ -3,18 +3,19 @@
     Private ReadOnly _pbRep As IPurchaseBarrelRep
     Private ReadOnly _vendorRep As IManufacturerRep
     Private ReadOnly _barmbSer As IBarrelMonthlyBalanceService
-    Private ReadOnly _gbRep As IGasBarrelRep
+    Private ReadOnly _compRep As ICompanyRep
 
-    Public Sub New(view As IPurchaseBarrelView, pbRep As IPurchaseBarrelRep, vendorRep As IManufacturerRep, barmbSer As IBarrelMonthlyBalanceService, gbRep As IGasBarrelRep)
+    Public Sub New(view As IPurchaseBarrelView, pbRep As IPurchaseBarrelRep, vendorRep As IManufacturerRep, barmbSer As IBarrelMonthlyBalanceService, compRep As ICompanyRep)
         _view = view
         _pbRep = pbRep
         _vendorRep = vendorRep
         _barmbSer = barmbSer
-        _gbRep = gbRep
+        _compRep = compRep
     End Sub
 
     Public Async Sub Initialize()
         Await LoadVendor()
+        Await LoadCompany()
         _view.ClearInput()
         LoadList()
     End Sub
@@ -111,6 +112,16 @@
         Try
             Dim datas = Await _vendorRep.GetVendorDropdownAsync
             _view.SetVendorCmb(datas.ToList)
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
+    End Function
+
+    Private Async Function LoadCompany() As Task
+        Try
+            Dim datas = Await _compRep.GetCompanyDropdownAsync
+            _view.SetCompanyCmb(datas.ToList)
         Catch ex As Exception
             Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)

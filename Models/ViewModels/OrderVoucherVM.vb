@@ -100,11 +100,9 @@ Public Class OrderVoucherVM
 
     Public Sub New(order As order)
         If order Is Nothing Then Throw New ArgumentNullException("order 不能為 nothing")
-        If order.car Is Nothing Then Throw New ArgumentNullException("order中的car不能為nothing")
-        If order.car.customer Is Nothing Then Throw New ArgumentNullException("order中的car中的customer不能為nothing")
 
-        客戶名稱 = order.car.customer.cus_name
-        車號 = order.car.c_no
+        客戶名稱 = order.customer.cus_name
+        車號 = order.car?.c_no
         提氣時間 = order.o_date
         提單編號 = order.o_id
         丙氣10kg = order.o_gas_c_10
@@ -152,15 +150,15 @@ Public Class OrderVoucherVM
         收空瓶4kg = order.o_empty_4
         收空瓶50kg = order.o_empty_50
         收空瓶5kg = order.o_empty_5
-        結存10kg = order.car.customer.cus_gas_10
-        結存14kg = order.car.customer.cus_gas_14
-        結存18kg = order.car.customer.cus_gas_18
-        結存16kg = order.car.customer.cus_gas_16
-        結存20kg = order.car.customer.cus_gas_20
-        結存2kg = order.car.customer.cus_gas_2
-        結存4kg = order.car.customer.cus_gas_4
-        結存50kg = order.car.customer.cus_gas_50
-        結存5kg = order.car.customer.cus_gas_5
+        結存10kg = order.customer.cus_gas_10
+        結存14kg = order.customer.cus_gas_14
+        結存18kg = order.customer.cus_gas_18
+        結存16kg = order.customer.cus_gas_16
+        結存20kg = order.customer.cus_gas_20
+        結存2kg = order.customer.cus_gas_2
+        結存4kg = order.customer.cus_gas_4
+        結存50kg = order.customer.cus_gas_50
+        結存5kg = order.customer.cus_gas_5
         本日退氣 = order.o_return + order.o_return_c
     End Sub
 End Class

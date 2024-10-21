@@ -746,9 +746,298 @@
         End Try
     End Function
 
-    Public Function GetMonthlyStatement(compId As Integer, month As Date) As MonthlyStatement Implements IReportRep.GetMonthlyStatement
+    Public Function GetMonthlyStatement(cusCode As String, month As Date) As MonthlyStatement Implements IReportRep.GetMonthlyStatement
         Try
+            Dim result = New MonthlyStatement
+            Dim orderByCusAndMonth = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
+                                                                        x.o_date.Value.Month = month.Month AndAlso
+                                                                        x.customer.cus_code = cusCode).ToList
 
+            If orderByCusAndMonth.Count = 0 Then Throw New Exception($"該客戶 {month:yyyy/MM} 無訂購資料")
+
+            Dim cus = orderByCusAndMonth.FirstOrDefault.customer
+            result.CusCode = cus.cus_code
+            result.CompanyName = cus.company?.comp_name
+
+            Dim firstDate = New Date(month.Year, month.Month, 1)
+            Dim orderByFirstDate = orderByCusAndMonth.Where(Function(x) x.o_date.Value.Date = firstDate)
+
+            If orderByFirstDate.Count <> 0 Then
+                '家用瓦斯(變動前)
+                result.GasNormalQuantity_First = orderByFirstDate.Sum(Function(x) x.o_gas_total)
+                result.GasNormalUnitPrice_First = If(orderByFirstDate.FirstOrDefault.o_UnitPrice, 0)
+
+                '工業氣(變動前)
+                result.GasCQuantity_First = orderByFirstDate.Sum(Function(x) x.o_gas_c_total)
+                result.GasCUnitPrice_First = If(orderByFirstDate.FirstOrDefault.o_UnitPriceC, 0)
+            End If
+
+            Dim orderByOtherDate = orderByCusAndMonth.Where(Function(x) x.o_date.Value.Date <> firstDate)
+
+            If orderByOtherDate.Count <> 0 Then
+                '家用瓦斯(變動後)
+                result.GasNormalQuantity = orderByOtherDate.Sum(Function(x) x.o_gas_total)
+                result.GasNormalUnitPrice = If(orderByOtherDate.FirstOrDefault.o_UnitPrice, 0)
+
+                '工業氣(變動後)
+                result.GasCQuantity = orderByOtherDate.Sum(Function(x) x.o_gas_c_total)
+                result.GasCUnitPrice = If(orderByOtherDate.FirstOrDefault.o_UnitPriceC, 0)
+            End If
+
+            '保險
+            result.InsuranceUnitPrice = cus.cus_InsurancePrice
+
+            '本月已收氣款
+            Dim col = _context.collections.Where(Function(x) x.col_Date.Year = month.Year AndAlso x.col_Date.Month = month.Month AndAlso x.col_cus_Id = cus.cus_id)
+            If col.Count <> 0 Then result.GasAccountsReceived = col.Sum(Function(x) x.col_Amount)
+
+            '新桶
+            result.NewBerralAccountsReceivable = orderByCusAndMonth.Sum(Function(x) x.o_BarrelPrice)
+
+            '註新桶
+            Dim newBarrelCounts = New Dictionary(Of String, Integer) From {{"50", 0}, {"20", 0}, {"16", 0}, {"10", 0}, {"4", 0}, {"18", 0}, {"14", 0}, {"5", 0}, {"2", 0}}
+
+            For Each order In orderByCusAndMonth
+                newBarrelCounts("50") += order.o_new_in_50
+                newBarrelCounts("20") += order.o_new_in_20
+                newBarrelCounts("16") += order.o_new_in_16
+                newBarrelCounts("10") += order.o_new_in_10
+                newBarrelCounts("4") += order.o_new_in_4
+                newBarrelCounts("18") += order.o_new_in_18
+                newBarrelCounts("14") += order.o_new_in_14
+                newBarrelCounts("5") += order.o_new_in_5
+                newBarrelCounts("2") += order.o_new_in_2
+            Next
+
+            result.NewBerralTypesCount = String.Join(", ",
+                newBarrelCounts.Where(Function(kvp) kvp.Value > 0).Select(Function(kvp) $"{kvp.Key}Kg:{kvp.Value}"))
+
+            result.IsInsurance = cus.cus_IsInsurance
+
+            Return result
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            Throw
+        End Try
+    End Function
+
+    Public Function GetInsurance(compId As Integer, month As Date) As Insurance Implements IReportRep.GetInsurance
+        Try
+            Dim result = New Insurance With {
+                .CompanyName = _context.companies.Find(compId).comp_name,
+                .Month = month.Date
+            }
+
+            result.List = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
+                                                            x.o_date.Value.Month = month.Month AndAlso
+                                                            x.customer.cus_comp_Id = compId).
+                                          GroupBy(Function(x) New With {
+                                              Key .CusCode = x.customer.cus_code,
+                                              Key .CusName = x.customer.cus_name,
+                                              Key .TaxId = x.customer.cus_tax_id
+                                          }).
+                                          Select(Function(x) New InsuranceList With {
+                                              .Amount = x.Sum(Function(o) o.o_Insurance),
+                                              .CusCode = x.Key.CusCode,
+                                              .CusName = x.Key.CusName,
+                                              .TaxId = x.Key.TaxId
+                                          }).ToList
+
+            Return result
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            Throw
+        End Try
+    End Function
+
+    Public Function GetIncomeStatement(startDate As Date, endDate As Date, compId As Integer) As IncomeStatement Implements IReportRep.GetIncomeStatement
+        Try
+            Dim result = New IncomeStatement With {
+                .CompanyName = _context.companies.Find(compId).comp_name,
+                .DateRange = $"{startDate:yyyy.MM.dd} ~ {endDate:yyyy.MM.dd}",
+                .List = New List(Of IncomeStatementList)
+            }
+
+            Dim formatEndDate = endDate.Date.AddDays(1)
+
+            '收入管理資料
+            Dim collections = _context.collections.Where(Function(x) x.col_Date >= startDate.Date AndAlso
+                                                                     x.col_Date < formatEndDate AndAlso
+                                                                     x.col_comp_Id = compId).
+                                                   GroupBy(Function(x) New With {Key .Type = x.subject.s_Type, Key .Name = x.subject.s_name}).
+                                                   Select(Function(x) New IncomeStatementList With {
+                                                       .SubjectType = x.Key.Type,
+                                                       .Subject = x.Key.Name,
+                                                       .Amount = x.Sum(Function(c) c.col_Amount)
+                                                   }).ToList
+            result.List.AddRange(collections)
+
+            '支出管理資料
+            Dim payments = _context.payments.Where(Function(x) x.p_Date >= startDate.Date AndAlso
+                                                               x.p_Date < formatEndDate AndAlso
+                                                               x.p_comp_Id = compId).
+                                             GroupBy(Function(x) New With {Key .Type = x.subject.s_Type, Key .Name = x.subject.s_name}).
+                                             Select(Function(x) New IncomeStatementList With {
+                                                 .SubjectType = x.Key.Type,
+                                                 .Subject = x.Key.Name,
+                                                 .Amount = x.Sum(Function(c) c.p_Amount)
+                                             }).ToList
+            result.List.AddRange(payments)
+
+            Return result
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            Throw
+        End Try
+    End Function
+
+    Public Function GetOutInvoice(year As Integer, months As String) As OutInvoice Implements IReportRep.GetOutInvoice
+        Try
+            Dim result = New OutInvoice With {
+                .Companies = New List(Of CompanyInvoiceData)
+            }
+
+            Dim targetCompanies As New List(Of String) From {"豐合能源股份有限公司", "豐牛有限公司"}
+            Dim monthPart = months.Split("/"c)
+            Dim startMonth = Integer.Parse(monthPart(0))
+            Dim endMonth = Integer.Parse(monthPart(1))
+            Dim startDate = New Date(year, startMonth, 1)
+            Dim endDate = New Date(year, endMonth, 1).AddMonths(1)
+
+            '取得日期內的發票
+            Dim invoices = _context.invoices.Where(Function(x) x.i_Date >= startDate AndAlso
+                                                               x.i_Date < endDate AndAlso
+                                                               Not x.i_IsInvalid AndAlso
+                                                               targetCompanies.Contains(x.customer.company.comp_name)).
+                                             OrderBy(Function(x) x.i_Date).ToList
+
+            '依公司分組
+            For Each companyName In targetCompanies
+                Dim companyInvoices = invoices.Where(Function(x) x.customer.company.comp_name = companyName)
+
+                If Not companyInvoices.Any Then Continue For
+
+                Dim companyData As New CompanyInvoiceData With {
+                    .CompanyName = companyName,
+                    .MonthlyData = New List(Of MonthInvoiceData)
+                }
+
+                '依月分處理發票
+                For month As Integer = startMonth To endMonth
+                    Dim monthData As New MonthInvoiceData With {
+                        .Month = month,
+                        .RegularInvoices = New List(Of InvoiceGroup),
+                        .SpecialInvoices = New SpecialInvoices
+                    }
+                    Dim monthInvoices = companyInvoices.Where(Function(x) x.i_Date.Month = month)
+
+                    '處理機開三聯
+                    Dim regularInvoices = monthInvoices.Where(Function(x) x.i_InvoiceType = "機開三聯").OrderBy(Function(x) x.i_Number).ToList
+                    Dim groupCount = 5
+                    For i As Integer = 0 To regularInvoices.Count - 1 Step groupCount
+                        Dim group = regularInvoices.Skip(i).Take(groupCount)
+                        monthData.RegularInvoices.Add(New InvoiceGroup With {
+                            .GroupNumber = i \ groupCount + 1,
+                            .Qty = group.Sum(Function(x) x.i_KG),
+                            .Amount = group.Sum(Function(x) x.i_Amount),
+                            .TaxAmount = group.Sum(Function(x) x.i_Tax)
+                        })
+                    Next
+
+                    '處理其他發票
+                    monthData.SpecialInvoices.TwoPartMachine = ProcessSpecialInvoices(monthInvoices, "機開二聯")
+                    monthData.SpecialInvoices.ThreePartHandwritten = ProcessSpecialInvoices(monthInvoices, "手開三聯")
+                    monthData.SpecialInvoices.TwoPartHandwritten = ProcessSpecialInvoices(monthInvoices, "手開二聯")
+
+                    companyData.MonthlyData.Add(monthData)
+                Next
+
+                result.Companies.Add(companyData)
+            Next
+
+            Return result
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            Throw
+        End Try
+    End Function
+
+    Public Function GetSplitCompany(year As Integer, months As String) As SplitCompanyInvoice Implements IReportRep.GetSplitCompany
+        Try
+            Dim result As New SplitCompanyInvoice
+            Dim monthPart = months.Split("/"c)
+            Dim startMonth = Integer.Parse(monthPart(0))
+            Dim endMonth = Integer.Parse(monthPart(1))
+            Dim startDate = New Date(year, startMonth, 1)
+            Dim midDate = New Date(year, startMonth, Date.DaysInMonth(year, startMonth))
+            Dim endDate = New Date(year, endMonth, Date.DaysInMonth(year, endMonth)).AddDays(1)
+
+            ' 取得日期內的銷項發票
+            Dim splitInvoices = _context.invoice_split.Where(Function(x) x.is_Type = "銷項" AndAlso
+                                                                         x.is_Date >= startDate AndAlso
+                                                                         x.is_Date < endDate).
+                                                       OrderBy(Function(x) x.is_Date).
+                                                       ThenBy(Function(x) x.is_comp_Id).ToList
+
+            ' 依公司和月份分組
+            Dim groupedInvoices = splitInvoices.GroupBy(Function(x) New With {
+                Key .CompId = x.is_comp_Id,
+                Key .Month = x.is_Date.Month
+            })
+
+            If splitInvoices.Count >= 4 Then
+                Dim groups = groupedInvoices.OrderBy(Function(x) x.Key.Month).ThenBy(Function(x) x.Key.CompId).ToList
+                ' 第一個月，第一個公司
+                result.FrontDate1 = midDate.ToString("MM月dd日")
+                result.FrontTax1 = groups(0).Sum(Function(x) x.is_Tax)
+                result.FrontAmount1 = groups(0).Sum(Function(x) x.is_Amount)
+                result.FrontVendorTaxId1 = groups(0).First.company.comp_tax_id
+
+                ' 第一個月，第二個公司
+                result.FrontDate2 = midDate.ToString("MM月dd日")
+                result.FrontTax2 = groups(1).Sum(Function(x) x.is_Tax)
+                result.FrontAmount2 = groups(1).Sum(Function(x) x.is_Amount)
+                result.FrontVendorTaxId2 = groups(1).First.company.comp_tax_id
+
+                ' 第二個月，第一個公司
+                result.EndDate1 = endDate.AddDays(-1).ToString("MM月dd日")
+                result.EndTax1 = groups(2).Sum(Function(x) x.is_Tax)
+                result.EndAmount1 = groups(2).Sum(Function(x) x.is_Amount)
+                result.EndVendorTaxId1 = groups(2).First.company.comp_tax_id
+
+                ' 第二個月，第二個公司
+                result.EndDate2 = endDate.AddDays(-1).ToString("MM月dd日")
+                result.EndTax2 = groups(3).Sum(Function(x) x.is_Tax)
+                result.EndAmount2 = groups(3).Sum(Function(x) x.is_Amount)
+                result.EndVendorTaxId2 = groups(3).First.company.comp_tax_id
+            End If
+
+            ' 取得進項發票
+            result.InList = _context.invoice_split.Where(Function(x) x.is_Type = "進項" AndAlso
+                                                                     x.is_Date >= startDate AndAlso
+                                                                     x.is_Date < endDate).ToList.
+                                                   Select(Function(x) New InDetail With {
+                                                       .Day = x.is_Date.ToString("MM月dd日"),
+                                                       .InvoiceNum = x.is_Number,
+                                                       .Name = x.is_Name,
+                                                       .Tax = x.is_Tax,
+                                                       .Amount = x.is_Amount,
+                                                       .VendorTaxId = x.is_VendorTaxId
+                                                   }).OrderBy(Function(x) x.Day).ToList
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Private Function ProcessSpecialInvoices(invoices As IEnumerable(Of invoice), invoiceType As String) As InvoiceGroup
+        Try
+            Dim specialInvoices = invoices.Where(Function(x) x.i_InvoiceType = invoiceType)
+            Return New InvoiceGroup With {
+                .Qty = specialInvoices.Sum(Function(x) x.i_KG),
+                .Amount = specialInvoices.Sum(Function(x) x.i_Amount),
+                .TaxAmount = specialInvoices.Sum(Function(x) x.i_Tax)
+            }
         Catch ex As Exception
             Throw
         End Try

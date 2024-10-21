@@ -1,4 +1,7 @@
-﻿Public Class InvoicePresenter
+﻿''' <summary>
+''' 發票管理
+''' </summary>
+Public Class InvoicePresenter
     Private ReadOnly _view As IInvoiceView
     Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _invoiceRep As IInvoiceRep
@@ -131,16 +134,9 @@
 
             Dim orders = _orderRep.GetByMonth(d).Where(Function(x) x.o_cus_Id = cusId)
             Dim invoices = _invoiceRep.GetByMonth(d).Where(Function(x) x.i_cus_Id = cusId)
-            Dim result = New InvoiceInfoVM With {
-                .DeliNormTotal = orders.Where(Function(x) x.o_delivery_type = "廠運").Sum(Function(x) x.o_gas_total),
-                .DeliCTotal = orders.Where(Function(x) x.o_delivery_type = "廠運").Sum(Function(x) x.o_gas_c_total),
-                .PickNormTotal = orders.Where(Function(x) x.o_delivery_type = "自運").Sum(Function(x) x.o_gas_total),
-                .PickCTotal = orders.Where(Function(x) x.o_delivery_type = "自運").Sum(Function(x) x.o_gas_c_total),
-                .DeliNormInvoice = invoices.Where(Function(x) x.i_Type = "廠運普氣").Sum(Function(x) x.i_KG),
-                .DeliCInvoice = invoices.Where(Function(x) x.i_Type = "廠運丙氣").Sum(Function(x) x.i_KG),
-                .PickNormInvoice = invoices.Where(Function(x) x.i_Type = "廠運普氣").Sum(Function(x) x.i_KG),
-                .PickCInvoice = invoices.Where(Function(x) x.i_Type = "廠運丙氣").Sum(Function(x) x.i_KG)
-            }
+            Dim result As (Integer, Integer)
+            result.Item1 = orders.Sum(Function(x) x.o_gas_total)
+            result.Item2 = orders.Sum(Function(x) x.o_gas_c_total)
 
             _view.DisplayInvoiceInfo(result)
         Catch ex As Exception
@@ -148,10 +144,31 @@
         End Try
     End Sub
 
+    Public Function GetInvoiceDefaultNumber(invoiceType As String) As String
+        Try
+            If Not String.IsNullOrEmpty(invoiceType) Then
+                Dim lastNumber = _invoiceRep.GetLastInvoiceNumberByType(invoiceType)
+
+                If Not String.IsNullOrEmpty(lastNumber) Then
+
+                    '將數字部分轉換為整數並加1
+                    Return (Integer.Parse(lastNumber) + 1).ToString("D8")
+                End If
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        Return Nothing
+    End Function
+
     Private Sub Validate(data As invoice)
-        If data.i_cus_Id = 0 Then Throw New Exception("請選擇客戶")
-        If String.IsNullOrEmpty(data.i_Type) Then Throw New Exception("請選擇種類")
-        If data.i_KG = 0 Then Throw New Exception("請填寫KG")
         If String.IsNullOrEmpty(data.i_Number) Then Throw New Exception("請填寫發票號碼")
+
+        If data.i_cus_Id <> 0 Then
+            If String.IsNullOrEmpty(data.i_Type) Then Throw New Exception("請選擇種類")
+
+            If data.i_KG = 0 Then Throw New Exception("請填寫KG")
+        End If
     End Sub
 End Class

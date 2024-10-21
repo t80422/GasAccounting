@@ -74,6 +74,7 @@ Public Class OrderPresenter
             _view.DisplayCustomer(currentCustomer)
             _view.DisplayCusStk(currentCustomer, True)
             _view.DisplayCusStk(currentCustomer, False)
+
             Return True
         Catch ex As Exception
             Console.WriteLine(ex.StackTrace)
@@ -202,7 +203,7 @@ Public Class OrderPresenter
             '計算總計
             Dim amount As Single = totalBarrelPrice + gasPrice + gasCPrice + insurance - inputOrder.o_sales_allowance - returnGas - returnGasC
 
-            _view.DisplayGasAndPrice(totalGas, totalGasC, amount, insurance)
+            _view.DisplayGasAndPrice(totalGas, totalGasC, amount, insurance, totalBarrelPrice, cusGasUnitPrice, cusGasCUnitPrice)
         Catch ex As Exception
             MsgBox(ex.Message)
             MsgBox(ex.StackTrace)
@@ -400,8 +401,7 @@ Public Class OrderPresenter
             Using pdfWriter As New PdfWriter(pdfPath)
                 Using pdfDocument As New PdfDocument(pdfWriter)
                     Dim fontProvider As New DefaultFontProvider()
-                    fontProvider.AddFont("c:/windows/Fonts/MSMINCHO.TTF")
-                    fontProvider.AddFont("c:/windows/Fonts/STSONG.TTF")
+                    fontProvider.AddFont("c:/windows/Fonts/kaiu.ttf")
                     Dim converterProperties As New ConverterProperties()
                     converterProperties.SetFontProvider(fontProvider)
 

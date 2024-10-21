@@ -7,7 +7,7 @@
 
     Sub DisplayCarStk(data As car, isIn As Boolean)
 
-    Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single)
+    Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single, barrelAmount As Integer, gasUnitPrice As Single, gasCUnitPrice As Single)
 
     Sub DisplayInsurance(price As Single)
 

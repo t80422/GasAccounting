@@ -10,8 +10,8 @@
     Public Property GasCQuantity As Integer
     Public Property GasCUnitPrice As Single
     Public Property InsuranceUnitPrice As Single
-    Public Property GasAccountsReceivable As Single
-    Public Property GasAccountsReceived As Single
+    Public Property GasAccountsReceived As Integer
     Public Property NewBerralAccountsReceivable As Integer
     Public Property NewBerralTypesCount As String
+    Public Property IsInsurance As Boolean
 End Class

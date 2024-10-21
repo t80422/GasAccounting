@@ -60,6 +60,9 @@
         <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_4" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.invoice" Width="1.5" PointX="11.25" PointY="24.625" />
         <AssociationConnector Association="gas_accounting_systemModel.invoice_ibfk_1" />
+        <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_2" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.invoice_split" Width="1.5" PointX="3" PointY="40.875" />
+        <AssociationConnector Association="gas_accounting_systemModel.invoice_split_ibfk_1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -101,6 +101,7 @@ Partial Public Class order
     Public Property o_UnitPriceC As Nullable(Of Single)
     Public Property o_Insurance As Single
     Public Property o_cus_Id As Nullable(Of Integer)
+    Public Property o_BarrelPrice As Nullable(Of Integer)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car
