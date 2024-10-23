@@ -4,24 +4,14 @@ Public Class CollectionRep
     Inherits Repository(Of collection)
     Implements ICollectionRep
 
-    Private _journalService As IJournalService = New JournalService
-
     Public Sub New(context As gas_accounting_systemEntities)
         MyBase.New(context)
     End Sub
 
-    Public Sub Add(collection As collection, Optional journal As journal = Nothing, Optional cheque As cheque = Nothing) Implements ICollectionRep.Add
+    Public Sub Add(collection As collection, Optional cheque As cheque = Nothing) Implements ICollectionRep.Add
         Using db As New gas_accounting_systemEntities
             Using transaction = db.Database.BeginTransaction
                 Try
-                    '新增傳票
-                    If journal IsNot Nothing Then
-                        Dim SubpoenaNo = _journalService.GetSubpoenaNo()
-                        journal.j_SubpoenaNo = SubpoenaNo
-                        db.journals.Add(journal)
-                        collection.col_SubpoenaNo = SubpoenaNo
-                    End If
-
                     db.collections.Add(collection)
 
                     '新增支票
@@ -39,22 +29,10 @@ Public Class CollectionRep
         End Using
     End Sub
 
-    Public Sub Edit(col As collection, jour As journal, che As cheque) Implements ICollectionRep.Edit
+    Public Sub Edit(col As collection, che As cheque) Implements ICollectionRep.Edit
         Using db As New gas_accounting_systemEntities
             Using transaction = db.Database.BeginTransaction
                 Try
-                    Dim exCol = db.collections.Find(col.col_Id)
-                    col.col_SubpoenaNo = exCol.col_SubpoenaNo
-                    col.col_Cheque = exCol.col_Cheque
-                    db.Entry(exCol).CurrentValues.SetValues(col)
-
-                    '更新傳票
-                    If jour IsNot Nothing Then
-                        Dim exJour = db.journals.First(Function(x) x.j_SubpoenaNo = col.col_SubpoenaNo)
-                        jour.j_Id = exJour.j_Id
-                        db.Entry(exJour).CurrentValues.SetValues(jour)
-                    End If
-
                     '更新支票
                     If che IsNot Nothing Then
                         Dim exChe = db.cheques.First(Function(x) x.che_Number = col.col_Cheque)
@@ -77,16 +55,6 @@ Public Class CollectionRep
             Using transaction = db.Database.BeginTransaction
                 Try
                     Dim col = db.collections.Find(colId)
-                    Dim subpoenaNo = _journalService.GetSubpoenaNo
-                    Dim jour = New journal With {
-                        .j_Amount = col.col_Amount,
-                        .j_Memo = col.col_Memo,
-                        .j_s_Id = 4,
-                        .j_SubpoenaNo = subpoenaNo
-                    }
-                    db.journals.Add(jour)
-                    col.col_SubpoenaNo = subpoenaNo
-
                     Dim che = db.cheques.FirstOrDefault(Function(x) x.che_Number = col.col_Cheque)
                     che.chu_State = "已兌現"
                     che.che_CashingDate = Now.Date

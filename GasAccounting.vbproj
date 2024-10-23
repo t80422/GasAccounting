@@ -294,6 +294,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\accounting_entry.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\bank.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -351,6 +354,8 @@
     <Compile Include="Presenters\CarPresenter.vb" />
     <Compile Include="Presenters\GasBarrelPresenter.vb" />
     <Compile Include="Presenters\GasCheckoutPresenter.vb" />
+    <Compile Include="Services\AccountingEntryService.vb" />
+    <Compile Include="Services\IAccountingEntryService.vb" />
     <Compile Include="Presenters\InvoiceSplitPresenters.vb" />
     <Compile Include="Presenters\InvoicePresenter.vb" />
     <Compile Include="Presenters\PermissionPresenter.vb" />
@@ -366,6 +371,7 @@
     <Compile Include="Models\purchase_barrel.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\AccountingEntryRep.vb" />
     <Compile Include="Repositories\BankMonthlyBalances\BankMonthlyBalancesRep.vb" />
     <Compile Include="Repositories\BankMonthlyBalances\IBankMonthlyBalancesRep.vb" />
     <Compile Include="Repositories\Bank\BankRep.vb" />
@@ -378,8 +384,9 @@
     <Compile Include="Repositories\BarrelMonthlyBalance\IBarrelMonthlyBalancesRep.vb" />
     <Compile Include="Repositories\GasMonthlyBalance\GasMonthlyBalanceRep.vb" />
     <Compile Include="Repositories\GasMonthlyBalance\IGasMonthlyBalanceRep.vb" />
-    <Compile Include="Repositories\IInvoiceSplitRep.vb" />
-    <Compile Include="Repositories\InvoiceSplitRep.vb" />
+    <Compile Include="Repositories\IAccountingEntryRep.vb" />
+    <Compile Include="Repositories\InvoiceSplit\IInvoiceSplitRep.vb" />
+    <Compile Include="Repositories\InvoiceSplit\InvoiceSplitRep.vb" />
     <Compile Include="Repositories\Invoice\IInvoiceRep.vb" />
     <Compile Include="Repositories\Invoice\InvoiceRep.vb" />
     <Compile Include="Repositories\PurchaseBarrel\IPurchaseBarrelRep.vb" />
@@ -402,12 +409,12 @@
     <Compile Include="Models\ViewModels\RoleVM.vb" />
     <Compile Include="Services\BankMonthlyBalance\BankMonthlyBalanceService.vb" />
     <Compile Include="Services\BankMonthlyBalance\IBankMonthlyBalanceService.vb" />
-    <Compile Include="Services\BarrelMonthlyBalanceService.vb" />
-    <Compile Include="Services\GasMonthlyBalanceService.vb" />
-    <Compile Include="Services\IBarrelMonthlyBalanceService.vb" />
-    <Compile Include="Services\IGasMonthlyBalanceService.vb" />
-    <Compile Include="Services\IPriceCalculationService.vb" />
-    <Compile Include="Services\PriceCalculationService.vb" />
+    <Compile Include="Services\BarrelMonthlyBalance\BarrelMonthlyBalanceService.vb" />
+    <Compile Include="Services\GasMonthlyBalance\GasMonthlyBalanceService.vb" />
+    <Compile Include="Services\BarrelMonthlyBalance\IBarrelMonthlyBalanceService.vb" />
+    <Compile Include="Services\GasMonthlyBalance\IGasMonthlyBalanceService.vb" />
+    <Compile Include="Services\PriceCalculation\IPriceCalculationService.vb" />
+    <Compile Include="Services\PriceCalculation\PriceCalculationService.vb" />
     <Compile Include="Views\IBaseView.vb" />
     <Compile Include="Views\IBasicPriceView.vb" />
     <Compile Include="Views\ICarView.vb" />
@@ -426,7 +433,6 @@
     <Compile Include="Repositories\Report\IReportRep.vb" />
     <Compile Include="Repositories\Report\ReportRep.vb" />
     <Compile Include="Utilities\CloseXML_Excel.vb" />
-    <Compile Include="Services\CusOrdByCar\CusOrdByCarService.vb" />
     <Compile Include="Utilities\HtmlToPDF.vb" />
     <Compile Include="Presenters\BankPresenter.vb" />
     <Compile Include="Views\IBankView.vb" />
@@ -483,9 +489,6 @@
     <Compile Include="Views\ICompanyView.vb" />
     <Compile Include="Views\ICommonView_old.vb" />
     <Compile Include="Presenters\IPresenter.vb" />
-    <Compile Include="Models\journal.vb">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\manufacturer.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -522,11 +525,6 @@
     <Compile Include="Models\role.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Services\CusOrdByCar\ICusOrdByCarService.vb" />
-    <Compile Include="Services\Journal\IJournalService.vb" />
-    <Compile Include="Services\Subjects\ISubjectsService.vb" />
-    <Compile Include="Services\Journal\JournalService.vb" />
-    <Compile Include="Services\Subjects\SubjectsService.vb" />
     <Compile Include="Models\stock.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

@@ -18,8 +18,6 @@ Partial Public Class subject
     Public Property s_Type As String
 
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
-    Public Overridable Property journals As ICollection(Of journal) = New HashSet(Of journal)
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
-    Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
 
 End Class

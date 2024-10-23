@@ -25,13 +25,10 @@ Partial Public Class purchase
     Public Property pur_SpecialDUP As Boolean
     Public Property pur_Memo As String
     Public Property pur_DriveCmpId As Nullable(Of Integer)
-    Public Property pur_s_Id As Nullable(Of Integer)
-    Public Property pur_PayType As String
     Public Property pur_Checkout As Boolean
 
     Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
     Public Overridable Property manufacturer1 As manufacturer
-    Public Overridable Property subject As subject
 
 End Class

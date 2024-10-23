@@ -22,6 +22,7 @@ Partial Public Class gas_accounting_systemEntities
         Throw New UnintentionalCodeFirstException()
     End Sub
 
+    Public Overridable Property accounting_entry() As DbSet(Of accounting_entry)
     Public Overridable Property banks() As DbSet(Of bank)
     Public Overridable Property bank_monthly_balances() As DbSet(Of bank_monthly_balances)
     Public Overridable Property barrel_monthly_balances() As DbSet(Of barrel_monthly_balances)
@@ -33,8 +34,11 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property customers() As DbSet(Of customer)
     Public Overridable Property employees() As DbSet(Of employee)
     Public Overridable Property gas_barrel() As DbSet(Of gas_barrel)
-    Public Overridable Property journals() As DbSet(Of journal)
+    Public Overridable Property gas_monthly_balances() As DbSet(Of gas_monthly_balances)
+    Public Overridable Property invoices() As DbSet(Of invoice)
+    Public Overridable Property invoice_split() As DbSet(Of invoice_split)
     Public Overridable Property manufacturers() As DbSet(Of manufacturer)
+    Public Overridable Property orders() As DbSet(Of order)
     Public Overridable Property payments() As DbSet(Of payment)
     Public Overridable Property permissions() As DbSet(Of permission)
     Public Overridable Property priceplans() As DbSet(Of priceplan)
@@ -43,10 +47,6 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property roles() As DbSet(Of role)
     Public Overridable Property stocks() As DbSet(Of stock)
     Public Overridable Property subjects() As DbSet(Of subject)
-    Public Overridable Property orders() As DbSet(Of order)
-    Public Overridable Property gas_monthly_balances() As DbSet(Of gas_monthly_balances)
     Public Overridable Property purchases() As DbSet(Of purchase)
-    Public Overridable Property invoices() As DbSet(Of invoice)
-    Public Overridable Property invoice_split() As DbSet(Of invoice_split)
 
 End Class

@@ -15,7 +15,6 @@ Public Class PurchaseRep
             If conditions.CompanyId <> 0 Then query = query.Where(Function(x) x.pur_comp_id = conditions.CompanyId)
             If conditions.ManufacturerId <> 0 Then query = query.Where(Function(x) x.pur_manu_id = conditions.ManufacturerId)
             If Not String.IsNullOrEmpty(conditions.Product) Then query = query.Where(Function(x) x.pur_product = conditions.Product)
-            If Not String.IsNullOrEmpty(conditions.PayType) Then query = query.Where(Function(x) x.pur_PayType = conditions.PayType)
             If conditions.IsDateSearch Then query = query.Where(Function(x) x.pur_date >= conditions.StartDate AndAlso x.pur_date <= conditions.EndDate)
 
             Return Await query.ToListAsync()
@@ -49,7 +48,6 @@ Public Class PurchaseRep
             Dim query = _dbSet.Where(Function(x) Not x.pur_Checkout)
             If input.IsDateSearch Then query = query.Where(Function(x) x.pur_date >= input.StartDate AndAlso x.pur_date < input.EndDate)
             If input.ManufacturerId <> 0 Then query = query.Where(Function(x) x.pur_manu_id = input.ManufacturerId)
-            If Not String.IsNullOrEmpty(input.PayType) Then query = query.Where(Function(x) x.pur_PayType = input.PayType)
             Return Await query.ToListAsync
         Catch ex As Exception
             Throw New Exception("取得未結帳訂貨資訊錯誤", ex)

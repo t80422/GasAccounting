@@ -11,7 +11,6 @@
 
     Private _compService As ICompanyService = New CompanyService
     Private _manuService As IManufacturerService = New ManufacturerService
-    Private _subjectService As ISubjectsService = New SubjectsService
 
     Private _basicPrice As BasicPricePresenter
     Private _car As CarPresenter
@@ -76,6 +75,7 @@
 
         Dim context As New gas_accounting_systemEntities
 
+        Dim aeRep As New AccountingEntryRep(context)
         Dim bankRep As New BankRep(context)
         Dim barMBRep As New BarrelMonthlyBalancesRep(context)
         Dim bmbRep As New BankMonthlyBalancesRep(context)
@@ -99,6 +99,7 @@
         Dim manuRep As New ManufacturerRep(context)
         Dim subjectRep As New SubjectRep(context)
 
+        Dim aeSer As IAccountingEntryService = New AccountingEntryService(aeRep)
         Dim barMBSer As IBarrelMonthlyBalanceService = New BarrelMonthlyBalanceService(barMBRep, gbRep, pbRep, ordRep)
         Dim bmbService As IBankMonthlyBalanceService = New BankMonthlyBalanceService(bmbRep, bankRep, paymentRep, colRep)
         Dim priceCalSer As IPriceCalculationService = New PriceCalculationService(bpRep)
@@ -112,13 +113,13 @@
         _invoice = New InvoicePresenter(Me, cusRep, invoiceRep, priceCalSer, ordRep)
         _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
         _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer)
-        _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep)
-        _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep)
+        _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep, aeSer)
+        _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep, aeSer)
         _report = New ReportPresenter(Me, reportRep, bankRep, compRep)
         _subjects = New SubjectsPresenter(Me, subjectRep)
         _cheque = New ChequePresenter(Me, cheRep)
         _permission = New PermissionPresenter(Me, permissionRep)
-        _purchase = New PurchasePresenter(Me, purRep, compRep, manuRep, subjectRep, gmbSer)
+        _purchase = New PurchasePresenter(Me, purRep, compRep, manuRep, subjectRep, gmbSer, aeSer)
         _gasCheckout = New GasCheckoutPresenter(Me, purRep, manuRep)
     End Sub
 
@@ -659,13 +660,11 @@
         Dim data = New PurchaseCondition With {
             .CompanyId = cmbCompany_pur.SelectedItem?.Value,
             .ManufacturerId = cmbGasVendor_pur.SelectedItem?.Value,
-            .PayType = cmbPayType_pur.SelectedItem,
             .Product = cmbProduct_pur.SelectedItem,
             .StartDate = dtpStartDate_pur.Value.Date,
             .EndDate = dtpEndDate_pur.Value.Date,
             .IsDateSearch = chkDateRange_pur.Checked
         }
-
         Return data
     End Function
 
@@ -679,10 +678,6 @@
 
     Public Sub IPurchaseView_SetDriveVendorCmb(items As List(Of SelectListItem)) Implements IPurchaseView.SetDriveVendorCmb
         SetComboBox(cmbDriveCmp, items)
-    End Sub
-
-    Public Sub IPurchaseView_SetSubjectCmb(items As List(Of SelectListItem)) Implements IPurchaseView.SetSubjectCmb
-        SetComboBox(cmbSubject, items)
     End Sub
 
     Public Sub SetDefaultPrice(unitPrice As Single, DeliveryUnitPrice As Single) Implements IPurchaseView.SetDefaultPrice
@@ -720,7 +715,7 @@
     '採購管理-大氣採購-dgv
     Private Async Sub dgvPurchase_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPurchase.SelectionChanged, dgvPurchase.CellMouseClick
         Dim ctrl As DataGridView = sender
-        If Not ctrl.Focused Then Return
+        If Not ctrl.Focused OrElse ctrl.SelectedRows.Count = 0 Then Return
 
         SetButtonState(ctrl, False)
 
@@ -763,7 +758,7 @@
     ''' 設定大氣採購查詢控制項狀態
     ''' </summary>
     Private Sub SetPurchaseQueryCtrlsState()
-        Dim lst As New List(Of Control) From {lblCompany_pur, lblGasVendor_pur, lblProduct, lblPayType_pur, grpDateRange_pur}
+        Dim lst As New List(Of Control) From {lblCompany_pur, lblGasVendor_pur, lblProduct, grpDateRange_pur}
         SetQueryControls(btnQuery_pur, lst)
     End Sub
 
@@ -2097,14 +2092,6 @@
     Public Sub ICollectionView_SetCompanyCmb(data As List(Of SelectListItem)) Implements ICollectionView.ICollectionView_SetCompanyCmb
         SetComboBox(cmbCompany_col, data)
     End Sub
-
-    Public Function GetJournalDatas() As journal Implements ICollectionView.GetJournalDatas
-        Return New journal With {
-            .j_Amount = txtAmount_collection.Text,
-            .j_Memo = txtMemo_col.Text,
-            .j_s_Id = cmbSubjects.SelectedValue
-        }
-    End Function
 
     Private Sub ICollectionView_Reset() Implements ICollectionView.Reset
         ClearControls(tpCollection)

@@ -10,13 +10,13 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class journal
-    Public Property j_Id As Integer
-    Public Property j_SubpoenaNo As Integer
-    Public Property j_s_Id As Nullable(Of Integer)
-    Public Property j_Amount As Single
-    Public Property j_Memo As String
-
-    Public Overridable Property subject As subject
+Partial Public Class accounting_entry
+    Public Property ae_Id As Integer
+    Public Property ae_TransactionType As String
+    Public Property ae_TransactionId As Integer
+    Public Property ae_Date As Date
+    Public Property ae_s_Id As Integer
+    Public Property ae_Debit As Nullable(Of Single)
+    Public Property ae_Credit As Nullable(Of Single)
 
 End Class

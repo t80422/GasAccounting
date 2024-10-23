@@ -372,11 +372,6 @@ Partial Class frmMain
         Me.dtpEndDate_pur = New System.Windows.Forms.DateTimePicker()
         Me.dtpStartDate_pur = New System.Windows.Forms.DateTimePicker()
         Me.btnPrint_pur = New System.Windows.Forms.Button()
-        Me.Label141 = New System.Windows.Forms.Label()
-        Me.cmbPayType_pur = New System.Windows.Forms.ComboBox()
-        Me.lblPayType_pur = New System.Windows.Forms.Label()
-        Me.cmbSubject = New System.Windows.Forms.ComboBox()
-        Me.Label137 = New System.Windows.Forms.Label()
         Me.cmbDriveCmp = New System.Windows.Forms.ComboBox()
         Me.Label136 = New System.Windows.Forms.Label()
         Me.chkSp = New System.Windows.Forms.CheckBox()
@@ -4826,11 +4821,6 @@ Partial Class frmMain
         '
         Me.tpPurchase.Controls.Add(Me.grpDateRange_pur)
         Me.tpPurchase.Controls.Add(Me.btnPrint_pur)
-        Me.tpPurchase.Controls.Add(Me.Label141)
-        Me.tpPurchase.Controls.Add(Me.cmbPayType_pur)
-        Me.tpPurchase.Controls.Add(Me.lblPayType_pur)
-        Me.tpPurchase.Controls.Add(Me.cmbSubject)
-        Me.tpPurchase.Controls.Add(Me.Label137)
         Me.tpPurchase.Controls.Add(Me.cmbDriveCmp)
         Me.tpPurchase.Controls.Add(Me.Label136)
         Me.tpPurchase.Controls.Add(Me.chkSp)
@@ -4882,9 +4872,9 @@ Partial Class frmMain
         Me.grpDateRange_pur.Controls.Add(Me.chkDateRange_pur)
         Me.grpDateRange_pur.Controls.Add(Me.dtpEndDate_pur)
         Me.grpDateRange_pur.Controls.Add(Me.dtpStartDate_pur)
-        Me.grpDateRange_pur.Location = New System.Drawing.Point(934, 138)
+        Me.grpDateRange_pur.Location = New System.Drawing.Point(1021, 94)
         Me.grpDateRange_pur.Name = "grpDateRange_pur"
-        Me.grpDateRange_pur.Size = New System.Drawing.Size(733, 76)
+        Me.grpDateRange_pur.Size = New System.Drawing.Size(629, 76)
         Me.grpDateRange_pur.TabIndex = 455
         Me.grpDateRange_pur.TabStop = False
         Me.grpDateRange_pur.Text = "日期起訖"
@@ -4916,73 +4906,26 @@ Partial Class frmMain
         'btnPrint_pur
         '
         Me.btnPrint_pur.BackColor = System.Drawing.Color.Lime
-        Me.btnPrint_pur.Location = New System.Drawing.Point(788, 170)
+        Me.btnPrint_pur.Location = New System.Drawing.Point(788, 130)
         Me.btnPrint_pur.Name = "btnPrint_pur"
         Me.btnPrint_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_pur.TabIndex = 454
         Me.btnPrint_pur.Text = "列  印"
         Me.btnPrint_pur.UseVisualStyleBackColor = False
         '
-        'Label141
-        '
-        Me.Label141.AutoSize = True
-        Me.Label141.ForeColor = System.Drawing.Color.Red
-        Me.Label141.Location = New System.Drawing.Point(8, 95)
-        Me.Label141.Name = "Label141"
-        Me.Label141.Size = New System.Drawing.Size(20, 19)
-        Me.Label141.TabIndex = 453
-        Me.Label141.Text = "*"
-        '
-        'cmbPayType_pur
-        '
-        Me.cmbPayType_pur.FormattingEnabled = True
-        Me.cmbPayType_pur.Items.AddRange(New Object() {"現金", "支票", "銀行"})
-        Me.cmbPayType_pur.Location = New System.Drawing.Point(133, 92)
-        Me.cmbPayType_pur.Name = "cmbPayType_pur"
-        Me.cmbPayType_pur.Size = New System.Drawing.Size(170, 27)
-        Me.cmbPayType_pur.TabIndex = 452
-        Me.cmbPayType_pur.Tag = "pur_PayType"
-        '
-        'lblPayType_pur
-        '
-        Me.lblPayType_pur.AutoSize = True
-        Me.lblPayType_pur.Location = New System.Drawing.Point(34, 95)
-        Me.lblPayType_pur.Name = "lblPayType_pur"
-        Me.lblPayType_pur.Size = New System.Drawing.Size(93, 19)
-        Me.lblPayType_pur.TabIndex = 451
-        Me.lblPayType_pur.Text = "付款方式"
-        '
-        'cmbSubject
-        '
-        Me.cmbSubject.FormattingEnabled = True
-        Me.cmbSubject.Location = New System.Drawing.Point(1467, 92)
-        Me.cmbSubject.Name = "cmbSubject"
-        Me.cmbSubject.Size = New System.Drawing.Size(200, 27)
-        Me.cmbSubject.TabIndex = 450
-        Me.cmbSubject.Tag = "pur_s_Id"
-        '
-        'Label137
-        '
-        Me.Label137.AutoSize = True
-        Me.Label137.Location = New System.Drawing.Point(1366, 95)
-        Me.Label137.Name = "Label137"
-        Me.Label137.Size = New System.Drawing.Size(95, 19)
-        Me.Label137.TabIndex = 449
-        Me.Label137.Text = "科    目"
-        '
         'cmbDriveCmp
         '
         Me.cmbDriveCmp.FormattingEnabled = True
-        Me.cmbDriveCmp.Location = New System.Drawing.Point(1144, 51)
+        Me.cmbDriveCmp.Location = New System.Drawing.Point(1118, 53)
         Me.cmbDriveCmp.Name = "cmbDriveCmp"
-        Me.cmbDriveCmp.Size = New System.Drawing.Size(523, 27)
+        Me.cmbDriveCmp.Size = New System.Drawing.Size(525, 27)
         Me.cmbDriveCmp.TabIndex = 448
         Me.cmbDriveCmp.Tag = "pur_DriveCmpId"
         '
         'Label136
         '
         Me.Label136.AutoSize = True
-        Me.Label136.Location = New System.Drawing.Point(1045, 54)
+        Me.Label136.Location = New System.Drawing.Point(1019, 57)
         Me.Label136.Name = "Label136"
         Me.Label136.Size = New System.Drawing.Size(93, 19)
         Me.Label136.TabIndex = 447
@@ -4992,7 +4935,7 @@ Partial Class frmMain
         '
         Me.chkSp.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkSp.AutoSize = True
-        Me.chkSp.Location = New System.Drawing.Point(1320, 6)
+        Me.chkSp.Location = New System.Drawing.Point(1296, 9)
         Me.chkSp.Name = "chkSp"
         Me.chkSp.Size = New System.Drawing.Size(40, 29)
         Me.chkSp.TabIndex = 446
@@ -5004,7 +4947,7 @@ Partial Class frmMain
         '
         Me.chkSpecial.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkSpecial.AutoSize = True
-        Me.chkSpecial.Location = New System.Drawing.Point(999, 90)
+        Me.chkSpecial.Location = New System.Drawing.Point(672, 95)
         Me.chkSpecial.Name = "chkSpecial"
         Me.chkSpecial.Size = New System.Drawing.Size(40, 29)
         Me.chkSpecial.TabIndex = 445
@@ -5016,7 +4959,7 @@ Partial Class frmMain
         '
         Me.Label309.AutoSize = True
         Me.Label309.ForeColor = System.Drawing.Color.Red
-        Me.Label309.Location = New System.Drawing.Point(742, 95)
+        Me.Label309.Location = New System.Drawing.Point(285, 100)
         Me.Label309.Name = "Label309"
         Me.Label309.Size = New System.Drawing.Size(20, 19)
         Me.Label309.TabIndex = 444
@@ -5026,7 +4969,7 @@ Partial Class frmMain
         '
         Me.Label308.AutoSize = True
         Me.Label308.ForeColor = System.Drawing.Color.Red
-        Me.Label308.Location = New System.Drawing.Point(742, 11)
+        Me.Label308.Location = New System.Drawing.Point(718, 14)
         Me.Label308.Name = "Label308"
         Me.Label308.Size = New System.Drawing.Size(20, 19)
         Me.Label308.TabIndex = 443
@@ -5036,7 +4979,7 @@ Partial Class frmMain
         '
         Me.Label307.AutoSize = True
         Me.Label307.ForeColor = System.Drawing.Color.Red
-        Me.Label307.Location = New System.Drawing.Point(742, 54)
+        Me.Label307.Location = New System.Drawing.Point(718, 57)
         Me.Label307.Name = "Label307"
         Me.Label307.Size = New System.Drawing.Size(20, 19)
         Me.Label307.TabIndex = 442
@@ -5046,7 +4989,7 @@ Partial Class frmMain
         '
         Me.Label306.AutoSize = True
         Me.Label306.ForeColor = System.Drawing.Color.Red
-        Me.Label306.Location = New System.Drawing.Point(309, 54)
+        Me.Label306.Location = New System.Drawing.Point(285, 57)
         Me.Label306.Name = "Label306"
         Me.Label306.Size = New System.Drawing.Size(20, 19)
         Me.Label306.TabIndex = 441
@@ -5056,7 +4999,7 @@ Partial Class frmMain
         '
         Me.Label305.AutoSize = True
         Me.Label305.ForeColor = System.Drawing.Color.Red
-        Me.Label305.Location = New System.Drawing.Point(309, 11)
+        Me.Label305.Location = New System.Drawing.Point(285, 14)
         Me.Label305.Name = "Label305"
         Me.Label305.Size = New System.Drawing.Size(20, 19)
         Me.Label305.TabIndex = 440
@@ -5064,7 +5007,7 @@ Partial Class frmMain
         '
         'txtDeliUnitPrice
         '
-        Me.txtDeliUnitPrice.Location = New System.Drawing.Point(1144, 8)
+        Me.txtDeliUnitPrice.Location = New System.Drawing.Point(1120, 8)
         Me.txtDeliUnitPrice.Name = "txtDeliUnitPrice"
         Me.txtDeliUnitPrice.Size = New System.Drawing.Size(170, 30)
         Me.txtDeliUnitPrice.TabIndex = 439
@@ -5073,7 +5016,7 @@ Partial Class frmMain
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(1045, 11)
+        Me.Label4.Location = New System.Drawing.Point(1021, 14)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(93, 19)
         Me.Label4.TabIndex = 438
@@ -5082,7 +5025,7 @@ Partial Class frmMain
         'cmbGasVendor_pur
         '
         Me.cmbGasVendor_pur.FormattingEnabled = True
-        Me.cmbGasVendor_pur.Location = New System.Drawing.Point(436, 51)
+        Me.cmbGasVendor_pur.Location = New System.Drawing.Point(412, 53)
         Me.cmbGasVendor_pur.Name = "cmbGasVendor_pur"
         Me.cmbGasVendor_pur.Size = New System.Drawing.Size(300, 27)
         Me.cmbGasVendor_pur.TabIndex = 437
@@ -5092,7 +5035,7 @@ Partial Class frmMain
         '
         Me.cmbProduct_pur.FormattingEnabled = True
         Me.cmbProduct_pur.Items.AddRange(New Object() {"普氣", "丙氣"})
-        Me.cmbProduct_pur.Location = New System.Drawing.Point(869, 8)
+        Me.cmbProduct_pur.Location = New System.Drawing.Point(845, 10)
         Me.cmbProduct_pur.Name = "cmbProduct_pur"
         Me.cmbProduct_pur.Size = New System.Drawing.Size(170, 27)
         Me.cmbProduct_pur.TabIndex = 436
@@ -5101,7 +5044,7 @@ Partial Class frmMain
         'lblProduct
         '
         Me.lblProduct.AutoSize = True
-        Me.lblProduct.Location = New System.Drawing.Point(768, 11)
+        Me.lblProduct.Location = New System.Drawing.Point(744, 14)
         Me.lblProduct.Name = "lblProduct"
         Me.lblProduct.Size = New System.Drawing.Size(95, 19)
         Me.lblProduct.TabIndex = 435
@@ -5110,7 +5053,7 @@ Partial Class frmMain
         'Label28
         '
         Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(768, 54)
+        Me.Label28.Location = New System.Drawing.Point(744, 57)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(95, 19)
         Me.Label28.TabIndex = 423
@@ -5118,16 +5061,16 @@ Partial Class frmMain
         '
         'txtSum_pur
         '
-        Me.txtSum_pur.Location = New System.Drawing.Point(1144, 92)
+        Me.txtSum_pur.Location = New System.Drawing.Point(845, 94)
         Me.txtSum_pur.Name = "txtSum_pur"
         Me.txtSum_pur.ReadOnly = True
-        Me.txtSum_pur.Size = New System.Drawing.Size(216, 30)
+        Me.txtSum_pur.Size = New System.Drawing.Size(170, 30)
         Me.txtSum_pur.TabIndex = 428
         Me.txtSum_pur.Tag = "pur_price"
         '
         'txtFreight
         '
-        Me.txtFreight.Location = New System.Drawing.Point(1467, 8)
+        Me.txtFreight.Location = New System.Drawing.Point(1443, 8)
         Me.txtFreight.Name = "txtFreight"
         Me.txtFreight.Size = New System.Drawing.Size(200, 30)
         Me.txtFreight.TabIndex = 434
@@ -5135,7 +5078,7 @@ Partial Class frmMain
         '
         'txtWeight_pur
         '
-        Me.txtWeight_pur.Location = New System.Drawing.Point(869, 51)
+        Me.txtWeight_pur.Location = New System.Drawing.Point(845, 51)
         Me.txtWeight_pur.Name = "txtWeight_pur"
         Me.txtWeight_pur.Size = New System.Drawing.Size(170, 30)
         Me.txtWeight_pur.TabIndex = 424
@@ -5144,7 +5087,7 @@ Partial Class frmMain
         'Label31
         '
         Me.Label31.AutoSize = True
-        Me.Label31.Location = New System.Drawing.Point(1366, 11)
+        Me.Label31.Location = New System.Drawing.Point(1342, 14)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(95, 19)
         Me.Label31.TabIndex = 433
@@ -5153,7 +5096,7 @@ Partial Class frmMain
         'Label35
         '
         Me.Label35.AutoSize = True
-        Me.Label35.Location = New System.Drawing.Point(1045, 95)
+        Me.Label35.Location = New System.Drawing.Point(744, 100)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(94, 19)
         Me.Label35.TabIndex = 427
@@ -5162,7 +5105,7 @@ Partial Class frmMain
         'Label37
         '
         Me.Label37.AutoSize = True
-        Me.Label37.Location = New System.Drawing.Point(768, 95)
+        Me.Label37.Location = New System.Drawing.Point(311, 100)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(95, 19)
         Me.Label37.TabIndex = 425
@@ -5170,7 +5113,7 @@ Partial Class frmMain
         '
         'txtId_pur
         '
-        Me.txtId_pur.Location = New System.Drawing.Point(133, 8)
+        Me.txtId_pur.Location = New System.Drawing.Point(109, 8)
         Me.txtId_pur.Name = "txtId_pur"
         Me.txtId_pur.ReadOnly = True
         Me.txtId_pur.Size = New System.Drawing.Size(170, 30)
@@ -5179,16 +5122,16 @@ Partial Class frmMain
         '
         'txtUnitPrice_pur
         '
-        Me.txtUnitPrice_pur.Location = New System.Drawing.Point(869, 92)
+        Me.txtUnitPrice_pur.Location = New System.Drawing.Point(412, 94)
         Me.txtUnitPrice_pur.Name = "txtUnitPrice_pur"
-        Me.txtUnitPrice_pur.Size = New System.Drawing.Size(124, 30)
+        Me.txtUnitPrice_pur.Size = New System.Drawing.Size(254, 30)
         Me.txtUnitPrice_pur.TabIndex = 426
         Me.txtUnitPrice_pur.Tag = "pur_unit_price"
         '
         'Label38
         '
         Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(34, 11)
+        Me.Label38.Location = New System.Drawing.Point(8, 14)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(95, 19)
         Me.Label38.TabIndex = 431
@@ -5197,7 +5140,7 @@ Partial Class frmMain
         'cmbCompany_pur
         '
         Me.cmbCompany_pur.FormattingEnabled = True
-        Me.cmbCompany_pur.Location = New System.Drawing.Point(436, 8)
+        Me.cmbCompany_pur.Location = New System.Drawing.Point(412, 10)
         Me.cmbCompany_pur.Name = "cmbCompany_pur"
         Me.cmbCompany_pur.Size = New System.Drawing.Size(300, 27)
         Me.cmbCompany_pur.TabIndex = 430
@@ -5206,7 +5149,7 @@ Partial Class frmMain
         'lblCompany_pur
         '
         Me.lblCompany_pur.AutoSize = True
-        Me.lblCompany_pur.Location = New System.Drawing.Point(335, 11)
+        Me.lblCompany_pur.Location = New System.Drawing.Point(311, 14)
         Me.lblCompany_pur.Name = "lblCompany_pur"
         Me.lblCompany_pur.Size = New System.Drawing.Size(95, 19)
         Me.lblCompany_pur.TabIndex = 429
@@ -5215,7 +5158,7 @@ Partial Class frmMain
         'dtpDate_pur
         '
         Me.dtpDate_pur.CustomFormat = "yyyy/MM/dd"
-        Me.dtpDate_pur.Location = New System.Drawing.Point(133, 46)
+        Me.dtpDate_pur.Location = New System.Drawing.Point(109, 51)
         Me.dtpDate_pur.Name = "dtpDate_pur"
         Me.dtpDate_pur.Size = New System.Drawing.Size(170, 30)
         Me.dtpDate_pur.TabIndex = 422
@@ -5224,7 +5167,7 @@ Partial Class frmMain
         'Label92
         '
         Me.Label92.AutoSize = True
-        Me.Label92.Location = New System.Drawing.Point(34, 54)
+        Me.Label92.Location = New System.Drawing.Point(8, 57)
         Me.Label92.Name = "Label92"
         Me.Label92.Size = New System.Drawing.Size(95, 19)
         Me.Label92.TabIndex = 421
@@ -5233,7 +5176,7 @@ Partial Class frmMain
         'lblGasVendor_pur
         '
         Me.lblGasVendor_pur.AutoSize = True
-        Me.lblGasVendor_pur.Location = New System.Drawing.Point(335, 54)
+        Me.lblGasVendor_pur.Location = New System.Drawing.Point(311, 57)
         Me.lblGasVendor_pur.Name = "lblGasVendor_pur"
         Me.lblGasVendor_pur.Size = New System.Drawing.Size(93, 19)
         Me.lblGasVendor_pur.TabIndex = 420
@@ -5241,16 +5184,16 @@ Partial Class frmMain
         '
         'txtMemo_pur
         '
-        Me.txtMemo_pur.Location = New System.Drawing.Point(436, 92)
+        Me.txtMemo_pur.Location = New System.Drawing.Point(109, 94)
         Me.txtMemo_pur.Name = "txtMemo_pur"
-        Me.txtMemo_pur.Size = New System.Drawing.Size(300, 30)
+        Me.txtMemo_pur.Size = New System.Drawing.Size(170, 30)
         Me.txtMemo_pur.TabIndex = 419
         Me.txtMemo_pur.Tag = "pur_Memo"
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(335, 95)
+        Me.Label3.Location = New System.Drawing.Point(8, 100)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(95, 19)
         Me.Label3.TabIndex = 418
@@ -5262,17 +5205,17 @@ Partial Class frmMain
         Me.dgvPurchase.AllowUserToDeleteRows = False
         Me.dgvPurchase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPurchase.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvPurchase.Location = New System.Drawing.Point(5, 234)
+        Me.dgvPurchase.Location = New System.Drawing.Point(5, 194)
         Me.dgvPurchase.Name = "dgvPurchase"
         Me.dgvPurchase.ReadOnly = True
         Me.dgvPurchase.RowTemplate.Height = 24
-        Me.dgvPurchase.Size = New System.Drawing.Size(1872, 710)
+        Me.dgvPurchase.Size = New System.Drawing.Size(1872, 750)
         Me.dgvPurchase.TabIndex = 417
         '
         'btnQuery_pur
         '
         Me.btnQuery_pur.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_pur.Location = New System.Drawing.Point(632, 170)
+        Me.btnQuery_pur.Location = New System.Drawing.Point(632, 130)
         Me.btnQuery_pur.Name = "btnQuery_pur"
         Me.btnQuery_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_pur.TabIndex = 416
@@ -5282,7 +5225,7 @@ Partial Class frmMain
         'btnCancel_pur
         '
         Me.btnCancel_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_pur.Location = New System.Drawing.Point(476, 170)
+        Me.btnCancel_pur.Location = New System.Drawing.Point(476, 130)
         Me.btnCancel_pur.Name = "btnCancel_pur"
         Me.btnCancel_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_pur.TabIndex = 415
@@ -5292,7 +5235,7 @@ Partial Class frmMain
         'btnDelete_pur
         '
         Me.btnDelete_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete_pur.Location = New System.Drawing.Point(320, 170)
+        Me.btnDelete_pur.Location = New System.Drawing.Point(320, 130)
         Me.btnDelete_pur.Name = "btnDelete_pur"
         Me.btnDelete_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_pur.TabIndex = 414
@@ -5302,7 +5245,7 @@ Partial Class frmMain
         'btnEdit_pur
         '
         Me.btnEdit_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit_pur.Location = New System.Drawing.Point(164, 170)
+        Me.btnEdit_pur.Location = New System.Drawing.Point(164, 130)
         Me.btnEdit_pur.Name = "btnEdit_pur"
         Me.btnEdit_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_pur.TabIndex = 413
@@ -5312,7 +5255,7 @@ Partial Class frmMain
         'btnAdd_pur
         '
         Me.btnAdd_pur.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnAdd_pur.Location = New System.Drawing.Point(8, 170)
+        Me.btnAdd_pur.Location = New System.Drawing.Point(8, 130)
         Me.btnAdd_pur.Name = "btnAdd_pur"
         Me.btnAdd_pur.Size = New System.Drawing.Size(140, 44)
         Me.btnAdd_pur.TabIndex = 412
@@ -11449,7 +11392,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.11.1"
+        Me.Text = "豐原瓦斯會計系統 v0.11.2"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -12288,8 +12231,6 @@ Partial Class frmMain
     Friend WithEvents txtBankName As TextBox
     Friend WithEvents cmbDriveCmp As ComboBox
     Friend WithEvents Label136 As Label
-    Friend WithEvents cmbSubject As ComboBox
-    Friend WithEvents Label137 As Label
     Friend WithEvents tpGasCheckout As TabPage
     Friend WithEvents btnQuery_gc As Button
     Friend WithEvents dgvGasCheckout As DataGridView
@@ -12301,9 +12242,6 @@ Partial Class frmMain
     Friend WithEvents Label138 As Label
     Friend WithEvents btnCancel_gc As Button
     Friend WithEvents btnCheckout_gc As Button
-    Friend WithEvents Label141 As Label
-    Friend WithEvents cmbPayType_pur As ComboBox
-    Friend WithEvents lblPayType_pur As Label
     Friend WithEvents cmbVendor_gc As ComboBox
     Friend WithEvents chkDate_gc As CheckBox
     Friend WithEvents Label83 As Label

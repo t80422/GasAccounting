@@ -96,33 +96,31 @@
         Dim ord = _view.GetUserInput
 
         If ord IsNot Nothing Then
-            Dim journal As journal = If(ord.col_Type <> "支票", _view.GetJournalDatas, Nothing)
             Dim cheque As cheque = If(ord.col_Type = "支票", _view.GetChequeDatas, Nothing)
 
             If cheque IsNot Nothing Then cheque.che_col_Id = ord.col_Id
 
             Using transaction = _colRep.BeginTransaction
-                    Try
-                        _colRep.Add(ord, journal, cheque)
+                Try
+                    _colRep.Add(ord, cheque)
 
-                        If ord.col_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(ord.col_bank_Id, ord.col_AccountMonth)
+                    If ord.col_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(ord.col_bank_Id, ord.col_AccountMonth)
 
-                        transaction.Commit()
-                        _view.Reset()
-                        MsgBox("新增成功")
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        MsgBox(ex.Message)
-                    End Try
-                End Using
-            End If
+                    transaction.Commit()
+                    _view.Reset()
+                    MsgBox("新增成功")
+                Catch ex As Exception
+                    transaction.Rollback()
+                    MsgBox(ex.Message)
+                End Try
+            End Using
+        End If
     End Sub
 
     Public Async Sub Edit()
         Dim col = _view.GetUserInput
 
         If col IsNot Nothing Then
-            Dim journal As journal = If(col.col_Type <> "支票", _view.GetJournalDatas, Nothing)
             Dim cheque As cheque = If(col.col_Type = "支票", _view.GetChequeDatas, Nothing)
             cheque.che_col_Id = col.col_Id
 
@@ -132,7 +130,7 @@
                     Dim orgCollection = Await _colRep.GetByIdAsync(col.col_Id)
                     Dim orgAccountMonth = orgCollection.col_AccountMonth
 
-                    _colRep.Edit(col, journal, cheque)
+                    _colRep.Edit(col, cheque)
                     Dim bankId = orgCollection.col_bank_Id
                     Dim updatedCollection = Await _colRep.GetByIdAsync(col.col_Id)
 

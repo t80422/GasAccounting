@@ -12,8 +12,6 @@
     Public Property 特殊單價 As Boolean
     Public Property 特殊運費 As Boolean
     Public Property 運輸公司 As String
-    Public Property 科目 As String
-    Public Property 付款方式 As String
 
     Public Sub New(data As purchase)
         編號 = data.pur_id
@@ -29,8 +27,6 @@
         特殊單價 = data.pur_SpecialUP
         特殊運費 = data.pur_SpecialDUP
         運輸公司 = data.manufacturer1?.manu_name
-        科目 = data.subject?.s_name
-        付款方式 = data.pur_PayType
     End Sub
 
     Public Sub New()
