@@ -17,7 +17,8 @@ Partial Public Class subject
     Public Property s_IsDeletable As Nullable(Of Boolean)
     Public Property s_Type As String
 
-    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property accounting_entry As ICollection(Of accounting_entry) = New HashSet(Of accounting_entry)
+    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
 
 End Class

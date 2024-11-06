@@ -26,7 +26,7 @@
     ''' <param name="d"></param>
     ''' <param name="cusId"></param>
     ''' <returns></returns>
-    Function DailyCustomerReceivable(d As Date, cusId As Integer) As List(Of DailyCustomerReceivable)
+    Function DailyCustomerReceivable(d As Date, cusId As String) As List(Of DailyCustomerReceivable)
 
     ''' <summary>
     ''' 提量支數統計

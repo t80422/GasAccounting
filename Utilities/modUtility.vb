@@ -75,10 +75,12 @@ Module modUtility
                                 propValue = 0
                             End If
                         End If
-                        ' 根據屬性類型轉換值
-                        Dim convertedValue = Convert.ChangeType(propValue, propType)
-                        prop.SetValue(entity, convertedValue)
 
+                        If Not (propType.Name = "DateTime" AndAlso String.IsNullOrEmpty(propValue)) Then
+                            ' 根據屬性類型轉換值
+                            Dim convertedValue = Convert.ChangeType(propValue, propType)
+                            prop.SetValue(entity, convertedValue)
+                        End If
                     Catch ex As Exception
                         Console.WriteLine(ex.StackTrace)
                         Throw New Exception(ex.Message & vbCrLf & "出問題的欄位:" & control.Tag)

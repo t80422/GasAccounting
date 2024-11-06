@@ -107,12 +107,12 @@
 
         _basicPrice = New BasicPricePresenter(Me, bpRep)
         _car = New CarPresenter(Me, cusRep, carRep)
-        _collect = New CollectionPresenter(Me, subjectRep, _compService, colRep, bankRep, cusRep, bmbService, cheRep)
+        _collect = New CollectionPresenter(Me, subjectRep, colRep, bankRep, cusRep, bmbService, cheRep, aeSer, compRep)
         _customer = New CustomerPresenter(Me, cusRep, ppRep, compRep)
         _gasBarrel = New GasBarrelPresenter(Me, gbRep)
         _invoice = New InvoicePresenter(Me, cusRep, invoiceRep, priceCalSer, ordRep)
         _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
-        _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer)
+        _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer, aeSer)
         _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep, aeSer)
         _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep, aeSer)
         _report = New ReportPresenter(Me, reportRep, bankRep, compRep)
@@ -181,7 +181,7 @@
         btnCancel_payment_Click(btnCancel_payment, EventArgs.Empty)
         btnCancel_uph_Click(btnCancel_uph, EventArgs.Empty)
         btnCancel_Che_Click(btnCancel_Che, EventArgs.Empty)
-        ICollectionView_Reset()
+        btnCancel_col_Click(btnCancel_col, EventArgs.Empty)
         _report.GetManuCmb()
         btnCancel_gc_Click(btnCancel_gc, EventArgs.Empty)
         btnRefresh_Click(btnRefresh, EventArgs.Empty)
@@ -1384,6 +1384,15 @@
 
             Case Keys.F5
                 btnPrint.PerformClick()
+
+            Case Keys.F6
+                btnPrintCusStk.PerformClick()
+
+            Case Keys.F7
+                btnCusGasPayCollect_Click(btnCusGasPayCollect, EventArgs.Empty)
+
+            Case Keys.F8
+                btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
         End Select
     End Sub
 
@@ -1407,14 +1416,24 @@
         End If
     End Sub
 
-    '銷售管理-列印客戶寄桶結存瓶
-    Private Sub btnCusGasCylinderInventory_Click(sender As Object, e As EventArgs) Handles btnCusGasCylinderInventory.Click
-        '要產生全部客戶還是個別客戶?
-    End Sub
-
     '銷售管理-修改
     Private Sub btnEdit_ord_Click(sender As Object, e As EventArgs) Handles btnEdit_ord.Click
         _order.Update()
+    End Sub
+
+    '銷售管理-列印客戶鋼瓶結存總冊
+    Private Sub btnPrintCusStk_Click(sender As Object, e As EventArgs) Handles btnPrintCusStk.Click
+        _order.PrintCusStk()
+    End Sub
+
+    '銷售管理-氣量氣款收付明細表
+    Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
+        _report.GenerateCustomersGasDetailByDay(Now.Date)
+    End Sub
+
+    '銷售管理-客戶提氣清冊
+    Private Sub btnCusGetGasList_Click(sender As Object, e As EventArgs) Handles btnCusGetGasList.Click
+        _report.GenerateCustomersGetGasList(Now.Date)
     End Sub
 
     ''' <summary>
@@ -2007,6 +2026,70 @@
         _payment.LoadVendorAmountDue(cmbManu_payment.SelectedValue)
     End Sub
 
+    Public Sub DisplayList(data As List(Of CollectionVM)) Implements IBaseView(Of collection, CollectionVM).DisplayList
+        dgvCollection.DataSource = data
+    End Sub
+
+    Public Sub DisplayDetail(data As collection) Implements IBaseView(Of collection, CollectionVM).DisplayDetail
+        AutoMapEntityToControls(data, tpCollection)
+        AutoMapEntityToControls(data.customer, tpCollection)
+        AutoMapEntityToControls(data.cheques, tpCollection)
+    End Sub
+
+    Private Function IBaseView_GetUserInput4() As collection Implements IBaseView(Of collection, CollectionVM).GetUserInput
+        Dim data As New collection
+        AutoMapControlsToEntity(data, tpCollection)
+        Return data
+    End Function
+
+    Private Sub IBaseView_ClearInput4() Implements IBaseView(Of collection, CollectionVM).ClearInput
+        ClearControls(tpCollection)
+    End Sub
+
+    Public Sub SetSubjectCmb(datas As List(Of SelectListItem)) Implements ICollectionView.SetSubjectCmb
+        SetComboBox(cmbSubjects, datas)
+    End Sub
+
+    Private Sub ICollectionView_SetCompanyCmb(datas As List(Of SelectListItem)) Implements ICollectionView.SetCompanyCmb
+        SetComboBox(cmbCompany_col, datas)
+    End Sub
+
+    Public Sub SetBankCmb(datas As List(Of SelectListItem)) Implements ICollectionView.SetBankCmb
+        SetComboBox(cmbBank_col, datas)
+    End Sub
+
+    Private Function ICollectionView_GetSearchCriteria() As CollectionSearchCriteria Implements ICollectionView.GetSearchCriteria
+        Return New CollectionSearchCriteria With {
+            .BankId = cmbBank_col.SelectedItem?.Value,
+            .Cheque = txtCheque_col.Text,
+            .CompanyId = cmbCompany_col.SelectedItem?.Value,
+            .CusId = If(Integer.TryParse(txtCusId_col.Text, Nothing), CInt(txtCusId_col.Text), Nothing),
+            .EndDate = dtpEnd_col.Value,
+            .IsDate = chkIsDate.Checked,
+            .StartDate = dtpStart_col.Value,
+            .SubjectId = cmbSubjects.SelectedItem?.Value,
+            .Type = cmbType_col.SelectedItem
+        }
+    End Function
+
+    Public Function GetChequeInput() As cheque Implements ICollectionView.GetChequeInput
+        Dim data As New cheque
+        AutoMapControlsToEntity(data, tpCollection)
+        data.che_Amount = txtAmount_collection.Text
+        data.che_ReceivedDate = dtpCollectionDate.Value.Date
+        data.che_col_Id = If(String.IsNullOrEmpty(txtColId.Text), Nothing, txtColId.Text)
+        data.che_Number = txtCheque_col.Text
+        data.chu_State = "未兌現"
+        Return data
+    End Function
+
+    '收入管理-收款作業-取消
+    Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
+        _collect.Initialize()
+        SetButtonState(btnCancel_col, True)
+    End Sub
+
+    '收入管理-收款作業-搜尋
     Private Sub btnQueryCus_col_Click(sender As Object, e As EventArgs) Handles btnQueryCus_col.Click
         Using searchForm As New frmQueryCustomer
             If searchForm.ShowDialog = DialogResult.OK Then
@@ -2015,97 +2098,6 @@
                 txtCusCode_col.Text = searchForm.CusCode
             End If
         End Using
-    End Sub
-
-    Public Sub ShowList(data As List(Of CollectionVM)) Implements ICommonView_old(Of collection, CollectionVM).ShowList
-        dgvCollection.DataSource = data
-    End Sub
-
-    Public Sub SetDataToControl(col As collection, Optional che As cheque = Nothing) Implements ICollectionView.SetDataToControl
-        AutoMapEntityToControls(col, tpCollection)
-
-        If che IsNot Nothing Then
-            AutoMapEntityToControls(che, tpCollection)
-        End If
-    End Sub
-
-    Public Sub SetDataToControl(data As collection) Implements ICommonView_old(Of collection, CollectionVM).SetDataToControl
-
-    End Sub
-
-    Private Function GetUserInput_collection() As collection Implements ICommonView_old(Of collection, CollectionVM).GetUserInput
-        Dim list As New List(Of Control) From {txtAmount_collection, cmbType_col, cmbSubjects, txtCusId_col, cmbCompany_col}
-
-        If cmbType_col.Text = "支票" Then
-            Dim ctrls As Control() = {txtCheque_col, txtIssuerName, txtCheAcctNum}
-            list.AddRange(ctrls)
-        End If
-
-        If Not CheckRequired(list) Then Return Nothing
-
-        Dim data As New collection
-        AutoMapControlsToEntity(data, tpCollection)
-
-        Dim accountMonth = data.col_AccountMonth
-        Dim formatAccountMonth = New Date(accountMonth.Year, accountMonth.Month, 1)
-        data.col_AccountMonth = formatAccountMonth
-        Return data
-    End Function
-
-    Private Sub ClearInput_collection() Implements ICommonView_old(Of collection, CollectionVM).ClearInput
-        ClearControls(tpCollection)
-    End Sub
-
-    Private Sub ICollectionView_SetSubjectsCmb(data As IReadOnlyList(Of SelectListItem)) Implements ICollectionView.SetSubjectsCmb
-        SetComboBox(cmbSubjects, data)
-    End Sub
-
-    Private Function ICollectionView_GetQueryConditions() As CollectionQueryVM Implements ICollectionView.GetQueryConditions
-        Return New CollectionQueryVM With {
-            .Cheque = txtCheque_col.Text,
-            .CusId = If(txtCusId_col.Text = "", 0, txtCusId_col.Text),
-            .Subjects = If(cmbSubjects.SelectedItem Is Nothing, 0, cmbSubjects.SelectedItem.Value),
-            .EndDate = dtpEnd_col.Value.Date,
-            .StartDate = dtpStart_col.Value.Date,
-            .Type = cmbType_col.Text
-        }
-    End Function
-
-    Private Function ICollectionView_GetChequeDatas() As cheque Implements ICollectionView.GetChequeDatas
-        Return New cheque With {
-            .che_Amount = txtAmount_collection.Text,
-            .che_ReceivedDate = dtpDate_col.Value.Date,
-            .che_Memo = txtMemo_col.Text,
-            .che_Number = txtCheque_col.Text,
-            .che_AccountNumber = txtCheAcctNum.Text,
-            .che_IssuerName = txtIssuerName.Text,
-            .chu_State = "未兌現",
-            .che_AbleCashingDate = dtpAbleCashingDate.Value,
-            .che_PayBankName = txtPayBank.Text
-        }
-    End Function
-
-    Private Sub ICollectionView_SetBankCmb(data As List(Of SelectListItem)) Implements ICollectionView.SetBankCmb
-        SetComboBox(cmbBank_col, data)
-    End Sub
-
-    Public Sub ICollectionView_SetCompanyCmb(data As List(Of SelectListItem)) Implements ICollectionView.ICollectionView_SetCompanyCmb
-        SetComboBox(cmbCompany_col, data)
-    End Sub
-
-    Private Sub ICollectionView_Reset() Implements ICollectionView.Reset
-        ClearControls(tpCollection)
-
-        _collect.LoadBankList()
-        _collect.GetCompanyCmb()
-        _collect.GetSubjectsCmbAsync()
-        _collect.LoadList()
-
-        If btnQuery_col.Text = "確  認" Then SetOrderQueryCtrl(btnQuery_col)
-        SetButtonState(btnCancel_col, True)
-
-        btnCashing.Visible = False
-        cmbType_col.Enabled = True
     End Sub
 
     '收入管理-收款作業-收款類型-支票號碼顯示
@@ -2125,11 +2117,6 @@
         Next
     End Sub
 
-    '收入管理-收款作業-取消
-    Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
-        ICollectionView_Reset()
-    End Sub
-
     '收入管理-收款作業-新增
     Private Sub btnAdd_col_Click(sender As Object, e As EventArgs) Handles btnAdd_col.Click
         _collect.Add()
@@ -2139,7 +2126,7 @@
     Private Sub dgvCollection_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCollection.SelectionChanged, dgvCollection.CellMouseClick
         Dim id = DGV_SelectionChanged(sender)
         If id > 0 Then
-            _collect.SelectRow(id)
+            _collect.LoadDetail(id)
             cmbType_col.Enabled = False
         End If
     End Sub
@@ -2160,22 +2147,25 @@
 
     '收入管理-收款作業-刪除
     Private Sub btnDelete_col_Click(sender As Object, e As EventArgs) Handles btnDelete_col.Click
-        Dim id As Integer = txtColId.Text
-        _collect.DeleteAsync(id)
+        _collect.DeleteAsync()
     End Sub
 
     '收入管理-收款作業-查詢
     Private Sub btnQuery_col_Click(sender As Object, e As EventArgs) Handles btnQuery_col.Click
-        SetCollectionQueryCtrlsState()
+        Dim lst As New List(Of Control) From {lblType_col, lblCusCode_col, lblSubjects_col}
+
+        If lblCheque_col.Visible = True Then lst.Add(lblCheque_col)
+
+        SetQueryControls(btnQuery_col, lst)
 
         If sender.Text = "查  詢" Then
-            _collect.Query()
+            _collect.LoadList()
         End If
     End Sub
 
     '收入管理-收款作業-支票兌現
     Private Sub btnCashing_Click(sender As Object, e As EventArgs) Handles btnCashing.Click
-        _collect.UpdateCheque(txtColId.Text)
+        _collect.UpdateCheque()
     End Sub
 
     '收入管理-收款作業-搜尋客戶
@@ -2192,17 +2182,6 @@
                 MsgBox("查無此客戶")
             End If
         End If
-    End Sub
-
-    ''' <summary>
-    ''' 設定收款作業查詢控制項狀態
-    ''' </summary>
-    Private Sub SetCollectionQueryCtrlsState()
-        Dim lst As New List(Of Control) From {lblType_col, lblCusCode_col, lblSubjects_col}
-
-        If lblCheque_col.Visible = True Then lst.Add(lblCheque_col)
-
-        SetQueryControls(btnQuery_col, lst)
     End Sub
 
     Public Sub ShowList(data As List(Of ChequeVM)) Implements ICommonView_old(Of cheque, ChequeVM).ShowList
@@ -2324,10 +2303,6 @@
                 Select(Function(x) CInt(x.Cells("編號").Value)).ToList
     End Function
 
-    Private Function ICommonView_SetRequired() As List(Of Control) Implements ICommonView_old(Of collection, CollectionVM).SetRequired
-        Throw New NotImplementedException()
-    End Function
-
     Public Sub SetGasVendorCmb(item As List(Of SelectListItem)) Implements IReportView.SetGasVendorCmb
         SetComboBox(cmbManu, item)
     End Sub
@@ -2350,43 +2325,19 @@
         _report.LoadCompany()
     End Sub
 
-    '會計管理-報表-氣量氣款收付明細表
-    Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
-        _report.GenerateCustomersGasDetailByDay(dtpDate_cgpc.Value)
-    End Sub
-
-    '會計管理-報表-客戶提氣清冊
-    Private Sub btnCusGetGasList_Click(sender As Object, e As EventArgs) Handles btnCusGetGasList.Click
-        _report.GenerateCustomersGetGasList(dtpDate_cgpc.Value)
-    End Sub
-
-    '會計管理-報表-大氣進貨明細
-    Private Sub btnGasPayableDetail_Click(sender As Object, e As EventArgs) Handles btnGasPayableDetail.Click
-        If Not (cmbManu.SelectedIndex = -1 And String.IsNullOrEmpty(cmbManu.Text)) Then
-            _report.GenerateGasPayableDetail(dtpDate_cgpc.Value, cmbManu.SelectedValue)
-        End If
-
-    End Sub
-
     '會計管理-報表-單一客戶每日的應收帳明細表
     Private Sub btnDailyCusReceivable_Click(sender As Object, e As EventArgs) Handles btnDailyCusReceivable.Click
-        Dim cusCode As Integer
-
-        If Integer.TryParse(txtCusCode_report.Text, cusCode) Then
-            _report.GenerateDailyCustomerReceivable(dtpDate_cgpc.Value, cusCode)
-        Else
-            MsgBox("無效的客戶代號")
-        End If
+        _report.GenerateDailyCustomerReceivable(Now.Date, txtCusCode_dcr.Text)
     End Sub
 
     '會計管理-報表-提量支數統計
     Private Sub btnGasUsageCylinderCount_Click(sender As Object, e As EventArgs) Handles btnGasUsageCylinderCount.Click
-        _report.GenerateGasUsageAndCylinderCount(dtpDate_cgpc.Value)
+        _report.GenerateGasUsageAndCylinderCount(Now.Date)
     End Sub
 
     '會計管理-報表-現金帳
     Private Sub btnCashAccount_Click(sender As Object, e As EventArgs) Handles btnCashAccount.Click
-        _report.GenerateCashAccount(dtpDate_cgpc.Value)
+        _report.GenerateCashAccount(Now.Date)
     End Sub
 
     '會計管理-報表-銀行帳
@@ -2486,6 +2437,13 @@
     '會計管理-報表-進項銷項
     Private Sub btnInOut_Click(sender As Object, e As EventArgs) Handles btnInOut.Click
         _report.GenerateInOut(dtpYear_InOut.Value, cmbMonth_InOut.SelectedItem)
+    End Sub
+
+    '會計管理-報表-大氣進貨明細
+    Private Sub btnGasPayableDetail_Click(sender As Object, e As EventArgs) Handles btnGasPayableDetail.Click
+        If Not (cmbManu.SelectedIndex = -1 And String.IsNullOrEmpty(cmbManu.Text)) Then
+            _report.GenerateGasPayableDetail(Now.Date, cmbManu.SelectedValue)
+        End If
     End Sub
 
     Private Function IGasCheckoutView_GetUserInput() As PurchaseCondition Implements IGasCheckoutView.GetUserInput

@@ -8,70 +8,35 @@ Public Class CollectionRep
         MyBase.New(context)
     End Sub
 
-    Public Sub Add(collection As collection, Optional cheque As cheque = Nothing) Implements ICollectionRep.Add
-        Using db As New gas_accounting_systemEntities
-            Using transaction = db.Database.BeginTransaction
-                Try
-                    db.collections.Add(collection)
+    Public Function Search(criteria As CollectionSearchCriteria) As List(Of CollectionVM) Implements ICollectionRep.Search
+        Try
+            Dim query = _dbSet.AsNoTracking.AsQueryable
 
-                    '新增支票
-                    If cheque IsNot Nothing Then
-                        db.cheques.Add(cheque)
-                    End If
+            If criteria.IsDate Then
+                Dim startDate = criteria.StartDate.Value.Date
+                Dim endDate = criteria.EndDate.Value.Date.AddDays(1)
+                query = query.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate)
+            End If
 
-                    db.SaveChanges()
-                    transaction.Commit()
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Throw
-                End Try
-            End Using
-        End Using
-    End Sub
+            If criteria.SubjectId.HasValue Then query = query.Where(Function(x) x.col_s_Id = criteria.SubjectId)
+            If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.col_comp_Id = criteria.CompanyId)
+            If criteria.BankId.HasValue Then query = query.Where(Function(x) x.col_bank_Id = criteria.BankId)
+            If criteria.CusId <> 0 Then query = query.Where(Function(x) x.col_cus_Id = criteria.CusId)
+            If Not String.IsNullOrEmpty(criteria.Type) Then query = query.Where(Function(x) x.col_Type = criteria.Type)
+            If Not String.IsNullOrEmpty(criteria.Cheque) Then query = query.Where(Function(x) x.col_Cheque = criteria.Cheque)
 
-    Public Sub Edit(col As collection, che As cheque) Implements ICollectionRep.Edit
-        Using db As New gas_accounting_systemEntities
-            Using transaction = db.Database.BeginTransaction
-                Try
-                    '更新支票
-                    If che IsNot Nothing Then
-                        Dim exChe = db.cheques.First(Function(x) x.che_Number = col.col_Cheque)
-                        che.che_Id = exChe.che_Id
-                        db.Entry(exChe).CurrentValues.SetValues(che)
-                    End If
-
-                    db.SaveChanges()
-                    transaction.Commit()
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Throw
-                End Try
-            End Using
-        End Using
-    End Sub
-
-    Public Sub UpdateCheque(colId As Integer) Implements ICollectionRep.UpdateCheque
-        Using db As New gas_accounting_systemEntities
-            Using transaction = db.Database.BeginTransaction
-                Try
-                    Dim col = db.collections.Find(colId)
-                    Dim che = db.cheques.FirstOrDefault(Function(x) x.che_Number = col.col_Cheque)
-                    che.chu_State = "已兌現"
-                    che.che_CashingDate = Now.Date
-
-                    db.SaveChanges()
-                    transaction.Commit()
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Throw
-                End Try
-            End Using
-        End Using
-    End Sub
+            Return query.OrderByDescending(Function(x) x.col_Date).
+                         ThenByDescending(Function(x) x.col_Id).ToList.
+                         Select(Function(x) New CollectionVM(x)).ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 
     Public Async Function GetByBankAndMonthAsync(bankId As Integer, month As Date) As Task(Of IEnumerable(Of collection)) Implements ICollectionRep.GetByBankAndMonthAsync
         Try
-            Return Await _dbSet.AsNoTracking.Where(Function(x) x.col_AccountMonth = month AndAlso x.col_bank_Id = bankId).ToListAsync
+            Return Await _dbSet.AsNoTracking.Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso x.col_AccountMonth.Month = month.Month AndAlso x.col_bank_Id = bankId).
+                                             ToListAsync
         Catch ex As Exception
             Throw
         End Try

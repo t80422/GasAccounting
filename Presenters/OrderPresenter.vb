@@ -17,6 +17,7 @@ Public Class OrderPresenter
     Private ReadOnly _ordRep As IOrderRep
     Private ReadOnly _service As IBarrelMonthlyBalanceService
     Private ReadOnly _priceCalSer As IPriceCalculationService
+    Private ReadOnly _aeSer As IAccountingEntryService
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -25,7 +26,7 @@ Public Class OrderPresenter
     Public CurrentCarOut As car
 
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
-                   priceCalSer As IPriceCalculationService)
+                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
@@ -33,6 +34,7 @@ Public Class OrderPresenter
         _gbRep = gbRep
         _service = barMBService
         _priceCalSer = priceCalSer
+        _aeSer = aeSer
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -250,7 +252,7 @@ Public Class OrderPresenter
 
                 _view.GetCusStkInput(currentCustomer)
 
-                If orderInput.o_delivery_type = "自運" Then
+                If orderInput.o_delivery_type = "廠運" Then
                     If orderInput.o_in_out = "進場單" Then
                         _view.GetCarStkInput(CurrentCarIn)
                     Else
@@ -259,6 +261,28 @@ Public Class OrderPresenter
                 End If
 
                 Await _service.UpdateOrAddAsync(orderInput.o_date)
+
+                Dim entries = New List(Of accounting_entry) From {
+                    New accounting_entry With {
+                        .ae_TransactionId = orderInput.o_id,
+                        .ae_Date = Now,
+                        .ae_TransactionType = "銷售管理",
+                        .ae_s_Id = 8,
+                        .ae_Debit = 0,
+                        .ae_Credit = orderInput.o_total_amount
+                    },
+                    New accounting_entry With {
+                        .ae_TransactionId = orderInput.o_id,
+                        .ae_Date = Now,
+                        .ae_TransactionType = "銷售管理",
+                        .ae_s_Id = 9,
+                        .ae_Debit = orderInput.o_total_amount,
+                        .ae_Credit = 0
+                    }
+                }
+
+                _aeSer.AddEntries(entries)
+
                 Await _cusRep.SaveChangesAsync
 
                 transaction.Commit()
@@ -308,7 +332,7 @@ Public Class OrderPresenter
                 UpdateCustomerStock(currentOrder, currentCustomer)
 
                 ' 更新車輛庫存
-                If currentOrder.o_delivery_type = "自運" Then
+                If currentOrder.o_delivery_type = "廠運" Then
                     If currentOrder.o_in_out = "進場單" Then
                         UpdateCarStock(currentOrder, CurrentCarIn, True)
                     Else
@@ -320,6 +344,8 @@ Public Class OrderPresenter
                 Await _ordRep.DeleteAsync(currentOrder.o_id)
 
                 Await _service.UpdateOrAddAsync(currentOrder.o_date)
+
+                _aeSer.DeleteEntries("銷售管理", currentOrder.o_id)
 
                 ' 保存更改
                 Await _ordRep.SaveChangesAsync()
@@ -447,7 +473,7 @@ Public Class OrderPresenter
 
                 _view.GetCusStkInput(currentCustomer)
 
-                If orderInput.o_delivery_type = "自運" Then
+                If orderInput.o_delivery_type = "廠運" Then
                     If orderInput.o_in_out = "進場單" Then
                         _view.GetCarStkInput(CurrentCarIn)
                     Else
@@ -456,6 +482,28 @@ Public Class OrderPresenter
                 End If
 
                 Await _service.UpdateOrAddAsync(orderInput.o_date)
+
+                Dim entries = New List(Of accounting_entry) From {
+                    New accounting_entry With {
+                        .ae_TransactionId = orderInput.o_id,
+                        .ae_Date = orderInput.o_date,
+                        .ae_TransactionType = "銷售管理",
+                        .ae_s_Id = 8,
+                        .ae_Debit = 0,
+                        .ae_Credit = orderInput.o_total_amount
+                    },
+                    New accounting_entry With {
+                        .ae_TransactionId = orderInput.o_id,
+                        .ae_Date = orderInput.o_date,
+                        .ae_TransactionType = "銷售管理",
+                        .ae_s_Id = 9,
+                        .ae_Debit = orderInput.o_total_amount,
+                        .ae_Credit = 0
+                    }
+                }
+
+                _aeSer.UpdateEntries(entries)
+
                 Await _cusRep.SaveChangesAsync
 
                 transaction.Commit()
@@ -468,6 +516,64 @@ Public Class OrderPresenter
                 MsgBox(ex.Message)
             End Try
         End Using
+    End Sub
+
+    Public Async Sub PrintCusStk()
+        Try
+            '取得資料
+            Dim customers = Await _cusRep.GetAllAsync()
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "客戶鋼瓶結存總冊範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+                    .WriteToCell(3, 9, $"印表日期:{Now:yyyy/MM/dd}")
+
+                    Dim rowIndex = 5
+                    Dim totalSum As Integer
+
+                    For Each cus In customers
+                        Dim totalBarrel = cus.cus_gas_50 + cus.cus_gas_20 + cus.cus_gas_16 + cus.cus_gas_10 + cus.cus_gas_4 + cus.cus_gas_18 + cus.cus_gas_14 + cus.cus_gas_5 + cus.cus_gas_2
+                        .WriteToCell(rowIndex, 1, cus.cus_code)
+                        .WriteToCell(rowIndex, 2, cus.cus_name)
+                        .WriteToCell(rowIndex, 3, cus.cus_gas_50)
+                        .WriteToCell(rowIndex, 4, cus.cus_gas_20)
+                        .WriteToCell(rowIndex, 5, cus.cus_gas_16)
+                        .WriteToCell(rowIndex, 6, cus.cus_gas_10)
+                        .WriteToCell(rowIndex, 7, cus.cus_gas_4)
+                        .WriteToCell(rowIndex, 8, cus.cus_gas_18)
+                        .WriteToCell(rowIndex, 9, cus.cus_gas_14)
+                        .WriteToCell(rowIndex, 10, cus.cus_gas_5)
+                        .WriteToCell(rowIndex, 11, cus.cus_gas_2)
+                        .WriteToCell(rowIndex, 12, totalBarrel)
+                        rowIndex += 1
+                        totalSum += totalBarrel
+                    Next
+
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+                    .WriteToCell(rowIndex, 2, "合計")
+                    .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50))
+                    .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20))
+                    .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16))
+                    .WriteToCell(rowIndex, 6, customers.Sum(Function(x) x.cus_gas_10))
+                    .WriteToCell(rowIndex, 7, customers.Sum(Function(x) x.cus_gas_4))
+                    .WriteToCell(rowIndex, 8, customers.Sum(Function(x) x.cus_gas_18))
+                    .WriteToCell(rowIndex, 9, customers.Sum(Function(x) x.cus_gas_14))
+                    .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5))
+                    .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2))
+                    .WriteToCell(rowIndex, 12, totalSum)
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶鋼瓶結存總冊.xlsx")
+                    .SaveAs(exportFilePath)
+                End With
+            End Using
+        Catch ex As Exception
+            Console.WriteLine(ex.StackTrace)
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     ''' <summary>

@@ -19,7 +19,6 @@ Partial Public Class company
     Public Property comp_GasStock As Single
     Public Property comp_Phone As String
 
-    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property customers As ICollection(Of customer) = New HashSet(Of customer)
     Public Overridable Property gas_monthly_balances As ICollection(Of gas_monthly_balances) = New HashSet(Of gas_monthly_balances)
     Public Overridable Property invoice_split As ICollection(Of invoice_split) = New HashSet(Of invoice_split)
@@ -27,5 +26,6 @@ Partial Public Class company
     Public Overridable Property purchase_barrel As ICollection(Of purchase_barrel) = New HashSet(Of purchase_barrel)
     Public Overridable Property stocks As ICollection(Of stock) = New HashSet(Of stock)
     Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
+    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
 
 End Class

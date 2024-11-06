@@ -162,7 +162,7 @@
         Return result
     End Function
 
-    Public Function DailyCustomerReceivable(d As Date, cusCode As Integer) As List(Of DailyCustomerReceivable) Implements IReportRep.DailyCustomerReceivable
+    Public Function DailyCustomerReceivable(d As Date, cusCode As String) As List(Of DailyCustomerReceivable) Implements IReportRep.DailyCustomerReceivable
         Dim result As New List(Of DailyCustomerReceivable)
 
         Try
@@ -176,7 +176,6 @@
 
                 If cus Is Nothing Then
                     Throw New Exception("查無此客戶代號")
-
                 End If
 
                 Dim cusName = cus.cus_name
@@ -423,15 +422,15 @@
 
             Dim depositList = _context.cars.Where(Function(x) x.c_cus_id = cusId).
                                             Select(Function(x) New CustomerGasCylinderInventory.DepositList With {
-                                                .Barrel_10KG = x.c_deposit_10,
-                                                .Barrel_14KG = x.c_deposit_14,
-                                                .Barrel_18KG = x.c_deposit_18,
-                                                .Barrel_16KG = x.c_deposit_16,
-                                                .Barrel_20KG = x.c_deposit_20,
-                                                .Barrel_2KG = x.c_deposit_2,
-                                                .Barrel_4KG = x.c_deposit_4,
-                                                .Barrel_50KG = x.c_deposit_50,
-                                                .Barrel_5KG = x.c_deposit_5,
+                                                .瓦斯瓶10Kg = x.c_deposit_10,
+                                                .瓦斯瓶14Kg = x.c_deposit_14,
+                                                .瓦斯瓶18Kg = x.c_deposit_18,
+                                                .瓦斯瓶16Kg = x.c_deposit_16,
+                                                .瓦斯瓶20Kg = x.c_deposit_20,
+                                                .瓦斯瓶2Kg = x.c_deposit_2,
+                                                .瓦斯瓶4Kg = x.c_deposit_4,
+                                                .瓦斯瓶50Kg = x.c_deposit_50,
+                                                .瓦斯瓶5Kg = x.c_deposit_5,
                                                 .CarNo = x.c_no,
                                                 .DriverName = x.c_driver
                                              }).ToList

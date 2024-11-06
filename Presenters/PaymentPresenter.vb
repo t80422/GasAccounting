@@ -67,68 +67,9 @@
                 Dim payment = _view.GetUserInput
                 Await _paymentRep.AddAsync(payment)
 
-                Dim entries = New List(Of accounting_entry)
+                If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_AccountMonth)
 
-                Select Case payment.p_Type
-                    Case "現金"
-                        entries.Add(New accounting_entry With {
-                            .ae_TransactionId = payment.p_Id,
-                            .ae_Date = payment.p_Date,
-                            .ae_TransactionType = "付款作業",
-                            .ae_s_Id = payment.p_s_Id,
-                            .ae_Debit = payment.p_Amount,
-                            .ae_Credit = 0
-                        })
-
-                        entries.Add(New accounting_entry With {
-                            .ae_TransactionId = payment.p_Id,
-                            .ae_Date = payment.p_Date,
-                            .ae_TransactionType = "付款作業",
-                            .ae_s_Id = 5,
-                            .ae_Debit = 0,
-                            .ae_Credit = payment.p_Amount
-                        })
-                    Case "銀行"
-                        entries.Add(New accounting_entry With {
-                            .ae_TransactionId = payment.p_Id,
-                            .ae_Date = payment.p_Date,
-                            .ae_TransactionType = "付款作業",
-                            .ae_s_Id = payment.p_s_Id,
-                            .ae_Debit = payment.p_Amount,
-                            .ae_Credit = 0
-                        })
-
-                        entries.Add(New accounting_entry With {
-                            .ae_TransactionId = payment.p_Id,
-                            .ae_Date = payment.p_Date,
-                            .ae_TransactionType = "付款作業",
-                            .ae_s_Id = 6,
-                            .ae_Debit = 0,
-                            .ae_Credit = payment.p_Amount
-                        })
-
-                        Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_AccountMonth)
-
-                    Case "支票"
-                        entries.Add(New accounting_entry With {
-                            .ae_TransactionId = payment.p_Id,
-                            .ae_Date = payment.p_Date,
-                            .ae_TransactionType = "付款作業",
-                            .ae_s_Id = payment.p_s_Id,
-                            .ae_Debit = payment.p_Amount,
-                            .ae_Credit = 0
-                        })
-
-                        entries.Add(New accounting_entry With {
-                            .ae_TransactionId = payment.p_Id,
-                            .ae_Date = payment.p_Date,
-                            .ae_TransactionType = "付款作業",
-                            .ae_s_Id = 7,
-                            .ae_Debit = 0,
-                            .ae_Credit = payment.p_Amount
-                        })
-                End Select
-
+                Dim entries = CreatePaymentEntries(payment)
                 _aeSer.AddEntries(entries)
 
                 transaction.Commit()
@@ -149,9 +90,13 @@
                 Await _paymentRep.UpdateAsync(selectData, payment)
 
                 ' 更新付款記錄
-                If selectData.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(selectData.p_bank_Id, selectData.p_AccountMonth)
                 If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_AccountMonth)
 
+                '更新會計分錄
+                Dim entries = CreatePaymentEntries(payment)
+                _aeSer.UpdateEntries(entries)
+
+                Await _paymentRep.SaveChangesAsync()
                 transaction.Commit()
 
                 Await InitializeAsync()
@@ -182,6 +127,9 @@
 
                 '更新月結餘額
                 If payType = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(bankId, accountMonth)
+
+                _aeSer.DeleteEntries("付款作業", payment.p_Id)
+                Await _paymentRep.SaveChangesAsync()
 
                 transaction.Commit()
 
@@ -238,5 +186,70 @@
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
+    End Function
+
+    Private Function CreatePaymentEntries(payment As payment) As List(Of accounting_entry)
+        Dim entries = New List(Of accounting_entry)
+
+        Select Case payment.p_Type
+            Case "現金"
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = payment.p_Id,
+                    .ae_Date = payment.p_Date,
+                    .ae_TransactionType = "付款作業",
+                    .ae_s_Id = payment.p_s_Id,
+                    .ae_Debit = payment.p_Amount,
+                    .ae_Credit = 0
+                })
+
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = payment.p_Id,
+                    .ae_Date = payment.p_Date,
+                    .ae_TransactionType = "付款作業",
+                    .ae_s_Id = 5,
+                    .ae_Debit = 0,
+                    .ae_Credit = payment.p_Amount
+                })
+
+            Case "銀行"
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = payment.p_Id,
+                    .ae_Date = payment.p_Date,
+                    .ae_TransactionType = "付款作業",
+                    .ae_s_Id = payment.p_s_Id,
+                    .ae_Debit = payment.p_Amount,
+                    .ae_Credit = 0
+                })
+
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = payment.p_Id,
+                    .ae_Date = payment.p_Date,
+                    .ae_TransactionType = "付款作業",
+                    .ae_s_Id = 6,
+                    .ae_Debit = 0,
+                    .ae_Credit = payment.p_Amount
+                })
+
+            Case "支票"
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = payment.p_Id,
+                    .ae_Date = payment.p_Date,
+                    .ae_TransactionType = "付款作業",
+                    .ae_s_Id = payment.p_s_Id,
+                    .ae_Debit = payment.p_Amount,
+                    .ae_Credit = 0
+                })
+
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = payment.p_Id,
+                    .ae_Date = payment.p_Date,
+                    .ae_TransactionType = "付款作業",
+                    .ae_s_Id = 7,
+                    .ae_Debit = 0,
+                    .ae_Credit = payment.p_Amount
+                })
+        End Select
+
+        Return entries
     End Function
 End Class

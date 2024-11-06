@@ -29,7 +29,6 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property basic_price() As DbSet(Of basic_price)
     Public Overridable Property cars() As DbSet(Of car)
     Public Overridable Property cheques() As DbSet(Of cheque)
-    Public Overridable Property collections() As DbSet(Of collection)
     Public Overridable Property companies() As DbSet(Of company)
     Public Overridable Property customers() As DbSet(Of customer)
     Public Overridable Property employees() As DbSet(Of employee)
@@ -48,5 +47,6 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property stocks() As DbSet(Of stock)
     Public Overridable Property subjects() As DbSet(Of subject)
     Public Overridable Property purchases() As DbSet(Of purchase)
+    Public Overridable Property collections() As DbSet(Of collection)
 
 End Class

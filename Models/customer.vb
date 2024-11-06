@@ -49,10 +49,10 @@ Partial Public Class customer
     Public Property cus_InvoiceMemo As String
 
     Public Overridable Property cars As ICollection(Of car) = New HashSet(Of car)
-    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property company As company
     Public Overridable Property priceplan As priceplan
     Public Overridable Property invoices As ICollection(Of invoice) = New HashSet(Of invoice)
     Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
+    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
 
 End Class

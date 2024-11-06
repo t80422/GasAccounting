@@ -196,7 +196,7 @@ Public Class ReportPresenter
     ''' </summary>
     ''' <param name="d"></param>
     ''' <param name="cusCode"></param>
-    Public Sub GenerateDailyCustomerReceivable(d As Date, cusCode As Integer)
+    Public Sub GenerateDailyCustomerReceivable(d As Date, cusCode As String)
         Try
             '蒐集資料
             Dim datas = _rep.DailyCustomerReceivable(d, cusCode)
@@ -412,16 +412,16 @@ Public Class ReportPresenter
                     For Each bankAccount In data.List
                         .WriteToCell(rowIndex, 1, bankAccount.CarNo)
                         .WriteToCell(rowIndex, 2, bankAccount.DriverName)
-                        .WriteToCell(rowIndex, 3, bankAccount.Barrel_50KG)
-                        .WriteToCell(rowIndex, 4, bankAccount.Barrel_20KG)
-                        .WriteToCell(rowIndex, 5, bankAccount.Barrel_16KG)
-                        .WriteToCell(rowIndex, 6, bankAccount.Barrel_10KG)
-                        .WriteToCell(rowIndex, 7, bankAccount.Barrel_4KG)
-                        .WriteToCell(rowIndex, 8, bankAccount.Barrel_18KG)
-                        .WriteToCell(rowIndex, 9, bankAccount.Barrel_14KG)
-                        .WriteToCell(rowIndex, 10, bankAccount.Barrel_5KG)
-                        .WriteToCell(rowIndex, 11, bankAccount.Barrel_2KG)
-                        .SetBottomBorder(rowIndex, 1, rowIndex, 11)
+                        .WriteToCell(rowIndex, 3, bankAccount.瓦斯瓶50Kg)
+                        .WriteToCell(rowIndex, 4, bankAccount.瓦斯瓶20Kg)
+                        .WriteToCell(rowIndex, 5, bankAccount.瓦斯瓶16Kg)
+                        .WriteToCell(rowIndex, 6, bankAccount.瓦斯瓶10Kg)
+                        .WriteToCell(rowIndex, 7, bankAccount.瓦斯瓶4Kg)
+                        .WriteToCell(rowIndex, 8, bankAccount.瓦斯瓶18Kg)
+                        .WriteToCell(rowIndex, 9, bankAccount.瓦斯瓶14Kg)
+                        .WriteToCell(rowIndex, 10, bankAccount.瓦斯瓶5Kg)
+                        .WriteToCell(rowIndex, 11, bankAccount.瓦斯瓶2Kg)
+                        .SetCustomBorders(rowIndex, 1, rowIndex, 11, bottomStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
                         rowIndex += 1
                     Next
 

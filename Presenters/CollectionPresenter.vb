@@ -1,182 +1,173 @@
 ﻿Public Class CollectionPresenter
     Private _view As ICollectionView
     Private ReadOnly _subjectRep As ISubjectRep
-    Private _companyService As CompanyService
     Private ReadOnly _colRep As ICollectionRep
     Private ReadOnly _bankRep As IBankRep
     Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _chequeRep As IChequeRep
+    Private ReadOnly _aeSer As IAccountingEntryService
+    Private ReadOnly _compRep As ICompanyRep
+    Private _currentData As collection
 
-    Public Sub New(view As ICollectionView, subjectRep As ISubjectRep, companyService As CompanyService, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
-                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep)
+    Public Sub New(view As ICollectionView, subjectRep As ISubjectRep, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
+                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, compRep As ICompanyRep)
         _view = view
         _subjectRep = subjectRep
-        _companyService = companyService
         _colRep = colRep
         _bankRep = bankRep
         _cusRep = cusRep
         _bmbService = bmbService
         _chequeRep = chequeRep
+        _aeSer = aeSer
+        _compRep = compRep
     End Sub
 
-    ''' <summary>
-    ''' 取得列表
-    ''' </summary>
-    ''' <param name="conditions"></param>
-    Public Sub LoadList(Optional conditions As Object = Nothing)
+    Public Sub Initialize()
         Try
-            Using db As New gas_accounting_systemEntities
-                Dim query = db.collections.AsNoTracking.AsQueryable
-
-                If conditions IsNot Nothing Then
-                    query = SetSearchConditions(query, conditions)
-                End If
-
-                _view.ShowList(SetListViewModel(query))
-            End Using
-
+            _view.ClearInput()
+            LoadCmbsAsync()
+            LoadList()
+            _currentData = Nothing
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
 
-    ''' <summary>
-    ''' 取得選取的資料
-    ''' </summary>
-    ''' <param name="id"></param>
-    Public Sub SelectRow(id As Integer)
-        Try
-            Using db As New gas_accounting_systemEntities
-                Dim data = db.collections.Find(id)
-                If data IsNot Nothing Then
-                    Dim che = db.cheques.FirstOrDefault(Function(x) x.che_Number = data.col_Cheque)
-                    _view.ClearInput()
-                    _view.SetDataToControl(data, che)
-                End If
-            End Using
+    Private Async Sub LoadCmbsAsync()
+        _view.SetBankCmb(Await _bankRep.GetBankDropdownAsync)
+        _view.SetCompanyCmb(Await _compRep.GetCompanyDropdownAsync)
+        _view.SetSubjectCmb(Await _subjectRep.GetSubjectDropdownAsync)
+    End Sub
 
+    Public Sub LoadList()
+        Try
+            Dim datas = _colRep.Search(_view.GetSearchCriteria)
+            _view.DisplayList(datas)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Sub
-
-    ''' <summary>
-    ''' 取得科目選單
-    ''' </summary>
-    Public Async Sub GetSubjectsCmbAsync()
-        Try
-            Dim subjects = Await _subjectRep.GetSubjectDropdownAsync
-            _view.SetSubjectsCmb(subjects)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    ''' <summary>
-    ''' 取得銀行選單
-    ''' </summary>
-    Public Async Sub LoadBankList()
-        Dim banks = Await _bankRep.GetBankDropdownAsync
-        _view.SetBankCmb(banks)
-    End Sub
-
-    ''' <summary>
-    ''' 取得公司選單
-    ''' </summary>
-    Public Sub GetCompanyCmb()
-        _view.ICollectionView_SetCompanyCmb(_companyService.GetCompanyComboBoxData)
-    End Sub
-
-    Public Sub Query()
-        LoadList(_view.GetQueryConditions)
     End Sub
 
     Public Async Sub Add()
-        Dim ord = _view.GetUserInput
+        Using transaction = _colRep.BeginTransaction
+            Try
+                Dim input = _view.GetUserInput
+                Validate(input)
+                Dim col = Await _colRep.AddAsync(input)
 
-        If ord IsNot Nothing Then
-            Dim cheque As cheque = If(ord.col_Type = "支票", _view.GetChequeDatas, Nothing)
+                Select Case input.col_Type
+                    Case "支票"
+                        Dim cheInput = _view.GetChequeInput
+                        Validate(cheInput)
+                        cheInput.che_col_Id = col.col_Id
+                        Await _chequeRep.AddAsync(cheInput)
+                    Case "銀行"
+                        Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
+                End Select
 
-            If cheque IsNot Nothing Then cheque.che_col_Id = ord.col_Id
+                Dim entries = CreatePaymentEntries(input)
+                _aeSer.AddEntries(entries)
 
-            Using transaction = _colRep.BeginTransaction
-                Try
-                    _colRep.Add(ord, cheque)
+                Await _colRep.SaveChangesAsync
 
-                    If ord.col_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(ord.col_bank_Id, ord.col_AccountMonth)
+                transaction.Commit()
+                Initialize()
+                MsgBox("新增成功")
+            Catch ex As Exception
+                transaction.Rollback()
+                Console.WriteLine(ex.StackTrace)
+                MsgBox(ex.Message)
+            End Try
+        End Using
+    End Sub
 
-                    transaction.Commit()
-                    _view.Reset()
-                    MsgBox("新增成功")
-                Catch ex As Exception
-                    transaction.Rollback()
-                    MsgBox(ex.Message)
-                End Try
-            End Using
-        End If
+    Public Async Sub LoadDetail(id As Integer)
+        Try
+            Dim data = Await _colRep.GetByIdAsync(id)
+            _currentData = data
+            _view.ClearInput()
+            _view.DisplayDetail(data)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     Public Async Sub Edit()
-        Dim col = _view.GetUserInput
+        Using transaction = _colRep.BeginTransaction
+            Try
+                Dim col = _view.GetUserInput
+                Await _colRep.UpdateAsync(_currentData, col)
 
-        If col IsNot Nothing Then
-            Dim cheque As cheque = If(col.col_Type = "支票", _view.GetChequeDatas, Nothing)
-            cheque.che_col_Id = col.col_Id
+                Select Case col.col_Type
+                    Case "現金"
+                        If _currentData.col_Type = "銀行" Then
+                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+                        ElseIf _currentData.col_Type = "支票" Then
+                            Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+                            Await _chequeRep.DeleteAsync(cheque.che_Id)
+                        End If
+                    Case "銀行"
+                        Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
+                        Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, _currentData.col_AccountMonth)
 
-            Using transaction = _colRep.BeginTransaction
-                Try
+                        If _currentData.col_bank_Id.HasValue Then
+                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, col.col_AccountMonth)
+                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+                        End If
 
-                    Dim orgCollection = Await _colRep.GetByIdAsync(col.col_Id)
-                    Dim orgAccountMonth = orgCollection.col_AccountMonth
+                        If _currentData.col_Type = "支票" Then
+                            Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+                            Await _chequeRep.DeleteAsync(cheque.che_Id)
+                        End If
+                    Case "支票"
+                        Dim cheque = _view.GetChequeInput
 
-                    _colRep.Edit(col, cheque)
-                    Dim bankId = orgCollection.col_bank_Id
-                    Dim updatedCollection = Await _colRep.GetByIdAsync(col.col_Id)
+                        If _currentData.col_Type = "支票" Then
+                            Dim orgCheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+                            cheque.che_Id = orgCheque.che_Id
+                            Await _chequeRep.UpdateAsync(orgCheque, cheque)
+                        ElseIf _currentData.col_Type = "現金" Then
+                            Await _chequeRep.AddAsync(cheque)
+                        ElseIf _currentData.col_Type = "銀行" Then
+                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+                        End If
+                End Select
 
-                    '處理銀行月結餘額
-                    If bankId IsNot Nothing Then
-                        '如果修改帳款月份,就更新原始月份的借、貸總額
-                        If orgAccountMonth <> updatedCollection.col_AccountMonth Then Await _bmbService.UpdateMonthBalanceAsync(bankId, orgAccountMonth)
+                Dim entries = CreatePaymentEntries(col)
+                _aeSer.UpdateEntries(entries)
 
-                        Await _bmbService.UpdateMonthBalanceAsync(bankId, updatedCollection.col_AccountMonth)
-                    End If
-
-                    transaction.Commit()
-                    _view.Reset()
-                    MsgBox("修改成功")
-
-                Catch ex As Exception
-                    transaction.Rollback()
-                    MsgBox(ex.Message)
-                End Try
-            End Using
-        End If
+                Await _colRep.SaveChangesAsync
+                transaction.Commit()
+                Initialize()
+                MsgBox("修改成功")
+            Catch ex As Exception
+                transaction.Rollback()
+                MsgBox(ex.Message)
+            End Try
+        End Using
     End Sub
 
-    Public Async Sub DeleteAsync(id As Integer)
+    Public Async Sub DeleteAsync()
         If MsgBox("確定要刪除?", vbYesNo, "警告") = MsgBoxResult.No Then Exit Sub
         Using transaction = _colRep.BeginTransaction
             Try
-                Dim collection = Await _colRep.GetByIdAsync(id)
-                Dim payType = collection.col_Type
-                Dim bankId = collection.col_bank_Id
-                Dim accountMonth = collection.col_AccountMonth
-
-                '刪除支票
-                If payType = "支票" Then
-                    Dim cheque = Await _chequeRep.GetByNumberAsync(collection.col_Cheque)
-                    Await _chequeRep.DeleteAsync(cheque.che_Id)
-                End If
+                Dim payType = _currentData.col_Type
 
                 '刪除資料
-                Await _colRep.DeleteAsync(id)
+                Await _colRep.DeleteAsync(_currentData)
 
-                '更新月結餘額
-                If payType = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(bankId, accountMonth)
+                If payType = "支票" Then
+                    Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+                    Await _chequeRep.DeleteAsync(cheque.che_Id)
+                ElseIf payType = "銀行" Then
+                    Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+                End If
+
+                _aeSer.DeleteEntries("收款作業", _currentData.col_Id)
 
                 transaction.Commit()
-                _view.Reset()
+                Initialize()
                 MsgBox("刪除成功")
             Catch ex As Exception
                 transaction.Rollback()
@@ -185,45 +176,105 @@
         End Using
     End Sub
 
-    Public Sub UpdateCheque(colId As Integer)
+    Public Async Sub UpdateCheque()
         Try
-            _colRep.UpdateCheque(colId)
-            _view.Reset()
+            If _currentData Is Nothing Then Return
+
+            Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+            cheque.che_CashingDate = Now
+            cheque.chu_State = "已兌現"
+            Await _chequeRep.SaveChangesAsync()
+            Initialize()
             MsgBox("兌現成功")
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
 
+    Private Sub Validate(data As collection)
+        If data.col_Amount = 0 Then Throw New Exception("請輸入金額")
+        If data.col_s_Id Is Nothing Then Throw New Exception("請選擇科目")
+        If data.col_comp_Id Is Nothing Then Throw New Exception("請選擇公司")
+        If data.col_cus_Id = 0 Then Throw New Exception("請輸入客戶")
+        If String.IsNullOrEmpty(data.col_Type) Then Throw New Exception("請選擇收款類型")
+        If data.col_Type = "銀行" Then
+            If data.col_bank_Id Is Nothing Then Throw New Exception("請選擇銀行")
+        ElseIf data.col_Type = "支票" Then
+            If String.IsNullOrEmpty(data.col_Cheque) Then Throw New Exception("請輸入支票號碼")
+        End If
+    End Sub
+
+    Private Sub Validate(data As cheque)
+        If String.IsNullOrEmpty(data.che_IssuerName) Then Throw New Exception("請輸入發票人")
+        If String.IsNullOrEmpty(data.che_AccountNumber) Then Throw New Exception("請輸入支票銀行帳號")
+    End Sub
+
     Public Function GetCustomer(cusCode As String) As customer
         Return _cusRep.GetByCusCode(cusCode)
     End Function
 
-    Private Function SetSearchConditions(query As IQueryable(Of collection), conditions As CollectionQueryVM) As IQueryable(Of collection)
-        conditions.EndDate = conditions.EndDate.AddDays(1).AddSeconds(-1)
-        query = query.Where(Function(x) x.col_Date >= conditions.StartDate AndAlso x.col_Date <= conditions.EndDate)
+    Private Function CreatePaymentEntries(data As collection) As List(Of accounting_entry)
+        Dim entries = New List(Of accounting_entry)
 
-        If conditions.Cheque <> "" Then query = query.Where(Function(x) x.col_Cheque = conditions.Cheque)
-        If conditions.CusId <> 0 Then query = query.Where(Function(x) x.col_cus_Id = conditions.CusId)
-        If conditions.Subjects <> 0 Then query = query.Where(Function(x) x.col_s_Id = conditions.Subjects)
-        If conditions.Type <> "" Then query = query.Where(Function(x) x.col_Type = conditions.Type)
+        Select Case data.col_Type
+            Case "現金"
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = data.col_Id,
+                    .ae_Date = data.col_Date,
+                    .ae_TransactionType = "收款作業",
+                    .ae_s_Id = data.col_s_Id,
+                    .ae_Debit = 0,
+                    .ae_Credit = data.col_Amount
+                })
 
-        Return query
-    End Function
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = data.col_Id,
+                    .ae_Date = data.col_Date,
+                    .ae_TransactionType = "收款作業",
+                    .ae_s_Id = 10,
+                    .ae_Debit = data.col_Amount,
+                    .ae_Credit = 0
+                })
 
-    Private Function SetListViewModel(query As IQueryable(Of collection)) As List(Of CollectionVM)
-        Dim collections = query.ToList
+            Case "銀行"
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = data.col_Id,
+                    .ae_Date = data.col_Date,
+                    .ae_TransactionType = "收款作業",
+                    .ae_s_Id = data.col_s_Id,
+                    .ae_Debit = 0,
+                    .ae_Credit = data.col_Amount
+                })
 
-        Return collections.Select(Function(x) New CollectionVM With {
-            .備註 = x.col_Memo,
-            .客戶名稱 = x.customer.cus_name,
-            .帳款月份 = x.col_AccountMonth.ToString("yyyy年MM月"),
-            .支票號碼 = x.col_Cheque,
-            .收款類型 = x.col_Type,
-            .日期 = x.col_Date,
-            .科目 = x.subject.s_name,
-            .編號 = x.col_Id,
-            .金額 = x.col_Amount
-        }).ToList
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = data.col_Id,
+                    .ae_Date = data.col_Date,
+                    .ae_TransactionType = "收款作業",
+                    .ae_s_Id = 11,
+                    .ae_Debit = data.col_Amount,
+                    .ae_Credit = 0
+                })
+
+            Case "支票"
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = data.col_Id,
+                    .ae_Date = data.col_Date,
+                    .ae_TransactionType = "收款作業",
+                    .ae_s_Id = data.col_s_Id,
+                    .ae_Debit = 0,
+                    .ae_Credit = data.col_Amount
+                })
+
+                entries.Add(New accounting_entry With {
+                    .ae_TransactionId = data.col_Id,
+                    .ae_Date = data.col_Date,
+                    .ae_TransactionType = "收款作業",
+                    .ae_s_Id = 12,
+                    .ae_Debit = data.col_Amount,
+                    .ae_Credit = 0
+                })
+        End Select
+
+        Return entries
     End Function
 End Class
