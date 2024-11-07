@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports ClosedXML.Excel
 
 Public Class ReportPresenter
     Private ReadOnly _view As IReportView
@@ -6,12 +7,14 @@ Public Class ReportPresenter
     Private _manuRep As IManufacturerService = New ManufacturerService
     Private ReadOnly _bankRep As IBankRep
     Private ReadOnly _compRep As ICompanyRep
+    Private ReadOnly _printerSer As IPrinterService
 
-    Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep)
+    Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService)
         _view = view
         _rep = reportRep
         _bankRep = bankRep
         _compRep = compRep
+        _printerSer = printerSer
     End Sub
 
     ''' <summary>
@@ -48,7 +51,7 @@ Public Class ReportPresenter
 
                     Next
 
-                    .SetBottomBorder(rowIndex, 1, rowIndex, 7)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 7, bottomStyle:=XLBorderStyleValues.Thin)
 
                     rowIndex += 1
 
@@ -63,6 +66,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "日氣量氣款收付明細表.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -121,6 +128,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶提氣清冊.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -168,7 +179,7 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 10, If(datas(i).餘額 <> Nothing, datas(i).餘額, ""))
                         .WriteToCell(rowIndex, 11, If(datas(i).累計 <> Nothing, datas(i).累計, ""))
                     Next
-                    .SetBottomBorder(rowIndex, 1, rowIndex, 11)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 11, XLBorderStyleValues.Thin)
 
                     rowIndex += 1
                     .WriteToCell(rowIndex, 2, "總計:")
@@ -184,6 +195,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "大氣進貨明細.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -249,6 +264,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "單一客戶每日的應收帳明細表.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -298,6 +317,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "提量支數統計.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -334,6 +357,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "現金帳.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -381,6 +408,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "銀行帳.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -427,6 +458,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶寄桶結存瓶.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -641,6 +676,10 @@ Public Class ReportPresenter
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "新桶明細.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -697,6 +736,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "應收票據.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -747,6 +790,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "發票.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -808,10 +855,13 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 5, totalNotCollect)
                     .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Discount))
 
-
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "月應收帳明細.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -885,6 +935,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "進銷存明細表.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -921,6 +975,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "應付票據.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -961,7 +1019,7 @@ Public Class ReportPresenter
                         rowIndex += 1
                     Next
 
-                    .SetBottomBorder(rowIndex - 1, 1, rowIndex - 1, 8)
+                    .SetCustomBorders(rowIndex - 1, 1, rowIndex - 1, 8, XLBorderStyleValues.Thin)
                     .WriteToCell(rowIndex, 4, "合計")
                     .WriteToCell(rowIndex, 5, data.List.Sum(Function(x) x.Quantity))
                     .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Tax))
@@ -970,6 +1028,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "財稅.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -1049,6 +1111,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "能源局.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -1154,6 +1220,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "月對帳單.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -1201,6 +1271,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "保險.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -1265,6 +1339,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "損益表.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -1414,6 +1492,10 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "進項銷項.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '列印
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception

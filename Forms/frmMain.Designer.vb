@@ -6583,7 +6583,7 @@ Partial Class frmMain
         '
         Me.btnCusGetGasList.AutoSize = True
         Me.btnCusGetGasList.BackColor = System.Drawing.Color.Lime
-        Me.btnCusGetGasList.Location = New System.Drawing.Point(1283, 403)
+        Me.btnCusGetGasList.Location = New System.Drawing.Point(1303, 403)
         Me.btnCusGetGasList.Name = "btnCusGetGasList"
         Me.btnCusGetGasList.Size = New System.Drawing.Size(189, 44)
         Me.btnCusGetGasList.TabIndex = 475
@@ -6594,7 +6594,7 @@ Partial Class frmMain
         '
         Me.btnCusGasPayCollect.AutoSize = True
         Me.btnCusGasPayCollect.BackColor = System.Drawing.Color.Lime
-        Me.btnCusGasPayCollect.Location = New System.Drawing.Point(1025, 403)
+        Me.btnCusGasPayCollect.Location = New System.Drawing.Point(1035, 403)
         Me.btnCusGasPayCollect.Name = "btnCusGasPayCollect"
         Me.btnCusGasPayCollect.Size = New System.Drawing.Size(252, 44)
         Me.btnCusGasPayCollect.TabIndex = 474
@@ -11352,7 +11352,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.11.3"
+        Me.Text = "豐原瓦斯會計系統 v0.12.0"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)

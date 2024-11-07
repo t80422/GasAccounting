@@ -18,6 +18,7 @@ Public Class OrderPresenter
     Private ReadOnly _service As IBarrelMonthlyBalanceService
     Private ReadOnly _priceCalSer As IPriceCalculationService
     Private ReadOnly _aeSer As IAccountingEntryService
+    Private ReadOnly _printerSer As IPrinterService
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -26,7 +27,7 @@ Public Class OrderPresenter
     Public CurrentCarOut As car
 
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
-                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService)
+                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
@@ -35,6 +36,7 @@ Public Class OrderPresenter
         _service = barMBService
         _priceCalSer = priceCalSer
         _aeSer = aeSer
+        _printerSer = printerSer
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -565,9 +567,14 @@ Public Class OrderPresenter
                     .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5))
                     .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2))
                     .WriteToCell(rowIndex, 12, totalSum)
+
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶鋼瓶結存總冊.xlsx")
                     .SaveAs(exportFilePath)
+
+                    '取得印表機
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(filePath, printerName)
                 End With
             End Using
         Catch ex As Exception

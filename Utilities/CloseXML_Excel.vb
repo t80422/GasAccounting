@@ -151,17 +151,35 @@ Public Class CloseXML_Excel
         End Try
     End Sub
 
-    Public Sub Print(filePath As String)
+    Public Sub Print(filePath As String, printerName As String)
+        Dim app As Application = Nothing
+        Dim workbook As Workbook = Nothing
+
         Try
-            Dim app As New Application
-            Dim workbook = app.Workbooks.Open(filePath)
+            app = New Application With {
+                .DisplayAlerts = False
+            }
 
-            workbook.PrintOutEx()
-            workbook.Close()
-            app.Quit()
+            workbook = app.Workbooks.Open(filePath)
 
+            workbook.PrintOutEx(
+                Preview:=False,
+                ActivePrinter:=printerName
+            )
         Catch ex As Exception
             Throw
+        Finally
+            If workbook IsNot Nothing Then
+                workbook.Close(SaveChanges:=False)
+                Runtime.InteropServices.Marshal.ReleaseComObject(workbook)
+                workbook = Nothing
+            End If
+
+            If app IsNot Nothing Then
+                app.Quit()
+                Runtime.InteropServices.Marshal.ReleaseComObject(app)
+                app = Nothing
+            End If
         End Try
     End Sub
 

@@ -11,9 +11,10 @@ Public Class PurchasePresenter
     Private ReadOnly _subRep As ISubjectRep
     Private ReadOnly _gmbSer As IGasMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
+    Private ReadOnly _printerSer As IPrinterService
 
     Public Sub New(view As IPurchaseView, purRep As IPurchaseRep, compRep As ICompanyRep, manuRep As IManufacturerRep, subRep As ISubjectRep, gmbSer As IGasMonthlyBalanceService,
-                   aeSer As IAccountingEntryService)
+                   aeSer As IAccountingEntryService, printerSer As IPrinterService)
         _view = view
         _purRep = purRep
         _compRep = compRep
@@ -21,6 +22,7 @@ Public Class PurchasePresenter
         _subRep = subRep
         _gmbSer = gmbSer
         _aeSer = aeSer
+        _printerSer = printerSer
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -232,7 +234,10 @@ Public Class PurchasePresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "大氣採購.xlsx")
                     .SaveAs(exportFilePath)
-                    .Print(exportFilePath)
+
+                    '取得印表機
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception

@@ -3,10 +3,12 @@
 Public Class ChequePresenter
     Private ReadOnly _view As ICheque
     Private ReadOnly _cheRep As IChequeRep
+    Private ReadOnly _printerSer As IPrinterService
 
-    Public Sub New(view As ICheque, cheRep As IChequeRep)
+    Public Sub New(view As ICheque, cheRep As IChequeRep, printerSer As IPrinterService)
         _view = view
         _cheRep = cheRep
+        _printerSer = printerSer
     End Sub
 
     ''' <summary>
@@ -115,7 +117,10 @@ Public Class ChequePresenter
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "支票管理.xlsx")
                     .SaveAs(exportFilePath)
-                    .Print(exportFilePath)
+
+                    '取得印表機
+                    Dim printerName = _printerSer.GetOrSelectPrinter
+                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception

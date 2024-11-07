@@ -403,8 +403,8 @@
     <Compile Include="Presenters\CarPresenter.vb" />
     <Compile Include="Presenters\GasBarrelPresenter.vb" />
     <Compile Include="Presenters\GasCheckoutPresenter.vb" />
-    <Compile Include="Services\AccountingEntryService.vb" />
-    <Compile Include="Services\IAccountingEntryService.vb" />
+    <Compile Include="Services\AccountingEntry\AccountingEntryService.vb" />
+    <Compile Include="Services\AccountingEntry\IAccountingEntryService.vb" />
     <Compile Include="Presenters\InvoiceSplitPresenters.vb" />
     <Compile Include="Presenters\InvoicePresenter.vb" />
     <Compile Include="Presenters\PermissionPresenter.vb" />
@@ -462,8 +462,10 @@
     <Compile Include="Services\GasMonthlyBalance\GasMonthlyBalanceService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\IBarrelMonthlyBalanceService.vb" />
     <Compile Include="Services\GasMonthlyBalance\IGasMonthlyBalanceService.vb" />
+    <Compile Include="Services\IPrinterService.vb" />
     <Compile Include="Services\PriceCalculation\IPriceCalculationService.vb" />
     <Compile Include="Services\PriceCalculation\PriceCalculationService.vb" />
+    <Compile Include="Services\PrinterService.vb" />
     <Compile Include="Views\IBaseView.vb" />
     <Compile Include="Views\IBasicPriceView.vb" />
     <Compile Include="Views\ICarView.vb" />

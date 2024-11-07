@@ -104,6 +104,7 @@
         Dim bmbService As IBankMonthlyBalanceService = New BankMonthlyBalanceService(bmbRep, bankRep, paymentRep, colRep)
         Dim priceCalSer As IPriceCalculationService = New PriceCalculationService(bpRep)
         Dim gmbSer As IGasMonthlyBalanceService = New GasMonthlyBalanceService(gmbRep, ordRep, compRep)
+        Dim printerSer As IPrinterService = New PrinterService()
 
         _basicPrice = New BasicPricePresenter(Me, bpRep)
         _car = New CarPresenter(Me, cusRep, carRep)
@@ -112,14 +113,14 @@
         _gasBarrel = New GasBarrelPresenter(Me, gbRep)
         _invoice = New InvoicePresenter(Me, cusRep, invoiceRep, priceCalSer, ordRep)
         _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
-        _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer, aeSer)
+        _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer, aeSer, printerSer)
         _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep, aeSer)
         _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep, aeSer)
-        _report = New ReportPresenter(Me, reportRep, bankRep, compRep)
+        _report = New ReportPresenter(Me, reportRep, bankRep, compRep, printerSer)
         _subjects = New SubjectsPresenter(Me, subjectRep)
-        _cheque = New ChequePresenter(Me, cheRep)
+        _cheque = New ChequePresenter(Me, cheRep, printerSer)
         _permission = New PermissionPresenter(Me, permissionRep)
-        _purchase = New PurchasePresenter(Me, purRep, compRep, manuRep, subjectRep, gmbSer, aeSer)
+        _purchase = New PurchasePresenter(Me, purRep, compRep, manuRep, subjectRep, gmbSer, aeSer, printerSer)
         _gasCheckout = New GasCheckoutPresenter(Me, purRep, manuRep)
     End Sub
 
