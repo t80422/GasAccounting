@@ -1429,12 +1429,16 @@
 
     '銷售管理-氣量氣款收付明細表
     Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
-        _report.GenerateCustomersGasDetailByDay(Now.Date)
+        Using frm As New frmDatePicker
+            If frm.ShowDialog = DialogResult.OK Then _report.GenerateCustomersGasDetailByDay(frm.SelectedDate)
+        End Using
     End Sub
 
     '銷售管理-客戶提氣清冊
     Private Sub btnCusGetGasList_Click(sender As Object, e As EventArgs) Handles btnCusGetGasList.Click
-        _report.GenerateCustomersGetGasList(Now.Date)
+        Using frm As New frmDatePicker
+            If frm.ShowDialog = DialogResult.OK Then _report.GenerateCustomersGetGasList(frm.SelectedDate)
+        End Using
     End Sub
 
     ''' <summary>

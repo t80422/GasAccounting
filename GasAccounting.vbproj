@@ -341,6 +341,12 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\frmDatePicker.Designer.vb">
+      <DependentUpon>frmDatePicker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmDatePicker.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Models\accounting_entry.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -649,6 +655,9 @@
     <Compile Include="Models\ViewModels\UnitPriceHistoryVM.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\frmDatePicker.resx">
+      <DependentUpon>frmDatePicker.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLogin.resx">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </EmbeddedResource>
