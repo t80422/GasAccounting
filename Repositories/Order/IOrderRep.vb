@@ -13,4 +13,6 @@
     Function GetByMonth(month As Date) As List(Of order)
 
     Function GetByMonthAndCompany(month As Date, compId As Integer) As List(Of order)
+
+    Function GetByCusIdAndDate(cusId As Integer, day As Date) As List(Of order)
 End Interface

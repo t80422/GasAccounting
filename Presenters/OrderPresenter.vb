@@ -42,7 +42,7 @@ Public Class OrderPresenter
     Public Async Function InitializeAsync() As Task
         Try
             _view.ClearInput()
-            Await LoadList()
+            Await LoadList(False)
             currentOrder = Nothing
             currentCustomer = Nothing
             CurrentCarIn = Nothing
@@ -53,9 +53,10 @@ Public Class OrderPresenter
         End Try
     End Function
 
-    Public Async Function LoadList() As Task
+    Public Async Function LoadList(isSearch As Boolean) As Task
         Try
-            Dim criteria = _view.GetSearchCriteria()
+            Dim criteria = If(isSearch, _view.GetSearchCriteria(), New OrderSearchCriteria With {.SearchIn = True, .SearchOut = True})
+
             Dim datas = Await _ordRep.SearchAsync(criteria)
 
             _view.ClearInput()
@@ -289,7 +290,7 @@ Public Class OrderPresenter
 
                 transaction.Commit()
                 _view.ClearInput()
-                Await LoadList()
+                Await LoadList(False)
                 MsgBox("新增成功")
 
                 Return insert.o_id
@@ -354,7 +355,7 @@ Public Class OrderPresenter
 
                 transaction.Commit()
                 _view.ClearInput()
-                Await LoadList()
+                Await LoadList(False)
                 MsgBox("刪除成功")
 
                 ' 重置當前訂單和相關對象
@@ -510,7 +511,7 @@ Public Class OrderPresenter
 
                 transaction.Commit()
                 _view.ClearInput()
-                Await LoadList()
+                Await LoadList(False)
                 MsgBox("修改成功")
             Catch ex As Exception
                 transaction.Rollback()
@@ -520,10 +521,14 @@ Public Class OrderPresenter
         End Using
     End Sub
 
-    Public Async Sub PrintCusStk()
+    Public Async Sub PrintCusStk(isYesterday As Boolean)
         Try
             '取得資料
             Dim customers = Await _cusRep.GetAllAsync()
+
+            If isYesterday Then GetYesterdayStk(customers)
+
+            customers = customers.OrderBy(Function(x) x.cus_code).ToList
 
             '取得範本檔
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "客戶鋼瓶結存總冊範本檔.xlsx")
@@ -532,7 +537,9 @@ Public Class OrderPresenter
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
-                    .WriteToCell(3, 9, $"印表日期:{Now:yyyy/MM/dd}")
+
+                    Dim printDate = If(isYesterday, Now.AddDays(-1), Now)
+                    .WriteToCell(3, 10, $"印表日期:{printDate:yyyy/MM/dd}")
 
                     Dim rowIndex = 5
                     Dim totalSum As Integer
@@ -580,6 +587,26 @@ Public Class OrderPresenter
         Catch ex As Exception
             Console.WriteLine(ex.StackTrace)
             MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub GetYesterdayStk(ByRef customers As List(Of customer))
+        Try
+            For Each cus In customers
+                Dim orders = _ordRep.GetByCusIdAndDate(cus.cus_id, Now)
+
+                cus.cus_gas_50 += orders.Sum(Function(x) x.o_gas_50) + orders.Sum(Function(x) x.o_gas_c_50) + orders.Sum(Function(x) x.o_empty_50) - orders.Sum(Function(x) x.o_in_50) - orders.Sum(Function(x) x.o_new_in_50) - orders.Sum(Function(x) x.o_inspect_50)
+                cus.cus_gas_20 += orders.Sum(Function(x) x.o_gas_20) + orders.Sum(Function(x) x.o_gas_c_20) + orders.Sum(Function(x) x.o_empty_20) - orders.Sum(Function(x) x.o_in_20) - orders.Sum(Function(x) x.o_new_in_20) - orders.Sum(Function(x) x.o_inspect_20)
+                cus.cus_gas_18 += orders.Sum(Function(x) x.o_gas_18) + orders.Sum(Function(x) x.o_gas_c_18) + orders.Sum(Function(x) x.o_empty_18) - orders.Sum(Function(x) x.o_in_18) - orders.Sum(Function(x) x.o_new_in_18) - orders.Sum(Function(x) x.o_inspect_18)
+                cus.cus_gas_16 += orders.Sum(Function(x) x.o_gas_16) + orders.Sum(Function(x) x.o_gas_c_16) + orders.Sum(Function(x) x.o_empty_16) - orders.Sum(Function(x) x.o_in_16) - orders.Sum(Function(x) x.o_new_in_16) - orders.Sum(Function(x) x.o_inspect_16)
+                cus.cus_gas_14 += orders.Sum(Function(x) x.o_gas_14) + orders.Sum(Function(x) x.o_gas_c_14) + orders.Sum(Function(x) x.o_empty_14) - orders.Sum(Function(x) x.o_in_14) - orders.Sum(Function(x) x.o_new_in_14) - orders.Sum(Function(x) x.o_inspect_14)
+                cus.cus_gas_10 += orders.Sum(Function(x) x.o_gas_10) + orders.Sum(Function(x) x.o_gas_c_10) + orders.Sum(Function(x) x.o_empty_10) - orders.Sum(Function(x) x.o_in_10) - orders.Sum(Function(x) x.o_new_in_10) - orders.Sum(Function(x) x.o_inspect_10)
+                cus.cus_gas_5 += orders.Sum(Function(x) x.o_gas_5) + orders.Sum(Function(x) x.o_gas_c_5) + orders.Sum(Function(x) x.o_empty_5) - orders.Sum(Function(x) x.o_in_5) - orders.Sum(Function(x) x.o_new_in_5) - orders.Sum(Function(x) x.o_inspect_5)
+                cus.cus_gas_4 += orders.Sum(Function(x) x.o_gas_4) + orders.Sum(Function(x) x.o_gas_c_4) + orders.Sum(Function(x) x.o_empty_4) - orders.Sum(Function(x) x.o_in_4) - orders.Sum(Function(x) x.o_new_in_4) - orders.Sum(Function(x) x.o_inspect_4)
+                cus.cus_gas_2 += orders.Sum(Function(x) x.o_gas_2) + orders.Sum(Function(x) x.o_gas_c_2) + orders.Sum(Function(x) x.o_empty_2) - orders.Sum(Function(x) x.o_in_2) - orders.Sum(Function(x) x.o_new_in_2) - orders.Sum(Function(x) x.o_inspect_2)
+            Next
+        Catch ex As Exception
+            Throw
         End Try
     End Sub
 

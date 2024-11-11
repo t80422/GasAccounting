@@ -14,6 +14,7 @@
             Using db As New gas_accounting_systemEntities
                 '獲取所有客戶資料
                 Dim customers = db.customers.ToList
+                customers = customers.OrderBy(Function(x) x.cus_code)
 
                 '遍歷每個客戶並蒐集相關資料
                 For Each cus In customers
@@ -59,6 +60,7 @@
             Using db As New gas_accounting_systemEntities
                 '獲取所有客戶資料
                 Dim customers = db.customers.ToList
+                customers = customers.OrderBy(Function(x) x.cus_code)
 
                 '遍歷每個客戶並蒐集相關資料
                 For Each cus In customers
@@ -578,23 +580,23 @@
 
     Public Function GetInvoice(month As Date) As List(Of Report_Invoice) Implements IReportRep.GetInvoice
         Try
-            Dim query = From o In _context.orders
-                        Where o.o_date.Value.Year = month.Year AndAlso o.o_date.Value.Month = month.Month
-                        Group Join i In _context.invoices On o.o_cus_Id Equals i.i_cus_Id Into invoiceGroup = Group
-                        From invoice In invoiceGroup.DefaultIfEmpty()
-                        Group By Key = New With {
-                        .CusId = o.o_cus_Id,
-                        .CusCode = o.customer.cus_code,
-                        .CusName = o.customer.cus_name,
-                        .TaxId = o.customer.cus_tax_id
-                    } Into g = Group
-                        Select New Report_Invoice With {
-                        .CusCode = Key.CusCode,
-                        .CusName = Key.CusName,
-                        .TaxId = Key.TaxId,
-                        .Amount = g.Sum(Function(x) x.o.o_gas_total + x.o.o_gas_c_total),
-                        .IsInvoice = g.Sum(Function(x) If(x.invoice Is Nothing, 0, x.invoice.i_KG))
-                    }
+            Dim query = (From o In _context.orders
+                         Where o.o_date.Value.Year = month.Year AndAlso o.o_date.Value.Month = month.Month
+                         Group Join i In _context.invoices On o.o_cus_Id Equals i.i_cus_Id Into invoiceGroup = Group
+                         From invoice In invoiceGroup.DefaultIfEmpty()
+                         Group By Key = New With {
+                            .CusId = o.o_cus_Id,
+                            .CusCode = o.customer.cus_code,
+                            .CusName = o.customer.cus_name,
+                            .TaxId = o.customer.cus_tax_id
+                        } Into g = Group
+                         Select New Report_Invoice With {
+                            .CusCode = Key.CusCode,
+                            .CusName = Key.CusName,
+                            .TaxId = Key.TaxId,
+                            .Amount = g.Sum(Function(x) x.o.o_gas_total + x.o.o_gas_c_total),
+                            .IsInvoice = g.Sum(Function(x) If(x.invoice Is Nothing, 0, x.invoice.i_KG))
+                        }).OrderBy(Function(x) x.CusCode)
 
             Return query.ToList()
         Catch ex As Exception
@@ -630,7 +632,7 @@
                              .AccountsReceivable = g.Sum(Function(x) x.o.o_total_amount),
                              .AccountsReceived = g.Sum(Function(x) If(x.collection Is Nothing, 0, x.collection.col_Amount)),
                              .Discount = g.Sum(Function(x) x.o.o_sales_allowance)
-                           }).ToList
+                           }).OrderBy(Function(x) x.CusCode).ToList
 
             Return result
         Catch ex As Exception
@@ -749,8 +751,8 @@
         Try
             Dim result = New MonthlyStatement
             Dim orderByCusAndMonth = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
-                                                                        x.o_date.Value.Month = month.Month AndAlso
-                                                                        x.customer.cus_code = cusCode).ToList
+                                                                       x.o_date.Value.Month = month.Month AndAlso
+                                                                       x.customer.cus_code = cusCode).ToList
 
             If orderByCusAndMonth.Count = 0 Then Throw New Exception($"該客戶 {month:yyyy/MM} 無訂購資料")
 
@@ -840,7 +842,7 @@
                                               .CusCode = x.Key.CusCode,
                                               .CusName = x.Key.CusName,
                                               .TaxId = x.Key.TaxId
-                                          }).ToList
+                                          }).OrderBy(Function(x) x.CusCode).ToList
 
             Return result
         Catch ex As Exception

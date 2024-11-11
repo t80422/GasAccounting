@@ -42,6 +42,10 @@ Public Class OrderRep
     Public Async Function SearchAsync(criteria As OrderSearchCriteria) As Task(Of List(Of order)) Implements IOrderRep.SearchAsync
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
+
+            If Not criteria.SearchIn Then query = query.Where(Function(x) x.o_in_out <> "進場單")
+            If Not criteria.SearchOut Then query = query.Where(Function(x) x.o_in_out <> "出場單")
+
             Dim startDate = criteria.StartDate.Date
             Dim endDate = criteria.EndDate.Date.AddDays(1)
 
@@ -69,6 +73,17 @@ Public Class OrderRep
     Public Function GetByMonthAndCompany(month As Date, compId As Integer) As List(Of order) Implements IOrderRep.GetByMonthAndCompany
         Try
             Return _dbSet.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso x.o_date.Value.Month = month.Month AndAlso x.customer.cus_comp_Id = compId).ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetByCusIdAndDate(cusId As Integer, day As Date) As List(Of order) Implements IOrderRep.GetByCusIdAndDate
+        Try
+            Return _dbSet.Where(Function(x) x.o_date.Value.Year = day.Year AndAlso
+                                            x.o_date.Value.Month = day.Month AndAlso
+                                            x.o_date.Value.Day = day.Day AndAlso
+                                            x.o_cus_Id = cusId).ToList
         Catch ex As Exception
             Throw
         End Try

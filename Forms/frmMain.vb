@@ -1026,7 +1026,9 @@
             .CusId = cusId,
             .EndDate = dtpEnd_order.Value,
             .IsDate = chkIsDate_ord.Checked,
-            .StartDate = dtpStart_order.Value
+            .StartDate = dtpStart_order.Value,
+            .SearchIn = chkIn.Checked,
+            .SearchOut = chkOut.Checked
         }
 
         Return data
@@ -1403,7 +1405,7 @@
         SetOrderQueryCtrl(btn)
 
         If btn.Text = "查  詢" Then
-            Await _order.LoadList()
+            Await _order.LoadList(True)
         End If
     End Sub
 
@@ -1424,7 +1426,20 @@
 
     '銷售管理-列印客戶鋼瓶結存總冊
     Private Sub btnPrintCusStk_Click(sender As Object, e As EventArgs) Handles btnPrintCusStk.Click
-        _order.PrintCusStk()
+        Dim result = MessageBox.Show(
+            "是否列印昨天的報表?",
+            "客戶鋼瓶結存總冊",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question
+        )
+
+        Select Case result
+            Case DialogResult.Yes
+                _order.PrintCusStk(True)
+            Case DialogResult.No
+                _order.PrintCusStk(False)
+            Case Else
+        End Select
     End Sub
 
     '銷售管理-氣量氣款收付明細表

@@ -1005,6 +1005,8 @@ Partial Class frmMain
         Me.Label132 = New System.Windows.Forms.Label()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.chkIn = New System.Windows.Forms.CheckBox()
+        Me.chkOut = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -8347,7 +8349,7 @@ Partial Class frmMain
         '
         'txtCusID_order
         '
-        Me.txtCusID_order.Location = New System.Drawing.Point(715, 266)
+        Me.txtCusID_order.Location = New System.Drawing.Point(1614, 413)
         Me.txtCusID_order.Name = "txtCusID_order"
         Me.txtCusID_order.ReadOnly = True
         Me.txtCusID_order.Size = New System.Drawing.Size(100, 30)
@@ -8357,7 +8359,7 @@ Partial Class frmMain
         '
         'txto_id
         '
-        Me.txto_id.Location = New System.Drawing.Point(599, 266)
+        Me.txto_id.Location = New System.Drawing.Point(1498, 413)
         Me.txto_id.Name = "txto_id"
         Me.txto_id.ReadOnly = True
         Me.txto_id.Size = New System.Drawing.Size(100, 30)
@@ -8416,15 +8418,17 @@ Partial Class frmMain
         '
         'grpSearch_ord
         '
+        Me.grpSearch_ord.Controls.Add(Me.chkOut)
+        Me.grpSearch_ord.Controls.Add(Me.chkIn)
         Me.grpSearch_ord.Controls.Add(Me.chkIsDate_ord)
         Me.grpSearch_ord.Controls.Add(Me.Label165)
         Me.grpSearch_ord.Controls.Add(Me.btnQuery_order)
         Me.grpSearch_ord.Controls.Add(Me.dtpEnd_order)
         Me.grpSearch_ord.Controls.Add(Me.Label166)
         Me.grpSearch_ord.Controls.Add(Me.dtpStart_order)
-        Me.grpSearch_ord.Location = New System.Drawing.Point(8, 317)
+        Me.grpSearch_ord.Location = New System.Drawing.Point(8, 263)
         Me.grpSearch_ord.Name = "grpSearch_ord"
-        Me.grpSearch_ord.Size = New System.Drawing.Size(804, 80)
+        Me.grpSearch_ord.Size = New System.Drawing.Size(804, 134)
         Me.grpSearch_ord.TabIndex = 446
         Me.grpSearch_ord.TabStop = False
         Me.grpSearch_ord.Text = "搜尋"
@@ -11344,6 +11348,26 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
+        'chkIn
+        '
+        Me.chkIn.AutoSize = True
+        Me.chkIn.Location = New System.Drawing.Point(6, 65)
+        Me.chkIn.Name = "chkIn"
+        Me.chkIn.Size = New System.Drawing.Size(70, 23)
+        Me.chkIn.TabIndex = 347
+        Me.chkIn.Text = "進場"
+        Me.chkIn.UseVisualStyleBackColor = True
+        '
+        'chkOut
+        '
+        Me.chkOut.AutoSize = True
+        Me.chkOut.Location = New System.Drawing.Point(6, 94)
+        Me.chkOut.Name = "chkOut"
+        Me.chkOut.Size = New System.Drawing.Size(70, 23)
+        Me.chkOut.TabIndex = 348
+        Me.chkOut.Text = "出場"
+        Me.chkOut.UseVisualStyleBackColor = True
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -11352,7 +11376,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.13.0"
+        Me.Text = "豐原瓦斯會計系統 v0.14.0"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -12488,4 +12512,6 @@ Partial Class frmMain
     Friend WithEvents Label133 As Label
     Friend WithEvents btnCusGasPayCollect As Button
     Friend WithEvents btnCusGetGasList As Button
+    Friend WithEvents chkOut As CheckBox
+    Friend WithEvents chkIn As CheckBox
 End Class
