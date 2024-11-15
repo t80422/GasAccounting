@@ -721,6 +721,8 @@ Partial Class frmMain
         Me.btnQueryCus_ord = New System.Windows.Forms.Button()
         Me.btnPrint = New System.Windows.Forms.Button()
         Me.grpSearch_ord = New System.Windows.Forms.GroupBox()
+        Me.chkOut = New System.Windows.Forms.CheckBox()
+        Me.chkIn = New System.Windows.Forms.CheckBox()
         Me.chkIsDate_ord = New System.Windows.Forms.CheckBox()
         Me.Label165 = New System.Windows.Forms.Label()
         Me.btnQuery_order = New System.Windows.Forms.Button()
@@ -1005,8 +1007,6 @@ Partial Class frmMain
         Me.Label132 = New System.Windows.Forms.Label()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.chkIn = New System.Windows.Forms.CheckBox()
-        Me.chkOut = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -8433,6 +8433,26 @@ Partial Class frmMain
         Me.grpSearch_ord.TabStop = False
         Me.grpSearch_ord.Text = "搜尋"
         '
+        'chkOut
+        '
+        Me.chkOut.AutoSize = True
+        Me.chkOut.Location = New System.Drawing.Point(6, 94)
+        Me.chkOut.Name = "chkOut"
+        Me.chkOut.Size = New System.Drawing.Size(70, 23)
+        Me.chkOut.TabIndex = 348
+        Me.chkOut.Text = "出場"
+        Me.chkOut.UseVisualStyleBackColor = True
+        '
+        'chkIn
+        '
+        Me.chkIn.AutoSize = True
+        Me.chkIn.Location = New System.Drawing.Point(6, 65)
+        Me.chkIn.Name = "chkIn"
+        Me.chkIn.Size = New System.Drawing.Size(70, 23)
+        Me.chkIn.TabIndex = 347
+        Me.chkIn.Text = "進場"
+        Me.chkIn.UseVisualStyleBackColor = True
+        '
         'chkIsDate_ord
         '
         Me.chkIsDate_ord.AutoSize = True
@@ -11348,26 +11368,6 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'chkIn
-        '
-        Me.chkIn.AutoSize = True
-        Me.chkIn.Location = New System.Drawing.Point(6, 65)
-        Me.chkIn.Name = "chkIn"
-        Me.chkIn.Size = New System.Drawing.Size(70, 23)
-        Me.chkIn.TabIndex = 347
-        Me.chkIn.Text = "進場"
-        Me.chkIn.UseVisualStyleBackColor = True
-        '
-        'chkOut
-        '
-        Me.chkOut.AutoSize = True
-        Me.chkOut.Location = New System.Drawing.Point(6, 94)
-        Me.chkOut.Name = "chkOut"
-        Me.chkOut.Size = New System.Drawing.Size(70, 23)
-        Me.chkOut.TabIndex = 348
-        Me.chkOut.Text = "出場"
-        Me.chkOut.UseVisualStyleBackColor = True
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -11376,7 +11376,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.14.0"
+        Me.Text = "豐原瓦斯會計系統 v0.14.1"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)

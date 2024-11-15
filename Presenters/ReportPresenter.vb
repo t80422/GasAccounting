@@ -100,6 +100,7 @@ Public Class ReportPresenter
 
                     For i As Integer = 0 To datas.Count - 1
                         rowIndex = 6 + i
+                        .InsertRow(rowIndex)
 
                         .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
                         .WriteToCell(rowIndex, 2, If(datas(i).普氣50Kg <> Nothing, datas(i).普氣50Kg.ToString("#,##"), ""))

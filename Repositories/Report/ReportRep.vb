@@ -13,8 +13,7 @@
         Try
             Using db As New gas_accounting_systemEntities
                 '獲取所有客戶資料
-                Dim customers = db.customers.ToList
-                customers = customers.OrderBy(Function(x) x.cus_code)
+                Dim customers = db.customers.OrderBy(Function(x) x.cus_code).ToList
 
                 '遍歷每個客戶並蒐集相關資料
                 For Each cus In customers
@@ -59,8 +58,7 @@
         Try
             Using db As New gas_accounting_systemEntities
                 '獲取所有客戶資料
-                Dim customers = db.customers.ToList
-                customers = customers.OrderBy(Function(x) x.cus_code)
+                Dim customers = db.customers.OrderBy(Function(x) x.cus_code).ToList
 
                 '遍歷每個客戶並蒐集相關資料
                 For Each cus In customers
