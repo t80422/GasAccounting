@@ -297,7 +297,13 @@ Public Class OrderPresenter
             Catch ex As Exception
                 transaction.Rollback()
                 Console.WriteLine(ex.StackTrace)
-                MsgBox(ex.Message)
+
+                Dim innerEx = ex
+                While innerEx.InnerException IsNot Nothing
+                    innerEx = innerEx.InnerException
+                End While
+
+                MsgBox(innerEx.Message)
                 Return 0
             End Try
         End Using
@@ -558,12 +564,17 @@ Public Class OrderPresenter
                         .WriteToCell(rowIndex, 10, cus.cus_gas_5)
                         .WriteToCell(rowIndex, 11, cus.cus_gas_2)
                         .WriteToCell(rowIndex, 12, totalBarrel)
+                        .InsertRow(rowIndex)
                         rowIndex += 1
                         totalSum += totalBarrel
                     Next
 
+                    Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center
+                    }
+
                     .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
-                    .WriteToCell(rowIndex, 2, "合計")
+                    .WriteToCell(rowIndex, 2, "合計", totalStyle)
                     .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50))
                     .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20))
                     .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16))
@@ -581,7 +592,7 @@ Public Class OrderPresenter
 
                     '取得印表機
                     Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(filePath, printerName)
+                    .Print(exportFilePath, printerName, 1, 4)
                 End With
             End Using
         Catch ex As Exception

@@ -34,7 +34,11 @@
             LoadList()
             MsgBox("新增成功")
         Catch ex As Exception
-            MsgBox(ex.Message)
+            Dim innerEx = ex
+            While innerEx.InnerException IsNot Nothing
+                innerEx = innerEx.InnerException
+            End While
+            MsgBox(innerEx)
         End Try
     End Sub
 

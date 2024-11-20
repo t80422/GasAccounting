@@ -38,16 +38,20 @@ Public Class ReportPresenter
 
                     Dim rowIndex As Integer
 
+                    Dim dataStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = XLAlignmentHorizontalValues.Center
+                    }
+
                     For i As Integer = 0 To datas.Count - 1
                         rowIndex = 5 + i
 
                         .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
-                        .WriteToCell(rowIndex, 2, If(datas(i).存氣 <> Nothing, datas(i).存氣.ToString("#,##"), 0))
-                        .WriteToCell(rowIndex, 3, If(datas(i).本日提量 <> Nothing, datas(i).本日提量.ToString("#,##"), "0"))
-                        .WriteToCell(rowIndex, 4, If(datas(i).當月累計提量 <> Nothing, datas(i).當月累計提量.ToString("#,##"), "0"))
-                        .WriteToCell(rowIndex, 5, If(datas(i).本日氣款 <> Nothing, datas(i).本日氣款.ToString("#,##"), "0"))
-                        .WriteToCell(rowIndex, 6, If(datas(i).本日收款 <> Nothing, datas(i).本日收款.ToString("#,##"), "0"))
-                        .WriteToCell(rowIndex, 7, If(datas(i).結欠 <> Nothing, datas(i).結欠.ToString("#,##"), "0"))
+                        .WriteToCell(rowIndex, 2, If(datas(i).存氣 <> Nothing, datas(i).存氣.ToString("#,##"), 0), dataStyle)
+                        .WriteToCell(rowIndex, 3, If(datas(i).本日提量 <> Nothing, datas(i).本日提量.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 4, If(datas(i).當月累計提量 <> Nothing, datas(i).當月累計提量.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 5, If(datas(i).本日氣款 <> Nothing, datas(i).本日氣款.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 6, If(datas(i).本日收款 <> Nothing, datas(i).本日收款.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 7, If(datas(i).結欠 <> Nothing, datas(i).結欠.ToString("#,##"), "0"), dataStyle)
 
                     Next
 
@@ -55,13 +59,13 @@ Public Class ReportPresenter
 
                     rowIndex += 1
 
-                    .WriteToCell(rowIndex, 1, "合計:")
-                    .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.存氣).ToString("#,##"))
-                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.本日提量).ToString("#,##"))
-                    .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.當月累計提量).ToString("#,##"))
-                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.本日氣款).ToString("#,##"))
-                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.本日收款).ToString("#,##"))
-                    .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"))
+                    .WriteToCell(rowIndex, 1, "合計:", dataStyle)
+                    .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.存氣).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.本日提量).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.當月累計提量).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.本日氣款).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.本日收款).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"), dataStyle)
 
 
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "日氣量氣款收付明細表.xlsx")
@@ -69,7 +73,7 @@ Public Class ReportPresenter
 
                     '列印
                     Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    .Print(exportFilePath, printerName, 1, 4)
                 End With
             End Using
         Catch ex As Exception
@@ -93,8 +97,26 @@ Public Class ReportPresenter
                 With xml
                     .SelectWorksheet("Sheet1")
 
-                    .WriteToCell(3, 1, $"提氣日期: {d:yyyy/MM/dd}")
-                    .WriteToCell(3, 23, $"列印日期: {Now:yyyy/MM/dd}")
+                    Dim titleStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .FontSize = 14,
+                        .IsBold = True,
+                        .Horizontal = XLAlignmentHorizontalValues.Center
+                    }
+                    .MergeCells(1, 1, 1, 23)
+                    .WriteToCell(1, 1, "豐原液化煤氣分裝場", titleStyle)
+
+                    .MergeCells(2, 1, 2, 23)
+                    .WriteToCell(2, 1, "客戶提氣量清單", titleStyle)
+
+                    Dim dateStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = XLAlignmentHorizontalValues.Left
+                    }
+                    .WriteToCell(3, 1, $"提氣日期: {d:yyyy/MM/dd}", dateStyle)
+
+                    Dim printDateStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = XLAlignmentHorizontalValues.Right
+                    }
+                    .WriteToCell(3, 23, $"列印日期: {Now:yyyy/MM/dd}", printDateStyle)
 
                     Dim rowIndex As Integer
 
@@ -127,12 +149,43 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 23, If(datas(i).丙氣Kg數 <> Nothing, datas(i).丙氣Kg數.ToString("#,##"), ""))
                     Next
 
+                    '合計
+                    rowIndex += 1
+
+                    Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .IsBold = True
+                    }
+
+                    .WriteToCell(rowIndex, 1, "合計", totalStyle)
+                    .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.普氣50Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.丙氣50Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.普氣20Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.丙氣20Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.普氣16Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.丙氣16Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 8, datas.Sum(Function(x) x.普氣10Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 9, datas.Sum(Function(x) x.丙氣10Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 10, datas.Sum(Function(x) x.普氣4Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 11, datas.Sum(Function(x) x.丙氣4Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 12, datas.Sum(Function(x) x.普氣18Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 13, datas.Sum(Function(x) x.丙氣18Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 14, datas.Sum(Function(x) x.普氣14Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 15, datas.Sum(Function(x) x.丙氣14Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 16, datas.Sum(Function(x) x.普氣5Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 17, datas.Sum(Function(x) x.丙氣5Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 18, datas.Sum(Function(x) x.普氣2Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 19, datas.Sum(Function(x) x.丙氣2Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 20, datas.Sum(Function(x) x.普氣瓶數).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 21, datas.Sum(Function(x) x.丙氣瓶數).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 22, datas.Sum(Function(x) x.普氣Kg數).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 23, datas.Sum(Function(x) x.丙氣Kg數).ToString("#,##"), totalStyle)
+
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶提氣清冊.xlsx")
                     .SaveAs(exportFilePath)
 
                     '列印
                     Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    .Print(exportFilePath, printerName, 1, 5)
                 End With
             End Using
         Catch ex As Exception

@@ -5,12 +5,13 @@ Public Class CloseXML_Excel
     Implements IDisposable
 
     Private workbook As XLWorkbook
-    Private worksheet As IXLWorksheet
+
+    Public Worksheet As IXLWorksheet
 
     Public Sub New(filePath As String)
         Try
             workbook = New XLWorkbook(filePath)
-            worksheet = workbook.Worksheets.First()
+            Worksheet = workbook.Worksheets.First()
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             Throw
@@ -23,7 +24,7 @@ Public Class CloseXML_Excel
     ''' <param name="columnIndex">列的索引，從 1 開始。</param>
     ''' <param name="width">欄寬值。</param>
     Public Sub SetColumnWidth(columnIndex As Integer, width As Double)
-        worksheet.Column(columnIndex).Width = width
+        Worksheet.Column(columnIndex).Width = width
     End Sub
 
     ''' <summary>
@@ -32,26 +33,26 @@ Public Class CloseXML_Excel
     ''' <param name="rowIndex">行的索引，從 1 開始。</param>
     ''' <param name="height_cm">列高值。</param>
     Public Sub SetRowHeight(rowIndex As Integer, height_cm As Double)
-        worksheet.Row(rowIndex).Height = CmToPoints(height_cm)
+        Worksheet.Row(rowIndex).Height = CmToPoints(height_cm)
     End Sub
 
     Public Sub SelectWorksheet(sheetName As String)
         Try
-            worksheet = workbook.Worksheet(sheetName)
+            Worksheet = workbook.Worksheet(sheetName)
         Catch ex As Exception
             Console.WriteLine($"Sheet '{sheetName}' not found: {ex.Message}")
         End Try
     End Sub
 
     Public Sub WriteToCell(rowIndex As Integer, columnIndex As Integer, content As String, Optional formatOptions As CellFormatOptions = Nothing)
-        Dim cell = worksheet.Cell(rowIndex, columnIndex)
+        Dim cell = Worksheet.Cell(rowIndex, columnIndex)
         cell.Value = content
 
         If formatOptions IsNot Nothing Then
             cell.Style.Font.FontName = formatOptions.FontName
             cell.Style.Font.FontSize = formatOptions.FontSize
             cell.Style.Font.Bold = formatOptions.IsBold
-            cell.Style.Alignment.Horizontal = If(formatOptions.HorizontalCenter, XLAlignmentHorizontalValues.Center, XLAlignmentHorizontalValues.Left)
+            cell.Style.Alignment.Horizontal = formatOptions.Horizontal
             cell.Style.Alignment.Vertical = If(formatOptions.VerticalCenter, XLAlignmentVerticalValues.Center, XLAlignmentVerticalValues.Top)
             cell.Style.Alignment.WrapText = formatOptions.WrapText
             If formatOptions.VerticalText Then cell.Style.Alignment.TextRotation = 255
@@ -84,7 +85,7 @@ Public Class CloseXML_Excel
     ''' <param name="borderStyle">下底線樣式</param>
     <Obsolete("改用 SetCustomBorders")>
     Public Sub SetBottomBorder(startRowIndex As Integer, startColIndex As Integer, endRowIndex As Integer, endColIndex As Integer, Optional borderStyle As XLBorderStyleValues = XLBorderStyleValues.Thin)
-        Dim range = worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
+        Dim range = Worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
         range.Style.Border.BottomBorder = borderStyle
     End Sub
 
@@ -94,7 +95,7 @@ Public Class CloseXML_Excel
                             Optional leftStyle As XLBorderStyleValues? = Nothing,
                             Optional rightStyle As XLBorderStyleValues? = Nothing)
 
-        Dim range = worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
+        Dim range = Worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
 
         If topStyle.HasValue Then
             range.Style.Border.TopBorder = topStyle.Value
@@ -118,10 +119,10 @@ Public Class CloseXML_Excel
         Public Property FontSize As Double = 11
         Public Property IsBold As Boolean = False
         ''' <summary>
-        ''' 水平置中
+        ''' 水平
         ''' </summary>
         ''' <returns></returns>
-        Public Property HorizontalCenter As Boolean = False
+        Public Property Horizontal As XLAlignmentHorizontalValues
         ''' <summary>
         ''' 垂直置中
         ''' </summary>
@@ -145,34 +146,42 @@ Public Class CloseXML_Excel
     ''' <param name="rowIndex">要插入新列的位置,從1開始</param>
     Public Sub InsertRow(rowIndex As Integer)
         Try
-            worksheet.Row(rowIndex).InsertRowsBelow(1)
+            Worksheet.Row(rowIndex).InsertRowsBelow(1)
         Catch ex As Exception
             Throw
         End Try
     End Sub
 
-    Public Sub Print(filePath As String, printerName As String)
+    Public Sub Print(filePath As String, printerName As String, Optional repeatFromRow As Integer = 0, Optional repeatToRow As Integer = 0)
+        With Worksheet.PageSetup
+            If repeatFromRow > 0 AndAlso repeatToRow > 0 Then
+                .SetRowsToRepeatAtTop(repeatFromRow, repeatToRow)
+                workbook.SaveAs(filePath)
+            End If
+        End With
+
         Dim app As Application = Nothing
-        Dim workbook As Workbook = Nothing
+        Dim wb As Workbook = Nothing
 
         Try
             app = New Application With {
                 .DisplayAlerts = False
             }
 
-            workbook = app.Workbooks.Open(filePath)
+            wb = app.Workbooks.Open(filePath)
 
-            workbook.PrintOutEx(
+            wb.PrintOutEx(
                 Preview:=False,
-                ActivePrinter:=printerName
+                ActivePrinter:=printerName,
+                Collate:=True
             )
         Catch ex As Exception
             Throw
         Finally
-            If workbook IsNot Nothing Then
-                workbook.Close(SaveChanges:=False)
-                Runtime.InteropServices.Marshal.ReleaseComObject(workbook)
-                workbook = Nothing
+            If wb IsNot Nothing Then
+                wb.Close(SaveChanges:=False)
+                Runtime.InteropServices.Marshal.ReleaseComObject(wb)
+                wb = Nothing
             End If
 
             If app IsNot Nothing Then
@@ -180,6 +189,14 @@ Public Class CloseXML_Excel
                 Runtime.InteropServices.Marshal.ReleaseComObject(app)
                 app = Nothing
             End If
+        End Try
+    End Sub
+
+    Public Sub MergeCells(startRowIndex As Integer, startColIndex As Integer, endRowIndex As Integer, endColIndex As Integer)
+        Try
+            Worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex).Merge()
+        Catch ex As Exception
+            Throw New Exception($"合併儲存格時發生錯誤: {ex.Message}", ex)
         End Try
     End Sub
 
