@@ -55,7 +55,15 @@ Public Class OrderPresenter
 
     Public Async Function LoadList(isSearch As Boolean) As Task
         Try
-            Dim criteria = If(isSearch, _view.GetSearchCriteria(), New OrderSearchCriteria With {.SearchIn = True, .SearchOut = True})
+            Dim criteria = If(isSearch,
+                _view.GetSearchCriteria(),
+                New OrderSearchCriteria With {
+                    .SearchIn = True,
+                    .SearchOut = True,
+                    .IsDate = True,
+                    .StartDate = Today,
+                    .EndDate = Today
+                })
 
             Dim datas = Await _ordRep.SearchAsync(criteria)
 
@@ -255,7 +263,7 @@ Public Class OrderPresenter
 
                 _view.GetCusStkInput(currentCustomer)
 
-                If orderInput.o_delivery_type = "廠運" Then
+                If orderInput.o_delivery_type = "自運" Then
                     If orderInput.o_in_out = "進場單" Then
                         _view.GetCarStkInput(CurrentCarIn)
                     Else
@@ -341,7 +349,7 @@ Public Class OrderPresenter
                 UpdateCustomerStock(currentOrder, currentCustomer)
 
                 ' 更新車輛庫存
-                If currentOrder.o_delivery_type = "廠運" Then
+                If currentOrder.o_delivery_type = "自運" Then
                     If currentOrder.o_in_out = "進場單" Then
                         UpdateCarStock(currentOrder, CurrentCarIn, True)
                     Else
@@ -441,8 +449,8 @@ Public Class OrderPresenter
                     converterProperties.SetFontProvider(fontProvider)
 
                     ' 將毫米轉換為點
-                    Dim widthInPoints As Single = 215 * 2.834645
-                    Dim heightInPoints As Single = 140 * 2.834645
+                    Dim widthInPoints As Single = 216 * 2.834645
+                    Dim heightInPoints As Single = 139 * 2.834645
 
                     ' 設置頁面大小
                     pdfDocument.SetDefaultPageSize(New PageSize(widthInPoints, heightInPoints))
@@ -663,7 +671,7 @@ Public Class OrderPresenter
         Dim htmlContent = File.ReadAllText(templatePath)
 
         htmlContent = htmlContent.Replace("{{客戶名稱}}", data.客戶名稱.ToString)
-        htmlContent = htmlContent.Replace("{{車號}}", data.車號.ToString)
+        htmlContent = htmlContent.Replace("{{車號}}", If(data.車號, ""))
         htmlContent = htmlContent.Replace("{{提氣時間}}", data.提氣時間.ToString("yyyy/MM/dd HH:mm"))
         htmlContent = htmlContent.Replace("{{提單編號}}", data.提單編號.ToString("D6"))
 
@@ -699,15 +707,15 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{檢驗14kg}}", If(data.檢驗14kg = 0, "", data.檢驗14kg.ToString))
         htmlContent = htmlContent.Replace("{{檢驗5kg}}", If(data.檢驗5kg = 0, "", data.檢驗5kg.ToString))
 
-        htmlContent = htmlContent.Replace("{{新瓶50kg}}", If(data.收空瓶50kg = 0, "", data.收空瓶50kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶20kg}}", If(data.收空瓶20kg = 0, "", data.收空瓶20kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶16kg}}", If(data.收空瓶16kg = 0, "", data.收空瓶16kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶10kg}}", If(data.收空瓶10kg = 0, "", data.收空瓶10kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶4kg}}", If(data.收空瓶4kg = 0, "", data.收空瓶4kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶15kg}}", If(data.收空瓶18kg = 0, "", data.收空瓶18kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶2kg}}", If(data.收空瓶2kg = 0, "", data.收空瓶2kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶14kg}}", If(data.收空瓶14kg = 0, "", data.收空瓶14kg.ToString))
-        htmlContent = htmlContent.Replace("{{新瓶5kg}}", If(data.收空瓶5kg = 0, "", data.收空瓶5kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶50kg}}", If(data.新瓶50kg = 0, "", data.新瓶50kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶20kg}}", If(data.新瓶20kg = 0, "", data.新瓶20kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶16kg}}", If(data.新瓶16kg = 0, "", data.新瓶16kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶10kg}}", If(data.新瓶10kg = 0, "", data.新瓶10kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶4kg}}", If(data.新瓶4kg = 0, "", data.新瓶4kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶15kg}}", If(data.新瓶18kg = 0, "", data.新瓶18kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶2kg}}", If(data.新瓶2kg = 0, "", data.新瓶2kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶14kg}}", If(data.新瓶14kg = 0, "", data.新瓶14kg.ToString))
+        htmlContent = htmlContent.Replace("{{新瓶5kg}}", If(data.新瓶5kg = 0, "", data.新瓶5kg.ToString))
 
         htmlContent = htmlContent.Replace("{{收空瓶50kg}}", If(data.收空瓶50kg = 0, "", data.收空瓶50kg.ToString))
         htmlContent = htmlContent.Replace("{{收空瓶20kg}}", If(data.收空瓶20kg = 0, "", data.收空瓶20kg.ToString))

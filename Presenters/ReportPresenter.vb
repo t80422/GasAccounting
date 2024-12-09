@@ -122,6 +122,8 @@ Public Class ReportPresenter
 
                     For i As Integer = 0 To datas.Count - 1
                         rowIndex = 6 + i
+
+                        .SetRowHeight(rowIndex, 0.78)
                         .InsertRow(rowIndex)
 
                         .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
@@ -155,6 +157,8 @@ Public Class ReportPresenter
                     Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
                         .IsBold = True
                     }
+
+                    .SetRowHeight(rowIndex, 0.78)
 
                     .WriteToCell(rowIndex, 1, "合計", totalStyle)
                     .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.普氣50Kg).ToString("#,##"), totalStyle)

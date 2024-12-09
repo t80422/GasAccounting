@@ -56,7 +56,7 @@ Public Class OrderRep
 
             If criteria.CusId <> 0 Then query = query.Where(Function(x) x.car.c_cus_id = criteria.CusId)
 
-            Return Await query.OrderByDescending(Function(x) x.o_date).ToListAsync
+            Return Await query.OrderByDescending(Function(x) x.o_id).ToListAsync
         Catch ex As Exception
             Throw
         End Try
