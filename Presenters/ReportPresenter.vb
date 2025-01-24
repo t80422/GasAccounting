@@ -67,13 +67,8 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.本日收款).ToString("#,##"), dataStyle)
                     .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"), dataStyle)
 
-
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "日氣量氣款收付明細表.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName, 1, 4)
+                    '存檔
+                    SaveExcel($"日氣量氣款收付明細表_{d:yyyyMMdd}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -184,12 +179,8 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 22, datas.Sum(Function(x) x.普氣Kg數).ToString("#,##"), totalStyle)
                     .WriteToCell(rowIndex, 23, datas.Sum(Function(x) x.丙氣Kg數).ToString("#,##"), totalStyle)
 
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶提氣清冊.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName, 1, 5)
+                    '存檔
+                    SaveExcel($"客戶提氣清冊_{d:yyyyMMdd}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -218,8 +209,9 @@ Public Class ReportPresenter
                 With xml
                     .SelectWorksheet("Sheet1")
 
+                    Dim vendorName = datas.FirstOrDefault().廠商
                     .WriteToCell(1, 1, $"{d:yyyy}年豐原液化煤氣分裝場應付明細帳")
-                    .WriteToCell(3, 1, datas.FirstOrDefault().廠商)
+                    .WriteToCell(3, 1, vendorName)
 
                     Dim rowIndex As Integer
 
@@ -251,12 +243,9 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 10, datas.Sum(Function(x) x.餘額))
                     .WriteToCell(rowIndex, 11, datas.Last().累計)
 
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "大氣進貨明細.xlsx")
-                    .SaveAs(exportFilePath)
+                    '存檔
+                    SaveExcel($"大氣進貨明細_{vendorName}_{d:yyyyMMdd}", xml)
 
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
                 End With
             End Using
         Catch ex As Exception
@@ -281,8 +270,9 @@ Public Class ReportPresenter
                 With xml
                     .SelectWorksheet("Sheet1")
 
+                    Dim cusName = datas.FirstOrDefault().客戶名稱
                     .WriteToCell(1, 1, $"{d:yyyy}年豐原液化煤氣分裝場氣款應收帳")
-                    .WriteToCell(4, 1, datas.FirstOrDefault().客戶名稱)
+                    .WriteToCell(4, 1, cusName)
 
                     Dim rowIndex As Integer
 
@@ -320,12 +310,8 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 26, datas(i).累計)
                     Next
 
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "單一客戶每日的應收帳明細表.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    '存檔
+                    SaveExcel($"單一客戶每日的應收帳明細表_{cusName}_{d:yyyyMMdd}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -373,12 +359,8 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 14, datas(i).瓦斯瓶2Kg)
                     Next
 
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "提量支數統計.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    '存檔
+                    SaveExcel($"單一客戶每日的應收帳明細表_{month:yyyy}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -419,6 +401,9 @@ Public Class ReportPresenter
                     '列印
                     Dim printerName = _printerSer.GetOrSelectPrinter
                     .Print(exportFilePath, printerName)
+
+                    '存檔
+                    SaveExcel($"現金帳_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -453,7 +438,7 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 4, bankAccount.借方)
                         .WriteToCell(rowIndex, 5, bankAccount.貸方)
                         .WriteToCell(rowIndex, 6, bankAccount.餘額)
-                        .SetBottomBorder(rowIndex, 1, rowIndex, 6)
+                        .SetCustomBorders(rowIndex, 1, rowIndex, 6, bottomStyle:=XLBorderStyleValues.Thin)
                         rowIndex += 1
                     Next
 
@@ -470,6 +455,9 @@ Public Class ReportPresenter
                     '列印
                     Dim printerName = _printerSer.GetOrSelectPrinter
                     .Print(exportFilePath, printerName)
+
+                    '存檔
+                    SaveExcel($"銀行帳_{data.年月}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -514,12 +502,8 @@ Public Class ReportPresenter
                         rowIndex += 1
                     Next
 
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶寄桶結存瓶.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    '存檔
+                    SaveExcel($"客戶寄桶結存瓶_{data.CustomerName}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -732,12 +716,8 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 36, incomingAmount10)
                     .WriteToCell(rowIndex, 38, incomingAmount4)
 
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "新桶明細.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    '存檔
+                    SaveExcel($"新桶明細_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -792,12 +772,7 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 8, total)
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "應收票據.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"應收票據_{data.CompanyName}_{data.BankAccount}_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -846,12 +821,7 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 6, totalNotInoice)
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "發票.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"發票_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -914,12 +884,7 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Discount))
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "月應收帳明細.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"月應收帳明細_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -991,12 +956,7 @@ Public Class ReportPresenter
                     Next
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "進銷存明細表.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"進銷存明細表_{data.Company}_{year:yyyy}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1031,12 +991,7 @@ Public Class ReportPresenter
                     Next
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "應付票據.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"應付票據_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1084,12 +1039,7 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Amount))
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "財稅.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"財稅_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1167,12 +1117,7 @@ Public Class ReportPresenter
                     End While
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "能源局.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"能源局_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1276,12 +1221,7 @@ Public Class ReportPresenter
                     .WriteToCell(12, 2, data.NewBerralTypesCount)
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "月對帳單.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"月對帳單_{data.CusCode}_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1324,15 +1264,10 @@ Public Class ReportPresenter
 
                     .WriteToCell(rowIndex, 3, "合計")
                     .WriteToCell(rowIndex, 4, data.List.Sum(Function(x) x.Amount))
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 4, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 4, topStyle:=XLBorderStyleValues.Thin)
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "保險.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"保險_{data.CompanyName}_{month:yyyyMM}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1349,7 +1284,7 @@ Public Class ReportPresenter
     Public Sub GenerateIncomeStatement(startDate As Date, endDate As Date, compId As Integer)
         Try
             '取得資料
-            Dim data As IncomeStatement = _rep.GetIncomeStatement(startDate, endDate, compId)
+            Dim data As IncomeStatementModel = _rep.GetIncomeStatement(startDate, endDate, compId)
 
             '取得範本檔
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "損益表範本檔.xlsx")
@@ -1363,44 +1298,62 @@ Public Class ReportPresenter
                     .WriteToCell(1, 1, data.CompanyName)
                     .WriteToCell(3, 1, $"起訖年月日 {data.DateRange}")
 
-                    Dim rowIndex = 5
                     Dim totalRevenue As Single = 0
                     Dim totalCostOfSales As Single = 0
                     Dim totalOperatingExpenses As Single = 0
                     Dim totalNonOperatingIncome As Single = 0
 
-                    .WriteToCell(rowIndex, 1, "營業收入")
-                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業收入").ToList, rowIndex, totalRevenue)
+                    ' 營業收入
+                    .WriteToCell(6, 3, data.GasIncome)
+                    .WriteToCell(7, 3, data.SalesDiscount)
 
-                    .WriteToCell(rowIndex, 1, "營業費用(上)")
-                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業費用(上)").ToList, rowIndex, totalCostOfSales)
+                    ' 營業收入
+                    .WriteToCell(5, 4, data.OperatingIncome)
 
-                    Dim grossProfit As Single = totalRevenue - totalCostOfSales
-                    .WriteToCell(rowIndex, 1, "銷貨毛利")
-                    .WriteToCell(rowIndex, 4, grossProfit)
+                    ' 營業費用(上)
+                    .WriteToCell(9, 3, data.Income)
+                    .WriteToCell(8, 4, data.Income)
+
+                    ' 銷貨毛利
+                    Dim grossProfit = data.OperatingIncome - data.Income
+                    .WriteToCell(10, 4, grossProfit)
+
+                    ' 營業費用(下)
+                    totalOperatingExpenses = data.PaymentList.Sum(Function(x) x.Amount)
+                    .WriteToCell(11, 4, totalOperatingExpenses)
+
+                    Dim rowIndex = 12
+
+                    For Each item In data.PaymentList
+                        .WriteToCell(rowIndex, 2, item.Subject)
+                        .WriteToCell(rowIndex, 3, item.Amount)
+                        rowIndex += 1
+                    Next
+
+                    ' 營業外收益
+                    totalNonOperatingIncome = data.CollectionsList.Sum(Function(x) x.Amount)
+                    .WriteToCell(rowIndex, 1, "營業外收益", New CloseXML_Excel.CellFormatOptions With {.IsBold = True, .Horizontal = XLAlignmentHorizontalValues.Left})
+
+
+                    .WriteToCell(rowIndex, 4, totalNonOperatingIncome)
                     rowIndex += 1
 
-                    .WriteToCell(rowIndex, 1, "營業費用(下)")
-                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業費用(下)").ToList, rowIndex, totalOperatingExpenses)
+                    For Each item In data.CollectionsList
+                        .WriteToCell(rowIndex, 2, item.Subject)
+                        .WriteToCell(rowIndex, 3, item.Amount)
+                        rowIndex += 1
+                    Next
 
-                    .WriteToCell(rowIndex, 1, "營業外收益")
-                    rowIndex = WriteSubjectGroup(xml, data.List.Where(Function(x) x.SubjectType = "營業外收益").ToList, rowIndex, totalNonOperatingIncome)
-
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 4, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 4, topStyle:=XLBorderStyleValues.Thin)
                     .WriteToCell(rowIndex, 1, "存貨")
                     rowIndex += 1
 
                     Dim netIncome As Single = grossProfit - totalOperatingExpenses + totalNonOperatingIncome
-                    .WriteToCell(rowIndex, 1, "本期損益")
+                    .WriteToCell(rowIndex, 1, "本期損益", New CloseXML_Excel.CellFormatOptions With {.IsBold = True, .Horizontal = XLAlignmentHorizontalValues.Left})
                     .WriteToCell(rowIndex, 4, netIncome)
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "損益表.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"損益表_{data.CompanyName}_{startDate:yyyyMMdd}-{endDate:yyyyMMdd}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1548,12 +1501,7 @@ Public Class ReportPresenter
                     Next
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "進項銷項.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    SaveExcel($"進項銷項_{year:yyyy}_{month}", xml)
                 End With
             End Using
         Catch ex As Exception
@@ -1561,7 +1509,7 @@ Public Class ReportPresenter
         End Try
     End Sub
 
-    Private Function WriteSubjectGroup(xml As CloseXML_Excel, subjects As List(Of IncomeStatementList), rowIndex As Integer, ByRef total As Single) As Integer
+    Private Function WriteSubjectGroup(xml As CloseXML_Excel, subjects As List(Of IncomeStatementItem), rowIndex As Integer, ByRef total As Single) As Integer
         total = subjects.Sum(Function(x) x.Amount)
 
         With xml
@@ -1594,5 +1542,19 @@ Public Class ReportPresenter
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
+    End Sub
+
+    Private Sub SaveExcel(fileName As String, xml As CloseXML_Excel)
+        Using saveDialog As New SaveFileDialog
+            With saveDialog
+                .Filter = "Excel檔案|*.xlsx"
+                .FileName = fileName + ".xlsx"
+            End With
+
+            If saveDialog.ShowDialog = DialogResult.OK Then
+                xml.SaveAs(saveDialog.FileName)
+            End If
+        End Using
+
     End Sub
 End Class

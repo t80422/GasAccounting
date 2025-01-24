@@ -89,6 +89,7 @@
         Dim invoiceRep As New InvoiceRep(context)
         Dim invoiceInRep As New InvoiceSplitRep(context)
         Dim ordRep As New OrderRep(context)
+        Dim ocmRep As New OrderCollectionMappingRep(context)
         Dim pbRep As New PurchaseBarrelRep(context)
         Dim bpRep As New BasicPriceRep(context)
         Dim paymentRep As New PaymentRep(context)
@@ -102,18 +103,19 @@
         Dim aeSer As IAccountingEntryService = New AccountingEntryService(aeRep)
         Dim barMBSer As IBarrelMonthlyBalanceService = New BarrelMonthlyBalanceService(barMBRep, gbRep, pbRep, ordRep)
         Dim bmbService As IBankMonthlyBalanceService = New BankMonthlyBalanceService(bmbRep, bankRep, paymentRep, colRep)
+        Dim ocmSer As IOrderCollectionMappingService = New OrderCollectionMappingService(ocmRep, ordRep, colRep)
         Dim priceCalSer As IPriceCalculationService = New PriceCalculationService(bpRep)
         Dim gmbSer As IGasMonthlyBalanceService = New GasMonthlyBalanceService(gmbRep, ordRep, compRep)
         Dim printerSer As IPrinterService = New PrinterService()
 
         _basicPrice = New BasicPricePresenter(Me, bpRep)
         _car = New CarPresenter(Me, cusRep, carRep)
-        _collect = New CollectionPresenter(Me, subjectRep, colRep, bankRep, cusRep, bmbService, cheRep, aeSer, compRep)
+        _collect = New CollectionPresenter(Me, subjectRep, colRep, bankRep, cusRep, bmbService, cheRep, aeSer, compRep, ocmSer)
         _customer = New CustomerPresenter(Me, cusRep, ppRep, compRep)
         _gasBarrel = New GasBarrelPresenter(Me, gbRep)
         _invoice = New InvoicePresenter(Me, cusRep, invoiceRep, priceCalSer, ordRep)
         _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
-        _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer, aeSer, printerSer)
+        _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer, aeSer, printerSer, ocmSer)
         _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep, aeSer)
         _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep, aeSer)
         _report = New ReportPresenter(Me, reportRep, bankRep, compRep, printerSer)
@@ -372,7 +374,8 @@
         Dim lst = New List(Of Control) From {
             txtCusCode,
             txtCusName_cus,
-            txtCusPhone1
+            txtCusPhone1,
+            cmbCompany_cus
         }
 
         SetQueryControls(btn, lst)
@@ -576,7 +579,7 @@
     End Sub
 
     Private Function SetRequired_subjects() As List(Of Control) Implements ICommonView_old(Of subject, SubjectsVM).SetRequired
-        Return New List(Of Control) From {txtName_subjects, cmbSubjectType}
+        Return New List(Of Control) From {txtName_subjects}
     End Function
 
     '基本資料-科目管理-取消
@@ -978,7 +981,7 @@
     End Function
 
     Public Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single, barrelAmount As Integer, gasUnitPrice As Single,
-                                  gasCUnitPrice As Single) Implements IOrderView.DisplayGasAndPrice
+                                  gasCUnitPrice As Single, unpaidAmount As Integer) Implements IOrderView.DisplayGasAndPrice
         txtTotalGas.Text = gas
         txtTotalGas_c.Text = gasC
         txtAmount_ord.Text = amount
@@ -986,6 +989,7 @@
         txtBarrelAmount.Text = barrelAmount
         txtGasUnitPrice.Text = gasUnitPrice
         txtGasCUnitPrice.Text = gasCUnitPrice
+        txtUnpaid.Text = unpaidAmount
     End Sub
 
     Public Function GetOrderInput() As order Implements IOrderView.GetOrderInput
@@ -2107,6 +2111,13 @@
     Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
         _collect.Initialize()
         SetButtonState(btnCancel_col, True)
+
+        ' 公司預設 "豐合"
+        Dim index As Integer = cmbCompany_col.FindString("豐合")
+        If index >= 0 Then cmbCompany_col.SelectedIndex = index
+
+        ' 解鎖"收款類型"
+        cmbType_col.Enabled = True
     End Sub
 
     '收入管理-收款作業-搜尋
@@ -2202,6 +2213,19 @@
                 MsgBox("查無此客戶")
             End If
         End If
+    End Sub
+
+    '收入管理-收款作業-銷帳
+    Private Sub btnWriteOff_Click(sender As Object, e As EventArgs) Handles btnWriteOff.Click
+        If String.IsNullOrEmpty(txtColId.Text) Then
+            MsgBox("請選擇對象")
+            Return
+        End If
+
+        Using frm As New frmWriteOff(txtColId.Text)
+            If frm.ShowDialog = DialogResult.OK Then
+            End If
+        End Using
     End Sub
 
     Public Sub ShowList(data As List(Of ChequeVM)) Implements ICommonView_old(Of cheque, ChequeVM).ShowList

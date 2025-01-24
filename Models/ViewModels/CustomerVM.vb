@@ -9,6 +9,7 @@
     Public Property 傳真 As String
     Public Property 地址 As String
     Public Property 統編 As String
+    Public Property 所屬公司 As String
     Public Property 備註 As String
     Public Property 保險 As String
     Public Property 價格方案 As String
@@ -49,5 +50,6 @@
         瓦斯桶2Kg = data.cus_gas_2
         普氣存氣 = data.cus_GasStock
         丙氣存氣 = data.cus_GasCStock
+        所屬公司 = data.company?.comp_name
     End Sub
 End Class

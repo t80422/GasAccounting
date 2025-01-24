@@ -8,10 +8,11 @@
     Private ReadOnly _chequeRep As IChequeRep
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _compRep As ICompanyRep
+    Private ReadOnly _ocmSer As IOrderCollectionMappingService
     Private _currentData As collection
 
     Public Sub New(view As ICollectionView, subjectRep As ISubjectRep, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
-                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, compRep As ICompanyRep)
+                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, compRep As ICompanyRep, ocmSer As IOrderCollectionMappingService)
         _view = view
         _subjectRep = subjectRep
         _colRep = colRep
@@ -21,6 +22,7 @@
         _chequeRep = chequeRep
         _aeSer = aeSer
         _compRep = compRep
+        _ocmSer = ocmSer
     End Sub
 
     Public Sub Initialize()
@@ -29,6 +31,7 @@
             LoadCmbsAsync()
             LoadList()
             _currentData = Nothing
+
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -54,6 +57,8 @@
             Try
                 Dim input = _view.GetUserInput
                 Validate(input)
+                input.col_UnmatchedAmount = input.col_Amount
+
                 Dim col = Await _colRep.AddAsync(input)
 
                 Select Case input.col_Type
@@ -97,6 +102,10 @@
         Using transaction = _colRep.BeginTransaction
             Try
                 Dim col = _view.GetUserInput
+
+                '未銷帳
+                Dim paid = _ocmSer.CalculateCollectionUnmatched(col.col_Id)
+                col.col_UnmatchedAmount = col.col_Amount - paid
                 Await _colRep.UpdateAsync(_currentData, col)
 
                 Select Case col.col_Type
@@ -153,6 +162,9 @@
         Using transaction = _colRep.BeginTransaction
             Try
                 Dim payType = _currentData.col_Type
+
+                ' 銷帳
+                _ocmSer.DeleteCollection(_currentData.col_Id)
 
                 '刪除資料
                 Await _colRep.DeleteAsync(_currentData)

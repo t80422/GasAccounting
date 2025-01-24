@@ -160,5 +160,14 @@ Public Class OrderVoucherVM
         結存50kg = order.customer.cus_gas_50
         結存5kg = order.customer.cus_gas_5
         本日退氣 = order.o_return + order.o_return_c
+        退空瓶50kg = order.o_in_50
+        退空瓶20kg = order.o_in_20
+        退空瓶16kg = order.o_in_16
+        退空瓶10kg = order.o_in_10
+        退空瓶4kg = order.o_in_4
+        退空瓶18kg = order.o_in_18
+        退空瓶2kg = order.o_in_2
+        退空瓶14kg = order.o_in_14
+        退空瓶5kg = order.o_in_5
     End Sub
 End Class

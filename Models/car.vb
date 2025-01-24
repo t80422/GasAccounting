@@ -26,6 +26,7 @@ Partial Public Class car
     Public Property c_deposit_2 As Integer
 
     Public Overridable Property customer As customer
+    Public Overridable Property customer1 As customer
     Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
     Public Overridable Property orders1 As ICollection(Of order) = New HashSet(Of order)
 

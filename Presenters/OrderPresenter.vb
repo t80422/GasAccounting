@@ -19,6 +19,7 @@ Public Class OrderPresenter
     Private ReadOnly _priceCalSer As IPriceCalculationService
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _printerSer As IPrinterService
+    Private ReadOnly _ocmSer As IOrderCollectionMappingService
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -27,7 +28,7 @@ Public Class OrderPresenter
     Public CurrentCarOut As car
 
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
-                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService)
+                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
@@ -37,6 +38,7 @@ Public Class OrderPresenter
         _priceCalSer = priceCalSer
         _aeSer = aeSer
         _printerSer = printerSer
+        _ocmSer = ocmSer
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -216,7 +218,15 @@ Public Class OrderPresenter
             '計算總計
             Dim amount As Single = totalBarrelPrice + gasPrice + gasCPrice + insurance - inputOrder.o_sales_allowance - returnGas - returnGasC
 
-            _view.DisplayGasAndPrice(totalGas, totalGasC, amount, insurance, totalBarrelPrice, cusGasUnitPrice, cusGasCUnitPrice)
+            ' 未收款金額
+            Dim paid As Integer = 0
+
+            If currentOrder IsNot Nothing Then
+                paid = _ocmSer.CalculateOrderUnPaid(currentOrder.o_id)
+            End If
+
+            Dim unpaid = amount - paid
+            _view.DisplayGasAndPrice(totalGas, totalGasC, amount, insurance, totalBarrelPrice, cusGasUnitPrice, cusGasCUnitPrice, unpaid)
         Catch ex As Exception
             MsgBox(ex.Message)
             MsgBox(ex.StackTrace)
@@ -357,6 +367,9 @@ Public Class OrderPresenter
                     End If
                 End If
 
+                ' 銷帳
+                _ocmSer.DeleteOrder(currentOrder.o_id)
+
                 ' 刪除訂單
                 Await _ordRep.DeleteAsync(currentOrder.o_id)
 
@@ -388,6 +401,7 @@ Public Class OrderPresenter
 
     Private Sub Validate(input As order)
         If input.o_cus_Id Is Nothing Then Throw New Exception("請輸入客戶")
+        If input.o_delivery_type = "自運" AndAlso input.o_c_id Is Nothing Then Throw New Exception("請選擇車號")
     End Sub
 
     Private Sub UpdateCustomerStock(order As order, customer As customer)
@@ -490,7 +504,7 @@ Public Class OrderPresenter
 
                 _view.GetCusStkInput(currentCustomer)
 
-                If orderInput.o_delivery_type = "廠運" Then
+                If orderInput.o_delivery_type = "自運" Then
                     If orderInput.o_in_out = "進場單" Then
                         _view.GetCarStkInput(CurrentCarIn)
                     Else

@@ -15,7 +15,7 @@
         日期 = payment.p_Date
         金額 = payment.p_Amount
         付款類型 = payment.p_Type
-        廠商名稱 = payment.manufacturer.manu_name
+        廠商名稱 = payment.manufacturer?.manu_name
         銀行名稱 = payment.bank?.bank_name
         科目 = payment.subject?.s_name
         帳款月份 = payment.p_AccountMonth?.ToString("yyyy年MM月")

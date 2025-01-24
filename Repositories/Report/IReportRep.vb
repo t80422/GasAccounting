@@ -138,7 +138,7 @@
     ''' <param name="endDate"></param>
     ''' <param name="compId"></param>
     ''' <returns></returns>
-    Function GetIncomeStatement(startDate As Date, endDate As Date, compId As Integer) As IncomeStatement
+    Function GetIncomeStatement(startDate As Date, endDate As Date, compId As Integer) As IncomeStatementModel
 
     ''' <summary>
     ''' 取得銷項

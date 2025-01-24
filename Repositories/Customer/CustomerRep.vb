@@ -20,6 +20,7 @@ Public Class CustomerRep
                 query = query.Where(Function(x) x.cus_phone1.Contains(criteria.cus_phone1))
                 query = query.Where(Function(x) x.cus_phone2.Contains(criteria.cus_phone2))
             End If
+            If criteria.cus_comp_Id IsNot Nothing Then query = query.Where(Function(x) x.cus_comp_Id = criteria.cus_comp_Id)
 
             Return Await query.ToListAsync
         Catch ex As Exception

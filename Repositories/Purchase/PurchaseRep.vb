@@ -17,7 +17,7 @@ Public Class PurchaseRep
             If Not String.IsNullOrEmpty(conditions.Product) Then query = query.Where(Function(x) x.pur_product = conditions.Product)
             If conditions.IsDateSearch Then query = query.Where(Function(x) x.pur_date >= conditions.StartDate AndAlso x.pur_date <= conditions.EndDate)
 
-            Return Await query.ToListAsync()
+            Return Await query.OrderByDescending(Function(x) x.pur_id).ToListAsync()
         Catch ex As Exception
             Throw New Exception("取得purchase列表時發生錯誤", ex)
         End Try

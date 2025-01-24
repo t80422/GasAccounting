@@ -75,20 +75,6 @@ Public Class CloseXML_Excel
         workbook?.Dispose()
     End Sub
 
-    ''' <summary>
-    ''' 設定指定範圍的單元格下底線
-    ''' </summary>
-    ''' <param name="startRowIndex">起始行索引，從1開始</param>
-    ''' <param name="startColIndex">起始列索引，從1開始</param>
-    ''' <param name="endRowIndex">結束行索引，從1開始</param>
-    ''' <param name="endColIndex">結束列索引，從1開始</param>
-    ''' <param name="borderStyle">下底線樣式</param>
-    <Obsolete("改用 SetCustomBorders")>
-    Public Sub SetBottomBorder(startRowIndex As Integer, startColIndex As Integer, endRowIndex As Integer, endColIndex As Integer, Optional borderStyle As XLBorderStyleValues = XLBorderStyleValues.Thin)
-        Dim range = Worksheet.Range(startRowIndex, startColIndex, endRowIndex, endColIndex)
-        range.Style.Border.BottomBorder = borderStyle
-    End Sub
-
     Public Sub SetCustomBorders(startRowIndex As Integer, startColIndex As Integer, endRowIndex As Integer, endColIndex As Integer,
                             Optional topStyle As XLBorderStyleValues? = Nothing,
                             Optional bottomStyle As XLBorderStyleValues? = Nothing,
@@ -116,23 +102,29 @@ Public Class CloseXML_Excel
 
     Public Class CellFormatOptions
         Public Property FontName As String = "新細明體"
+
         Public Property FontSize As Double = 11
+
         Public Property IsBold As Boolean = False
+
         ''' <summary>
         ''' 水平
         ''' </summary>
         ''' <returns></returns>
         Public Property Horizontal As XLAlignmentHorizontalValues
+
         ''' <summary>
         ''' 垂直置中
         ''' </summary>
         ''' <returns></returns>
         Public Property VerticalCenter As Boolean = False
+
         ''' <summary>
         ''' 自動換行
         ''' </summary>
         ''' <returns></returns>
         Public Property WrapText As Boolean = False
+
         ''' <summary>
         ''' 垂直文字
         ''' </summary>

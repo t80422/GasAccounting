@@ -849,39 +849,57 @@
         End Try
     End Function
 
-    Public Function GetIncomeStatement(startDate As Date, endDate As Date, compId As Integer) As IncomeStatement Implements IReportRep.GetIncomeStatement
+    Public Function GetIncomeStatement(startDate As Date, endDate As Date, compId As Integer) As IncomeStatementModel Implements IReportRep.GetIncomeStatement
         Try
-            Dim result = New IncomeStatement With {
+            Dim result = New IncomeStatementModel With {
                 .CompanyName = _context.companies.Find(compId).comp_name,
-                .DateRange = $"{startDate:yyyy.MM.dd} ~ {endDate:yyyy.MM.dd}",
-                .List = New List(Of IncomeStatementList)
+                .DateRange = $"{startDate:yyyy.MM.dd} ~ {endDate:yyyy.MM.dd}"
             }
 
             Dim formatEndDate = endDate.Date.AddDays(1)
+            Dim orders = _context.orders.Where(Function(x) x.o_date >= startDate.Date AndAlso
+                                                                       x.o_date < formatEndDate AndAlso
+                                                                       x.customer.cus_comp_Id = compId)
+            '營業收入
+            result.OperatingIncome = orders.Select(Function(x) x.o_total_amount).
+                                            DefaultIfEmpty(0).
+                                            Sum
 
-            '收入管理資料
-            Dim collections = _context.collections.Where(Function(x) x.col_Date >= startDate.Date AndAlso
-                                                                     x.col_Date < formatEndDate AndAlso
-                                                                     x.col_comp_Id = compId).
-                                                   GroupBy(Function(x) New With {Key .Type = x.subject.s_Type, Key .Name = x.subject.s_name}).
-                                                   Select(Function(x) New IncomeStatementList With {
-                                                       .SubjectType = x.Key.Type,
-                                                       .Subject = x.Key.Name,
-                                                       .Amount = x.Sum(Function(c) c.col_Amount)
+            ' 銷貨折讓
+            result.SalesDiscount = orders.Select(Function(x) x.o_sales_allowance).
+                                          DefaultIfEmpty(0).
+                                          Sum
+
+            ' 氣款收入
+            result.GasIncome = result.OperatingIncome + result.SalesDiscount
+
+            ' 進貨
+            result.Income = _context.purchases.Where(Function(x) x.pur_date >= startDate.Date AndAlso
+                                                                 x.pur_date < formatEndDate AndAlso
+                                                                 x.pur_comp_id = compId).
+                                               Select(Function(x) x.pur_price).
+                                               DefaultIfEmpty(0).
+                                               Sum
+
+            ' 營業外收益
+            result.CollectionsList = _context.collections.Where(Function(x) x.col_Date >= startDate.Date AndAlso
+                                                                            x.col_Date < formatEndDate AndAlso
+                                                                            x.col_comp_Id = compId).
+                                                          GroupBy(Function(g) New With {Key .Name = g.subject.s_name}).
+                                                          Select(Function(g) New IncomeStatementItem With {
+                                                            .Subject = g.Key.Name,
+                                                            .Amount = g.Sum(Function(x) x.col_Amount)
+                                                          }).ToList
+
+            ' 營業費用
+            result.PaymentList = _context.payments.Where(Function(x) x.p_Date >= startDate.Date AndAlso
+                                                                     x.p_Date < formatEndDate AndAlso
+                                                                     x.p_comp_Id = compId).
+                                                   GroupBy(Function(g) New With {Key .Name = g.subject.s_name}).
+                                                   Select(Function(g) New IncomeStatementItem With {
+                                                        .Subject = g.Key.Name,
+                                                        .Amount = g.Sum(Function(x) x.p_Amount)
                                                    }).ToList
-            result.List.AddRange(collections)
-
-            '支出管理資料
-            Dim payments = _context.payments.Where(Function(x) x.p_Date >= startDate.Date AndAlso
-                                                               x.p_Date < formatEndDate AndAlso
-                                                               x.p_comp_Id = compId).
-                                             GroupBy(Function(x) New With {Key .Type = x.subject.s_Type, Key .Name = x.subject.s_name}).
-                                             Select(Function(x) New IncomeStatementList With {
-                                                 .SubjectType = x.Key.Type,
-                                                 .Subject = x.Key.Name,
-                                                 .Amount = x.Sum(Function(c) c.p_Amount)
-                                             }).ToList
-            result.List.AddRange(payments)
 
             Return result
         Catch ex As Exception

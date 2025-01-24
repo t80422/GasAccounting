@@ -9,6 +9,7 @@
     Public Property 科目 As String
     Public Property 銀行名稱 As String
     Public Property 公司 As String
+    Public Property 未銷帳金額 As Integer
     Public Property 備註 As String
 
     Public Sub New(data As collection)
@@ -23,5 +24,6 @@
         銀行名稱 = data.bank?.bank_name
         公司 = data.company?.comp_name
         備註 = data.col_Memo
+        未銷帳金額 = data.col_UnmatchedAmount
     End Sub
 End Class

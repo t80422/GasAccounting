@@ -22,11 +22,13 @@ Partial Public Class collection
     Public Property col_Memo As String
     Public Property col_bank_Id As Nullable(Of Integer)
     Public Property col_comp_Id As Nullable(Of Integer)
+    Public Property col_UnmatchedAmount As Integer
 
     Public Overridable Property bank As bank
     Public Overridable Property cheques As ICollection(Of cheque) = New HashSet(Of cheque)
     Public Overridable Property customer As customer
     Public Overridable Property subject As subject
     Public Overridable Property company As company
+    Public Overridable Property order_collection_mapping As ICollection(Of order_collection_mapping) = New HashSet(Of order_collection_mapping)
 
 End Class

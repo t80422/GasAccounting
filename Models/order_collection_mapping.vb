@@ -10,10 +10,14 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class stock
-    Public Property stk_Id As Integer
-    Public Property stk_comp_Id As Integer
-    Public Property stk_Year As Short
-    Public Property stk_EndingStock As Single
+Partial Public Class order_collection_mapping
+    Public Property ocm_Id As Integer
+    Public Property ocm_o_Id As Integer
+    Public Property ocm_col_Id As Integer
+    Public Property ocm_Amount As Integer
+    Public Property ocm_Date As Date
+
+    Public Overridable Property collection As collection
+    Public Overridable Property order As order
 
 End Class
