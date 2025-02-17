@@ -9,8 +9,16 @@
     Public Property 普氣14Kg As Integer
     Public Property 普氣5Kg As Integer
     Public Property 普氣2Kg As Integer
-    Public Property 普氣瓶數 As Integer
-    Public Property 普氣Kg數 As Integer
+    Public Property 普氣殘氣 As Integer
+    Public Property 普氣提量 As Integer
+
+    Public ReadOnly Property 普氣實提量 As Integer
+        Get
+            Return 普氣提量 - 普氣殘氣
+        End Get
+    End Property
+
+
     Public Property 丙氣50Kg As Integer
     Public Property 丙氣20Kg As Integer
     Public Property 丙氣16Kg As Integer
@@ -20,7 +28,12 @@
     Public Property 丙氣14Kg As Integer
     Public Property 丙氣5Kg As Integer
     Public Property 丙氣2Kg As Integer
-    Public Property 丙氣瓶數 As Integer
-    Public Property 丙氣Kg數 As Integer
+    Public Property 丙氣殘氣 As Integer
+    Public Property 丙氣提量 As Integer
 
+    Public ReadOnly Property 丙氣實提量 As Integer
+        Get
+            Return 丙氣提量 - 丙氣殘氣
+        End Get
+    End Property
 End Class

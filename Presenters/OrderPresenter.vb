@@ -473,7 +473,7 @@ Public Class OrderPresenter
                 End Using
             End Using
 
-            PrintPDF(pdfPath)
+            'PrintPDF(pdfPath)
 
             MsgBox("成功")
 

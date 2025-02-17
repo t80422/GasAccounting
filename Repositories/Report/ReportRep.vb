@@ -68,7 +68,7 @@
 
                     Dim startDay = d.Date
                     Dim endDay = d.Date.AddDays(1)
-                    Dim ordersToday = db.orders.Where(Function(x) x.car.c_cus_id = cus.cus_id And x.o_date.Value >= startDay And x.o_date.Value < endDay).ToList
+                    Dim ordersToday = db.orders.Where(Function(x) x.o_cus_Id = cus.cus_id And x.o_date.Value >= startDay And x.o_date.Value < endDay).ToList
 
                     detail.普氣50Kg = ordersToday.Sum(Function(x) x.o_gas_50)
                     detail.丙氣50Kg = ordersToday.Sum(Function(x) x.o_gas_c_50)
@@ -97,11 +97,11 @@
                     detail.普氣2Kg = ordersToday.Sum(Function(x) x.o_gas_2)
                     detail.丙氣2Kg = ordersToday.Sum(Function(x) x.o_gas_c_2)
 
-                    detail.普氣瓶數 = detail.普氣50Kg + detail.普氣20Kg + detail.普氣16Kg + detail.普氣10Kg + detail.普氣4Kg + detail.普氣18Kg + detail.普氣14Kg + detail.普氣5Kg + detail.普氣2Kg
-                    detail.丙氣瓶數 = detail.丙氣50Kg + detail.丙氣20Kg + detail.丙氣16Kg + detail.丙氣10Kg + detail.丙氣4Kg + detail.丙氣18Kg + detail.丙氣14Kg + detail.丙氣5Kg + detail.丙氣2Kg
+                    detail.普氣殘氣 = ordersToday.Sum(Function(x) x.o_return)
+                    detail.丙氣殘氣 = ordersToday.Sum(Function(x) x.o_return_c)
 
-                    detail.普氣Kg數 = ordersToday.Sum(Function(x) x.o_gas_total)
-                    detail.丙氣Kg數 = ordersToday.Sum(Function(x) x.o_gas_c_total)
+                    detail.普氣提量 = ordersToday.Sum(Function(x) x.o_gas_total)
+                    detail.丙氣提量 = ordersToday.Sum(Function(x) x.o_gas_c_total)
 
                     result.Add(detail)
                 Next

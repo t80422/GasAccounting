@@ -4,15 +4,15 @@
     Public Property 客戶名稱 As String
     Public Property 車號 As String
     Public Property 進出場 As String
-    Public Property 進空瓶50 As Integer
-    Public Property 進空瓶20 As Integer
-    Public Property 進空瓶16 As Integer
-    Public Property 進空瓶10 As Integer
-    Public Property 進空瓶4 As Integer
-    Public Property 進空瓶18 As Integer
-    Public Property 進空瓶14 As Integer
-    Public Property 進空瓶5 As Integer
-    Public Property 進空瓶2 As Integer
+    Public Property 收空瓶50 As Integer
+    Public Property 收空瓶20 As Integer
+    Public Property 收空瓶16 As Integer
+    Public Property 收空瓶10 As Integer
+    Public Property 收空瓶4 As Integer
+    Public Property 收空瓶18 As Integer
+    Public Property 收空瓶14 As Integer
+    Public Property 收空瓶5 As Integer
+    Public Property 收空瓶2 As Integer
     Public Property 進新瓶50 As Integer
     Public Property 進新瓶20 As Integer
     Public Property 進新瓶16 As Integer
@@ -58,15 +58,15 @@
     Public Property 出丙氣14 As Integer
     Public Property 出丙氣5 As Integer
     Public Property 出丙氣2 As Integer
-    Public Property 出空瓶50 As Integer
-    Public Property 出空瓶20 As Integer
-    Public Property 出空瓶16 As Integer
-    Public Property 出空瓶10 As Integer
-    Public Property 出空瓶4 As Integer
-    Public Property 出空瓶18 As Integer
-    Public Property 出空瓶14 As Integer
-    Public Property 出空瓶5 As Integer
-    Public Property 出空瓶2 As Integer
+    Public Property 退空瓶50 As Integer
+    Public Property 退空瓶20 As Integer
+    Public Property 退空瓶16 As Integer
+    Public Property 退空瓶10 As Integer
+    Public Property 退空瓶4 As Integer
+    Public Property 退空瓶18 As Integer
+    Public Property 退空瓶14 As Integer
+    Public Property 退空瓶5 As Integer
+    Public Property 退空瓶2 As Integer
     Public Property 出寄桶50 As Integer
     Public Property 出寄桶20 As Integer
     Public Property 出寄桶16 As Integer
@@ -93,15 +93,15 @@
             客戶名稱 = data.customer.cus_name
             車號 = data.car?.c_no
             進出場 = data.o_in_out
-            進空瓶50 = data.o_in_50
-            進空瓶20 = data.o_in_20
-            進空瓶16 = data.o_in_16
-            進空瓶10 = data.o_in_10
-            進空瓶4 = data.o_in_4
-            進空瓶18 = data.o_in_18
-            進空瓶14 = data.o_in_14
-            進空瓶5 = data.o_in_5
-            進空瓶2 = data.o_in_2
+            收空瓶50 = data.o_in_50
+            收空瓶20 = data.o_in_20
+            收空瓶16 = data.o_in_16
+            收空瓶10 = data.o_in_10
+            收空瓶4 = data.o_in_4
+            收空瓶18 = data.o_in_18
+            收空瓶14 = data.o_in_14
+            收空瓶5 = data.o_in_5
+            收空瓶2 = data.o_in_2
             進新瓶50 = data.o_new_in_50
             進新瓶20 = data.o_new_in_20
             進新瓶16 = data.o_new_in_16
@@ -147,15 +147,15 @@
             出丙氣14 = data.o_gas_c_14
             出丙氣5 = data.o_gas_c_5
             出丙氣2 = data.o_gas_c_2
-            出空瓶50 = data.o_empty_50
-            出空瓶20 = data.o_empty_20
-            出空瓶16 = data.o_empty_16
-            出空瓶10 = data.o_empty_10
-            出空瓶4 = data.o_empty_4
-            出空瓶18 = data.o_empty_18
-            出空瓶14 = data.o_empty_14
-            出空瓶5 = data.o_empty_5
-            出空瓶2 = data.o_empty_2
+            退空瓶50 = data.o_empty_50
+            退空瓶20 = data.o_empty_20
+            退空瓶16 = data.o_empty_16
+            退空瓶10 = data.o_empty_10
+            退空瓶4 = data.o_empty_4
+            退空瓶18 = data.o_empty_18
+            退空瓶14 = data.o_empty_14
+            退空瓶5 = data.o_empty_5
+            退空瓶2 = data.o_empty_2
             出寄桶50 = data.o_deposit_out_50
             出寄桶20 = data.o_deposit_out_20
             出寄桶16 = data.o_deposit_out_16

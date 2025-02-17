@@ -140,10 +140,12 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 17, If(datas(i).丙氣5Kg <> Nothing, datas(i).丙氣5Kg.ToString("#,##"), ""))
                         .WriteToCell(rowIndex, 18, If(datas(i).普氣2Kg <> Nothing, datas(i).普氣2Kg.ToString("#,##"), ""))
                         .WriteToCell(rowIndex, 19, If(datas(i).丙氣2Kg <> Nothing, datas(i).丙氣2Kg.ToString("#,##"), ""))
-                        .WriteToCell(rowIndex, 20, If(datas(i).普氣瓶數 <> Nothing, datas(i).普氣瓶數.ToString("#,##"), ""))
-                        .WriteToCell(rowIndex, 21, If(datas(i).丙氣瓶數 <> Nothing, datas(i).丙氣瓶數.ToString("#,##"), ""))
-                        .WriteToCell(rowIndex, 22, If(datas(i).普氣Kg數 <> Nothing, datas(i).普氣Kg數.ToString("#,##"), ""))
-                        .WriteToCell(rowIndex, 23, If(datas(i).丙氣Kg數 <> Nothing, datas(i).丙氣Kg數.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 20, If(datas(i).普氣殘氣 <> Nothing, datas(i).普氣殘氣.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 21, If(datas(i).丙氣殘氣 <> Nothing, datas(i).丙氣殘氣.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 22, If(datas(i).普氣提量 <> Nothing, datas(i).普氣提量.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 23, If(datas(i).丙氣提量 <> Nothing, datas(i).丙氣提量.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 24, If(datas(i).普氣實提量 <> Nothing, datas(i).普氣實提量.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 25, If(datas(i).丙氣實提量 <> Nothing, datas(i).丙氣實提量.ToString("#,##"), ""))
                     Next
 
                     '合計
@@ -174,10 +176,12 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 17, datas.Sum(Function(x) x.丙氣5Kg).ToString("#,##"), totalStyle)
                     .WriteToCell(rowIndex, 18, datas.Sum(Function(x) x.普氣2Kg).ToString("#,##"), totalStyle)
                     .WriteToCell(rowIndex, 19, datas.Sum(Function(x) x.丙氣2Kg).ToString("#,##"), totalStyle)
-                    .WriteToCell(rowIndex, 20, datas.Sum(Function(x) x.普氣瓶數).ToString("#,##"), totalStyle)
-                    .WriteToCell(rowIndex, 21, datas.Sum(Function(x) x.丙氣瓶數).ToString("#,##"), totalStyle)
-                    .WriteToCell(rowIndex, 22, datas.Sum(Function(x) x.普氣Kg數).ToString("#,##"), totalStyle)
-                    .WriteToCell(rowIndex, 23, datas.Sum(Function(x) x.丙氣Kg數).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 20, datas.Sum(Function(x) x.普氣殘氣).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 21, datas.Sum(Function(x) x.丙氣殘氣).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 22, datas.Sum(Function(x) x.普氣提量).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 23, datas.Sum(Function(x) x.丙氣提量).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 24, datas.Sum(Function(x) x.普氣實提量).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 25, datas.Sum(Function(x) x.丙氣實提量).ToString("#,##"), totalStyle)
 
                     '存檔
                     SaveExcel($"客戶提氣清冊_{d:yyyyMMdd}", xml)

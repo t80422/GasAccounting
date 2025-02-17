@@ -746,6 +746,8 @@ Partial Class frmMain
         Me.tpRevenueManage = New System.Windows.Forms.TabPage()
         Me.TabControl5 = New System.Windows.Forms.TabControl()
         Me.tpCollection = New System.Windows.Forms.TabPage()
+        Me.TextBox14 = New System.Windows.Forms.TextBox()
+        Me.Label141 = New System.Windows.Forms.Label()
         Me.btnWriteOff = New System.Windows.Forms.Button()
         Me.dtpAbleCashingDate = New System.Windows.Forms.DateTimePicker()
         Me.lblAbleCashingDate = New System.Windows.Forms.Label()
@@ -1008,8 +1010,6 @@ Partial Class frmMain
         Me.Label132 = New System.Windows.Forms.Label()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.TextBox14 = New System.Windows.Forms.TextBox()
-        Me.Label141 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -7424,7 +7424,7 @@ Partial Class frmMain
         Me.Label214.Name = "Label214"
         Me.Label214.Size = New System.Drawing.Size(114, 19)
         Me.Label214.TabIndex = 487
-        Me.Label214.Text = "退空瓶"
+        Me.Label214.Text = "收空瓶"
         '
         'Label215
         '
@@ -8125,7 +8125,7 @@ Partial Class frmMain
         Me.Label44.Name = "Label44"
         Me.Label44.Size = New System.Drawing.Size(114, 19)
         Me.Label44.TabIndex = 471
-        Me.Label44.Text = "空瓶出場"
+        Me.Label44.Text = "退空瓶"
         '
         'Label45
         '
@@ -8719,6 +8719,26 @@ Partial Class frmMain
         Me.tpCollection.TabIndex = 20
         Me.tpCollection.Text = "收款作業"
         Me.tpCollection.UseVisualStyleBackColor = True
+        '
+        'TextBox14
+        '
+        Me.TextBox14.Location = New System.Drawing.Point(135, 141)
+        Me.TextBox14.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.TextBox14.Name = "TextBox14"
+        Me.TextBox14.ReadOnly = True
+        Me.TextBox14.Size = New System.Drawing.Size(165, 30)
+        Me.TextBox14.TabIndex = 454
+        Me.TextBox14.Tag = "col_UnmatchedAmount"
+        '
+        'Label141
+        '
+        Me.Label141.AutoSize = True
+        Me.Label141.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label141.Location = New System.Drawing.Point(34, 147)
+        Me.Label141.Name = "Label141"
+        Me.Label141.Size = New System.Drawing.Size(94, 19)
+        Me.Label141.TabIndex = 455
+        Me.Label141.Text = "未 銷 帳"
         '
         'btnWriteOff
         '
@@ -11372,26 +11392,6 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'TextBox14
-        '
-        Me.TextBox14.Location = New System.Drawing.Point(135, 141)
-        Me.TextBox14.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
-        Me.TextBox14.Name = "TextBox14"
-        Me.TextBox14.ReadOnly = True
-        Me.TextBox14.Size = New System.Drawing.Size(165, 30)
-        Me.TextBox14.TabIndex = 454
-        Me.TextBox14.Tag = "col_UnmatchedAmount"
-        '
-        'Label141
-        '
-        Me.Label141.AutoSize = True
-        Me.Label141.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label141.Location = New System.Drawing.Point(34, 147)
-        Me.Label141.Name = "Label141"
-        Me.Label141.Size = New System.Drawing.Size(94, 19)
-        Me.Label141.TabIndex = 455
-        Me.Label141.Text = "未 銷 帳"
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -11401,7 +11401,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.14.4"
+        Me.Text = "豐原瓦斯會計系統 v0.14.5"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
