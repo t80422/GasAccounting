@@ -8,6 +8,10 @@ Public Class CloseXML_Excel
 
     Public Worksheet As IXLWorksheet
 
+    ''' <summary>
+    ''' 初始化範本檔,要先選擇sheet
+    ''' </summary>
+    ''' <param name="filePath">範本檔路徑</param>
     Public Sub New(filePath As String)
         Try
             workbook = New XLWorkbook(filePath)
@@ -49,14 +53,34 @@ Public Class CloseXML_Excel
         cell.Value = content
 
         If formatOptions IsNot Nothing Then
-            cell.Style.Font.FontName = formatOptions.FontName
-            cell.Style.Font.FontSize = formatOptions.FontSize
-            cell.Style.Font.Bold = formatOptions.IsBold
-            cell.Style.Alignment.Horizontal = formatOptions.Horizontal
-            cell.Style.Alignment.Vertical = If(formatOptions.VerticalCenter, XLAlignmentVerticalValues.Center, XLAlignmentVerticalValues.Top)
-            cell.Style.Alignment.WrapText = formatOptions.WrapText
-            If formatOptions.VerticalText Then cell.Style.Alignment.TextRotation = 255
+            SetCellFormat(cell, formatOptions)
         End If
+    End Sub
+
+    Public Sub WriteToCell(cellAddress As String, content As String, Optional formatOptions As CellFormatOptions = Nothing)
+        Try
+            Dim cell = Worksheet.Cell(cellAddress)
+            cell.Value = content
+
+            If formatOptions IsNot Nothing Then
+                SetCellFormat(cell, formatOptions)
+            End If
+        Catch ex As Exception
+            Throw New Exception($"寫入單元格 {cellAddress} 時發生錯誤: {ex.Message}", ex)
+        End Try
+    End Sub
+
+    Public Sub WriteToCell(columnName As String, rowIndex As Integer, content As String, Optional formatOptions As CellFormatOptions = Nothing)
+        Try
+            Dim cell = Worksheet.Cell(rowIndex, columnName)
+            cell.Value = content
+
+            If formatOptions IsNot Nothing Then
+                SetCellFormat(cell, formatOptions)
+            End If
+        Catch ex As Exception
+            Throw New Exception($"寫入單元格 {columnName}{rowIndex} 時發生錯誤: {ex.Message}", ex)
+        End Try
     End Sub
 
     Public Function SaveAs(filePath As String) As Boolean
@@ -190,6 +214,32 @@ Public Class CloseXML_Excel
         Catch ex As Exception
             Throw New Exception($"合併儲存格時發生錯誤: {ex.Message}", ex)
         End Try
+    End Sub
+
+    Public Function SaveExcel(fileName As String) As String
+        Using saveDialog As New SaveFileDialog
+            With saveDialog
+                .Filter = "Excel檔案|*.xlsx"
+                .FileName = fileName + ".xlsx"
+            End With
+
+            If saveDialog.ShowDialog = DialogResult.OK Then
+                SaveAs(saveDialog.FileName)
+                Return saveDialog.FileName
+            End If
+
+            Return Nothing
+        End Using
+    End Function
+    Private Sub SetCellFormat(cell As IXLCell, formatOptions As CellFormatOptions)
+        cell.Style.Font.FontName = formatOptions.FontName
+        cell.Style.Font.FontSize = formatOptions.FontSize
+        cell.Style.Font.Bold = formatOptions.IsBold
+        cell.Style.Alignment.Horizontal = formatOptions.Horizontal
+        cell.Style.Alignment.Vertical = If(formatOptions.VerticalCenter, XLAlignmentVerticalValues.Center, XLAlignmentVerticalValues.Top)
+        cell.Style.Alignment.WrapText = formatOptions.WrapText
+
+        If formatOptions.VerticalText Then cell.Style.Alignment.TextRotation = 255
     End Sub
 
     Private Function CmToPoints(cm As Double) As Double

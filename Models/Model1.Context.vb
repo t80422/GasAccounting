@@ -38,7 +38,6 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property invoices() As DbSet(Of invoice)
     Public Overridable Property invoice_split() As DbSet(Of invoice_split)
     Public Overridable Property manufacturers() As DbSet(Of manufacturer)
-    Public Overridable Property orders() As DbSet(Of order)
     Public Overridable Property payments() As DbSet(Of payment)
     Public Overridable Property permissions() As DbSet(Of permission)
     Public Overridable Property priceplans() As DbSet(Of priceplan)
@@ -49,5 +48,7 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property stocks() As DbSet(Of stock)
     Public Overridable Property subjects() As DbSet(Of subject)
     Public Overridable Property order_collection_mapping() As DbSet(Of order_collection_mapping)
+    Public Overridable Property monthly_account() As DbSet(Of monthly_account)
+    Public Overridable Property orders() As DbSet(Of order)
 
 End Class

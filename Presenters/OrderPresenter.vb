@@ -20,6 +20,7 @@ Public Class OrderPresenter
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _printerSer As IPrinterService
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
+    Private ReadOnly _maService As IMonthlyAccountService
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -39,6 +40,7 @@ Public Class OrderPresenter
         _aeSer = aeSer
         _printerSer = printerSer
         _ocmSer = ocmSer
+        _maService = New MonthlyAccountService()
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -229,7 +231,6 @@ Public Class OrderPresenter
             _view.DisplayGasAndPrice(totalGas, totalGasC, amount, insurance, totalBarrelPrice, cusGasUnitPrice, cusGasCUnitPrice, unpaid)
         Catch ex As Exception
             MsgBox(ex.Message)
-            MsgBox(ex.StackTrace)
         End Try
     End Sub
 
@@ -304,6 +305,9 @@ Public Class OrderPresenter
 
                 _aeSer.AddEntries(entries)
 
+                ' 同步更新月度帳單資料
+                _maService.SyncOrderToMonthlyAccount(insert, True, False)
+
                 Await _cusRep.SaveChangesAsync
 
                 transaction.Commit()
@@ -366,6 +370,9 @@ Public Class OrderPresenter
                         UpdateCarStock(currentOrder, CurrentCarOut, False)
                     End If
                 End If
+
+                ' 同步更新月度帳單資料
+                _maService.SyncOrderToMonthlyAccount(currentOrder, False, True)
 
                 ' 銷帳
                 _ocmSer.DeleteOrder(currentOrder.o_id)
@@ -473,7 +480,7 @@ Public Class OrderPresenter
                 End Using
             End Using
 
-            'PrintPDF(pdfPath)
+            PrintPDF(pdfPath)
 
             MsgBox("成功")
 
@@ -514,29 +521,10 @@ Public Class OrderPresenter
 
                 Await _service.UpdateOrAddAsync(orderInput.o_date)
 
-                Dim entries = New List(Of accounting_entry) From {
-                    New accounting_entry With {
-                        .ae_TransactionId = orderInput.o_id,
-                        .ae_Date = orderInput.o_date,
-                        .ae_TransactionType = "銷售管理",
-                        .ae_s_Id = 8,
-                        .ae_Debit = 0,
-                        .ae_Credit = orderInput.o_total_amount
-                    },
-                    New accounting_entry With {
-                        .ae_TransactionId = orderInput.o_id,
-                        .ae_Date = orderInput.o_date,
-                        .ae_TransactionType = "銷售管理",
-                        .ae_s_Id = 9,
-                        .ae_Debit = orderInput.o_total_amount,
-                        .ae_Credit = 0
-                    }
-                }
-
-                _aeSer.UpdateEntries(entries)
+                ' 同步更新月度帳單資料
+                _maService.SyncOrderToMonthlyAccount(orderInput, False, False)
 
                 Await _cusRep.SaveChangesAsync
-
                 transaction.Commit()
                 _view.ClearInput()
                 Await LoadList(False)
@@ -576,16 +564,16 @@ Public Class OrderPresenter
                         Dim totalBarrel = cus.cus_gas_50 + cus.cus_gas_20 + cus.cus_gas_16 + cus.cus_gas_10 + cus.cus_gas_4 + cus.cus_gas_18 + cus.cus_gas_14 + cus.cus_gas_5 + cus.cus_gas_2
                         .WriteToCell(rowIndex, 1, cus.cus_code)
                         .WriteToCell(rowIndex, 2, cus.cus_name)
-                        .WriteToCell(rowIndex, 3, cus.cus_gas_50)
-                        .WriteToCell(rowIndex, 4, cus.cus_gas_20)
-                        .WriteToCell(rowIndex, 5, cus.cus_gas_16)
-                        .WriteToCell(rowIndex, 6, cus.cus_gas_10)
-                        .WriteToCell(rowIndex, 7, cus.cus_gas_4)
-                        .WriteToCell(rowIndex, 8, cus.cus_gas_18)
-                        .WriteToCell(rowIndex, 9, cus.cus_gas_14)
-                        .WriteToCell(rowIndex, 10, cus.cus_gas_5)
-                        .WriteToCell(rowIndex, 11, cus.cus_gas_2)
-                        .WriteToCell(rowIndex, 12, totalBarrel)
+                        .WriteToCell(rowIndex, 3, cus.cus_gas_50.ToString)
+                        .WriteToCell(rowIndex, 4, cus.cus_gas_20.ToString)
+                        .WriteToCell(rowIndex, 5, cus.cus_gas_16.ToString)
+                        .WriteToCell(rowIndex, 6, cus.cus_gas_10.ToString)
+                        .WriteToCell(rowIndex, 7, cus.cus_gas_4.ToString)
+                        .WriteToCell(rowIndex, 8, cus.cus_gas_18.ToString)
+                        .WriteToCell(rowIndex, 9, cus.cus_gas_14.ToString)
+                        .WriteToCell(rowIndex, 10, cus.cus_gas_5.ToString)
+                        .WriteToCell(rowIndex, 11, cus.cus_gas_2.ToString)
+                        .WriteToCell(rowIndex, 12, totalBarrel.ToString)
                         .InsertRow(rowIndex)
                         rowIndex += 1
                         totalSum += totalBarrel
@@ -597,16 +585,16 @@ Public Class OrderPresenter
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
                     .WriteToCell(rowIndex, 2, "合計", totalStyle)
-                    .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50))
-                    .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20))
-                    .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16))
-                    .WriteToCell(rowIndex, 6, customers.Sum(Function(x) x.cus_gas_10))
-                    .WriteToCell(rowIndex, 7, customers.Sum(Function(x) x.cus_gas_4))
-                    .WriteToCell(rowIndex, 8, customers.Sum(Function(x) x.cus_gas_18))
-                    .WriteToCell(rowIndex, 9, customers.Sum(Function(x) x.cus_gas_14))
-                    .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5))
-                    .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2))
-                    .WriteToCell(rowIndex, 12, totalSum)
+                    .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50).ToString)
+                    .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20).ToString)
+                    .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16).ToString)
+                    .WriteToCell(rowIndex, 6, customers.Sum(Function(x) x.cus_gas_10).ToString)
+                    .WriteToCell(rowIndex, 7, customers.Sum(Function(x) x.cus_gas_4).ToString)
+                    .WriteToCell(rowIndex, 8, customers.Sum(Function(x) x.cus_gas_18).ToString)
+                    .WriteToCell(rowIndex, 9, customers.Sum(Function(x) x.cus_gas_14).ToString)
+                    .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5).ToString)
+                    .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2).ToString)
+                    .WriteToCell(rowIndex, 12, totalSum.ToString)
 
                     '存檔
                     Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶鋼瓶結存總冊.xlsx")

@@ -1,30 +1,33 @@
 ﻿Imports System.IO
+Imports System.Windows.Interop
 Imports ClosedXML.Excel
 
 Public Class ReportPresenter
     Private ReadOnly _view As IReportView
-    Private _rep As IReportRep
-    Private _manuRep As IManufacturerService = New ManufacturerService
+    Private ReadOnly _rep As IReportRep
+    Private ReadOnly _manuRep As IManufacturerService = New ManufacturerService
     Private ReadOnly _bankRep As IBankRep
     Private ReadOnly _compRep As ICompanyRep
+    Private ReadOnly _colRep As ICollectionRep
     Private ReadOnly _printerSer As IPrinterService
 
-    Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService)
+    Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService, colRep As ICollectionRep)
         _view = view
         _rep = reportRep
         _bankRep = bankRep
         _compRep = compRep
         _printerSer = printerSer
+        _colRep = colRep
     End Sub
 
     ''' <summary>
     ''' 產生氣量氣款收付明細表
     ''' </summary>
     ''' <param name="d"></param>
-    Public Sub GenerateCustomersGasDetailByDay(d As Date)
+    Public Sub GenerateCustomersGasDetailByDay(d As Date, isMonth As Boolean)
         Try
             '蒐集資料
-            Dim datas = _rep.CustomersGasDetailByDay(d)
+            Dim datas = _rep.CustomersGasDetailByDay(d, isMonth)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "氣量氣款收付明細表範本檔.xlsx")
@@ -33,7 +36,12 @@ Public Class ReportPresenter
                 With xml
                     .SelectWorksheet("Sheet1")
 
-                    .WriteToCell(2, 1, $"{d:yyyy年MM月dd日 氣量氣款收付明細表}")
+                    If isMonth Then
+                        .WriteToCell(2, 1, $"{d:yyyy年MM月 氣量氣款收付明細表}")
+                    Else
+                        .WriteToCell(2, 1, $"{d:yyyy年MM月dd日 氣量氣款收付明細表}")
+                    End If
+
                     .WriteToCell(3, 7, $"列印日期: {Now:yyyy/MM/dd}")
 
                     Dim rowIndex As Integer
@@ -52,7 +60,6 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 5, If(datas(i).本日氣款 <> Nothing, datas(i).本日氣款.ToString("#,##"), "0"), dataStyle)
                         .WriteToCell(rowIndex, 6, If(datas(i).本日收款 <> Nothing, datas(i).本日收款.ToString("#,##"), "0"), dataStyle)
                         .WriteToCell(rowIndex, 7, If(datas(i).結欠 <> Nothing, datas(i).結欠.ToString("#,##"), "0"), dataStyle)
-
                     Next
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 7, bottomStyle:=XLBorderStyleValues.Thin)
@@ -68,7 +75,12 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"), dataStyle)
 
                     '存檔
-                    SaveExcel($"日氣量氣款收付明細表_{d:yyyyMMdd}", xml)
+                    If isMonth Then
+                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMM}")
+                    Else
+                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMMdd}")
+                    End If
+
                 End With
             End Using
         Catch ex As Exception
@@ -80,10 +92,10 @@ Public Class ReportPresenter
     ''' 產生客戶提氣清冊
     ''' </summary>
     ''' <param name="d"></param>
-    Public Sub GenerateCustomersGetGasList(d As Date)
+    Public Sub GenerateCustomersGetGasList(d As Date, isMonth As Boolean)
         Try
             '蒐集資料
-            Dim datas = _rep.CustomersGetGasList(d)
+            Dim datas = _rep.CustomersGetGasList(d, isMonth)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣清冊範本檔.xlsx")
@@ -92,26 +104,46 @@ Public Class ReportPresenter
                 With xml
                     .SelectWorksheet("Sheet1")
 
+                    ' 設定表頭
+                    Dim ws = .Worksheet
+
+                    ws.PageSetup.PrintAreas.Clear()
+                    ws.PageSetup.SetRowsToRepeatAtTop(1, 5)
+
+                    ws.PageSetup.PaperSize = XLPaperSize.A4Paper
+                    ws.PageSetup.Margins.Top = 0.1
+                    ws.PageSetup.Margins.Bottom = 0.5
+                    ws.PageSetup.Margins.Left = 0.1
+                    ws.PageSetup.Margins.Right = 0.1
+
                     Dim titleStyle = New CloseXML_Excel.CellFormatOptions With {
                         .FontSize = 14,
                         .IsBold = True,
                         .Horizontal = XLAlignmentHorizontalValues.Center
                     }
-                    .MergeCells(1, 1, 1, 23)
+
+                    .MergeCells(1, 1, 1, 25)
                     .WriteToCell(1, 1, "豐原液化煤氣分裝場", titleStyle)
 
-                    .MergeCells(2, 1, 2, 23)
+                    .MergeCells(2, 1, 2, 25)
                     .WriteToCell(2, 1, "客戶提氣量清單", titleStyle)
 
                     Dim dateStyle = New CloseXML_Excel.CellFormatOptions With {
-                        .Horizontal = XLAlignmentHorizontalValues.Left
-                    }
-                    .WriteToCell(3, 1, $"提氣日期: {d:yyyy/MM/dd}", dateStyle)
+                            .Horizontal = XLAlignmentHorizontalValues.Left
+                        }
+                    If isMonth Then
+                        .WriteToCell(3, 1, $"提氣日期: {d:yyyy/MM}", dateStyle)
+                    Else
+                        .WriteToCell(3, 1, $"提氣日期: {d:yyyy/MM/dd}", dateStyle)
+                    End If
 
                     Dim printDateStyle = New CloseXML_Excel.CellFormatOptions With {
-                        .Horizontal = XLAlignmentHorizontalValues.Right
-                    }
-                    .WriteToCell(3, 23, $"列印日期: {Now:yyyy/MM/dd}", printDateStyle)
+                            .Horizontal = XLAlignmentHorizontalValues.Right
+                        }
+
+                    .WriteToCell(3, 25, $"列印日期: {Now:yyyy/MM/dd}", printDateStyle)
+
+                    ws.PageSetup.Footer.Center.AddText("第 &P 頁/共 &N 頁")
 
                     Dim rowIndex As Integer
 
@@ -184,7 +216,12 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 25, datas.Sum(Function(x) x.丙氣實提量).ToString("#,##"), totalStyle)
 
                     '存檔
-                    SaveExcel($"客戶提氣清冊_{d:yyyyMMdd}", xml)
+                    If isMonth Then
+                        .SaveExcel($"客戶提氣清冊_{d:yyyyMM}")
+                    Else
+                        .SaveExcel($"客戶提氣清冊_{d:yyyyMMdd}")
+                    End If
+
                 End With
             End Using
         Catch ex As Exception
@@ -237,18 +274,18 @@ Public Class ReportPresenter
 
                     rowIndex += 1
                     .WriteToCell(rowIndex, 2, "總計:")
-                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.普氣))
-                    .WriteToCell(rowIndex, 4, datas.Average(Function(x) x.普氣單價.ToString("N2")))
-                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.普氣金額))
-                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.丙氣))
-                    .WriteToCell(rowIndex, 7, datas.Average(Function(x) x.丙氣單價.ToString("N2")))
-                    .WriteToCell(rowIndex, 8, datas.Sum(Function(x) x.丙氣金額))
-                    .WriteToCell(rowIndex, 9, datas.Sum(Function(x) x.總計))
-                    .WriteToCell(rowIndex, 10, datas.Sum(Function(x) x.餘額))
-                    .WriteToCell(rowIndex, 11, datas.Last().累計)
+                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.普氣).ToString)
+                    .WriteToCell(rowIndex, 4, datas.Average(Function(x) x.普氣單價.ToString("N2")).ToString)
+                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.普氣金額).ToString)
+                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.丙氣).ToString)
+                    .WriteToCell(rowIndex, 7, datas.Average(Function(x) x.丙氣單價.ToString("N2")).ToString)
+                    .WriteToCell(rowIndex, 8, datas.Sum(Function(x) x.丙氣金額).ToString)
+                    .WriteToCell(rowIndex, 9, datas.Sum(Function(x) x.總計).ToString)
+                    .WriteToCell(rowIndex, 10, datas.Sum(Function(x) x.餘額).ToString)
+                    .WriteToCell(rowIndex, 11, datas.Last().累計.ToString)
 
                     '存檔
-                    SaveExcel($"大氣進貨明細_{vendorName}_{d:yyyyMMdd}", xml)
+                    .SaveExcel($"大氣進貨明細_{vendorName}_{d:yyyyMMdd}")
 
                 End With
             End Using
@@ -262,10 +299,10 @@ Public Class ReportPresenter
     ''' </summary>
     ''' <param name="d"></param>
     ''' <param name="cusCode"></param>
-    Public Sub GenerateDailyCustomerReceivable(d As Date, cusCode As String)
+    Public Sub GenerateMonthlyCustomerReceivable(d As Date, cusCode As String)
         Try
             '蒐集資料
-            Dim datas = _rep.DailyCustomerReceivable(d, cusCode)
+            Dim datas = _rep.MonthlyCustomerReceivable(d, cusCode)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "單一客戶每日的應收帳明細表範本檔.xlsx")
@@ -285,37 +322,37 @@ Public Class ReportPresenter
                         rowIndex = 4 + i
 
                         .WriteToCell(rowIndex, 2, datas(i).日期)
-                        .WriteToCell(rowIndex, 3, datas(i).總提氣)
+                        .WriteToCell(rowIndex, 3, datas(i).總提氣.ToString)
 
-                        .WriteToCell(rowIndex, 4, datas(i).廠運總提氣)
-                        .WriteToCell(rowIndex, 5, datas(i).廠運普氣)
-                        .WriteToCell(rowIndex, 6, datas(i).廠運普氣退氣)
-                        .WriteToCell(rowIndex, 7, datas(i).廠運普氣單價)
-                        .WriteToCell(rowIndex, 8, datas(i).廠運普氣金額)
-                        .WriteToCell(rowIndex, 9, datas(i).廠運丙氣)
-                        .WriteToCell(rowIndex, 10, datas(i).廠運丙氣退氣)
-                        .WriteToCell(rowIndex, 11, datas(i).廠運丙氣單價)
-                        .WriteToCell(rowIndex, 12, datas(i).廠運丙氣金額)
+                        .WriteToCell(rowIndex, 4, datas(i).廠運總提氣.ToString)
+                        .WriteToCell(rowIndex, 5, datas(i).廠運普氣.ToString)
+                        .WriteToCell(rowIndex, 6, datas(i).廠運普氣退氣.ToString)
+                        .WriteToCell(rowIndex, 7, datas(i).廠運普氣單價.ToString)
+                        .WriteToCell(rowIndex, 8, datas(i).廠運普氣金額.ToString)
+                        .WriteToCell(rowIndex, 9, datas(i).廠運丙氣.ToString)
+                        .WriteToCell(rowIndex, 10, datas(i).廠運丙氣退氣.ToString)
+                        .WriteToCell(rowIndex, 11, datas(i).廠運丙氣單價.ToString)
+                        .WriteToCell(rowIndex, 12, datas(i).廠運丙氣金額.ToString)
 
-                        .WriteToCell(rowIndex, 13, datas(i).自運總提氣)
-                        .WriteToCell(rowIndex, 14, datas(i).自運普氣)
-                        .WriteToCell(rowIndex, 15, datas(i).自運普氣退氣)
-                        .WriteToCell(rowIndex, 16, datas(i).自運普氣單價)
-                        .WriteToCell(rowIndex, 17, datas(i).自運普氣金額)
-                        .WriteToCell(rowIndex, 18, datas(i).自運丙氣)
-                        .WriteToCell(rowIndex, 19, datas(i).自運丙氣退氣)
-                        .WriteToCell(rowIndex, 20, datas(i).自運丙氣單價)
-                        .WriteToCell(rowIndex, 21, datas(i).自運丙氣金額)
+                        .WriteToCell(rowIndex, 13, datas(i).自運總提氣.ToString)
+                        .WriteToCell(rowIndex, 14, datas(i).自運普氣.ToString)
+                        .WriteToCell(rowIndex, 15, datas(i).自運普氣退氣.ToString)
+                        .WriteToCell(rowIndex, 16, datas(i).自運普氣單價.ToString)
+                        .WriteToCell(rowIndex, 17, datas(i).自運普氣金額.ToString)
+                        .WriteToCell(rowIndex, 18, datas(i).自運丙氣.ToString)
+                        .WriteToCell(rowIndex, 19, datas(i).自運丙氣退氣.ToString)
+                        .WriteToCell(rowIndex, 20, datas(i).自運丙氣單價.ToString)
+                        .WriteToCell(rowIndex, 21, datas(i).自運丙氣金額.ToString)
 
-                        .WriteToCell(rowIndex, 22, datas(i).總額)
-                        .WriteToCell(rowIndex, 23, datas(i).現金)
-                        .WriteToCell(rowIndex, 24, datas(i).票據)
-                        .WriteToCell(rowIndex, 25, datas(i).掛帳)
-                        .WriteToCell(rowIndex, 26, datas(i).累計)
+                        .WriteToCell(rowIndex, 22, datas(i).總額.ToString)
+                        .WriteToCell(rowIndex, 23, datas(i).現金.ToString)
+                        .WriteToCell(rowIndex, 24, datas(i).票據.ToString)
+                        .WriteToCell(rowIndex, 25, datas(i).掛帳.ToString)
+                        .WriteToCell(rowIndex, 26, datas(i).累計.ToString)
                     Next
 
                     '存檔
-                    SaveExcel($"單一客戶每日的應收帳明細表_{cusName}_{d:yyyyMMdd}", xml)
+                    .SaveExcel($"單一客戶每月的應收帳明細表_{cusName}_{d:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -348,23 +385,23 @@ Public Class ReportPresenter
                         rowIndex = 3 + i
 
                         .WriteToCell(rowIndex, 1, datas(i).日期)
-                        .WriteToCell(rowIndex, 2, datas(i).退氣)
-                        .WriteToCell(rowIndex, 3, datas(i).退氣累計量)
-                        .WriteToCell(rowIndex, 4, datas(i).提氣量)
-                        .WriteToCell(rowIndex, 5, datas(i).提氣累計量)
-                        .WriteToCell(rowIndex, 6, datas(i).總支數)
-                        .WriteToCell(rowIndex, 7, datas(i).瓦斯瓶50Kg)
-                        .WriteToCell(rowIndex, 8, datas(i).瓦斯瓶20Kg)
-                        .WriteToCell(rowIndex, 9, datas(i).瓦斯瓶16Kg)
-                        .WriteToCell(rowIndex, 10, datas(i).瓦斯瓶4Kg)
-                        .WriteToCell(rowIndex, 11, datas(i).瓦斯瓶18Kg)
-                        .WriteToCell(rowIndex, 12, datas(i).瓦斯瓶14Kg)
-                        .WriteToCell(rowIndex, 13, datas(i).瓦斯瓶5Kg)
-                        .WriteToCell(rowIndex, 14, datas(i).瓦斯瓶2Kg)
+                        .WriteToCell(rowIndex, 2, datas(i).退氣.ToString)
+                        .WriteToCell(rowIndex, 3, datas(i).退氣累計量.ToString)
+                        .WriteToCell(rowIndex, 4, datas(i).提氣量.ToString)
+                        .WriteToCell(rowIndex, 5, datas(i).提氣累計量.ToString)
+                        .WriteToCell(rowIndex, 6, datas(i).總支數.ToString)
+                        .WriteToCell(rowIndex, 7, datas(i).瓦斯瓶50Kg.ToString)
+                        .WriteToCell(rowIndex, 8, datas(i).瓦斯瓶20Kg.ToString)
+                        .WriteToCell(rowIndex, 9, datas(i).瓦斯瓶16Kg.ToString)
+                        .WriteToCell(rowIndex, 10, datas(i).瓦斯瓶4Kg.ToString)
+                        .WriteToCell(rowIndex, 11, datas(i).瓦斯瓶18Kg.ToString)
+                        .WriteToCell(rowIndex, 12, datas(i).瓦斯瓶14Kg.ToString)
+                        .WriteToCell(rowIndex, 13, datas(i).瓦斯瓶5Kg.ToString)
+                        .WriteToCell(rowIndex, 14, datas(i).瓦斯瓶2Kg.ToString)
                     Next
 
                     '存檔
-                    SaveExcel($"單一客戶每日的應收帳明細表_{month:yyyy}", xml)
+                    .SaveExcel($"單一客戶每日的應收帳明細表_{month:yyyy}")
                 End With
             End Using
         Catch ex As Exception
@@ -376,10 +413,10 @@ Public Class ReportPresenter
     ''' 產生現金帳
     ''' </summary>
     ''' <param name="month"></param>
-    Public Sub GenerateCashAccount(month As Date)
+    Public Sub GenerateCashAccount(startDate As Date, endDate As Date)
         Try
             '取得資料
-            Dim data = _rep.GetCashAccount(month)
+            Dim data = _rep.GetCashAccount(startDate, endDate)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "現金帳範本檔.xlsx")
@@ -387,27 +424,27 @@ Public Class ReportPresenter
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
-                    .WriteToCell(1, 1, $"{month.Year}年{month.Month}月")
+                    .WriteToCell(1, 1, $"{startDate:yyyy/MM/dd}~{endDate:yyyy/MM/dd}")
 
                     Dim rowIndex = 3
+
                     For i As Integer = 0 To data.Count - 1
-                        .WriteToCell(rowIndex + i, 1, data(i).日)
+                        .WriteToCell(rowIndex + i, 1, data(i).日期.ToString("MM/dd"))
                         .WriteToCell(rowIndex + i, 2, data(i).科目)
                         .WriteToCell(rowIndex + i, 3, data(i).摘要)
-                        .WriteToCell(rowIndex + i, 4, data(i).收入金額)
-                        .WriteToCell(rowIndex + i, 5, data(i).支出金額)
-                        .WriteToCell(rowIndex + i, 6, data(i).餘額)
+                        .WriteToCell(rowIndex + i, 4, data(i).收入金額.ToString)
+                        .WriteToCell(rowIndex + i, 5, data(i).支出金額.ToString)
+                        .WriteToCell(rowIndex + i, 6, data(i).餘額.ToString)
                     Next
 
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "現金帳.xlsx")
-                    .SaveAs(exportFilePath)
+                    '存檔
+                    Dim exportFilePath = .SaveExcel($"現金帳_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}")
 
                     '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
-
-                    '存檔
-                    SaveExcel($"現金帳_{month:yyyyMM}", xml)
+                    If exportFilePath IsNot Nothing Then
+                        Dim printerName = _printerSer.GetOrSelectPrinter
+                        .Print(exportFilePath, printerName)
+                    End If
                 End With
             End Using
         Catch ex As Exception
@@ -418,12 +455,13 @@ Public Class ReportPresenter
     ''' <summary>
     ''' 產生銀行帳
     ''' </summary>
-    ''' <param name="month"></param>
+    ''' <param name="startDate"></param>
+    ''' <param name="endDate"></param>
     ''' <param name="bankId"></param>
-    Public Sub GenerateBankAccount(month As Date, bankId As Integer)
+    Public Sub GenerateBankAccount(startDate As Date, endDate As Date, bankId As Integer)
         Try
             '取得資料
-            Dim data = _rep.GetBankAccount(month, bankId)
+            Dim data = _rep.GetBankAccount(startDate, endDate, bankId)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "銀行帳範本檔.xlsx")
@@ -431,17 +469,17 @@ Public Class ReportPresenter
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
-                    .WriteToCell(1, 1, $"{data.年月}")
+                    .WriteToCell(1, 1, $"{data.日期}")
 
                     Dim rowIndex = 3
 
                     For Each bankAccount In data.List
-                        .WriteToCell(rowIndex, 1, bankAccount.日期)
+                        .WriteToCell(rowIndex, 1, bankAccount.日期.ToString("MM/dd"))
                         .WriteToCell(rowIndex, 2, bankAccount.科目)
                         .WriteToCell(rowIndex, 3, bankAccount.摘要)
-                        .WriteToCell(rowIndex, 4, bankAccount.借方)
-                        .WriteToCell(rowIndex, 5, bankAccount.貸方)
-                        .WriteToCell(rowIndex, 6, bankAccount.餘額)
+                        .WriteToCell(rowIndex, 4, bankAccount.借方.ToString)
+                        .WriteToCell(rowIndex, 5, bankAccount.貸方.ToString)
+                        .WriteToCell(rowIndex, 6, bankAccount.餘額.ToString)
                         .SetCustomBorders(rowIndex, 1, rowIndex, 6, bottomStyle:=XLBorderStyleValues.Thin)
                         rowIndex += 1
                     Next
@@ -450,18 +488,17 @@ Public Class ReportPresenter
                     Dim totalCredit = data.List.Sum(Function(x) x.貸方)
 
                     .WriteToCell(rowIndex, 3, "合計")
-                    .WriteToCell(rowIndex, 4, totalDebit)
-                    .WriteToCell(rowIndex, 5, totalCredit)
-
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "銀行帳.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '列印
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    .WriteToCell(rowIndex, 4, totalDebit.ToString)
+                    .WriteToCell(rowIndex, 5, totalCredit.ToString)
 
                     '存檔
-                    SaveExcel($"銀行帳_{data.年月}", xml)
+                    Dim exportFilePath = .SaveExcel($"銀行帳_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}")
+
+                    '列印
+                    If exportFilePath IsNot Nothing Then
+                        Dim printerName = _printerSer.GetOrSelectPrinter
+                        .Print(exportFilePath, printerName)
+                    End If
                 End With
             End Using
         Catch ex As Exception
@@ -493,21 +530,21 @@ Public Class ReportPresenter
                     For Each bankAccount In data.List
                         .WriteToCell(rowIndex, 1, bankAccount.CarNo)
                         .WriteToCell(rowIndex, 2, bankAccount.DriverName)
-                        .WriteToCell(rowIndex, 3, bankAccount.瓦斯瓶50Kg)
-                        .WriteToCell(rowIndex, 4, bankAccount.瓦斯瓶20Kg)
-                        .WriteToCell(rowIndex, 5, bankAccount.瓦斯瓶16Kg)
-                        .WriteToCell(rowIndex, 6, bankAccount.瓦斯瓶10Kg)
-                        .WriteToCell(rowIndex, 7, bankAccount.瓦斯瓶4Kg)
-                        .WriteToCell(rowIndex, 8, bankAccount.瓦斯瓶18Kg)
-                        .WriteToCell(rowIndex, 9, bankAccount.瓦斯瓶14Kg)
-                        .WriteToCell(rowIndex, 10, bankAccount.瓦斯瓶5Kg)
-                        .WriteToCell(rowIndex, 11, bankAccount.瓦斯瓶2Kg)
-                        .SetCustomBorders(rowIndex, 1, rowIndex, 11, bottomStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+                        .WriteToCell(rowIndex, 3, bankAccount.瓦斯瓶50Kg.ToString)
+                        .WriteToCell(rowIndex, 4, bankAccount.瓦斯瓶20Kg.ToString)
+                        .WriteToCell(rowIndex, 5, bankAccount.瓦斯瓶16Kg.ToString)
+                        .WriteToCell(rowIndex, 6, bankAccount.瓦斯瓶10Kg.ToString)
+                        .WriteToCell(rowIndex, 7, bankAccount.瓦斯瓶4Kg.ToString)
+                        .WriteToCell(rowIndex, 8, bankAccount.瓦斯瓶18Kg.ToString)
+                        .WriteToCell(rowIndex, 9, bankAccount.瓦斯瓶14Kg.ToString)
+                        .WriteToCell(rowIndex, 10, bankAccount.瓦斯瓶5Kg.ToString)
+                        .WriteToCell(rowIndex, 11, bankAccount.瓦斯瓶2Kg.ToString)
+                        .SetCustomBorders(rowIndex, 1, rowIndex, 11, bottomStyle:=XLBorderStyleValues.Thin)
                         rowIndex += 1
                     Next
 
                     '存檔
-                    SaveExcel($"客戶寄桶結存瓶_{data.CustomerName}", xml)
+                    .SaveExcel($"客戶寄桶結存瓶_{data.CustomerName}")
                 End With
             End Using
         Catch ex As Exception
@@ -541,11 +578,11 @@ Public Class ReportPresenter
                     Dim total4 = data.Last4
 
                     '上期結餘
-                    .WriteToCell(3, 12, total50)
-                    .WriteToCell(3, 13, total20)
-                    .WriteToCell(3, 14, total16)
-                    .WriteToCell(3, 15, total10)
-                    .WriteToCell(3, 16, total4)
+                    .WriteToCell(3, 12, total50.ToString)
+                    .WriteToCell(3, 13, total20.ToString)
+                    .WriteToCell(3, 14, total16.ToString)
+                    .WriteToCell(3, 15, total10.ToString)
+                    .WriteToCell(3, 16, total4.ToString)
                     .InsertRow(3)
 
                     '明細
@@ -576,18 +613,18 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 1, detail.Day)
 
                         '收入
-                        .WriteToCell(rowIndex, 2, in50)
-                        .WriteToCell(rowIndex, 3, in20)
-                        .WriteToCell(rowIndex, 4, in16)
-                        .WriteToCell(rowIndex, 5, in10)
-                        .WriteToCell(rowIndex, 6, in4)
+                        .WriteToCell(rowIndex, 2, in50.ToString)
+                        .WriteToCell(rowIndex, 3, in20.ToString)
+                        .WriteToCell(rowIndex, 4, in16.ToString)
+                        .WriteToCell(rowIndex, 5, in10.ToString)
+                        .WriteToCell(rowIndex, 6, in4.ToString)
 
                         '支出
-                        .WriteToCell(rowIndex, 7, out50)
-                        .WriteToCell(rowIndex, 8, out20)
-                        .WriteToCell(rowIndex, 9, out16)
-                        .WriteToCell(rowIndex, 10, out10)
-                        .WriteToCell(rowIndex, 11, out4)
+                        .WriteToCell(rowIndex, 7, out50.ToString)
+                        .WriteToCell(rowIndex, 8, out20.ToString)
+                        .WriteToCell(rowIndex, 9, out16.ToString)
+                        .WriteToCell(rowIndex, 10, out10.ToString)
+                        .WriteToCell(rowIndex, 11, out4.ToString)
 
                         '結餘
                         total50 += in50 - out50
@@ -596,92 +633,92 @@ Public Class ReportPresenter
                         total10 += in10 - out10
                         total4 += in4 - out4
 
-                        .WriteToCell(rowIndex, 12, in50 - out50)
-                        .WriteToCell(rowIndex, 13, in20 - out20)
-                        .WriteToCell(rowIndex, 14, in16 - out16)
-                        .WriteToCell(rowIndex, 15, in10 - out10)
-                        .WriteToCell(rowIndex, 16, in4 - out4)
+                        .WriteToCell(rowIndex, 12, (in50 - out50).ToString)
+                        .WriteToCell(rowIndex, 13, (in20 - out20).ToString)
+                        .WriteToCell(rowIndex, 14, (in16 - out16).ToString)
+                        .WriteToCell(rowIndex, 15, (in10 - out10).ToString)
+                        .WriteToCell(rowIndex, 16, (in4 - out4).ToString)
 
                         .WriteToCell(rowIndex, 17, detail.Memo)
                         .WriteToCell(rowIndex, 18, detail.PayDate)
 
                         If detail.In50 <> 0 Then
-                            .WriteToCell(rowIndex, 19, data.PayUnitPrice50)
+                            .WriteToCell(rowIndex, 19, data.PayUnitPrice50.ToString)
 
                             Dim amount = data.PayUnitPrice50 * in50
-                            .WriteToCell(rowIndex, 20, amount)
+                            .WriteToCell(rowIndex, 20, amount.ToString)
                             payAmount50 += amount
                         End If
 
                         If detail.In20 <> 0 Then
-                            .WriteToCell(rowIndex, 21, data.PayUnitPrice20)
+                            .WriteToCell(rowIndex, 21, data.PayUnitPrice20.ToString)
 
                             Dim amount = data.PayUnitPrice20 * in20
-                            .WriteToCell(rowIndex, 22, amount)
+                            .WriteToCell(rowIndex, 22, amount.ToString)
                             payAmount20 += amount
                         End If
 
                         If detail.In16 <> 0 Then
-                            .WriteToCell(rowIndex, 23, data.PayUnitPrice16)
+                            .WriteToCell(rowIndex, 23, data.PayUnitPrice16.ToString)
 
                             Dim amount = data.PayUnitPrice16 * in16
-                            .WriteToCell(rowIndex, 24, amount)
+                            .WriteToCell(rowIndex, 24, amount.ToString)
                             payAmount16 += amount
                         End If
 
                         If detail.In10 <> 0 Then
-                            .WriteToCell(rowIndex, 25, data.PayUnitPrice10)
+                            .WriteToCell(rowIndex, 25, data.PayUnitPrice10.ToString)
 
                             Dim amount = data.PayUnitPrice10 * in10
-                            .WriteToCell(rowIndex, 26, amount)
+                            .WriteToCell(rowIndex, 26, amount.ToString)
                             payAmount10 += amount
                         End If
 
                         If detail.In4 <> 0 Then
-                            .WriteToCell(rowIndex, 27, data.PayUnitPrice4)
+                            .WriteToCell(rowIndex, 27, data.PayUnitPrice4.ToString)
 
                             Dim amount = data.PayUnitPrice4 * in4
-                            .WriteToCell(rowIndex, 28, amount)
+                            .WriteToCell(rowIndex, 28, amount.ToString)
                             payAmount4 += amount
                         End If
 
                         If detail.Out50 <> 0 Then
-                            .WriteToCell(rowIndex, 29, data.IncomeUnitPrice50)
+                            .WriteToCell(rowIndex, 29, data.IncomeUnitPrice50.ToString)
 
                             Dim amount = data.IncomeUnitPrice50 * out50
-                            .WriteToCell(rowIndex, 30, amount)
+                            .WriteToCell(rowIndex, 30, amount.ToString)
                             incomingAmount50 += amount
                         End If
 
                         If detail.Out20 <> 0 Then
-                            .WriteToCell(rowIndex, 31, data.IncomeUnitPrice20)
+                            .WriteToCell(rowIndex, 31, data.IncomeUnitPrice20.ToString)
 
                             Dim amount = data.IncomeUnitPrice20 * out20
-                            .WriteToCell(rowIndex, 32, amount)
+                            .WriteToCell(rowIndex, 32, amount.ToString)
                             incomingAmount20 += amount
                         End If
 
                         If detail.Out16 <> 0 Then
-                            .WriteToCell(rowIndex, 33, data.IncomeUnitPrice16)
+                            .WriteToCell(rowIndex, 33, data.IncomeUnitPrice16.ToString)
 
                             Dim amount = data.IncomeUnitPrice16 * out16
-                            .WriteToCell(rowIndex, 34, amount)
+                            .WriteToCell(rowIndex, 34, amount.ToString)
                             incomingAmount16 += amount
                         End If
 
                         If detail.Out10 <> 0 Then
-                            .WriteToCell(rowIndex, 35, data.IncomeUnitPrice10)
+                            .WriteToCell(rowIndex, 35, data.IncomeUnitPrice10.ToString)
 
                             Dim amount = data.IncomeUnitPrice10 * out10
-                            .WriteToCell(rowIndex, 36, amount)
+                            .WriteToCell(rowIndex, 36, amount.ToString)
                             incomingAmount10 += amount
                         End If
 
                         If detail.Out4 <> 0 Then
-                            .WriteToCell(rowIndex, 37, data.IncomeUnitPrice4)
+                            .WriteToCell(rowIndex, 37, data.IncomeUnitPrice4.ToString)
 
                             Dim amount = data.IncomeUnitPrice4 * out4
-                            .WriteToCell(rowIndex, 38, amount)
+                            .WriteToCell(rowIndex, 38, amount.ToString)
                             incomingAmount4 += amount
                         End If
 
@@ -691,37 +728,37 @@ Public Class ReportPresenter
 
                     '總計
                     .WriteToCell(rowIndex, 1, "總計")
-                    .WriteToCell(rowIndex, 2, data.List.Sum(Function(x) x.In50))
-                    .WriteToCell(rowIndex, 3, data.List.Sum(Function(x) x.In20))
-                    .WriteToCell(rowIndex, 4, data.List.Sum(Function(x) x.In16))
-                    .WriteToCell(rowIndex, 5, data.List.Sum(Function(x) x.In10))
-                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.In4))
-                    .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Out50))
-                    .WriteToCell(rowIndex, 8, data.List.Sum(Function(x) x.Out20))
-                    .WriteToCell(rowIndex, 9, data.List.Sum(Function(x) x.Out16))
-                    .WriteToCell(rowIndex, 10, data.List.Sum(Function(x) x.Out10))
-                    .WriteToCell(rowIndex, 11, data.List.Sum(Function(x) x.Out4))
+                    .WriteToCell(rowIndex, 2, data.List.Sum(Function(x) x.In50).ToString)
+                    .WriteToCell(rowIndex, 3, data.List.Sum(Function(x) x.In20).ToString)
+                    .WriteToCell(rowIndex, 4, data.List.Sum(Function(x) x.In16).ToString)
+                    .WriteToCell(rowIndex, 5, data.List.Sum(Function(x) x.In10).ToString)
+                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.In4).ToString)
+                    .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Out50).ToString)
+                    .WriteToCell(rowIndex, 8, data.List.Sum(Function(x) x.Out20).ToString)
+                    .WriteToCell(rowIndex, 9, data.List.Sum(Function(x) x.Out16).ToString)
+                    .WriteToCell(rowIndex, 10, data.List.Sum(Function(x) x.Out10).ToString)
+                    .WriteToCell(rowIndex, 11, data.List.Sum(Function(x) x.Out4).ToString)
 
-                    .WriteToCell(rowIndex, 12, total50)
-                    .WriteToCell(rowIndex, 13, total20)
-                    .WriteToCell(rowIndex, 14, total16)
-                    .WriteToCell(rowIndex, 15, total10)
-                    .WriteToCell(rowIndex, 16, total4)
+                    .WriteToCell(rowIndex, 12, total50.ToString)
+                    .WriteToCell(rowIndex, 13, total20.ToString)
+                    .WriteToCell(rowIndex, 14, total16.ToString)
+                    .WriteToCell(rowIndex, 15, total10.ToString)
+                    .WriteToCell(rowIndex, 16, total4.ToString)
 
-                    .WriteToCell(rowIndex, 20, payAmount50)
-                    .WriteToCell(rowIndex, 22, payAmount20)
-                    .WriteToCell(rowIndex, 24, payAmount16)
-                    .WriteToCell(rowIndex, 26, payAmount10)
-                    .WriteToCell(rowIndex, 28, payAmount4)
+                    .WriteToCell(rowIndex, 20, payAmount50.ToString)
+                    .WriteToCell(rowIndex, 22, payAmount20.ToString)
+                    .WriteToCell(rowIndex, 24, payAmount16.ToString)
+                    .WriteToCell(rowIndex, 26, payAmount10.ToString)
+                    .WriteToCell(rowIndex, 28, payAmount4.ToString)
 
-                    .WriteToCell(rowIndex, 30, incomingAmount50)
-                    .WriteToCell(rowIndex, 32, incomingAmount20)
-                    .WriteToCell(rowIndex, 34, incomingAmount16)
-                    .WriteToCell(rowIndex, 36, incomingAmount10)
-                    .WriteToCell(rowIndex, 38, incomingAmount4)
+                    .WriteToCell(rowIndex, 30, incomingAmount50.ToString)
+                    .WriteToCell(rowIndex, 32, incomingAmount20.ToString)
+                    .WriteToCell(rowIndex, 34, incomingAmount16.ToString)
+                    .WriteToCell(rowIndex, 36, incomingAmount10.ToString)
+                    .WriteToCell(rowIndex, 38, incomingAmount4.ToString)
 
                     '存檔
-                    SaveExcel($"新桶明細_{month:yyyyMM}", xml)
+                    .SaveExcel($"新桶明細_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -756,14 +793,14 @@ Public Class ReportPresenter
 
                     For Each item In data.List
 
-                        .WriteToCell(rowIndex, 1, rowIndex - 3)
+                        .WriteToCell(rowIndex, 1, (rowIndex - 3).ToString)
                         .WriteToCell(rowIndex, 2, item.ReceiveDate.ToString("yyyy/MM/dd"))
                         .WriteToCell(rowIndex, 3, item.CusCode)
                         .WriteToCell(rowIndex, 4, item.ChequeNumber)
                         .WriteToCell(rowIndex, 5, item.IssuerName)
                         .WriteToCell(rowIndex, 6, item.PayBankName)
                         .WriteToCell(rowIndex, 7, item.AvailableDate.ToString("yyyy/MM/dd"))
-                        .WriteToCell(rowIndex, 8, item.Amount)
+                        .WriteToCell(rowIndex, 8, item.Amount.ToString)
                         .WriteToCell(rowIndex, 9, If(item.CollectDate.HasValue, item.CollectDate.ToString("yyyy/MM/dd"), ""))
                         .WriteToCell(rowIndex, 11, item.Memo)
 
@@ -773,10 +810,10 @@ Public Class ReportPresenter
 
                     Dim total = data.List.Sum(Function(x) x.Amount)
                     .WriteToCell(rowIndex, 7, "總計")
-                    .WriteToCell(rowIndex, 8, total)
+                    .WriteToCell(rowIndex, 8, total.ToString)
 
                     '存檔
-                    SaveExcel($"應收票據_{data.CompanyName}_{data.BankAccount}_{month:yyyyMM}", xml)
+                    .SaveExcel($"應收票據_{data.CompanyName}_{data.BankAccount}_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -809,10 +846,10 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 1, item.CusCode)
                         .WriteToCell(rowIndex, 2, item.CusName)
                         .WriteToCell(rowIndex, 3, item.TaxId)
-                        .WriteToCell(rowIndex, 4, item.Amount)
-                        .WriteToCell(rowIndex, 5, item.IsInvoice)
+                        .WriteToCell(rowIndex, 4, item.Amount.ToString)
+                        .WriteToCell(rowIndex, 5, item.IsInvoice.ToString)
                         Dim notInvoice = item.Amount - item.IsInvoice
-                        .WriteToCell(rowIndex, 6, item.Amount - item.IsInvoice)
+                        .WriteToCell(rowIndex, 6, (item.Amount - item.IsInvoice).ToString)
 
                         totalNotInoice += notInvoice
                         .InsertRow(rowIndex)
@@ -820,12 +857,12 @@ Public Class ReportPresenter
                     Next
 
                     .WriteToCell(rowIndex, 3, "總計")
-                    .WriteToCell(rowIndex, 4, data.Sum(Function(x) x.Amount))
-                    .WriteToCell(rowIndex, 5, data.Sum(Function(x) x.IsInvoice))
-                    .WriteToCell(rowIndex, 6, totalNotInoice)
+                    .WriteToCell(rowIndex, 4, data.Sum(Function(x) x.Amount).ToString)
+                    .WriteToCell(rowIndex, 5, data.Sum(Function(x) x.IsInvoice).ToString)
+                    .WriteToCell(rowIndex, 6, totalNotInoice.ToString)
 
                     '存檔
-                    SaveExcel($"發票_{month:yyyyMM}", xml)
+                    .SaveExcel($"發票_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -859,36 +896,36 @@ Public Class ReportPresenter
                     For Each item In data.List
 
                         .WriteToCell(rowIndex, 1, item.CusCode)
-                        .WriteToCell(rowIndex, 2, item.AccountsReceivable)
-                        .WriteToCell(rowIndex, 3, item.AccountsReceived)
+                        .WriteToCell(rowIndex, 2, item.AccountsReceivable.ToString)
+                        .WriteToCell(rowIndex, 3, item.AccountsReceived.ToString)
 
                         If item.AccountsReceivable < item.AccountsReceived Then
                             Dim over = item.AccountsReceived - item.AccountsReceivable
                             totalOver += over
-                            .WriteToCell(rowIndex, 4, over)
-                            .WriteToCell(rowIndex, 5, 0)
+                            .WriteToCell(rowIndex, 4, over.ToString)
+                            .WriteToCell(rowIndex, 5, "0")
                         Else
                             Dim notCollect = item.AccountsReceivable - item.AccountsReceived
                             totalNotCollect += notCollect
-                            .WriteToCell(rowIndex, 4, 0)
-                            .WriteToCell(rowIndex, 5, notCollect)
+                            .WriteToCell(rowIndex, 4, "0")
+                            .WriteToCell(rowIndex, 5, notCollect.ToString)
                         End If
 
-                        .WriteToCell(rowIndex, 6, item.Discount)
+                        .WriteToCell(rowIndex, 6, item.Discount.ToString)
 
                         .InsertRow(rowIndex)
                         rowIndex += 1
                     Next
 
                     .WriteToCell(rowIndex, 1, "合計")
-                    .WriteToCell(rowIndex, 2, data.List.Sum(Function(x) x.AccountsReceivable))
-                    .WriteToCell(rowIndex, 3, data.List.Sum(Function(x) x.AccountsReceived))
-                    .WriteToCell(rowIndex, 4, totalOver)
-                    .WriteToCell(rowIndex, 5, totalNotCollect)
-                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Discount))
+                    .WriteToCell(rowIndex, 2, data.List.Sum(Function(x) x.AccountsReceivable).ToString)
+                    .WriteToCell(rowIndex, 3, data.List.Sum(Function(x) x.AccountsReceived).ToString)
+                    .WriteToCell(rowIndex, 4, totalOver.ToString)
+                    .WriteToCell(rowIndex, 5, totalNotCollect.ToString)
+                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Discount).ToString)
 
                     '存檔
-                    SaveExcel($"月應收帳明細_{month:yyyyMM}", xml)
+                    .SaveExcel($"月應收帳明細_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -936,31 +973,31 @@ Public Class ReportPresenter
                         Dim colIndex = monthData.Month + 2
 
                         '期初存量
-                        .WriteToCell(5, colIndex, monthData.OpeningBalance)
+                        .WriteToCell(5, colIndex, monthData.OpeningBalance.ToString)
 
                         '各廠商的進貨量
                         For i As Integer = 0 To allVendors.Count - 1
                             Dim vendor = allVendors(i)
 
-                            If monthData.PurchasesByVendor.ContainsKey(vendor) Then .WriteToCell(6 + i, colIndex, monthData.PurchasesByVendor(vendor))
+                            If monthData.PurchasesByVendor.ContainsKey(vendor) Then .WriteToCell(6 + i, colIndex, monthData.PurchasesByVendor(vendor).ToString)
                         Next
 
                         '進貨總數
                         Dim totalMonthlyPurchase = monthData.PurchasesByVendor.Sum(Function(x) x.Value)
-                        .WriteToCell(19, colIndex, totalMonthlyPurchase)
+                        .WriteToCell(19, colIndex, totalMonthlyPurchase.ToString)
 
                         '銷售總數
-                        .WriteToCell(20, colIndex, monthData.Sale)
+                        .WriteToCell(20, colIndex, monthData.Sale.ToString)
 
                         '期末存量
-                        .WriteToCell(21, colIndex, monthData.CloseingBalance)
+                        .WriteToCell(21, colIndex, monthData.CloseingBalance.ToString)
 
                         '差異
-                        .WriteToCell(22, colIndex, monthData.OpeningBalance + totalMonthlyPurchase - monthData.Sale - monthData.CloseingBalance)
+                        .WriteToCell(22, colIndex, (monthData.OpeningBalance + totalMonthlyPurchase - monthData.Sale - monthData.CloseingBalance).ToString)
                     Next
 
                     '存檔
-                    SaveExcel($"進銷存明細表_{data.Company}_{year:yyyy}", xml)
+                    .SaveExcel($"進銷存明細表_{data.Company}_{year:yyyy}")
                 End With
             End Using
         Catch ex As Exception
@@ -988,14 +1025,14 @@ Public Class ReportPresenter
                     For i As Integer = 0 To data.Count - 1
                         .WriteToCell(i + 3, 1, data(i).Day)
                         .WriteToCell(i + 3, 2, data(i).ChequeNumber)
-                        .WriteToCell(i + 3, 3, data(i).Amount)
+                        .WriteToCell(i + 3, 3, data(i).Amount.ToString)
                         .WriteToCell(i + 3, 4, data(i).CashingDate)
                         .WriteToCell(i + 3, 5, data(i).Memo)
                         .WriteToCell(i + 3, 6, data(i).IsCashing)
                     Next
 
                     '存檔
-                    SaveExcel($"應付票據_{month:yyyyMM}", xml)
+                    .SaveExcel($"應付票據_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1027,10 +1064,10 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 1, item.Day.ToString("MM/dd"))
                         .WriteToCell(rowIndex, 2, item.InvoiceNum)
                         .WriteToCell(rowIndex, 3, item.TaxId)
-                        .WriteToCell(rowIndex, 4, item.UnitPrice)
-                        .WriteToCell(rowIndex, 5, item.Quantity)
-                        .WriteToCell(rowIndex, 6, item.Tax)
-                        .WriteToCell(rowIndex, 7, item.Amount)
+                        .WriteToCell(rowIndex, 4, item.UnitPrice.ToString)
+                        .WriteToCell(rowIndex, 5, item.Quantity.ToString)
+                        .WriteToCell(rowIndex, 6, item.Tax.ToString)
+                        .WriteToCell(rowIndex, 7, item.Amount.ToString)
                         .WriteToCell(rowIndex, 8, item.Memo)
 
                         rowIndex += 1
@@ -1038,12 +1075,12 @@ Public Class ReportPresenter
 
                     .SetCustomBorders(rowIndex - 1, 1, rowIndex - 1, 8, XLBorderStyleValues.Thin)
                     .WriteToCell(rowIndex, 4, "合計")
-                    .WriteToCell(rowIndex, 5, data.List.Sum(Function(x) x.Quantity))
-                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Tax))
-                    .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Amount))
+                    .WriteToCell(rowIndex, 5, data.List.Sum(Function(x) x.Quantity).ToString)
+                    .WriteToCell(rowIndex, 6, data.List.Sum(Function(x) x.Tax).ToString)
+                    .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Amount).ToString)
 
                     '存檔
-                    SaveExcel($"財稅_{month:yyyyMM}", xml)
+                    .SaveExcel($"財稅_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1121,7 +1158,7 @@ Public Class ReportPresenter
                     End While
 
                     '存檔
-                    SaveExcel($"能源局_{month:yyyyMM}", xml)
+                    .SaveExcel($"能源局_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1135,7 +1172,7 @@ Public Class ReportPresenter
             xml.WriteToCell(rowIndex, colStart + i, headers(i))
         Next
 
-        xml.SetCustomBorders(rowIndex, 1, rowIndex, 8, bottomStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+        xml.SetCustomBorders(rowIndex, 1, rowIndex, 8, bottomStyle:=XLBorderStyleValues.Thin)
     End Sub
 
     Private Sub WriteItemToSheet(xml As CloseXML_Excel, rowIndex As Integer, startCol As Integer, item As EnergyBureau)
@@ -1143,22 +1180,22 @@ Public Class ReportPresenter
             .WriteToCell(rowIndex, startCol, item.Day.ToString("MM/dd"))
             .WriteToCell(rowIndex, startCol + 1, item.InvoiceNum)
             .WriteToCell(rowIndex, startCol + 2, item.TaxId)
-            .WriteToCell(rowIndex, startCol + 3, item.Quantity)
+            .WriteToCell(rowIndex, startCol + 3, item.Quantity.ToString)
         End With
     End Sub
 
     Private Sub AddTotalRow(xml As CloseXML_Excel, rowIndex As Integer, colStart As Integer, page As Integer, total As Integer)
         With xml
             .WriteToCell(rowIndex, colStart, "總計")
-            .WriteToCell(rowIndex, colStart + 3, total)
-            .SetCustomBorders(rowIndex, 1, rowIndex, 8, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+            .WriteToCell(rowIndex, colStart + 3, total.ToString)
+            .SetCustomBorders(rowIndex, 1, rowIndex, 8, topStyle:=XLBorderStyleValues.Thin)
         End With
     End Sub
 
     ''' <summary>
     ''' 產生月結帳單
     ''' </summary>
-    ''' <param name="cusId"></param>
+    ''' <param name="cusCode"></param>
     ''' <param name="month"></param>
     Public Sub GenerateMonthlyStatement(cusCode As String, month As Date)
         Try
@@ -1178,54 +1215,53 @@ Public Class ReportPresenter
                     .WriteToCell(1, 4, data.CusCode)
 
                     '家用瓦斯(變動前)
-                    .WriteToCell(3, 2, data.GasNormalQuantity_First)
-                    .WriteToCell(3, 3, data.GasNormalUnitPrice_First)
+                    .WriteToCell(3, 2, data.GasNormalQuantity_First.ToString)
+                    .WriteToCell(3, 3, data.GasNormalUnitPrice_First.ToString)
 
                     Dim gasAmount_1 = data.GasNormalQuantity_First * data.GasNormalUnitPrice_First
-                    .WriteToCell(3, 4, gasAmount_1)
+                    .WriteToCell(3, 4, gasAmount_1.ToString)
 
                     '工業氣(變動前)
-                    .WriteToCell(4, 2, data.GasCQuantity_First)
-                    .WriteToCell(4, 3, data.GasCUnitPrice_First)
+                    .WriteToCell(4, 2, data.GasCQuantity_First.ToString)
+                    .WriteToCell(4, 3, data.GasCUnitPrice_First.ToString)
 
                     Dim gasCAmount_1 = data.GasCQuantity_First * data.GasCUnitPrice_First
-                    .WriteToCell(4, 4, gasCAmount_1)
+                    .WriteToCell(4, 4, gasCAmount_1.ToString)
 
                     '家用瓦斯(變動後)
-                    .WriteToCell(5, 2, data.GasNormalQuantity)
-                    .WriteToCell(5, 3, data.GasNormalUnitPrice)
+                    .WriteToCell(5, 2, data.GasNormalQuantity.ToString)
+                    .WriteToCell(5, 3, data.GasNormalUnitPrice.ToString)
 
                     Dim gasAmount = data.GasNormalQuantity * data.GasNormalUnitPrice
-                    .WriteToCell(5, 4, gasAmount)
+                    .WriteToCell(5, 4, gasAmount.ToString)
 
                     '工業氣(變動後)
-                    .WriteToCell(6, 2, data.GasCQuantity)
-                    .WriteToCell(6, 3, data.GasCUnitPrice)
+                    .WriteToCell(6, 2, data.GasCQuantity.ToString)
+                    .WriteToCell(6, 3, data.GasCUnitPrice.ToString)
 
                     Dim gasCAmount = data.GasCQuantity * data.GasCUnitPrice
-                    .WriteToCell(6, 4, gasCAmount)
+                    .WriteToCell(6, 4, gasCAmount.ToString)
 
                     '保險
                     Dim totalQty = data.GasNormalQuantity_First + data.GasCQuantity_First + data.GasNormalQuantity + data.GasCQuantity
-                    .WriteToCell(7, 2, totalQty)
-                    .WriteToCell(7, 3, data.InsuranceUnitPrice)
+                    .WriteToCell(7, 2, totalQty.ToString)
+                    .WriteToCell(7, 3, data.InsuranceUnitPrice.ToString)
 
                     Dim insuranceAmount = totalQty * data.InsuranceUnitPrice
-                    .WriteToCell(7, 4, insuranceAmount)
-
+                    .WriteToCell(7, 4, insuranceAmount.ToString)
 
                     Dim gasAccountsRecievable = gasAmount_1 + gasCAmount_1 + gasAmount + gasCAmount
 
                     If Not data.IsInsurance Then gasAccountsRecievable += insuranceAmount
 
-                    .WriteToCell(8, 2, gasAccountsRecievable)
-                    .WriteToCell(9, 2, data.GasAccountsReceived)
-                    .WriteToCell(10, 2, data.NewBerralAccountsReceivable)
-                    .WriteToCell(11, 2, gasAccountsRecievable + data.NewBerralAccountsReceivable - data.GasAccountsReceived)
+                    .WriteToCell(8, 2, gasAccountsRecievable.ToString)
+                    .WriteToCell(9, 2, data.GasAccountsReceived.ToString)
+                    .WriteToCell(10, 2, data.NewBerralAccountsReceivable.ToString)
+                    .WriteToCell(11, 2, (gasAccountsRecievable + data.NewBerralAccountsReceivable - data.GasAccountsReceived).ToString)
                     .WriteToCell(12, 2, data.NewBerralTypesCount)
 
                     '存檔
-                    SaveExcel($"月對帳單_{data.CusCode}_{month:yyyyMM}", xml)
+                    .SaveExcel($"月對帳單_{data.CusCode}_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1261,17 +1297,17 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex, 1, item.CusCode)
                         .WriteToCell(rowIndex, 2, item.CusName)
                         .WriteToCell(rowIndex, 3, item.TaxId)
-                        .WriteToCell(rowIndex, 4, item.Amount)
+                        .WriteToCell(rowIndex, 4, item.Amount.ToString)
 
                         rowIndex += 1
                     Next
 
                     .WriteToCell(rowIndex, 3, "合計")
-                    .WriteToCell(rowIndex, 4, data.List.Sum(Function(x) x.Amount))
+                    .WriteToCell(rowIndex, 4, data.List.Sum(Function(x) x.Amount).ToString)
                     .SetCustomBorders(rowIndex, 1, rowIndex, 4, topStyle:=XLBorderStyleValues.Thin)
 
                     '存檔
-                    SaveExcel($"保險_{data.CompanyName}_{month:yyyyMM}", xml)
+                    .SaveExcel($"保險_{data.CompanyName}_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1308,29 +1344,29 @@ Public Class ReportPresenter
                     Dim totalNonOperatingIncome As Single = 0
 
                     ' 營業收入
-                    .WriteToCell(6, 3, data.GasIncome)
-                    .WriteToCell(7, 3, data.SalesDiscount)
+                    .WriteToCell(6, 3, data.GasIncome.ToString)
+                    .WriteToCell(7, 3, data.SalesDiscount.ToString)
 
                     ' 營業收入
-                    .WriteToCell(5, 4, data.OperatingIncome)
+                    .WriteToCell(5, 4, data.OperatingIncome.ToString)
 
                     ' 營業費用(上)
-                    .WriteToCell(9, 3, data.Income)
-                    .WriteToCell(8, 4, data.Income)
+                    .WriteToCell(9, 3, data.Income.ToString)
+                    .WriteToCell(8, 4, data.Income.ToString)
 
                     ' 銷貨毛利
                     Dim grossProfit = data.OperatingIncome - data.Income
-                    .WriteToCell(10, 4, grossProfit)
+                    .WriteToCell(10, 4, grossProfit.ToString)
 
                     ' 營業費用(下)
                     totalOperatingExpenses = data.PaymentList.Sum(Function(x) x.Amount)
-                    .WriteToCell(11, 4, totalOperatingExpenses)
+                    .WriteToCell(11, 4, totalOperatingExpenses.ToString)
 
                     Dim rowIndex = 12
 
                     For Each item In data.PaymentList
                         .WriteToCell(rowIndex, 2, item.Subject)
-                        .WriteToCell(rowIndex, 3, item.Amount)
+                        .WriteToCell(rowIndex, 3, item.Amount.ToString)
                         rowIndex += 1
                     Next
 
@@ -1339,12 +1375,12 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 1, "營業外收益", New CloseXML_Excel.CellFormatOptions With {.IsBold = True, .Horizontal = XLAlignmentHorizontalValues.Left})
 
 
-                    .WriteToCell(rowIndex, 4, totalNonOperatingIncome)
+                    .WriteToCell(rowIndex, 4, totalNonOperatingIncome.ToString)
                     rowIndex += 1
 
                     For Each item In data.CollectionsList
                         .WriteToCell(rowIndex, 2, item.Subject)
-                        .WriteToCell(rowIndex, 3, item.Amount)
+                        .WriteToCell(rowIndex, 3, item.Amount.ToString)
                         rowIndex += 1
                     Next
 
@@ -1354,10 +1390,10 @@ Public Class ReportPresenter
 
                     Dim netIncome As Single = grossProfit - totalOperatingExpenses + totalNonOperatingIncome
                     .WriteToCell(rowIndex, 1, "本期損益", New CloseXML_Excel.CellFormatOptions With {.IsBold = True, .Horizontal = XLAlignmentHorizontalValues.Left})
-                    .WriteToCell(rowIndex, 4, netIncome)
+                    .WriteToCell(rowIndex, 4, netIncome.ToString)
 
                     '存檔
-                    SaveExcel($"損益表_{data.CompanyName}_{startDate:yyyyMMdd}-{endDate:yyyyMMdd}", xml)
+                    .SaveExcel($"損益表_{data.CompanyName}_{startDate:yyyyMMdd}-{endDate:yyyyMMdd}")
                 End With
             End Using
         Catch ex As Exception
@@ -1398,9 +1434,9 @@ Public Class ReportPresenter
                         For Each monthData In company.MonthlyData
                             For Each group In monthData.RegularInvoices
                                 .WriteToCell(rowIndex, startColumn, $"{monthData.Month}/{group.GroupNumber}")
-                                .WriteToCell(rowIndex, startColumn + 1, group.Qty)
-                                .WriteToCell(rowIndex, startColumn + 2, group.TaxAmount)
-                                .WriteToCell(rowIndex, startColumn + 3, group.Amount)
+                                .WriteToCell(rowIndex, startColumn + 1, group.Qty.ToString)
+                                .WriteToCell(rowIndex, startColumn + 2, group.TaxAmount.ToString)
+                                .WriteToCell(rowIndex, startColumn + 3, group.Amount.ToString)
                                 rowIndex += 1
                             Next
 
@@ -1411,47 +1447,47 @@ Public Class ReportPresenter
                             Dim amountSubTotal = monthData.RegularInvoices.Sum(Function(x) x.Amount)
 
                             Dim twoPartMachine = monthData.SpecialInvoices.TwoPartMachine
-                            .WriteToCell(rowIndex, startColumn + 1, twoPartMachine.Qty)
+                            .WriteToCell(rowIndex, startColumn + 1, twoPartMachine.Qty.ToString)
                             kgSubTotal += twoPartMachine.Qty
-                            .WriteToCell(rowIndex, startColumn + 2, twoPartMachine.TaxAmount)
+                            .WriteToCell(rowIndex, startColumn + 2, twoPartMachine.TaxAmount.ToString)
                             taxAmountSubTotal += twoPartMachine.TaxAmount
-                            .WriteToCell(rowIndex, startColumn + 3, twoPartMachine.Amount)
+                            .WriteToCell(rowIndex, startColumn + 3, twoPartMachine.Amount.ToString)
                             amountSubTotal += twoPartMachine.Amount
                             rowIndex += 1
 
                             Dim threePartHandwritten = monthData.SpecialInvoices.ThreePartHandwritten
-                            .WriteToCell(rowIndex, startColumn + 1, threePartHandwritten.Qty)
+                            .WriteToCell(rowIndex, startColumn + 1, threePartHandwritten.Qty.ToString)
                             kgSubTotal += threePartHandwritten.Qty
-                            .WriteToCell(rowIndex, startColumn + 2, threePartHandwritten.TaxAmount)
+                            .WriteToCell(rowIndex, startColumn + 2, threePartHandwritten.TaxAmount.ToString)
                             taxAmountSubTotal += threePartHandwritten.TaxAmount
-                            .WriteToCell(rowIndex, startColumn + 3, threePartHandwritten.Amount)
+                            .WriteToCell(rowIndex, startColumn + 3, threePartHandwritten.Amount.ToString)
                             amountSubTotal += threePartHandwritten.Amount
                             rowIndex += 1
 
                             Dim twoPartHandwritten = monthData.SpecialInvoices.TwoPartHandwritten
-                            .WriteToCell(rowIndex, startColumn + 1, twoPartHandwritten.Qty)
+                            .WriteToCell(rowIndex, startColumn + 1, twoPartHandwritten.Qty.ToString)
                             kgSubTotal += twoPartHandwritten.Qty
-                            .WriteToCell(rowIndex, startColumn + 2, twoPartHandwritten.TaxAmount)
+                            .WriteToCell(rowIndex, startColumn + 2, twoPartHandwritten.TaxAmount.ToString)
                             taxAmountSubTotal += twoPartHandwritten.TaxAmount
-                            .WriteToCell(rowIndex, startColumn + 3, twoPartHandwritten.Amount)
+                            .WriteToCell(rowIndex, startColumn + 3, twoPartHandwritten.Amount.ToString)
                             amountSubTotal += twoPartHandwritten.Amount
                             rowIndex += 1
 
                             '小計
-                            .WriteToCell(rowIndex, startColumn + 1, kgSubTotal)
+                            .WriteToCell(rowIndex, startColumn + 1, kgSubTotal.ToString)
                             kgTotal += kgSubTotal
-                            .WriteToCell(rowIndex, startColumn + 2, taxAmountSubTotal)
+                            .WriteToCell(rowIndex, startColumn + 2, taxAmountSubTotal.ToString)
                             taxAmountTotal += taxAmountSubTotal
-                            .WriteToCell(rowIndex, startColumn + 3, amountSubTotal)
+                            .WriteToCell(rowIndex, startColumn + 3, amountSubTotal.ToString)
                             amountTotal += amountSubTotal
 
                             rowIndex += 2
                         Next
 
                         '合計
-                        .WriteToCell(rowIndex - 1, startColumn + 1, kgTotal)
-                        .WriteToCell(rowIndex - 1, startColumn + 2, taxAmountTotal)
-                        .WriteToCell(rowIndex - 1, startColumn + 3, amountTotal)
+                        .WriteToCell(rowIndex - 1, startColumn + 1, kgTotal.ToString)
+                        .WriteToCell(rowIndex - 1, startColumn + 2, taxAmountTotal.ToString)
+                        .WriteToCell(rowIndex - 1, startColumn + 3, amountTotal.ToString)
                     Next
 
                     '分裝場
@@ -1459,36 +1495,36 @@ Public Class ReportPresenter
                     Dim amountSubTotal_split As Single = 0
 
                     .WriteToCell(4, 11, splitCompanyData.FrontDate1)
-                    .WriteToCell(4, 14, splitCompanyData.FrontTax1)
+                    .WriteToCell(4, 14, splitCompanyData.FrontTax1.ToString)
                     taxSubTotal += splitCompanyData.FrontTax1
-                    .WriteToCell(4, 15, splitCompanyData.FrontAmount1)
+                    .WriteToCell(4, 15, splitCompanyData.FrontAmount1.ToString)
                     amountSubTotal_split += splitCompanyData.FrontAmount1
                     .WriteToCell(4, 16, splitCompanyData.FrontVendorTaxId1)
 
                     .WriteToCell(5, 11, splitCompanyData.FrontDate2)
-                    .WriteToCell(5, 14, splitCompanyData.FrontTax2)
+                    .WriteToCell(5, 14, splitCompanyData.FrontTax2.ToString)
                     taxSubTotal += splitCompanyData.FrontTax2
-                    .WriteToCell(5, 15, splitCompanyData.FrontAmount2)
+                    .WriteToCell(5, 15, splitCompanyData.FrontAmount2.ToString)
                     amountSubTotal_split += splitCompanyData.FrontAmount2
                     .WriteToCell(5, 16, splitCompanyData.FrontVendorTaxId2)
 
                     .WriteToCell(6, 11, splitCompanyData.EndDate1)
-                    .WriteToCell(6, 14, splitCompanyData.EndTax1)
+                    .WriteToCell(6, 14, splitCompanyData.EndTax1.ToString)
                     taxSubTotal += splitCompanyData.EndTax1
-                    .WriteToCell(6, 15, splitCompanyData.EndAmount1)
+                    .WriteToCell(6, 15, splitCompanyData.EndAmount1.ToString)
                     amountSubTotal_split += splitCompanyData.EndAmount1
                     .WriteToCell(6, 16, splitCompanyData.EndVendorTaxId1)
 
                     .WriteToCell(7, 11, splitCompanyData.EndDate2)
-                    .WriteToCell(7, 14, splitCompanyData.EndTax2)
+                    .WriteToCell(7, 14, splitCompanyData.EndTax2.ToString)
                     taxSubTotal += splitCompanyData.EndTax2
-                    .WriteToCell(7, 15, splitCompanyData.EndAmount2)
+                    .WriteToCell(7, 15, splitCompanyData.EndAmount2.ToString)
                     amountSubTotal_split += splitCompanyData.EndAmount2
                     .WriteToCell(7, 16, splitCompanyData.EndVendorTaxId2)
 
                     '小計
-                    .WriteToCell(8, 14, taxSubTotal)
-                    .WriteToCell(8, 15, amountSubTotal_split)
+                    .WriteToCell(8, 14, taxSubTotal.ToString)
+                    .WriteToCell(8, 15, amountSubTotal_split.ToString)
 
                     Dim rowIndex_split As Integer = 10
 
@@ -1496,39 +1532,22 @@ Public Class ReportPresenter
                         .WriteToCell(rowIndex_split, 11, item.Day)
                         .WriteToCell(rowIndex_split, 12, item.InvoiceNum)
                         .WriteToCell(rowIndex_split, 13, item.Name)
-                        .WriteToCell(rowIndex_split, 14, item.Tax)
-                        .WriteToCell(rowIndex_split, 15, item.Amount)
+                        .WriteToCell(rowIndex_split, 14, item.Tax.ToString)
+                        .WriteToCell(rowIndex_split, 15, item.Amount.ToString)
                         .WriteToCell(rowIndex_split, 16, item.VendorTaxId)
-                        .SetCustomBorders(rowIndex_split, 11, rowIndex_split, 16, ClosedXML.Excel.XLBorderStyleValues.Thin, ClosedXML.Excel.XLBorderStyleValues.Thin,
-                                          ClosedXML.Excel.XLBorderStyleValues.Thin, ClosedXML.Excel.XLBorderStyleValues.Thin)
+                        .SetCustomBorders(rowIndex_split, 11, rowIndex_split, 16, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin,
+                                          XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
                         rowIndex_split += 1
                     Next
 
                     '存檔
-                    SaveExcel($"進項銷項_{year:yyyy}_{month}", xml)
+                    .SaveExcel($"進項銷項_{year:yyyy}_{month}")
                 End With
             End Using
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
-
-    Private Function WriteSubjectGroup(xml As CloseXML_Excel, subjects As List(Of IncomeStatementItem), rowIndex As Integer, ByRef total As Single) As Integer
-        total = subjects.Sum(Function(x) x.Amount)
-
-        With xml
-            .WriteToCell(rowIndex, 4, total)
-            rowIndex += 1
-
-            For Each item In subjects
-                .WriteToCell(rowIndex, 2, item.Subject)
-                .WriteToCell(rowIndex, 3, item.Amount)
-                rowIndex += 1
-            Next
-        End With
-
-        Return rowIndex
-    End Function
 
     Public Async Sub LoadBankAccount()
         Try
@@ -1546,19 +1565,5 @@ Public Class ReportPresenter
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Sub
-
-    Private Sub SaveExcel(fileName As String, xml As CloseXML_Excel)
-        Using saveDialog As New SaveFileDialog
-            With saveDialog
-                .Filter = "Excel檔案|*.xlsx"
-                .FileName = fileName + ".xlsx"
-            End With
-
-            If saveDialog.ShowDialog = DialogResult.OK Then
-                xml.SaveAs(saveDialog.FileName)
-            End If
-        End Using
-
     End Sub
 End Class

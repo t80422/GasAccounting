@@ -23,7 +23,7 @@ Partial Public Class employee
     Public Property emp_identity_number As String
     Public Property emp_birthday As Nullable(Of Date)
 
-    Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
     Public Overridable Property role As role
+    Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
 
 End Class

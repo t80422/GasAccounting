@@ -4,14 +4,14 @@
     ''' </summary>
     ''' <param name="d"></param>
     ''' <returns></returns>
-    Function CustomersGasDetailByDay(d As Date) As List(Of CustomersGasDetailByDay)
+    Function CustomersGasDetailByDay(d As Date, isMonth As Boolean) As List(Of CustomersGasDetailByDay)
 
     ''' <summary>
     ''' 客戶提氣清冊
     ''' </summary>
     ''' <param name="d"></param>
     ''' <returns></returns>
-    Function CustomersGetGasList(d As Date) As List(Of CusGetGas)
+    Function CustomersGetGasList(d As Date, isMonth As Boolean) As List(Of CusGetGas)
 
     ''' <summary>
     ''' 大氣應付明細表
@@ -21,12 +21,12 @@
     Function GasPayableDetailList(d As Date, manuId As Integer) As List(Of GasPayableDetail)
 
     ''' <summary>
-    ''' 客戶每日應收帳明細
+    ''' 客戶每月應收帳明細
     ''' </summary>
     ''' <param name="d"></param>
     ''' <param name="cusId"></param>
     ''' <returns></returns>
-    Function DailyCustomerReceivable(d As Date, cusId As String) As List(Of DailyCustomerReceivable)
+    Function MonthlyCustomerReceivable(d As Date, cusId As String) As List(Of DailyCustomerReceivable)
 
     ''' <summary>
     ''' 提量支數統計
@@ -38,16 +38,19 @@
     ''' <summary>
     ''' 取得現金帳
     ''' </summary>
-    ''' <param name="month"></param>
+    ''' <param name="startDate"></param>
+    ''' <param name="endDate"></param>
     ''' <returns></returns>
-    Function GetCashAccount(month As Date) As List(Of CashAccount)
+    Function GetCashAccount(startDate As Date, endDate As Date) As List(Of CashAccount)
 
     ''' <summary>
     ''' 取得銀行帳
     ''' </summary>
-    ''' <param name="month"></param>
+    ''' <param name="startDate"></param>
+    ''' <param name="endDate"></param>
+    ''' <param name="bankId"></param>
     ''' <returns></returns>
-    Function GetBankAccount(month As Date, bankId As Integer) As BankAccount
+    Function GetBankAccount(startDate As Date, endDate As Date, bankId As Integer) As BankAccount
 
     ''' <summary>
     ''' 取得客戶寄桶結存瓶

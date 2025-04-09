@@ -54,7 +54,7 @@ Public Class OrderRep
                 query = query.Where(Function(x) x.o_date < endDate)
             End If
 
-            If criteria.CusId <> 0 Then query = query.Where(Function(x) x.car.c_cus_id = criteria.CusId)
+            If criteria.CusId <> 0 Then query = query.Where(Function(x) x.o_cus_Id = criteria.CusId)
 
             Return Await query.OrderByDescending(Function(x) x.o_id).ToListAsync
         Catch ex As Exception

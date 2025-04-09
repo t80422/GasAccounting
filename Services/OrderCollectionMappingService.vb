@@ -79,8 +79,6 @@
                 If ocmByOrdIds IsNot Nothing Then
                     paids = ocmByOrdIds.Sum(Function(x) x.ocm_Amount)
                 End If
-
-                ord.o_UnpaidAmount = ord.o_total_amount - paids
             Next
 
             Await _ordRep.SaveChangesAsync

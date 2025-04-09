@@ -1,4 +1,6 @@
-﻿Public Class PaymentPresenter
+﻿Imports iText.Signatures.Validation.V1
+
+Public Class PaymentPresenter
     Private ReadOnly _view As IPaymentView
     Private ReadOnly _manufaturerRep As IManufacturerRep
     Private ReadOnly _bankRep As IBankRep
@@ -8,6 +10,7 @@
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _chequeRep As IChequeRep
     Private ReadOnly _aeSer As IAccountingEntryService
+    Private ReadOnly _report As New ReportService
     Private selectData As payment
 
     Public Sub New(view As IPaymentView, manufaturerRep As IManufacturerRep, bankRep As IBankRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
@@ -151,6 +154,19 @@
             MsgBox(ex.Message)
         End Try
     End Function
+
+    Public Sub Print()
+        Try
+            Dim today = Now.Date
+            Dim transferDatas = _paymentRep.GetSubpoenaData(today)
+            Dim cashIncomDatas = _paymentRep.GetSubpoenaData(today, True)
+
+            _report.GeneratorTransferSubpoena(today, transferDatas)
+            _report.GeneratorCashIncomeSubpoena(today, cashIncomDatas, False)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
 
     Private Async Function LoadVendorDropdownAsync() As Task
         Try

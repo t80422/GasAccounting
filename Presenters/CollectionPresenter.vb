@@ -1,4 +1,8 @@
-﻿Public Class CollectionPresenter
+﻿Imports System.IO
+Imports ClosedXML.Excel
+Imports iText.Signatures.Validation.V1
+
+Public Class CollectionPresenter
     Private _view As ICollectionView
     Private ReadOnly _subjectRep As ISubjectRep
     Private ReadOnly _colRep As ICollectionRep
@@ -9,6 +13,7 @@
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _compRep As ICompanyRep
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
+    Private ReadOnly _report As ReportService = New ReportService
     Private _currentData As collection
 
     Public Sub New(view As ICollectionView, subjectRep As ISubjectRep, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
@@ -224,6 +229,15 @@
     Public Function GetCustomer(cusCode As String) As customer
         Return _cusRep.GetByCusCode(cusCode)
     End Function
+
+    Public Sub Print()
+        Dim today = Now.Date
+        Dim transferDatas = _colRep.GetTransferSubpoenaData(today)
+        Dim cashIncomDatas = _colRep.GetTransferSubpoenaData(today, True)
+
+        _report.GeneratorTransferSubpoena(today, transferDatas)
+        _report.GeneratorCashIncomeSubpoena(today, cashIncomDatas, True)
+    End Sub
 
     Private Function CreatePaymentEntries(data As collection) As List(Of accounting_entry)
         Dim entries = New List(Of accounting_entry)

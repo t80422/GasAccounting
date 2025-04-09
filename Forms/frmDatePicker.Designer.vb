@@ -24,11 +24,11 @@ Partial Class frmDatePicker
     Private Sub InitializeComponent()
         Me.MonthCalendar1 = New System.Windows.Forms.MonthCalendar()
         Me.btnOk = New System.Windows.Forms.Button()
+        Me.btnConfirmMonth = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'MonthCalendar1
         '
-        Me.MonthCalendar1.Dock = System.Windows.Forms.DockStyle.Top
         Me.MonthCalendar1.Location = New System.Drawing.Point(0, 0)
         Me.MonthCalendar1.MaxSelectionCount = 1
         Me.MonthCalendar1.Name = "MonthCalendar1"
@@ -39,12 +39,24 @@ Partial Class frmDatePicker
         Me.btnOk.AutoSize = True
         Me.btnOk.BackColor = System.Drawing.Color.Lime
         Me.btnOk.Font = New System.Drawing.Font("新細明體", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnOk.Location = New System.Drawing.Point(87, 174)
+        Me.btnOk.Location = New System.Drawing.Point(12, 174)
         Me.btnOk.Name = "btnOk"
-        Me.btnOk.Size = New System.Drawing.Size(50, 30)
+        Me.btnOk.Size = New System.Drawing.Size(67, 30)
         Me.btnOk.TabIndex = 1
-        Me.btnOk.Text = "確認"
+        Me.btnOk.Text = "確認日期"
         Me.btnOk.UseVisualStyleBackColor = False
+        '
+        'btnConfirmMonth
+        '
+        Me.btnConfirmMonth.AutoSize = True
+        Me.btnConfirmMonth.BackColor = System.Drawing.Color.Lime
+        Me.btnConfirmMonth.Font = New System.Drawing.Font("新細明體", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.btnConfirmMonth.Location = New System.Drawing.Point(141, 174)
+        Me.btnConfirmMonth.Name = "btnConfirmMonth"
+        Me.btnConfirmMonth.Size = New System.Drawing.Size(67, 30)
+        Me.btnConfirmMonth.TabIndex = 4
+        Me.btnConfirmMonth.Text = "確認月份"
+        Me.btnConfirmMonth.UseVisualStyleBackColor = False
         '
         'frmDatePicker
         '
@@ -52,6 +64,7 @@ Partial Class frmDatePicker
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(220, 215)
+        Me.Controls.Add(Me.btnConfirmMonth)
         Me.Controls.Add(Me.btnOk)
         Me.Controls.Add(Me.MonthCalendar1)
         Me.MaximizeBox = False
@@ -66,4 +79,5 @@ Partial Class frmDatePicker
 
     Friend WithEvents MonthCalendar1 As MonthCalendar
     Friend WithEvents btnOk As Button
+    Friend WithEvents btnConfirmMonth As Button
 End Class

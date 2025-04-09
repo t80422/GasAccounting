@@ -32,9 +32,13 @@ Partial Class frmWriteOff
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtCusName = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.dgvWriteOff = New System.Windows.Forms.DataGridView()
+        Me.dgvMonth = New System.Windows.Forms.DataGridView()
         Me.btnConfirm = New System.Windows.Forms.Button()
-        CType(Me.dgvWriteOff, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.dgvDetail = New System.Windows.Forms.DataGridView()
+        Me.btnInit = New System.Windows.Forms.Button()
+        Me.btnAuto = New System.Windows.Forms.Button()
+        CType(Me.dgvMonth, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvDetail, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -65,7 +69,7 @@ Partial Class frmWriteOff
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 45)
+        Me.Label2.Location = New System.Drawing.Point(12, 43)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(41, 12)
         Me.Label2.TabIndex = 2
@@ -99,7 +103,7 @@ Partial Class frmWriteOff
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(165, 45)
+        Me.Label4.Location = New System.Drawing.Point(165, 43)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(65, 12)
         Me.Label4.TabIndex = 6
@@ -122,34 +126,65 @@ Partial Class frmWriteOff
         Me.Label5.TabIndex = 8
         Me.Label5.Text = "客戶名稱"
         '
-        'dgvWriteOff
+        'dgvMonth
         '
-        Me.dgvWriteOff.AllowUserToAddRows = False
-        Me.dgvWriteOff.AllowUserToDeleteRows = False
-        Me.dgvWriteOff.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvWriteOff.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvWriteOff.Location = New System.Drawing.Point(0, 80)
-        Me.dgvWriteOff.Name = "dgvWriteOff"
-        Me.dgvWriteOff.RowTemplate.Height = 24
-        Me.dgvWriteOff.Size = New System.Drawing.Size(595, 370)
-        Me.dgvWriteOff.TabIndex = 10
+        Me.dgvMonth.AllowUserToAddRows = False
+        Me.dgvMonth.AllowUserToDeleteRows = False
+        Me.dgvMonth.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvMonth.Location = New System.Drawing.Point(12, 69)
+        Me.dgvMonth.Name = "dgvMonth"
+        Me.dgvMonth.RowTemplate.Height = 24
+        Me.dgvMonth.Size = New System.Drawing.Size(445, 382)
+        Me.dgvMonth.TabIndex = 10
         '
         'btnConfirm
         '
-        Me.btnConfirm.Location = New System.Drawing.Point(508, 39)
+        Me.btnConfirm.Location = New System.Drawing.Point(423, 40)
         Me.btnConfirm.Name = "btnConfirm"
         Me.btnConfirm.Size = New System.Drawing.Size(75, 23)
         Me.btnConfirm.TabIndex = 11
         Me.btnConfirm.Text = "確認"
         Me.btnConfirm.UseVisualStyleBackColor = True
         '
+        'dgvDetail
+        '
+        Me.dgvDetail.AllowUserToAddRows = False
+        Me.dgvDetail.AllowUserToDeleteRows = False
+        Me.dgvDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDetail.Location = New System.Drawing.Point(463, 69)
+        Me.dgvDetail.Name = "dgvDetail"
+        Me.dgvDetail.RowTemplate.Height = 24
+        Me.dgvDetail.Size = New System.Drawing.Size(245, 382)
+        Me.dgvDetail.TabIndex = 12
+        '
+        'btnInit
+        '
+        Me.btnInit.Location = New System.Drawing.Point(507, 12)
+        Me.btnInit.Name = "btnInit"
+        Me.btnInit.Size = New System.Drawing.Size(75, 23)
+        Me.btnInit.TabIndex = 13
+        Me.btnInit.Text = "初始化(暫)"
+        Me.btnInit.UseVisualStyleBackColor = True
+        '
+        'btnAuto
+        '
+        Me.btnAuto.Location = New System.Drawing.Point(342, 40)
+        Me.btnAuto.Name = "btnAuto"
+        Me.btnAuto.Size = New System.Drawing.Size(75, 23)
+        Me.btnAuto.TabIndex = 14
+        Me.btnAuto.Text = "自動分配"
+        Me.btnAuto.UseVisualStyleBackColor = True
+        '
         'frmWriteOff
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(595, 450)
+        Me.ClientSize = New System.Drawing.Size(721, 463)
+        Me.Controls.Add(Me.btnAuto)
+        Me.Controls.Add(Me.btnInit)
+        Me.Controls.Add(Me.dgvDetail)
         Me.Controls.Add(Me.btnConfirm)
-        Me.Controls.Add(Me.dgvWriteOff)
+        Me.Controls.Add(Me.dgvMonth)
         Me.Controls.Add(Me.txtCusName)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.txtUnmatched)
@@ -165,7 +200,8 @@ Partial Class frmWriteOff
         Me.Name = "frmWriteOff"
         Me.Text = "銷帳"
         Me.TopMost = True
-        CType(Me.dgvWriteOff, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvMonth, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvDetail, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -181,6 +217,9 @@ Partial Class frmWriteOff
     Friend WithEvents Label4 As Label
     Friend WithEvents txtCusName As TextBox
     Friend WithEvents Label5 As Label
-    Friend WithEvents dgvWriteOff As DataGridView
+    Friend WithEvents dgvMonth As DataGridView
     Friend WithEvents btnConfirm As Button
+    Friend WithEvents dgvDetail As DataGridView
+    Friend WithEvents btnInit As Button
+    Friend WithEvents btnAuto As Button
 End Class

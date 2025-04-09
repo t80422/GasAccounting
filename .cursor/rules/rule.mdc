@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+-不允許修改UI的程式碼,已能在chat視窗顯示建議的修改

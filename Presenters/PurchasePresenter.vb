@@ -219,14 +219,14 @@ Public Class PurchasePresenter
                         .WriteToCell(rowIndex, 1, item.廠商)
                         .WriteToCell(rowIndex, 2, item.日期.ToString("yyyy年MM月dd日"))
                         .WriteToCell(rowIndex, 3, item.產品)
-                        .WriteToCell(rowIndex, 4, item.重量)
-                        .WriteToCell(rowIndex, 5, item.單價)
-                        .WriteToCell(rowIndex, 6, item.金額)
+                        .WriteToCell(rowIndex, 4, item.重量.ToString)
+                        .WriteToCell(rowIndex, 5, item.單價.ToString)
+                        .WriteToCell(rowIndex, 6, item.金額.ToString)
                         .WriteToCell(rowIndex, 7, item.公司)
-                        .WriteToCell(rowIndex, 8, item.運費單價)
-                        .WriteToCell(rowIndex, 9, item.運費)
-                        .WriteToCell(rowIndex, 10, item.特殊單價)
-                        .WriteToCell(rowIndex, 11, item.特殊運費)
+                        .WriteToCell(rowIndex, 8, item.運費單價.ToString)
+                        .WriteToCell(rowIndex, 9, item.運費.ToString)
+                        .WriteToCell(rowIndex, 10, item.特殊單價.ToString)
+                        .WriteToCell(rowIndex, 11, item.特殊運費.ToString)
 
                         rowIndex += 1
                     Next

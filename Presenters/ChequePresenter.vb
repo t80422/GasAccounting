@@ -106,7 +106,7 @@ Public Class ChequePresenter
                         .WriteToCell(rowIndex, 2, item.支票號碼)
                         .WriteToCell(rowIndex, 3, item.銀行帳號)
                         .WriteToCell(rowIndex, 4, item.發票人)
-                        .WriteToCell(rowIndex, 5, item.金額)
+                        .WriteToCell(rowIndex, 5, item.金額.ToString)
                         .WriteToCell(rowIndex, 6, item.狀態)
                         .WriteToCell(rowIndex, 7, If(item.兌現日期.HasValue, item.兌現日期.Value.ToString("yyyy/MM/dd"), ""))
                         .WriteToCell(rowIndex, 8, If(item.代收日期.HasValue, item.代收日期.Value.ToString("yyyy/MM/dd"), ""))

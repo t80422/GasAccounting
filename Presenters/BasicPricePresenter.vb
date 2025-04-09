@@ -32,7 +32,7 @@ Public Class BasicPricePresenter
                 Return
             End If
 
-            Dim checkDuplicate = Await _bpRep.CheckDuplicateMonthAsync(data.bp_date)
+            Dim checkDuplicate = Await _bpRep.CheckDuplicateDateAsync(data.bp_date)
 
             If Not checkDuplicate Then
                 Await _bpRep.AddAsync(data)
@@ -40,7 +40,7 @@ Public Class BasicPricePresenter
                 _view.ClearInput()
                 Await SearchAsync(False)
             Else
-                MsgBox("重複月份")
+                MsgBox("重複日期")
             End If
         Catch ex As Exception
             MsgBox(ex.Message)

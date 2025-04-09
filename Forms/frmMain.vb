@@ -118,7 +118,7 @@
         _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer, aeSer, printerSer, ocmSer)
         _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep, aeSer)
         _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep, aeSer)
-        _report = New ReportPresenter(Me, reportRep, bankRep, compRep, printerSer)
+        _report = New ReportPresenter(Me, reportRep, bankRep, compRep, printerSer, colRep)
         _subjects = New SubjectsPresenter(Me, subjectRep)
         _cheque = New ChequePresenter(Me, cheRep, printerSer)
         _permission = New PermissionPresenter(Me, permissionRep)
@@ -135,9 +135,13 @@
     End Sub
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        InitTabPage()
-        InitUI()
-        SetCtrlStyle()
+        Try
+            InitTabPage()
+            InitUI()
+            SetCtrlStyle()
+        Catch ex As Exception
+            Throw
+        End Try
     End Sub
 
     Private Sub frmMain_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
@@ -151,19 +155,23 @@
     End Sub
 
     Private Sub SetCtrlStyle()
-        SetQueryEnterEven(Me)
-        SetTextBoxIntOnly()
-        PositiveIntegerOnly()
-        PositiveFloatOnly()
-        SetFloatOnly()
-        TextChagedHandler()
+        Try
+            SetQueryEnterEven(Me)
+            SetTextBoxIntOnly()
+            PositiveIntegerOnly()
+            PositiveFloatOnly()
+            SetFloatOnly()
+            TextChagedHandler()
+        Catch ex As Exception
+            Throw
+        End Try
     End Sub
 
     Private Sub SetFloatOnly()
         Dim textBoxes = New List(Of TextBox) From {txtGasPrice, txtGasPrice_c, txtGasPriceDelivery, txtGasPriceDelivery_c}
 
         textBoxes.ForEach(Sub(txt) AddHandler txt.KeyPress, AddressOf FloatOnly_TextBox)
-    End Sub
+        End Sub
 
     ''' <summary>
     ''' 初始化各TabPage
@@ -198,29 +206,33 @@
     ''' 設定TextBox值改變事件
     ''' </summary>
     Private Sub TextChagedHandler()
+        Try
 #Region "大氣採購"
-        Dim lstFreight As New List(Of TextBox) From {txtWeight_pur, txtDeliUnitPrice}
-        lstFreight.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateFreight())
+            Dim lstFreight As New List(Of TextBox) From {txtWeight_pur, txtDeliUnitPrice}
+            lstFreight.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateFreight())
 
-        Dim lstSum_pur As New List(Of TextBox) From {txtWeight_pur, txtUnitPrice_pur}
-        lstSum_pur.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateSum_Purchase())
+            Dim lstSum_pur As New List(Of TextBox) From {txtWeight_pur, txtUnitPrice_pur}
+            lstSum_pur.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateSum_Purchase())
 #End Region
 
 #Region "新瓶採購"
-        grpBarrel.Controls.OfType(Of TextBox).ToList.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateAmount_PurchaseBarrel())
+            grpBarrel.Controls.OfType(Of TextBox).ToList.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateAmount_PurchaseBarrel())
 #End Region
 
 #Region "銷售管理"
-        SetupSalesManagementHandlers()
+            SetupSalesManagementHandlers()
 #End Region
 
 #Region "大氣採購"
-        'SetupGasPurchaseHandlers()
+            'SetupGasPurchaseHandlers()
 #End Region
 
 #Region "新瓶採購"
-        'SetupNewBottlePurchaseHandlers()
+            'SetupNewBottlePurchaseHandlers()
 #End Region
+        Catch ex As Exception
+            Throw
+        End Try
     End Sub
 
     ''' <summary>
@@ -1167,21 +1179,25 @@
 
     '銷售管理-控制項事件
     Private Sub SetupSalesManagementHandlers()
-        ' 進場單處理
-        SetupTextBoxHandlers(tpIn, AddressOf CalculateOrder, "txto_in", "txto_new_in", "txto_inspect")
-        SetupTextBoxHandlers(tpIn, AddressOf CalculateCarStock, "txtDepositIn")
+        Try
+            ' 進場單處理
+            SetupTextBoxHandlers(tpIn, AddressOf CalculateOrder, "txto_in", "txto_new_in", "txto_inspect")
+            SetupTextBoxHandlers(tpIn, AddressOf CalculateCarStock, "txtDepositIn")
 
-        ' 為所有非只讀的TextBox添加方向鍵處理
-        AddDirectionHandlers(tpIn)
+            ' 為所有非只讀的TextBox添加方向鍵處理
+            AddDirectionHandlers(tpIn)
 
-        ' 出場單處理
-        SetupTextBoxHandlers(tpOut, AddressOf CalculateOrder, "txtGas", "txtEmpty")
-        SetupTextBoxHandlers(tpOut, AddressOf CalculateCarStock, "txtDepositOut")
+            ' 出場單處理
+            SetupTextBoxHandlers(tpOut, AddressOf CalculateOrder, "txtGas", "txtEmpty")
+            SetupTextBoxHandlers(tpOut, AddressOf CalculateCarStock, "txtDepositOut")
 
-        AddDirectionHandlers(tpOut)
+            AddDirectionHandlers(tpOut)
 
-        ' 訂單處理
-        SetupTextBoxHandlers(tpOrder, AddressOf CalculateOrder, "txto_return", "txto_return_c", "txto_sales_allowance")
+            ' 訂單處理
+            SetupTextBoxHandlers(tpOrder, AddressOf CalculateOrder, "txto_return", "txto_return_c", "txto_sales_allowance")
+        Catch ex As Exception
+            Throw
+        End Try
     End Sub
 
     Private Sub SetupTextBoxHandlers(container As Control, handler As KeyEventHandler, ParamArray prefixes As String())
@@ -1196,8 +1212,12 @@
     ''' 即時計算進出場單
     ''' </summary>
     Private Sub CalculateOrder()
-        Dim isIn As Boolean = tcInOut.SelectedTab.Text = "進場單"
-        _order.CalculateStkAndPrice(isIn)
+        Try
+            Dim isIn As Boolean = tcInOut.SelectedTab.Text = "進場單"
+            _order.CalculateStkAndPrice(isIn)
+        Catch ex As Exception
+            Throw
+        End Try
     End Sub
 
     ''' <summary>
@@ -1278,23 +1298,27 @@
 
     '銷售管理-切換進出場單
     Private Sub tcInOut_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tcInOut.SelectedIndexChanged
-        Dim tc As TabControl = sender
+        Try
+            Dim tc As TabControl = sender
 
-        '顯示明細的狀況下只會有顯示一種單,不用計算
-        If tc.TabPages.Count = 1 Then Return
+            '顯示明細的狀況下只會有顯示一種單,不用計算
+            If tc.TabPages.Count = 1 Then Return
 
-        Dim isIn As Boolean = tc.SelectedTab.Text = "進場單"
-        Dim exception = New List(Of String) From {grpTransport.Name}
+            Dim isIn As Boolean = tc.SelectedTab.Text = "進場單"
+            Dim exception = New List(Of String) From {grpTransport.Name}
 
-        If isIn Then
-            ClearControls(tpOut, exception)
-            If rdoPickUp.Checked AndAlso cmbCar_ord.SelectedItem IsNot Nothing Then _order.LoadCarStk_In(cmbCar_ord.SelectedItem.Value)
-        Else
-            ClearControls(tpIn, exception)
-            cmbCarOut_ord.SelectedIndex = cmbCar_ord.SelectedIndex
-            If cmbCarOut_ord.SelectedItem IsNot Nothing Then _order.LoadCarStk_Out(cmbCarOut_ord.SelectedItem.Value)
-        End If
-        _order.CalculateStkAndPrice(isIn)
+            If isIn Then
+                ClearControls(tpOut, exception)
+                If rdoPickUp.Checked AndAlso cmbCar_ord.SelectedItem IsNot Nothing Then _order.LoadCarStk_In(cmbCar_ord.SelectedItem.Value)
+            Else
+                ClearControls(tpIn, exception)
+                cmbCarOut_ord.SelectedIndex = cmbCar_ord.SelectedIndex
+                If cmbCarOut_ord.SelectedItem IsNot Nothing Then _order.LoadCarStk_Out(cmbCarOut_ord.SelectedItem.Value)
+            End If
+            _order.CalculateStkAndPrice(isIn)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     '銷售管理-選擇廠運時
@@ -1449,14 +1473,14 @@
     '銷售管理-氣量氣款收付明細表
     Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
         Using frm As New frmDatePicker
-            If frm.ShowDialog = DialogResult.OK Then _report.GenerateCustomersGasDetailByDay(frm.SelectedDate)
+            If frm.ShowDialog = DialogResult.OK Then _report.GenerateCustomersGasDetailByDay(frm.SelectedDate, frm.isMonth)
         End Using
     End Sub
 
     '銷售管理-客戶提氣清冊
     Private Sub btnCusGetGasList_Click(sender As Object, e As EventArgs) Handles btnCusGetGasList.Click
         Using frm As New frmDatePicker
-            If frm.ShowDialog = DialogResult.OK Then _report.GenerateCustomersGetGasList(frm.SelectedDate)
+            If frm.ShowDialog = DialogResult.OK Then _report.GenerateCustomersGetGasList(frm.SelectedDate, frm.isMonth)
         End Using
     End Sub
 
@@ -2050,6 +2074,11 @@
         _payment.LoadVendorAmountDue(cmbManu_payment.SelectedValue)
     End Sub
 
+    '支出管理-付款作業-列印
+    Private Sub btnPrint_pay_Click(sender As Object, e As EventArgs) Handles btnPrint_pay.Click
+        _payment.Print()
+    End Sub
+
     Public Sub DisplayList(data As List(Of CollectionVM)) Implements IBaseView(Of collection, CollectionVM).DisplayList
         dgvCollection.DataSource = data
     End Sub
@@ -2228,6 +2257,11 @@
         End Using
     End Sub
 
+    '收入管理-收款作業-列印
+    Private Sub btnPrint_Col_Click(sender As Object, e As EventArgs) Handles btnPrint_Col.Click
+        _collect.Print()
+    End Sub
+
     Public Sub ShowList(data As List(Of ChequeVM)) Implements ICommonView_old(Of cheque, ChequeVM).ShowList
         '檢查是否有chk
         Dim chkColName = "ChkCol"
@@ -2369,26 +2403,24 @@
         _report.LoadCompany()
     End Sub
 
-    '會計管理-報表-單一客戶每日的應收帳明細表
-    Private Sub btnDailyCusReceivable_Click(sender As Object, e As EventArgs) Handles btnDailyCusReceivable.Click
-        _report.GenerateDailyCustomerReceivable(Now.Date, txtCusCode_dcr.Text)
+    '會計管理-報表-單一客戶每月的應收帳明細表
+    Private Sub btnMonthlyCusReceivable_Click(sender As Object, e As EventArgs) Handles btnMonthlyCusReceivable.Click
+        _report.GenerateMonthlyCustomerReceivable(Now.Date, txtCusCode_dcr.Text)
     End Sub
 
     '會計管理-報表-提量支數統計
     Private Sub btnGasUsageCylinderCount_Click(sender As Object, e As EventArgs) Handles btnGasUsageCylinderCount.Click
-        _report.GenerateGasUsageAndCylinderCount(Now.Date)
+        _report.GenerateGasUsageAndCylinderCount(dtpDate_gucc.Value.Date)
     End Sub
 
     '會計管理-報表-現金帳
     Private Sub btnCashAccount_Click(sender As Object, e As EventArgs) Handles btnCashAccount.Click
-        _report.GenerateCashAccount(Now.Date)
+        _report.GenerateCashAccount(dtpStart_ca.Value.Date, dtpEnd_ca.Value.Date)
     End Sub
 
     '會計管理-報表-銀行帳
     Private Sub btnBankAccount_Click(sender As Object, e As EventArgs) Handles btnBankAccount.Click
-        Dim selectDate = dtpMonth_BankAccount.Value.Date
-        Dim month = New Date(selectDate.Year, selectDate.Month, 1)
-        _report.GenerateBankAccount(month, cmbBankAccount_BankAccount.SelectedItem.Value)
+        _report.GenerateBankAccount(dtpStart_BankAccount.Value.Date, dtpEnd_BankAccount.Value.Date, cmbBankAccount_BankAccount.SelectedItem.Value)
     End Sub
 
     '會計管理-報表-客戶寄桶結存瓶-客戶代號

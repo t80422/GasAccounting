@@ -10,7 +10,7 @@
 
     Public Sub New(data As basic_price)
         編號 = data.bp_id
-        年月份 = data.bp_date.ToString("yyyy年MM月")
+        年月份 = data.bp_date.ToShortDateString
         普氣進氣價格 = data.bp_normal_in
         丙氣進氣價格 = data.bp_c_in
         普氣銷售價格 = data.bp_normal_out

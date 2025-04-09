@@ -41,4 +41,23 @@ Public Class CollectionRep
             Throw
         End Try
     End Function
+
+    Public Function GetTransferSubpoenaData(day As Date, Optional isIncome As Boolean = False) As Subpoena Implements ICollectionRep.GetTransferSubpoenaData
+        Try
+            Dim query = _dbSet.Where(Function(x) x.col_Date = day)
+
+            Dim result = If(isIncome, query.Where(Function(x) x.col_Type = "現金"), query.Where(Function(x) x.col_Type = "銀行" Or x.col_Type = "支票")).
+                Select(Function(x) New TransactionItem With {
+                    .AccountName = x.subject.s_name,
+                    .Amount = x.col_Amount,
+                    .Summary = x.col_Memo
+                }).ToList
+
+            Return New Subpoena With {
+                .DebitItems = result
+            }
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

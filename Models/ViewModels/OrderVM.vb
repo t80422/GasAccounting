@@ -82,7 +82,6 @@
     Public Property 折讓 As Integer
     Public Property 總金額 As Integer
     Public Property 保險金額 As Single
-    Public Property 未收款金額 As Integer
     Public Property 備註 As String
     Public Property 操作人員 As String
 
@@ -173,7 +172,6 @@
             備註 = data.o_memo
             操作人員 = data.employee?.emp_name
             保險金額 = data.o_Insurance
-            未收款金額 = data.o_UnpaidAmount
         Catch ex As Exception
             Console.WriteLine(ex.StackTrace)
             Throw

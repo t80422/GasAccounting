@@ -7,17 +7,14 @@
         _bpRep = bpRep
     End Sub
 
-    Public Function CalculateUnitPrice(customer As customer, month As Date, isDelivery As Boolean, isNormalGas As Boolean) As Single Implements IPriceCalculationService.CalculateUnitPrice
+    Public Function CalculateUnitPrice(customer As customer, day As Date, isDelivery As Boolean, isNormalGas As Boolean) As Single Implements IPriceCalculationService.CalculateUnitPrice
         Try
             Dim baseUnitPrice As Single
             Dim customerPriceAdjustment As Single
 
-            '每個月2號才是當月的開始
-            If month.Day = 1 Then month = month.AddDays(-1)
+            Dim basePrice = _bpRep.GetByNearestDate(day)
 
-            Dim basePrice = _bpRep.GetByMonth(month)
-
-            If basePrice Is Nothing Then Throw New Exception("請先設定當月基礎價格")
+            If basePrice Is Nothing Then Throw New Exception("找不到適用的基礎價格，請先設定價格")
 
             Dim pricePlan = customer.priceplan
 
