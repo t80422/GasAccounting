@@ -520,15 +520,15 @@
 
 
             '取得銷售價格
-            Dim salePrices = _context.gas_barrel.ToDictionary(Function(x) x.gb_Name, Function(x) x.gb_SalesPrice)
+            'Dim salePrices = _context.gas_barrel.ToDictionary(Function(x) x.gb_Name, Function(x) x.gb_SalesPrice)
 
-            With result
-                .IncomeUnitPrice50 = salePrices("50Kg")
-                .IncomeUnitPrice20 = salePrices("20Kg")
-                .IncomeUnitPrice16 = salePrices("16Kg")
-                .IncomeUnitPrice10 = salePrices("10Kg")
-                .IncomeUnitPrice4 = salePrices("4Kg")
-            End With
+            'With result
+            '    .IncomeUnitPrice50 = salePrices("50Kg")
+            '    .IncomeUnitPrice20 = salePrices("20Kg")
+            '    .IncomeUnitPrice16 = salePrices("16Kg")
+            '    .IncomeUnitPrice10 = salePrices("10Kg")
+            '    .IncomeUnitPrice4 = salePrices("4Kg")
+            'End With
 
 
             '取得進貨數據

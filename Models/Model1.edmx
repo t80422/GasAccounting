@@ -195,7 +195,6 @@
           <Property Name="gb_Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="gb_InitialInventory" Type="int" Nullable="false" />
           <Property Name="gb_Inventory" Type="int" Nullable="false" />
-          <Property Name="gb_SalesPrice" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="gas_monthly_balances">
           <Key>
@@ -278,6 +277,7 @@
           <Property Name="ma_unpaid_amount" Type="int" Nullable="false" />
           <Property Name="ma_status" Type="bool" Nullable="false" />
           <Property Name="ma_last_updated" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="ma_discount" Type="int" />
         </EntityType>
         <EntityType Name="order_collection_mapping">
           <Key>
@@ -384,6 +384,15 @@
           <Property Name="o_Insurance" Type="float" Nullable="false" />
           <Property Name="o_cus_Id" Type="int" />
           <Property Name="o_BarrelPrice" Type="int" />
+          <Property Name="o_barrel_unit_price_50" Type="int" />
+          <Property Name="o_barrel_unit_price_20" Type="int" />
+          <Property Name="o_barrel_unit_price_16" Type="int" />
+          <Property Name="o_barrel_unit_price_10" Type="int" />
+          <Property Name="o_barrel_unit_price_4" Type="int" />
+          <Property Name="o_barrel_unit_price_18" Type="int" />
+          <Property Name="o_barrel_unit_price_14" Type="int" />
+          <Property Name="o_barrel_unit_price_5" Type="int" />
+          <Property Name="o_barrel_unit_price_2" Type="int" />
         </EntityType>
         <EntityType Name="payment">
           <Key>
@@ -398,7 +407,6 @@
           <Property Name="p_Cheque" Type="varchar" MaxLength="50" />
           <Property Name="p_bank_Id" Type="int" />
           <Property Name="p_s_Id" Type="int" />
-          <Property Name="p_AccountMonth" Type="date" />
           <Property Name="p_comp_Id" Type="int" />
           <Property Name="p_SubpoenaNo" Type="int" Nullable="false" />
           <Property Name="p_IsCashing" Type="bool" />
@@ -505,6 +513,16 @@
           <Property Name="s_memo" Type="varchar" MaxLength="50" />
           <Property Name="s_IsDeletable" Type="bool" />
         </EntityType>
+        <EntityType Name="write_off">
+          <Key>
+            <PropertyRef Name="wo_id" />
+          </Key>
+          <Property Name="wo_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="wo_col_id" Type="int" Nullable="false" />
+          <Property Name="wo_amount" Type="int" Nullable="false" />
+          <Property Name="wo_date" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="wo_ma_id" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="accounting_entry_ibfk_1">
           <End Role="subjects" Type="Self.subjects" Multiplicity="1" />
           <End Role="accounting_entry" Type="Self.accounting_entry" Multiplicity="*" />
@@ -514,6 +532,18 @@
             </Principal>
             <Dependent Role="accounting_entry">
               <PropertyRef Name="ae_s_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="bank_ibfk_1">
+          <End Role="company" Type="Self.company" Multiplicity="0..1" />
+          <End Role="bank" Type="Self.bank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="comp_id" />
+            </Principal>
+            <Dependent Role="bank">
+              <PropertyRef Name="bank_comp_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -923,6 +953,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="write_off_ibfk_1">
+          <End Role="collection" Type="Self.collection" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="write_off" Type="Self.write_off" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="collection">
+              <PropertyRef Name="col_Id" />
+            </Principal>
+            <Dependent Role="write_off">
+              <PropertyRef Name="wo_col_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="write_off_ibfk_2">
+          <End Role="monthly_account" Type="Self.monthly_account" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="write_off" Type="Self.write_off" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="monthly_account">
+              <PropertyRef Name="ma_id" />
+            </Principal>
+            <Dependent Role="write_off">
+              <PropertyRef Name="wo_ma_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="gas_accounting_systemModelStoreContainer">
           <EntitySet Name="accounting_entry" EntityType="Self.accounting_entry" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="bank" EntityType="Self.bank" Schema="gas_accounting_system" store:Type="Tables" />
@@ -952,9 +1010,14 @@
           <EntitySet Name="roles" EntityType="Self.roles" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="stock" EntityType="Self.stock" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="subjects" EntityType="Self.subjects" Schema="gas_accounting_system" store:Type="Tables" />
+          <EntitySet Name="write_off" EntityType="Self.write_off" Schema="gas_accounting_system" store:Type="Tables" />
           <AssociationSet Name="accounting_entry_ibfk_1" Association="Self.accounting_entry_ibfk_1">
             <End Role="subjects" EntitySet="subjects" />
             <End Role="accounting_entry" EntitySet="accounting_entry" />
+          </AssociationSet>
+          <AssociationSet Name="bank_ibfk_1" Association="Self.bank_ibfk_1">
+            <End Role="company" EntitySet="company" />
+            <End Role="bank" EntitySet="bank" />
           </AssociationSet>
           <AssociationSet Name="bank_monthly_balances_ibfk_1" Association="Self.bank_monthly_balances_ibfk_1">
             <End Role="bank" EntitySet="bank" />
@@ -1088,6 +1151,14 @@
             <End Role="roles" EntitySet="roles" />
             <End Role="rolepermission" EntitySet="rolepermission" />
           </AssociationSet>
+          <AssociationSet Name="write_off_ibfk_1" Association="Self.write_off_ibfk_1">
+            <End Role="collection" EntitySet="collection" />
+            <End Role="write_off" EntitySet="write_off" />
+          </AssociationSet>
+          <AssociationSet Name="write_off_ibfk_2" Association="Self.write_off_ibfk_2">
+            <End Role="monthly_account" EntitySet="monthly_account" />
+            <End Role="write_off" EntitySet="write_off" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -1105,12 +1176,10 @@
           <EntitySet Name="companies" EntityType="gas_accounting_systemModel.company" />
           <EntitySet Name="customers" EntityType="gas_accounting_systemModel.customer" />
           <EntitySet Name="employees" EntityType="gas_accounting_systemModel.employee" />
-          <EntitySet Name="gas_barrel" EntityType="gas_accounting_systemModel.gas_barrel" />
           <EntitySet Name="gas_monthly_balances" EntityType="gas_accounting_systemModel.gas_monthly_balances" />
           <EntitySet Name="invoices" EntityType="gas_accounting_systemModel.invoice" />
           <EntitySet Name="invoice_split" EntityType="gas_accounting_systemModel.invoice_split" />
           <EntitySet Name="manufacturers" EntityType="gas_accounting_systemModel.manufacturer" />
-          <EntitySet Name="payments" EntityType="gas_accounting_systemModel.payment" />
           <EntitySet Name="permissions" EntityType="gas_accounting_systemModel.permission" />
           <EntitySet Name="priceplans" EntityType="gas_accounting_systemModel.priceplan" />
           <EntitySet Name="purchases" EntityType="gas_accounting_systemModel.purchase" />
@@ -1130,14 +1199,6 @@
           <AssociationSet Name="collection_ibfk_3" Association="gas_accounting_systemModel.collection_ibfk_3">
             <End Role="bank" EntitySet="banks" />
             <End Role="collection" EntitySet="collections" />
-          </AssociationSet>
-          <AssociationSet Name="payment_ibfk_2" Association="gas_accounting_systemModel.payment_ibfk_2">
-            <End Role="bank" EntitySet="banks" />
-            <End Role="payment" EntitySet="payments" />
-          </AssociationSet>
-          <AssociationSet Name="barrel_monthly_balances_ibfk_1" Association="gas_accounting_systemModel.barrel_monthly_balances_ibfk_1">
-            <End Role="gas_barrel" EntitySet="gas_barrel" />
-            <End Role="barrel_monthly_balances" EntitySet="barrel_monthly_balances" />
           </AssociationSet>
           <AssociationSet Name="car_ibfk_1" Association="gas_accounting_systemModel.car_ibfk_1">
             <End Role="customer" EntitySet="customers" />
@@ -1175,10 +1236,6 @@
             <End Role="company" EntitySet="companies" />
             <End Role="invoice_split" EntitySet="invoice_split" />
           </AssociationSet>
-          <AssociationSet Name="payment_ibfk_3" Association="gas_accounting_systemModel.payment_ibfk_3">
-            <End Role="company" EntitySet="companies" />
-            <End Role="payment" EntitySet="payments" />
-          </AssociationSet>
           <AssociationSet Name="purchase_ibfk_1" Association="gas_accounting_systemModel.purchase_ibfk_1">
             <End Role="company" EntitySet="companies" />
             <End Role="purchase" EntitySet="purchases" />
@@ -1191,10 +1248,6 @@
             <End Role="customer" EntitySet="customers" />
             <End Role="invoice" EntitySet="invoices" />
           </AssociationSet>
-          <AssociationSet Name="payment_ibfk_4" Association="gas_accounting_systemModel.payment_ibfk_4">
-            <End Role="manufacturer" EntitySet="manufacturers" />
-            <End Role="payment" EntitySet="payments" />
-          </AssociationSet>
           <AssociationSet Name="purchase_ibfk_2" Association="gas_accounting_systemModel.purchase_ibfk_2">
             <End Role="manufacturer" EntitySet="manufacturers" />
             <End Role="purchase" EntitySet="purchases" />
@@ -1202,10 +1255,6 @@
           <AssociationSet Name="purchase_ibfk_3" Association="gas_accounting_systemModel.purchase_ibfk_3">
             <End Role="manufacturer" EntitySet="manufacturers" />
             <End Role="purchase" EntitySet="purchases" />
-          </AssociationSet>
-          <AssociationSet Name="payment_ibfk_1" Association="gas_accounting_systemModel.payment_ibfk_1">
-            <End Role="subject" EntitySet="subjects" />
-            <End Role="payment" EntitySet="payments" />
           </AssociationSet>
           <AssociationSet Name="purchase_barrel_ibfk_1" Association="gas_accounting_systemModel.purchase_barrel_ibfk_1">
             <End Role="company" EntitySet="companies" />
@@ -1258,7 +1307,42 @@
             <End Role="order" EntitySet="orders" />
             <End Role="order_collection_mapping" EntitySet="order_collection_mapping" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="bank_ibfk_1" Association="gas_accounting_systemModel.bank_ibfk_1">
+            <End Role="company" EntitySet="companies" />
+            <End Role="bank" EntitySet="banks" />
+          </AssociationSet>
+          <EntitySet Name="payments" EntityType="gas_accounting_systemModel.payment" />
+          <AssociationSet Name="payment_ibfk_2" Association="gas_accounting_systemModel.payment_ibfk_2">
+            <End Role="bank" EntitySet="banks" />
+            <End Role="payment" EntitySet="payments" />
+          </AssociationSet>
+          <AssociationSet Name="payment_ibfk_3" Association="gas_accounting_systemModel.payment_ibfk_3">
+            <End Role="company" EntitySet="companies" />
+            <End Role="payment" EntitySet="payments" />
+          </AssociationSet>
+          <AssociationSet Name="payment_ibfk_4" Association="gas_accounting_systemModel.payment_ibfk_4">
+            <End Role="manufacturer" EntitySet="manufacturers" />
+            <End Role="payment" EntitySet="payments" />
+          </AssociationSet>
+          <AssociationSet Name="payment_ibfk_1" Association="gas_accounting_systemModel.payment_ibfk_1">
+            <End Role="subject" EntitySet="subjects" />
+            <End Role="payment" EntitySet="payments" />
+          </AssociationSet>
+          <EntitySet Name="gas_barrel" EntityType="gas_accounting_systemModel.gas_barrel" />
+          <AssociationSet Name="barrel_monthly_balances_ibfk_1" Association="gas_accounting_systemModel.barrel_monthly_balances_ibfk_1">
+            <End Role="gas_barrel" EntitySet="gas_barrel" />
+            <End Role="barrel_monthly_balances" EntitySet="barrel_monthly_balances" />
+          </AssociationSet>
+          <EntitySet Name="write_off" EntityType="gas_accounting_systemModel.write_off" />
+          <AssociationSet Name="write_off_ibfk_1" Association="gas_accounting_systemModel.write_off_ibfk_1">
+            <End Role="collection" EntitySet="collections" />
+            <End Role="write_off" EntitySet="write_off" />
+          </AssociationSet>
+          <AssociationSet Name="write_off_ibfk_2" Association="gas_accounting_systemModel.write_off_ibfk_2">
+            <End Role="monthly_account" EntitySet="monthly_account" />
+            <End Role="write_off" EntitySet="write_off" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="accounting_entry">
           <Key>
             <PropertyRef Name="ae_Id" />
@@ -1285,6 +1369,7 @@
           <Property Name="bank_AccountName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="bank_monthly_balances" Relationship="gas_accounting_systemModel.bank_monthly_balances_ibfk_1" FromRole="bank" ToRole="bank_monthly_balances" />
           <NavigationProperty Name="collections" Relationship="gas_accounting_systemModel.collection_ibfk_3" FromRole="bank" ToRole="collection" />
+          <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.bank_ibfk_1" FromRole="bank" ToRole="company" />
           <NavigationProperty Name="payments" Relationship="gas_accounting_systemModel.payment_ibfk_2" FromRole="bank" ToRole="payment" />
         </EntityType>
         <EntityType Name="bank_monthly_balances">
@@ -1388,6 +1473,7 @@
           <NavigationProperty Name="subject" Relationship="gas_accounting_systemModel.collection_ibfk_2" FromRole="collection" ToRole="subject" />
           <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.collection_ibfk_4" FromRole="collection" ToRole="company" />
           <NavigationProperty Name="order_collection_mapping" Relationship="gas_accounting_systemModel.order_collection_mapping_ibfk_1" FromRole="collection" ToRole="order_collection_mapping" />
+          <NavigationProperty Name="write_off" Relationship="gas_accounting_systemModel.write_off_ibfk_1" FromRole="collection" ToRole="write_off" />
         </EntityType>
         <EntityType Name="company">
           <Key>
@@ -1404,9 +1490,10 @@
           <NavigationProperty Name="customers" Relationship="gas_accounting_systemModel.customer_ibfk_2" FromRole="company" ToRole="customer" />
           <NavigationProperty Name="gas_monthly_balances" Relationship="gas_accounting_systemModel.gas_monthly_balances_ibfk_1" FromRole="company" ToRole="gas_monthly_balances" />
           <NavigationProperty Name="invoice_split" Relationship="gas_accounting_systemModel.invoice_split_ibfk_1" FromRole="company" ToRole="invoice_split" />
-          <NavigationProperty Name="payments" Relationship="gas_accounting_systemModel.payment_ibfk_3" FromRole="company" ToRole="payment" />
           <NavigationProperty Name="purchases" Relationship="gas_accounting_systemModel.purchase_ibfk_1" FromRole="company" ToRole="purchase" />
           <NavigationProperty Name="purchase_barrel" Relationship="gas_accounting_systemModel.purchase_barrel_ibfk_1" FromRole="company" ToRole="purchase_barrel" />
+          <NavigationProperty Name="banks" Relationship="gas_accounting_systemModel.bank_ibfk_1" FromRole="company" ToRole="bank" />
+          <NavigationProperty Name="payments" Relationship="gas_accounting_systemModel.payment_ibfk_3" FromRole="company" ToRole="payment" />
         </EntityType>
         <EntityType Name="customer">
           <Key>
@@ -1474,17 +1561,6 @@
           <Property Name="emp_birthday" Type="DateTime" />
           <NavigationProperty Name="role" Relationship="gas_accounting_systemModel.employee_ibfk_1" FromRole="employee" ToRole="role" />
           <NavigationProperty Name="orders" Relationship="gas_accounting_systemModel.orders_ibfk_3" FromRole="employee" ToRole="order" />
-        </EntityType>
-        <EntityType Name="gas_barrel">
-          <Key>
-            <PropertyRef Name="gb_Id" />
-          </Key>
-          <Property Name="gb_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="gb_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="gb_InitialInventory" Type="Int32" Nullable="false" />
-          <Property Name="gb_Inventory" Type="Int32" Nullable="false" />
-          <Property Name="gb_SalesPrice" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="barrel_monthly_balances" Relationship="gas_accounting_systemModel.barrel_monthly_balances_ibfk_1" FromRole="gas_barrel" ToRole="barrel_monthly_balances" />
         </EntityType>
         <EntityType Name="gas_monthly_balances">
           <Key>
@@ -1556,33 +1632,10 @@
           <Property Name="manu_gas_normal" Type="Single" />
           <Property Name="manu_gas_c" Type="Single" />
           <Property Name="manu_GasVendor" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="payments" Relationship="gas_accounting_systemModel.payment_ibfk_4" FromRole="manufacturer" ToRole="payment" />
           <NavigationProperty Name="purchases" Relationship="gas_accounting_systemModel.purchase_ibfk_2" FromRole="manufacturer" ToRole="purchase" />
           <NavigationProperty Name="purchases1" Relationship="gas_accounting_systemModel.purchase_ibfk_3" FromRole="manufacturer" ToRole="purchase" />
           <NavigationProperty Name="purchase_barrel" Relationship="gas_accounting_systemModel.purchase_barrel_ibfk_2" FromRole="manufacturer" ToRole="purchase_barrel" />
-        </EntityType>
-        <EntityType Name="payment">
-          <Key>
-            <PropertyRef Name="p_Id" />
-          </Key>
-          <Property Name="p_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="p_Date" Type="DateTime" Nullable="false" />
-          <Property Name="p_Amount" Type="Int32" Nullable="false" />
-          <Property Name="p_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="p_m_Id" Type="Int32" />
-          <Property Name="p_Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="p_Cheque" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="p_bank_Id" Type="Int32" />
-          <Property Name="p_s_Id" Type="Int32" />
-          <Property Name="p_AccountMonth" Type="DateTime" />
-          <Property Name="p_comp_Id" Type="Int32" />
-          <Property Name="p_SubpoenaNo" Type="Int32" Nullable="false" />
-          <Property Name="p_IsCashing" Type="Boolean" />
-          <Property Name="p_CashingDate" Type="DateTime" />
-          <NavigationProperty Name="bank" Relationship="gas_accounting_systemModel.payment_ibfk_2" FromRole="payment" ToRole="bank" />
-          <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.payment_ibfk_3" FromRole="payment" ToRole="company" />
-          <NavigationProperty Name="manufacturer" Relationship="gas_accounting_systemModel.payment_ibfk_4" FromRole="payment" ToRole="manufacturer" />
-          <NavigationProperty Name="subject" Relationship="gas_accounting_systemModel.payment_ibfk_1" FromRole="payment" ToRole="subject" />
+          <NavigationProperty Name="payments" Relationship="gas_accounting_systemModel.payment_ibfk_4" FromRole="manufacturer" ToRole="payment" />
         </EntityType>
         <EntityType Name="permission">
           <Key>
@@ -1735,32 +1788,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="payment_ibfk_2">
-          <End Type="gas_accounting_systemModel.bank" Role="bank" Multiplicity="0..1" />
-          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="bank">
-              <PropertyRef Name="bank_id" />
-            </Principal>
-            <Dependent Role="payment">
-              <PropertyRef Name="p_bank_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="barrel_monthly_balances_ibfk_1">
-          <End Type="gas_accounting_systemModel.gas_barrel" Role="gas_barrel" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="gas_accounting_systemModel.barrel_monthly_balances" Role="barrel_monthly_balances" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="gas_barrel">
-              <PropertyRef Name="gb_Id" />
-            </Principal>
-            <Dependent Role="barrel_monthly_balances">
-              <PropertyRef Name="barmb_gb_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="car_ibfk_1">
           <End Type="gas_accounting_systemModel.customer" Role="customer" Multiplicity="0..1" />
           <End Type="gas_accounting_systemModel.car" Role="car" Multiplicity="*" />
@@ -1875,18 +1902,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="payment_ibfk_3">
-          <End Type="gas_accounting_systemModel.company" Role="company" Multiplicity="0..1" />
-          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="company">
-              <PropertyRef Name="comp_id" />
-            </Principal>
-            <Dependent Role="payment">
-              <PropertyRef Name="p_comp_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="purchase_ibfk_1">
           <End Type="gas_accounting_systemModel.company" Role="company" Multiplicity="1" />
           <End Type="gas_accounting_systemModel.purchase" Role="purchase" Multiplicity="*" />
@@ -1925,18 +1940,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="payment_ibfk_4">
-          <End Type="gas_accounting_systemModel.manufacturer" Role="manufacturer" Multiplicity="0..1" />
-          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="manufacturer">
-              <PropertyRef Name="manu_id" />
-            </Principal>
-            <Dependent Role="payment">
-              <PropertyRef Name="p_m_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="purchase_ibfk_2">
           <End Type="gas_accounting_systemModel.manufacturer" Role="manufacturer" Multiplicity="1" />
           <End Type="gas_accounting_systemModel.purchase" Role="purchase" Multiplicity="*" />
@@ -1958,18 +1961,6 @@
             </Principal>
             <Dependent Role="purchase">
               <PropertyRef Name="pur_DriveCmpId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="payment_ibfk_1">
-          <End Type="gas_accounting_systemModel.subject" Role="subject" Multiplicity="0..1" />
-          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="subject">
-              <PropertyRef Name="s_id" />
-            </Principal>
-            <Dependent Role="payment">
-              <PropertyRef Name="p_s_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2071,6 +2062,8 @@
           <Property Name="ma_status" Type="Boolean" Nullable="false" />
           <Property Name="ma_last_updated" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.monthly_account_ibfk_1" FromRole="monthly_account" ToRole="customer" />
+          <Property Name="ma_discount" Type="Int32" />
+          <NavigationProperty Name="write_off" Relationship="gas_accounting_systemModel.write_off_ibfk_2" FromRole="monthly_account" ToRole="write_off" />
         </EntityType>
         <Association Name="monthly_account_ibfk_1">
           <End Type="gas_accounting_systemModel.customer" Role="customer" Multiplicity="1" />
@@ -2184,6 +2177,15 @@
           <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.orders_ibfk_5" FromRole="order" ToRole="customer" />
           <NavigationProperty Name="employee" Relationship="gas_accounting_systemModel.orders_ibfk_3" FromRole="order" ToRole="employee" />
           <NavigationProperty Name="order_collection_mapping" Relationship="gas_accounting_systemModel.order_collection_mapping_ibfk_2" FromRole="order" ToRole="order_collection_mapping" />
+          <Property Name="o_barrel_unit_price_50" Type="Int32" />
+          <Property Name="o_barrel_unit_price_20" Type="Int32" />
+          <Property Name="o_barrel_unit_price_16" Type="Int32" />
+          <Property Name="o_barrel_unit_price_10" Type="Int32" />
+          <Property Name="o_barrel_unit_price_4" Type="Int32" />
+          <Property Name="o_barrel_unit_price_18" Type="Int32" />
+          <Property Name="o_barrel_unit_price_14" Type="Int32" />
+          <Property Name="o_barrel_unit_price_5" Type="Int32" />
+          <Property Name="o_barrel_unit_price_2" Type="Int32" />
         </EntityType>
         <Association Name="orders_ibfk_1">
           <End Type="gas_accounting_systemModel.car" Role="car" Multiplicity="0..1" />
@@ -2242,6 +2244,152 @@
             </Principal>
             <Dependent Role="order_collection_mapping">
               <PropertyRef Name="ocm_o_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="bank_ibfk_1">
+          <End Type="gas_accounting_systemModel.company" Role="company" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.bank" Role="bank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="comp_id" />
+            </Principal>
+            <Dependent Role="bank">
+              <PropertyRef Name="bank_comp_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="payment">
+          <Key>
+            <PropertyRef Name="p_Id" />
+          </Key>
+          <Property Name="p_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="p_Date" Type="DateTime" Nullable="false" />
+          <Property Name="p_Amount" Type="Int32" Nullable="false" />
+          <Property Name="p_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="p_m_Id" Type="Int32" />
+          <Property Name="p_Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="p_Cheque" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="p_bank_Id" Type="Int32" />
+          <Property Name="p_s_Id" Type="Int32" />
+          <Property Name="p_comp_Id" Type="Int32" />
+          <Property Name="p_SubpoenaNo" Type="Int32" Nullable="false" />
+          <Property Name="p_IsCashing" Type="Boolean" />
+          <Property Name="p_CashingDate" Type="DateTime" />
+          <NavigationProperty Name="bank" Relationship="gas_accounting_systemModel.payment_ibfk_2" FromRole="payment" ToRole="bank" />
+          <NavigationProperty Name="company" Relationship="gas_accounting_systemModel.payment_ibfk_3" FromRole="payment" ToRole="company" />
+          <NavigationProperty Name="manufacturer" Relationship="gas_accounting_systemModel.payment_ibfk_4" FromRole="payment" ToRole="manufacturer" />
+          <NavigationProperty Name="subject" Relationship="gas_accounting_systemModel.payment_ibfk_1" FromRole="payment" ToRole="subject" />
+        </EntityType>
+        <Association Name="payment_ibfk_2">
+          <End Type="gas_accounting_systemModel.bank" Role="bank" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="bank">
+              <PropertyRef Name="bank_id" />
+            </Principal>
+            <Dependent Role="payment">
+              <PropertyRef Name="p_bank_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="payment_ibfk_3">
+          <End Type="gas_accounting_systemModel.company" Role="company" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="comp_id" />
+            </Principal>
+            <Dependent Role="payment">
+              <PropertyRef Name="p_comp_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="payment_ibfk_4">
+          <End Type="gas_accounting_systemModel.manufacturer" Role="manufacturer" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="manufacturer">
+              <PropertyRef Name="manu_id" />
+            </Principal>
+            <Dependent Role="payment">
+              <PropertyRef Name="p_m_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="payment_ibfk_1">
+          <End Type="gas_accounting_systemModel.subject" Role="subject" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.payment" Role="payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subject">
+              <PropertyRef Name="s_id" />
+            </Principal>
+            <Dependent Role="payment">
+              <PropertyRef Name="p_s_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="gas_barrel">
+          <Key>
+            <PropertyRef Name="gb_Id" />
+          </Key>
+          <Property Name="gb_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gb_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="gb_InitialInventory" Type="Int32" Nullable="false" />
+          <Property Name="gb_Inventory" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="barrel_monthly_balances" Relationship="gas_accounting_systemModel.barrel_monthly_balances_ibfk_1" FromRole="gas_barrel" ToRole="barrel_monthly_balances" />
+        </EntityType>
+        <Association Name="barrel_monthly_balances_ibfk_1">
+          <End Type="gas_accounting_systemModel.gas_barrel" Role="gas_barrel" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="gas_accounting_systemModel.barrel_monthly_balances" Role="barrel_monthly_balances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="gas_barrel">
+              <PropertyRef Name="gb_Id" />
+            </Principal>
+            <Dependent Role="barrel_monthly_balances">
+              <PropertyRef Name="barmb_gb_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="write_off">
+          <Key>
+            <PropertyRef Name="wo_id" />
+          </Key>
+          <Property Name="wo_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="wo_col_id" Type="Int32" Nullable="false" />
+          <Property Name="wo_amount" Type="Int32" Nullable="false" />
+          <Property Name="wo_date" Type="DateTime" Nullable="false" />
+          <Property Name="wo_ma_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="collection" Relationship="gas_accounting_systemModel.write_off_ibfk_1" FromRole="write_off" ToRole="collection" />
+          <NavigationProperty Name="monthly_account" Relationship="gas_accounting_systemModel.write_off_ibfk_2" FromRole="write_off" ToRole="monthly_account" />
+        </EntityType>
+        <Association Name="write_off_ibfk_1">
+          <End Type="gas_accounting_systemModel.collection" Role="collection" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="gas_accounting_systemModel.write_off" Role="write_off" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="collection">
+              <PropertyRef Name="col_Id" />
+            </Principal>
+            <Dependent Role="write_off">
+              <PropertyRef Name="wo_col_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="write_off_ibfk_2">
+          <End Type="gas_accounting_systemModel.monthly_account" Role="monthly_account" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="gas_accounting_systemModel.write_off" Role="write_off" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="monthly_account">
+              <PropertyRef Name="ma_id" />
+            </Principal>
+            <Dependent Role="write_off">
+              <PropertyRef Name="wo_ma_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2444,17 +2592,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="gas_barrel">
-            <EntityTypeMapping TypeName="gas_accounting_systemModel.gas_barrel">
-              <MappingFragment StoreEntitySet="gas_barrel">
-                <ScalarProperty Name="gb_SalesPrice" ColumnName="gb_SalesPrice" />
-                <ScalarProperty Name="gb_Inventory" ColumnName="gb_Inventory" />
-                <ScalarProperty Name="gb_InitialInventory" ColumnName="gb_InitialInventory" />
-                <ScalarProperty Name="gb_Name" ColumnName="gb_Name" />
-                <ScalarProperty Name="gb_Id" ColumnName="gb_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="gas_monthly_balances">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.gas_monthly_balances">
               <MappingFragment StoreEntitySet="gas_monthly_balances">
@@ -2524,26 +2661,6 @@
                 <ScalarProperty Name="manu_name" ColumnName="manu_name" />
                 <ScalarProperty Name="manu_code" ColumnName="manu_code" />
                 <ScalarProperty Name="manu_id" ColumnName="manu_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="payments">
-            <EntityTypeMapping TypeName="gas_accounting_systemModel.payment">
-              <MappingFragment StoreEntitySet="payment">
-                <ScalarProperty Name="p_CashingDate" ColumnName="p_CashingDate" />
-                <ScalarProperty Name="p_IsCashing" ColumnName="p_IsCashing" />
-                <ScalarProperty Name="p_SubpoenaNo" ColumnName="p_SubpoenaNo" />
-                <ScalarProperty Name="p_comp_Id" ColumnName="p_comp_Id" />
-                <ScalarProperty Name="p_AccountMonth" ColumnName="p_AccountMonth" />
-                <ScalarProperty Name="p_s_Id" ColumnName="p_s_Id" />
-                <ScalarProperty Name="p_bank_Id" ColumnName="p_bank_Id" />
-                <ScalarProperty Name="p_Cheque" ColumnName="p_Cheque" />
-                <ScalarProperty Name="p_Memo" ColumnName="p_Memo" />
-                <ScalarProperty Name="p_m_Id" ColumnName="p_m_Id" />
-                <ScalarProperty Name="p_Type" ColumnName="p_Type" />
-                <ScalarProperty Name="p_Amount" ColumnName="p_Amount" />
-                <ScalarProperty Name="p_Date" ColumnName="p_Date" />
-                <ScalarProperty Name="p_Id" ColumnName="p_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2670,6 +2787,7 @@
           <EntitySetMapping Name="monthly_account">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.monthly_account">
               <MappingFragment StoreEntitySet="monthly_account">
+                <ScalarProperty Name="ma_discount" ColumnName="ma_discount" />
                 <ScalarProperty Name="ma_last_updated" ColumnName="ma_last_updated" />
                 <ScalarProperty Name="ma_status" ColumnName="ma_status" />
                 <ScalarProperty Name="ma_unpaid_amount" ColumnName="ma_unpaid_amount" />
@@ -2685,6 +2803,15 @@
           <EntitySetMapping Name="orders">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.order">
               <MappingFragment StoreEntitySet="orders">
+                <ScalarProperty Name="o_barrel_unit_price_2" ColumnName="o_barrel_unit_price_2" />
+                <ScalarProperty Name="o_barrel_unit_price_5" ColumnName="o_barrel_unit_price_5" />
+                <ScalarProperty Name="o_barrel_unit_price_14" ColumnName="o_barrel_unit_price_14" />
+                <ScalarProperty Name="o_barrel_unit_price_18" ColumnName="o_barrel_unit_price_18" />
+                <ScalarProperty Name="o_barrel_unit_price_4" ColumnName="o_barrel_unit_price_4" />
+                <ScalarProperty Name="o_barrel_unit_price_10" ColumnName="o_barrel_unit_price_10" />
+                <ScalarProperty Name="o_barrel_unit_price_16" ColumnName="o_barrel_unit_price_16" />
+                <ScalarProperty Name="o_barrel_unit_price_20" ColumnName="o_barrel_unit_price_20" />
+                <ScalarProperty Name="o_barrel_unit_price_50" ColumnName="o_barrel_unit_price_50" />
                 <ScalarProperty Name="o_BarrelPrice" ColumnName="o_BarrelPrice" />
                 <ScalarProperty Name="o_cus_Id" ColumnName="o_cus_Id" />
                 <ScalarProperty Name="o_Insurance" ColumnName="o_Insurance" />
@@ -2776,6 +2903,46 @@
                 <ScalarProperty Name="o_c_id" ColumnName="o_c_id" />
                 <ScalarProperty Name="o_date" ColumnName="o_date" />
                 <ScalarProperty Name="o_id" ColumnName="o_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="payments">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.payment">
+              <MappingFragment StoreEntitySet="payment">
+                <ScalarProperty Name="p_CashingDate" ColumnName="p_CashingDate" />
+                <ScalarProperty Name="p_IsCashing" ColumnName="p_IsCashing" />
+                <ScalarProperty Name="p_SubpoenaNo" ColumnName="p_SubpoenaNo" />
+                <ScalarProperty Name="p_comp_Id" ColumnName="p_comp_Id" />
+                <ScalarProperty Name="p_s_Id" ColumnName="p_s_Id" />
+                <ScalarProperty Name="p_bank_Id" ColumnName="p_bank_Id" />
+                <ScalarProperty Name="p_Cheque" ColumnName="p_Cheque" />
+                <ScalarProperty Name="p_Memo" ColumnName="p_Memo" />
+                <ScalarProperty Name="p_m_Id" ColumnName="p_m_Id" />
+                <ScalarProperty Name="p_Type" ColumnName="p_Type" />
+                <ScalarProperty Name="p_Amount" ColumnName="p_Amount" />
+                <ScalarProperty Name="p_Date" ColumnName="p_Date" />
+                <ScalarProperty Name="p_Id" ColumnName="p_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="gas_barrel">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.gas_barrel">
+              <MappingFragment StoreEntitySet="gas_barrel">
+                <ScalarProperty Name="gb_Inventory" ColumnName="gb_Inventory" />
+                <ScalarProperty Name="gb_InitialInventory" ColumnName="gb_InitialInventory" />
+                <ScalarProperty Name="gb_Name" ColumnName="gb_Name" />
+                <ScalarProperty Name="gb_Id" ColumnName="gb_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="write_off">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.write_off">
+              <MappingFragment StoreEntitySet="write_off">
+                <ScalarProperty Name="wo_ma_id" ColumnName="wo_ma_id" />
+                <ScalarProperty Name="wo_date" ColumnName="wo_date" />
+                <ScalarProperty Name="wo_amount" ColumnName="wo_amount" />
+                <ScalarProperty Name="wo_col_id" ColumnName="wo_col_id" />
+                <ScalarProperty Name="wo_id" ColumnName="wo_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

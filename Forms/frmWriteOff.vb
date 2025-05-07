@@ -40,26 +40,44 @@
             .Columns.Add("MonthlyId", "編號")
             .Columns.Add("MonthText", "年月")
             .Columns.Add("TotalAmount", "金額")
+            .Columns.Add("DiscountAmount", "折讓")
+            .Columns.Add("Amount", "應收金額")
+            .Columns.Add("PaidAmount", "已銷帳金額")
             .Columns.Add("UnpaidAmount", "未收金額")
             .Columns.Add("WriteOffAmount", "銷帳金額")
 
-            ' 隱藏編號欄位
             .Columns("MonthlyId").Visible = False
             .Columns("MonthText").ReadOnly = True
             .Columns("TotalAmount").ReadOnly = True
             .Columns("UnpaidAmount").ReadOnly = True
+            .Columns("Amount").ReadOnly = True
+            .Columns("PaidAmount").ReadOnly = True
 
+            .Columns("MonthText").DefaultCellStyle.BackColor = Color.LightGray
             .Columns("TotalAmount").DefaultCellStyle.Format = "N0"
             .Columns("TotalAmount").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .Columns("TotalAmount").DefaultCellStyle.BackColor = Color.LightGray
             .Columns("UnpaidAmount").DefaultCellStyle.Format = "N0"
             .Columns("UnpaidAmount").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .Columns("UnpaidAmount").DefaultCellStyle.BackColor = Color.LightGray
             .Columns("WriteOffAmount").DefaultCellStyle.Format = "N0"
             .Columns("WriteOffAmount").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .Columns("DiscountAmount").DefaultCellStyle.Format = "N0"
+            .Columns("DiscountAmount").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .Columns("Amount").DefaultCellStyle.Format = "N0"
+            .Columns("Amount").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .Columns("Amount").DefaultCellStyle.BackColor = Color.LightGray
+            .Columns("PaidAmount").DefaultCellStyle.Format = "N0"
+            .Columns("PaidAmount").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .Columns("PaidAmount").DefaultCellStyle.BackColor = Color.LightGray
 
-            .Columns("MonthText").Width = 100
+            .Columns("MonthText").Width = 80
             .Columns("TotalAmount").Width = 100
             .Columns("UnpaidAmount").Width = 100
             .Columns("WriteOffAmount").Width = 100
+            .Columns("DiscountAmount").Width = 100
+            .Columns("Amount").Width = 100
+            .Columns("PaidAmount").Width = 100
         End With
     End Sub
 
@@ -68,19 +86,27 @@
         Dim unpaidMonths = _monthlyAccountService.GetCustomerUnpaidMonths(_cusId)
 
         ' 將月度帳單資料加入到 DataGridView
-        For Each month As monthly_account In unpaidMonths
-            dgvMonth.Rows.Add(
-                month.ma_id,
-                $"{month.ma_year}/{month.ma_month}",
-                month.ma_total_amount,
-                month.ma_unpaid_amount,
-                0
-            )
+        For Each ma As monthly_account In unpaidMonths
+            Dim rowIndex As Integer = dgvMonth.Rows.Add() ' 新增一行並獲取行索引
+            Dim row As DataGridViewRow = dgvMonth.Rows(rowIndex)
+            Dim woRep As New WriteOffRep()
+            Dim paidAmount = woRep.GetByMonthlyAccount(ma.ma_id)
+            Dim writeOff = woRep.GetByMonthlyAccountAndCollection(ma.ma_id, _colId)
+
+            ' 使用欄位名稱來對應資料
+            row.Cells("MonthlyId").Value = ma.ma_id
+            row.Cells("MonthText").Value = $"{ma.ma_year}/{ma.ma_month}"
+            row.Cells("TotalAmount").Value = ma.ma_total_amount
+            row.Cells("DiscountAmount").Value = If(ma.ma_discount, 0)
+            row.Cells("WriteOffAmount").Value = If(writeOff IsNot Nothing, writeOff.wo_amount, 0)
+            row.Cells("PaidAmount").Value = paidAmount
+
+            Calculate(row) ' 計算應收金額和未收金額
         Next
     End Sub
 
     Private Sub dgvWriteOff_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvMonth.CellValidating
-        ' 只驗證銷帳金額欄位
+        ' 只驗證銷帳金額和折扣金額欄位
         If e.ColumnIndex = dgvMonth.Columns("WriteOffAmount").Index Then
             ' 檢查是否為有效的數字
             If Not Decimal.TryParse(e.FormattedValue.ToString(), Nothing) Then
@@ -93,16 +119,32 @@
             Dim writeOffAmount = Decimal.Parse(e.FormattedValue.ToString())
             ' 取得該筆月度帳單的未收金額
             Dim unpaidAmount = CDec(dgvMonth.Rows(e.RowIndex).Cells("UnpaidAmount").Value)
-            ' 取得目前的未銷帳金額
-            Dim unmatchedAmount = CDec(txtUnmatched.Text)
 
             ' 檢查銷帳金額是否超過未收金額或未銷帳金額
             If writeOffAmount > unpaidAmount Then
                 e.Cancel = True
                 MessageBox.Show("銷帳金額不能超過未收金額")
-            ElseIf writeOffAmount > unmatchedAmount Then
+                Return
+            End If
+        ElseIf e.ColumnIndex = dgvMonth.Columns("DiscountAmount").Index Then
+            Dim discountAmount As Integer
+
+            ' 檢查是否為有效的數字
+            If Not Integer.TryParse(e.FormattedValue.ToString(), discountAmount) Then
                 e.Cancel = True
-                MessageBox.Show("銷帳金額不能超過未銷帳金額")
+                MessageBox.Show("請輸入有效的整數折扣金額")
+                Return
+            End If
+
+            ' 取得總金額
+            Dim row As DataGridViewRow = dgvMonth.Rows(e.RowIndex)
+            Dim totalAmount = CDec(row.Cells("TotalAmount").Value)
+
+            ' 檢查折扣金額是否超過總金額
+            If discountAmount > totalAmount Then
+                e.Cancel = True
+                MessageBox.Show("折扣金額不能超過總金額")
+                Return
             End If
         End If
     End Sub
@@ -129,13 +171,6 @@
             Return False
         End If
 
-        ' 第二步：確認銷帳總額不超過未銷帳金額
-        Dim unmatchedAmount As Decimal = CDec(txtUnmatched.Text)
-        If totalWriteOffAmount > unmatchedAmount Then
-            MessageBox.Show("銷帳總金額不能超過未銷帳金額", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return False
-        End If
-
         ' 第三步：執行銷帳處理
         Try
             Using db As New gas_accounting_systemEntities
@@ -147,22 +182,45 @@
 
                         ' 處理每一筆銷帳資料
                         For Each row As DataGridViewRow In dgvMonth.Rows
-                            Dim writeOffAmount As Decimal = If(row.Cells("WriteOffAmount").Value Is Nothing,
-                                                         0,
-                                                         CDec(row.Cells("WriteOffAmount").Value))
+                            Dim writeOffAmount As Integer = row.Cells("WriteOffAmount").Value
 
                             If writeOffAmount > 0 Then
-                                ' 解析月份文字取得年月
-                                Dim monthlyId As Integer = CInt(row.Cells("MonthlyId").Value)
-                                Dim monthlyData = db.monthly_account.Find(monthlyId)
-                                Dim year = monthlyData.ma_year
-                                Dim month = monthlyData.ma_month
+                                ' 處理銷帳明細
+                                Dim monthlyId As Integer = row.Cells("MonthlyId").Value
+                                Dim woRep As New WriteOffRep(db)
+                                Dim writeOff = woRep.GetByMonthlyAccountAndCollection(monthlyId, _colId)
+                                Dim resultWriteOff As Integer
 
-                                ' 更新月度帳單資料
-                                _monthlyAccountService.UpdateMonthlyAccountAfterWriteOff(_cusId, year, month, writeOffAmount)
+                                If writeOff Is Nothing Then
+                                    Dim writeOffData As New write_off With {
+                                        .wo_col_id = _colId,
+                                        .wo_amount = writeOffAmount,
+                                        .wo_date = Date.Now,
+                                        .wo_ma_id = monthlyId
+                                    }
+                                    db.write_off.Add(writeOffData)
+                                    resultWriteOff = writeOffAmount
+                                Else
+                                    Dim orgWriteOffAmount As Integer = writeOff.wo_amount
+                                    writeOff.wo_amount = writeOffAmount
+                                    writeOff.wo_date = Date.Now
+                                    resultWriteOff = writeOffAmount - orgWriteOffAmount
+                                End If
+
+                                db.SaveChanges()
+
+                                ' 處理月度帳單
+                                Dim ma = db.monthly_account.Find(monthlyId)
+                                Dim discount As Integer = row.Cells("DiscountAmount").Value
+
+                                ma.ma_discount = discount
+                                ma.ma_paid_amount = woRep.GetByMonthlyAccount(monthlyId)
+                                ma.ma_unpaid_amount = ma.ma_total_amount - ma.ma_paid_amount - discount
+                                ma.ma_status = ma.ma_unpaid_amount <= 0
+                                ma.ma_last_updated = Date.Now
 
                                 ' 更新收款單未銷帳金額
-                                collection.col_UnmatchedAmount -= writeOffAmount
+                                collection.col_UnmatchedAmount -= resultWriteOff
                             End If
                         Next
 
@@ -204,17 +262,25 @@
     End Sub
 
     Private Sub dgvMonth_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvMonth.CellMouseClick
+        ' 確保點擊的行索引有效
+        If e.RowIndex < 0 Then Return
+
         LoadOrderDetails()
     End Sub
 
     Private Sub dgvMonth_SelectionChanged(sender As Object, e As EventArgs) Handles dgvMonth.SelectionChanged
+        ' 確保有選中行且行索引有效
+        If dgvMonth.SelectedRows.Count = 0 AndAlso dgvMonth.SelectedCells.Count = 0 Then
+            Return
+        End If
+
         LoadOrderDetails()
     End Sub
 
     Private Sub LoadOrderDetails()
         Try
             ' 確保有選中行且行索引有效
-            If dgvMonth.SelectedRows.Count = 0 AndAlso dgvMonth.SelectedCells.Count = 0 Then
+            If dgvMonth.SelectedRows.Count = 0 Then
                 Return
             End If
 
@@ -285,7 +351,7 @@
     Private Sub btnAuto_Click(sender As Object, e As EventArgs) Handles btnAuto.Click
         Try
             ' 取得未銷帳金額
-            Dim unmatchedAmount As Decimal = CDec(txtUnmatched.Text)
+            Dim unmatchedAmount As Decimal = txtUnmatched.Text
             If unmatchedAmount <= 0 Then
                 MessageBox.Show("沒有未銷帳金額可分配", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
@@ -323,5 +389,24 @@
         Catch ex As Exception
             MessageBox.Show($"自動分配金額時發生錯誤：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+    End Sub
+
+    Private Sub Calculate(row As DataGridViewRow)
+        row.Cells("Amount").Value = row.Cells("TotalAmount").Value - row.Cells("DiscountAmount").Value - row.Cells("WriteOffAmount").Value ' 計算應收金額
+        row.Cells("UnpaidAmount").Value = row.Cells("Amount").Value - row.Cells("PaidAmount").Value ' 計算未收金額
+
+    End Sub
+
+    Private Sub dgvMonth_CellValidated(sender As Object, e As DataGridViewCellEventArgs) Handles dgvMonth.CellValidated
+        Calculate(dgvMonth.Rows(e.RowIndex))
+        Dim totalWriteOff As Integer = 0
+
+        ' 計算所有行的銷帳金額總和
+        For Each row As DataGridViewRow In dgvMonth.Rows
+            Dim writeOffAmount As Integer = If(row.Cells("WriteOffAmount").Value Is Nothing, 0, CDec(row.Cells("WriteOffAmount").Value))
+            totalWriteOff += writeOffAmount
+        Next
+
+        If totalWriteOff > CInt(txtAmount.Text) Then MessageBox.Show("銷帳金額總和超過收款單金額", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Sub
 End Class

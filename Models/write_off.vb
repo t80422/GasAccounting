@@ -10,12 +10,14 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class gas_barrel
-    Public Property gb_Id As Integer
-    Public Property gb_Name As String
-    Public Property gb_InitialInventory As Integer
-    Public Property gb_Inventory As Integer
+Partial Public Class write_off
+    Public Property wo_id As Integer
+    Public Property wo_col_id As Integer
+    Public Property wo_amount As Integer
+    Public Property wo_date As Date
+    Public Property wo_ma_id As Integer
 
-    Public Overridable Property barrel_monthly_balances As ICollection(Of barrel_monthly_balances) = New HashSet(Of barrel_monthly_balances)
+    Public Overridable Property collection As collection
+    Public Overridable Property monthly_account As monthly_account
 
 End Class

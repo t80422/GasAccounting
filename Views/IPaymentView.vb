@@ -1,5 +1,5 @@
 ﻿Public Interface IPaymentView
-    Inherits IBaseView(Of payment, PaymentVM)
+    Inherits IBaseView(Of payment, PaymentListVM)
 
     ''' <summary>
     ''' 設定廠商下拉選單
@@ -33,4 +33,7 @@
     ''' </summary>
     ''' <returns></returns>
     Function GetSearchCriteria() As PaymentSearchCriteria
+
+    Function GetInput() As PaymentVM
+    Sub Show(data As PaymentVM)
 End Interface

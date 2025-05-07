@@ -1,6 +1,4 @@
-﻿Imports iText.Signatures.Validation.V1
-
-Public Class PaymentPresenter
+﻿Public Class PaymentPresenter
     Private ReadOnly _view As IPaymentView
     Private ReadOnly _manufaturerRep As IManufacturerRep
     Private ReadOnly _bankRep As IBankRep
@@ -49,7 +47,7 @@ Public Class PaymentPresenter
         Try
             Dim criteria = _view.GetSearchCriteria
             Dim payments = Await _paymentRep.SearchPaymentAsync(criteria)
-            _view.DisplayList(payments.Select(Function(x) New PaymentVM(x)).ToList)
+            _view.DisplayList(payments.Select(Function(x) New PaymentListVM(x)).ToList)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -67,10 +65,23 @@ Public Class PaymentPresenter
     Public Async Sub Add()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim payment = _view.GetUserInput
+                Dim input = _view.GetInput
+                Dim payment = input.Payment
                 Await _paymentRep.AddAsync(payment)
 
-                If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_AccountMonth)
+                If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_Date)
+
+                If payment.p_Type = "支票" Then
+                    Dim cheque = New cheque With {
+                        .che_ReceivedDate = payment.p_Date,
+                        .che_Number = payment.p_Cheque,
+                        .che_Amount = payment.p_Amount,
+                        .che_AccountNumber = input.CheAcctNum,
+                        .chu_State = "未兌現"
+                    }
+
+                    Await _chequeRep.AddAsync(cheque)
+                End If
 
                 Dim entries = CreatePaymentEntries(payment)
                 _aeSer.AddEntries(entries)
@@ -88,12 +99,26 @@ Public Class PaymentPresenter
     Public Async Sub Update()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim payment = _view.GetUserInput
+                Dim input = _view.GetInput
+                Dim payment = input.Payment
+
 
                 Await _paymentRep.UpdateAsync(selectData, payment)
 
                 ' 更新付款記錄
-                If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_AccountMonth)
+                If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_Date)
+
+                If payment.p_Type = "支票" Then
+                    Dim cheque = New cheque With {
+                        .che_ReceivedDate = payment.p_Date,
+                        .che_Number = payment.p_Cheque,
+                        .che_Amount = payment.p_Amount,
+                        .che_AccountNumber = input.CheAcctNum,
+                        .chu_State = "未兌現"
+                    }
+
+                    Await _chequeRep.AddAsync(cheque)
+                End If
 
                 '更新會計分錄
                 Dim entries = CreatePaymentEntries(payment)
@@ -117,7 +142,6 @@ Public Class PaymentPresenter
                 Dim payment = Await _paymentRep.GetByIdAsync(id)
                 Dim payType = payment.p_Type
                 Dim bankId = payment.p_bank_Id
-                Dim accountMonth = payment.p_AccountMonth
 
                 '刪除支票
                 If Not String.IsNullOrEmpty(payment.p_Cheque) Then
@@ -129,7 +153,7 @@ Public Class PaymentPresenter
                 Await _paymentRep.DeleteAsync(id)
 
                 '更新月結餘額
-                If payType = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(bankId, accountMonth)
+                If payType = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(bankId, payment.p_Date)
 
                 _aeSer.DeleteEntries("付款作業", payment.p_Id)
                 Await _paymentRep.SaveChangesAsync()
@@ -149,7 +173,14 @@ Public Class PaymentPresenter
     Public Async Function LoadPaymentDetailAsync(id As Integer) As Task
         Try
             selectData = Await _paymentRep.GetByIdAsync(id)
-            _view.DisplayDetail(selectData)
+
+            Dim cheque = Await _chequeRep.GetByNumberAsync(selectData.p_Cheque)
+            Dim data = New PaymentVM With {
+            .Payment = selectData,
+            .CheAcctNum = cheque?.che_AccountNumber
+            }
+
+            _view.Show(data)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -177,9 +208,9 @@ Public Class PaymentPresenter
         End Try
     End Function
 
-    Private Async Function LoadBanksDropdownAsync() As Task
+    Public Async Function LoadBanksDropdownAsync(Optional companyId As Integer? = Nothing) As Task
         Try
-            Dim banks = Await _bankRep.GetBankDropdownAsync
+            Dim banks = Await _bankRep.GetBankDropdownAsync(companyId)
             _view.PopulateBankDropdown(banks)
         Catch ex As Exception
             MsgBox(ex.Message)

@@ -84,7 +84,7 @@ Public Class ReportPresenter
                 End With
             End Using
         Catch ex As Exception
-            MsgBox("列印失敗:" + ex.Message)
+            MsgBox("產生氣量氣款收付明細表出現錯誤:" + ex.Message)
         End Try
     End Sub
 
@@ -305,7 +305,7 @@ Public Class ReportPresenter
             Dim datas = _rep.MonthlyCustomerReceivable(d, cusCode)
 
             '套版
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "單一客戶每日的應收帳明細表範本檔.xlsx")
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "單一客戶每月的應收帳明細表範本檔.xlsx")
 
             Using xml As New CloseXML_Excel(filePath)
                 With xml
@@ -313,7 +313,7 @@ Public Class ReportPresenter
 
                     Dim cusName = datas.FirstOrDefault().客戶名稱
                     .WriteToCell(1, 1, $"{d:yyyy}年豐原液化煤氣分裝場氣款應收帳")
-                    .WriteToCell(4, 1, cusName)
+                    .WriteToCell("A2", cusName)
 
                     Dim rowIndex As Integer
 
@@ -321,42 +321,76 @@ Public Class ReportPresenter
                         '資料開始列
                         rowIndex = 4 + i
 
-                        .WriteToCell(rowIndex, 2, datas(i).日期)
-                        .WriteToCell(rowIndex, 3, datas(i).總提氣.ToString)
+                        .InsertRow(rowIndex)
 
-                        .WriteToCell(rowIndex, 4, datas(i).廠運總提氣.ToString)
-                        .WriteToCell(rowIndex, 5, datas(i).廠運普氣.ToString)
-                        .WriteToCell(rowIndex, 6, datas(i).廠運普氣退氣.ToString)
-                        .WriteToCell(rowIndex, 7, datas(i).廠運普氣單價.ToString)
-                        .WriteToCell(rowIndex, 8, datas(i).廠運普氣金額.ToString)
-                        .WriteToCell(rowIndex, 9, datas(i).廠運丙氣.ToString)
-                        .WriteToCell(rowIndex, 10, datas(i).廠運丙氣退氣.ToString)
-                        .WriteToCell(rowIndex, 11, datas(i).廠運丙氣單價.ToString)
-                        .WriteToCell(rowIndex, 12, datas(i).廠運丙氣金額.ToString)
+                        .WriteToCell(rowIndex, 1, datas(i).日期)
+                        .WriteToCell(rowIndex, 2, datas(i).總提氣.ToString)
 
-                        .WriteToCell(rowIndex, 13, datas(i).自運總提氣.ToString)
-                        .WriteToCell(rowIndex, 14, datas(i).自運普氣.ToString)
-                        .WriteToCell(rowIndex, 15, datas(i).自運普氣退氣.ToString)
-                        .WriteToCell(rowIndex, 16, datas(i).自運普氣單價.ToString)
-                        .WriteToCell(rowIndex, 17, datas(i).自運普氣金額.ToString)
-                        .WriteToCell(rowIndex, 18, datas(i).自運丙氣.ToString)
-                        .WriteToCell(rowIndex, 19, datas(i).自運丙氣退氣.ToString)
-                        .WriteToCell(rowIndex, 20, datas(i).自運丙氣單價.ToString)
-                        .WriteToCell(rowIndex, 21, datas(i).自運丙氣金額.ToString)
+                        .WriteToCell(rowIndex, 3, datas(i).廠運總提氣.ToString)
+                        .WriteToCell(rowIndex, 4, datas(i).廠運普氣.ToString)
+                        .WriteToCell(rowIndex, 5, datas(i).廠運普氣退氣.ToString)
+                        .WriteToCell(rowIndex, 6, datas(i).廠運普氣單價.ToString("N2"))
+                        .WriteToCell(rowIndex, 7, datas(i).廠運普氣金額.ToString)
+                        .WriteToCell(rowIndex, 8, datas(i).廠運丙氣.ToString)
+                        .WriteToCell(rowIndex, 9, datas(i).廠運丙氣退氣.ToString)
+                        .WriteToCell(rowIndex, 10, datas(i).廠運丙氣單價.ToString("N2"))
+                        .WriteToCell(rowIndex, 11, datas(i).廠運丙氣金額.ToString)
 
-                        .WriteToCell(rowIndex, 22, datas(i).總額.ToString)
-                        .WriteToCell(rowIndex, 23, datas(i).現金.ToString)
-                        .WriteToCell(rowIndex, 24, datas(i).票據.ToString)
-                        .WriteToCell(rowIndex, 25, datas(i).掛帳.ToString)
-                        .WriteToCell(rowIndex, 26, datas(i).累計.ToString)
+                        .WriteToCell(rowIndex, 12, datas(i).自運總提氣.ToString)
+                        .WriteToCell(rowIndex, 13, datas(i).自運普氣.ToString)
+                        .WriteToCell(rowIndex, 14, datas(i).自運普氣退氣.ToString)
+                        .WriteToCell(rowIndex, 15, datas(i).自運普氣單價.ToString("N2"))
+                        .WriteToCell(rowIndex, 16, datas(i).自運普氣金額.ToString)
+                        .WriteToCell(rowIndex, 17, datas(i).自運丙氣.ToString)
+                        .WriteToCell(rowIndex, 18, datas(i).自運丙氣退氣.ToString)
+                        .WriteToCell(rowIndex, 19, datas(i).自運丙氣單價.ToString("N2"))
+                        .WriteToCell(rowIndex, 20, datas(i).自運丙氣金額.ToString)
+
+                        .WriteToCell(rowIndex, 21, datas(i).總額.ToString)
+                        .WriteToCell(rowIndex, 22, datas(i).現金.ToString)
+                        .WriteToCell(rowIndex, 23, datas(i).票據.ToString)
+                        .WriteToCell(rowIndex, 24, datas(i).掛帳.ToString)
+                        .WriteToCell(rowIndex, 25, datas(i).累計.ToString)
                     Next
+
+                    rowIndex += 1
+
+                    .WriteToCell("A", rowIndex, "合計")
+                    .WriteToCell("B", rowIndex, datas.Sum(Function(x) x.總提氣).ToString)
+                    .WriteToCell("C", rowIndex, datas.Sum(Function(x) x.廠運總提氣).ToString)
+                    .WriteToCell("D", rowIndex, datas.Sum(Function(x) x.廠運普氣).ToString)
+                    .WriteToCell("E", rowIndex, datas.Sum(Function(x) x.廠運普氣退氣).ToString)
+                    .WriteToCell("F", rowIndex, datas.Average(Function(x) x.廠運普氣單價).ToString("N2"))
+                    .WriteToCell("G", rowIndex, datas.Sum(Function(x) x.廠運普氣金額).ToString)
+                    .WriteToCell("H", rowIndex, datas.Sum(Function(x) x.廠運丙氣).ToString)
+                    .WriteToCell("I", rowIndex, datas.Sum(Function(x) x.廠運丙氣退氣).ToString)
+                    .WriteToCell("J", rowIndex, datas.Average(Function(x) x.廠運丙氣單價).ToString("N2"))
+                    .WriteToCell("K", rowIndex, datas.Sum(Function(x) x.廠運丙氣金額).ToString)
+
+                    .WriteToCell("L", rowIndex, datas.Sum(Function(x) x.自運總提氣).ToString)
+                    .WriteToCell("M", rowIndex, datas.Sum(Function(x) x.自運普氣).ToString)
+                    .WriteToCell("N", rowIndex, datas.Sum(Function(x) x.自運普氣退氣).ToString)
+                    .WriteToCell("O", rowIndex, datas.Average(Function(x) x.自運普氣單價).ToString("N2"))
+                    .WriteToCell("P", rowIndex, datas.Sum(Function(x) x.自運普氣金額).ToString)
+                    .WriteToCell("Q", rowIndex, datas.Sum(Function(x) x.自運丙氣).ToString)
+                    .WriteToCell("R", rowIndex, datas.Sum(Function(x) x.自運丙氣退氣).ToString)
+                    .WriteToCell("S", rowIndex, datas.Average(Function(x) x.自運丙氣單價).ToString("N2"))
+                    .WriteToCell("T", rowIndex, datas.Sum(Function(x) x.自運丙氣金額).ToString)
+
+                    .WriteToCell("U", rowIndex, datas.Sum(Function(x) x.總額).ToString)
+                    .WriteToCell("V", rowIndex, datas.Sum(Function(x) x.現金).ToString)
+                    .WriteToCell("W", rowIndex, datas.Sum(Function(x) x.票據).ToString)
+                    .WriteToCell("X", rowIndex, datas.Sum(Function(x) x.掛帳).ToString)
+                    .WriteToCell("Y", rowIndex, datas.Sum(Function(x) x.累計).ToString)
+
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 25, XLBorderStyleValues.Medium, XLBorderStyleValues.Medium)
 
                     '存檔
                     .SaveExcel($"單一客戶每月的應收帳明細表_{cusName}_{d:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
-            MsgBox("列印失敗:" + ex.Message)
+            MsgBox("產生客戶每日應收帳明細表 錯誤:" + ex.Message)
         End Try
     End Sub
 
@@ -401,18 +435,19 @@ Public Class ReportPresenter
                     Next
 
                     '存檔
-                    .SaveExcel($"單一客戶每日的應收帳明細表_{month:yyyy}")
+                    .SaveExcel($"提量支數統計_{month:yyyy}")
                 End With
             End Using
         Catch ex As Exception
-            MsgBox("列印失敗:" + ex.Message)
+            MsgBox("產生提量支數統計 失敗:" + ex.Message)
         End Try
     End Sub
 
     ''' <summary>
     ''' 產生現金帳
     ''' </summary>
-    ''' <param name="month"></param>
+    ''' <param name="startDate"></param>
+    ''' <param name="endDate"></param>
     Public Sub GenerateCashAccount(startDate As Date, endDate As Date)
         Try
             '取得資料
@@ -439,16 +474,10 @@ Public Class ReportPresenter
 
                     '存檔
                     Dim exportFilePath = .SaveExcel($"現金帳_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}")
-
-                    '列印
-                    If exportFilePath IsNot Nothing Then
-                        Dim printerName = _printerSer.GetOrSelectPrinter
-                        .Print(exportFilePath, printerName)
-                    End If
                 End With
             End Using
         Catch ex As Exception
-            MsgBox("列印失敗:" + ex.Message)
+            MsgBox("產生現金帳 失敗:" + ex.Message)
         End Try
     End Sub
 
@@ -494,16 +523,15 @@ Public Class ReportPresenter
                     '存檔
                     Dim exportFilePath = .SaveExcel($"銀行帳_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}")
 
-                    '列印
-                    If exportFilePath IsNot Nothing Then
-                        Dim printerName = _printerSer.GetOrSelectPrinter
-                        .Print(exportFilePath, printerName)
-                    End If
+                    ''列印
+                    'If exportFilePath IsNot Nothing Then
+                    '    Dim printerName = _printerSer.GetOrSelectPrinter
+                    '    .Print(exportFilePath, printerName)
+                    'End If
                 End With
             End Using
         Catch ex As Exception
-            MsgBox("列印失敗:" + ex.Message)
-            Console.WriteLine(ex.InnerException.Message)
+            MsgBox("產生銀行帳發生錯誤:" + ex.Message)
         End Try
     End Sub
 

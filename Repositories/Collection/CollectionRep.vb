@@ -8,22 +8,30 @@ Public Class CollectionRep
         MyBase.New(context)
     End Sub
 
-    Public Function Search(criteria As CollectionSearchCriteria) As List(Of CollectionVM) Implements ICollectionRep.Search
+    Public Function GetList(Optional criteria As CollectionSearchCriteria = Nothing) As List(Of CollectionVM) Implements ICollectionRep.GetList
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
 
-            If criteria.IsDate Then
-                Dim startDate = criteria.StartDate.Value.Date
-                Dim endDate = criteria.EndDate.Value.Date.AddDays(1)
-                query = query.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate)
-            End If
+            If criteria IsNot Nothing Then
+                ' 日期範圍
+                If criteria.IsDate Then
+                    Dim startDate = criteria.StartDate.Value.Date
+                    Dim endDate = criteria.EndDate.Value.Date.AddDays(1)
+                    query = query.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate)
+                End If
 
-            If criteria.SubjectId.HasValue Then query = query.Where(Function(x) x.col_s_Id = criteria.SubjectId)
-            If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.col_comp_Id = criteria.CompanyId)
-            If criteria.BankId.HasValue Then query = query.Where(Function(x) x.col_bank_Id = criteria.BankId)
-            If criteria.CusId <> 0 Then query = query.Where(Function(x) x.col_cus_Id = criteria.CusId)
-            If Not String.IsNullOrEmpty(criteria.Type) Then query = query.Where(Function(x) x.col_Type = criteria.Type)
-            If Not String.IsNullOrEmpty(criteria.Cheque) Then query = query.Where(Function(x) x.col_Cheque = criteria.Cheque)
+                ' 客戶編號
+                If criteria.CusId <> 0 Then query = query.Where(Function(x) x.col_cus_Id = criteria.CusId)
+
+                ' 科目編號
+                If criteria.SubjectId.HasValue Then query = query.Where(Function(x) x.col_s_Id = criteria.SubjectId)
+
+                ' 收款類型
+                If Not String.IsNullOrEmpty(criteria.Type) Then query = query.Where(Function(x) x.col_Type = criteria.Type)
+
+                ' 支票號碼
+                If Not String.IsNullOrEmpty(criteria.ChequeNum) Then query = query.Where(Function(x) x.col_Cheque = criteria.ChequeNum)
+            End If
 
             Return query.OrderByDescending(Function(x) x.col_Date).
                          ThenByDescending(Function(x) x.col_Id).ToList.

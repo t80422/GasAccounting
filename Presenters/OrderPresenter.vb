@@ -165,8 +165,10 @@ Public Class OrderPresenter
                     Dim ordernewInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_new_in_{barrelType}").GetValue(currentOrder)
                     newStk = currentStk + inQty - orderInQty + newInQty - ordernewInQty
 
-                    Dim barrel = Await _gbRep.GetByIdAsync(Await _gbRep.GetIdByKgAsync(barrelType))
-                    totalBarrelPrice += newInQty * barrel.gb_SalesPrice
+                    'Dim barrel = Await _gbRep.GetByIdAsync(Await _gbRep.GetIdByKgAsync(barrelType))
+                    'totalBarrelPrice += newInQty * barrel.gb_SalesPrice
+                    Dim barrelUnitPrice = inputProps.FirstOrDefault(Function(x) x.Name = $"o_barrel_unit_price_{barrelType}").GetValue(inputInOut)
+                    totalBarrelPrice += newInQty * barrelUnitPrice
                 Else
                     Dim gasC As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_gas_c_{barrelType}").GetValue(inputInOut)
                     Dim gas As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_gas_{barrelType}").GetValue(inputInOut)

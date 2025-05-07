@@ -77,7 +77,7 @@ Public Class MonthlyAccountService
                     FirstOrDefault(Function(x) x.ma_cus_id = customerId AndAlso
                                               x.ma_year = year AndAlso
                                               x.ma_month = month)
-                
+
                 ' 新訂單全額視為未付款
                 Dim orderAmount = order.o_total_amount
 
@@ -86,7 +86,7 @@ Public Class MonthlyAccountService
                     If monthlyAccount IsNot Nothing Then
                         monthlyAccount.ma_total_amount -= orderAmount
                         monthlyAccount.ma_unpaid_amount -= orderAmount
-                        
+
                         If monthlyAccount.ma_total_amount <= 0 Then
                             ' 如果該月已無訂單，刪除月度記錄
                             db.monthly_account.Remove(monthlyAccount)
@@ -153,37 +153,6 @@ Public Class MonthlyAccountService
             End Using
         Catch ex As Exception
             Console.WriteLine("更新月度帳單時發生錯誤: " & ex.Message)
-            Return False
-        End Try
-    End Function
-
-    ''' <summary>
-    ''' 更新銷帳後的月度帳單資料
-    ''' </summary>
-    Public Function UpdateMonthlyAccountAfterWriteOff(customerId As Integer, year As Integer, month As Integer, writeOffAmount As Integer) As Boolean Implements IMonthlyAccountService.UpdateMonthlyAccountAfterWriteOff
-        Try
-            Using db As New gas_accounting_systemEntities
-                ' 查找該月的記錄
-                Dim monthlyAccount = db.monthly_account.
-                    FirstOrDefault(Function(x) x.ma_cus_id = customerId AndAlso
-                                               x.ma_year = year AndAlso
-                                               x.ma_month = month)
-
-                If monthlyAccount IsNot Nothing Then
-                    ' 更新銷帳金額
-                    monthlyAccount.ma_paid_amount += writeOffAmount
-                    monthlyAccount.ma_unpaid_amount -= writeOffAmount
-                    monthlyAccount.ma_status = monthlyAccount.ma_unpaid_amount <= 0
-                    monthlyAccount.ma_last_updated = Date.Now
-
-                    db.SaveChanges()
-                    Return True
-                End If
-
-                Return False
-            End Using
-        Catch ex As Exception
-            Console.WriteLine("更新銷帳後的月度帳單時發生錯誤: " & ex.Message)
             Return False
         End Try
     End Function

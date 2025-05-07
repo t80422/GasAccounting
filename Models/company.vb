@@ -23,8 +23,9 @@ Partial Public Class company
     Public Overridable Property customers As ICollection(Of customer) = New HashSet(Of customer)
     Public Overridable Property gas_monthly_balances As ICollection(Of gas_monthly_balances) = New HashSet(Of gas_monthly_balances)
     Public Overridable Property invoice_split As ICollection(Of invoice_split) = New HashSet(Of invoice_split)
-    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property purchases As ICollection(Of purchase) = New HashSet(Of purchase)
     Public Overridable Property purchase_barrel As ICollection(Of purchase_barrel) = New HashSet(Of purchase_barrel)
+    Public Overridable Property banks As ICollection(Of bank) = New HashSet(Of bank)
+    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class

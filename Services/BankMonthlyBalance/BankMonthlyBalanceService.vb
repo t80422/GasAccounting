@@ -15,6 +15,7 @@
 
     Private Async Function UpdateMonthBalanceAsync(bankId As Integer, inputMonth As Date) As Task Implements IBankMonthlyBalanceService.UpdateMonthBalanceAsync
         Dim month = New Date(inputMonth.Year, inputMonth.Month, 1)
+
         '取得payment該銀行帳戶這個月的支付金額
         Dim thisMonthPayments = Await _paymentRep.GetByBankAndMonthAsync(bankId, month)
         Dim totalCredit = thisMonthPayments.Sum(Function(x) x.p_Amount)

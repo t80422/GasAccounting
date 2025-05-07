@@ -2,9 +2,14 @@
     Inherits BasePresenter(Of bank, BankVM, IBankView)
     Implements IPresenter(Of bank, BankVM)
 
+    Private ReadOnly _companyRep As ICompanyRep
+
     Public Sub New(view As IBankView)
         MyBase.New(view)
         _presenter = Me
+
+        Dim db As New gas_accounting_systemEntities
+        _companyRep = New CompanyRep(db)
     End Sub
 
     Public Overrides Sub Add()
@@ -69,9 +74,18 @@
             .編號 = x.bank_id,
             .餘額 = x.bank_CurrentBalance,
             .帳號 = x.bank_Account,
-            .戶名 = x.bank_AccountName
+            .戶名 = x.bank_AccountName,
+            .公司名稱 = If(x.company IsNot Nothing, x.company.comp_name, "")
         }).ToList
     End Function
+
+    Public Async Sub Reset()
+        MyBase.LoadList()
+        _view.ClearInput()
+
+        Dim companyList = Await _companyRep.GetCompanyDropdownAsync()
+        _view.PopulateCompanyDropdown(companyList)
+    End Sub
 
     Private Sub UpdateCurrentBalance(data As bank)
         Try

@@ -48,9 +48,9 @@ Public Class CollectionPresenter
         _view.SetSubjectCmb(Await _subjectRep.GetSubjectDropdownAsync)
     End Sub
 
-    Public Sub LoadList()
+    Public Sub LoadList(Optional criteria As CollectionSearchCriteria = Nothing)
         Try
-            Dim datas = _colRep.Search(_view.GetSearchCriteria)
+            Dim datas = _colRep.GetList(criteria)
             _view.DisplayList(datas)
         Catch ex As Exception
             MsgBox(ex.Message)

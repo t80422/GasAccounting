@@ -102,6 +102,15 @@ Partial Public Class order
     Public Property o_Insurance As Single
     Public Property o_cus_Id As Nullable(Of Integer)
     Public Property o_BarrelPrice As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_50 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_20 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_16 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_10 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_4 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_18 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_14 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_5 As Nullable(Of Integer)
+    Public Property o_barrel_unit_price_2 As Nullable(Of Integer)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car

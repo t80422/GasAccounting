@@ -10,11 +10,6 @@ Public Interface IMonthlyAccountService
     Function SyncOrderToMonthlyAccount(order As order, isNew As Boolean, isDelete As Boolean) As Boolean
 
     ''' <summary>
-    ''' 更新銷帳後的月度帳單資料
-    ''' </summary>
-    Function UpdateMonthlyAccountAfterWriteOff(customerId As Integer, year As Integer, month As Integer, writeOffAmount As Integer) As Boolean
-
-    ''' <summary>
     ''' 取得客戶未結案的月度帳單資料
     ''' </summary>
     Function GetCustomerUnpaidMonths(customerId As Integer) As List(Of monthly_account)

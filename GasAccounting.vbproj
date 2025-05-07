@@ -368,6 +368,12 @@
     <Compile Include="Forms\frmInitializeMonthlyAccounts.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmSearch_Collection.Designer.vb">
+      <DependentUpon>frmSearch_Collection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSearch_Collection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmWriteOff.Designer.vb">
       <DependentUpon>frmWriteOff.vb</DependentUpon>
     </Compile>
@@ -436,16 +442,21 @@
     <Compile Include="Models\ViewModels\GasBarrelVM.vb" />
     <Compile Include="Models\ViewModels\InvioceVM.vb" />
     <Compile Include="Models\ViewModels\InvoiceSplitVM.vb" />
+    <Compile Include="Models\ViewModels\PaymentVM.vb" />
     <Compile Include="Models\ViewModels\PurchaseBarrelVM.vb" />
     <Compile Include="Models\permission.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\write_off.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\BasicPricePresenter.vb" />
     <Compile Include="Presenters\CarPresenter.vb" />
     <Compile Include="Presenters\GasBarrelPresenter.vb" />
     <Compile Include="Presenters\GasCheckoutPresenter.vb" />
-    <Compile Include="Repositories\IOrderCollectionMappingRep.vb" />
-    <Compile Include="Repositories\OrderCollectionMappingRep.vb" />
+    <Compile Include="Repositories\OrderCollectionMapping\IOrderCollectionMappingRep.vb" />
+    <Compile Include="Repositories\OrderCollectionMapping\OrderCollectionMappingRep.vb" />
+    <Compile Include="Repositories\WriteOffRep.vb" />
     <Compile Include="Services\AccountingEntry\AccountingEntryService.vb" />
     <Compile Include="Services\AccountingEntry\IAccountingEntryService.vb" />
     <Compile Include="Presenters\InvoiceSplitPresenters.vb" />
@@ -502,13 +513,14 @@
     <Compile Include="Services\BankMonthlyBalance\BankMonthlyBalanceService.vb" />
     <Compile Include="Services\BankMonthlyBalance\IBankMonthlyBalanceService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\BarrelMonthlyBalanceService.vb" />
+    <Compile Include="Services\ChequeService.vb" />
     <Compile Include="Services\GasMonthlyBalance\GasMonthlyBalanceService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\IBarrelMonthlyBalanceService.vb" />
     <Compile Include="Services\GasMonthlyBalance\IGasMonthlyBalanceService.vb" />
-    <Compile Include="Services\IOrderCollectionMappingService.vb" />
+    <Compile Include="Services\OrderCollectionMapping\IOrderCollectionMappingService.vb" />
     <Compile Include="Services\MonthlyAccount\IMonthlyAccountService.vb" />
     <Compile Include="Services\MonthlyAccount\MonthlyAccountService.vb" />
-    <Compile Include="Services\OrderCollectionMappingService.vb" />
+    <Compile Include="Services\OrderCollectionMapping\OrderCollectionMappingService.vb" />
     <Compile Include="Services\Printer\IPrinterService.vb" />
     <Compile Include="Services\PriceCalculation\IPriceCalculationService.vb" />
     <Compile Include="Services\PriceCalculation\PriceCalculationService.vb" />
@@ -644,7 +656,7 @@
     <Compile Include="Models\ViewModels\ManufacturerVM.vb" />
     <Compile Include="Models\SearchCriteria\OrderSearchCriteria.vb" />
     <Compile Include="Models\ViewModels\OrderVoucherVM.vb" />
-    <Compile Include="Models\ViewModels\PaymentVM.vb" />
+    <Compile Include="Models\ViewModels\PaymentListVM.vb" />
     <Compile Include="Models\ViewModels\PricePlanVM.vb" />
     <Compile Include="Models\ViewModels\PurchaseVM.vb" />
     <Compile Include="Views\IPricePlanView.vb" />
@@ -709,6 +721,9 @@
     <EmbeddedResource Include="Forms\frmQueryCustomer.resx">
       <DependentUpon>frmQueryCustomer.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSearch_Collection.resx">
+      <DependentUpon>frmSearch_Collection.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmWriteOff.resx">
       <DependentUpon>frmWriteOff.vb</DependentUpon>
     </EmbeddedResource>
@@ -772,9 +787,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Repositories\MonthlyAccount\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
