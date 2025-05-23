@@ -7,7 +7,7 @@ Public Interface IMonthlyAccountService
     ''' <summary>
     ''' 同步特定訂單的月度帳單資料
     ''' </summary>
-    Function SyncOrderToMonthlyAccount(order As order, isNew As Boolean, isDelete As Boolean) As Boolean
+    Function SyncOrderToMonthlyAccount(orderId As Integer, isNew As Boolean, isDelete As Boolean) As Boolean
 
     ''' <summary>
     ''' 取得客戶未結案的月度帳單資料

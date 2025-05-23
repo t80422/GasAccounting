@@ -1,6 +1,12 @@
 Public Class MonthlyAccountService
     Implements IMonthlyAccountService
 
+    Private ReadOnly _db As gas_accounting_systemEntities
+
+    Public Sub New(Optional db As gas_accounting_systemEntities = Nothing)
+        _db = If(db, New gas_accounting_systemEntities())
+    End Sub
+
     ''' <summary>
     ''' 初始化月度帳單資料 (將歷史訂單資料遷移到月度帳單表)
     ''' </summary>
@@ -61,42 +67,71 @@ Public Class MonthlyAccountService
     ''' <summary>
     ''' 同步特定訂單的月度帳單資料
     ''' </summary>
-    Public Function SyncOrderToMonthlyAccount(order As order, isNew As Boolean, isDelete As Boolean) As Boolean Implements IMonthlyAccountService.SyncOrderToMonthlyAccount
+    Public Function SyncOrderToMonthlyAccount(orderId As Integer, isNew As Boolean, isDelete As Boolean) As Boolean Implements IMonthlyAccountService.SyncOrderToMonthlyAccount
         Try
+            Dim order = _db.orders.Find(orderId)
+
             If Not order.o_date.HasValue OrElse Not order.o_cus_Id.HasValue Then
                 Return False
             End If
 
-            Using db As New gas_accounting_systemEntities
-                Dim year = order.o_date.Value.Year
-                Dim month = order.o_date.Value.Month
-                Dim customerId = order.o_cus_Id.Value
+            Dim year = order.o_date.Value.Year
+            Dim month = order.o_date.Value.Month
+            Dim customerId = order.o_cus_Id.Value
 
-                ' 查找該月的記錄
-                Dim monthlyAccount = db.monthly_account.
-                    FirstOrDefault(Function(x) x.ma_cus_id = customerId AndAlso
-                                              x.ma_year = year AndAlso
-                                              x.ma_month = month)
+            ' 查找該月的記錄
+            Dim monthlyAccount = _db.monthly_account.
+                FirstOrDefault(Function(x) x.ma_cus_id = customerId AndAlso
+                                          x.ma_year = year AndAlso
+                                          x.ma_month = month)
 
-                ' 新訂單全額視為未付款
-                Dim orderAmount = order.o_total_amount
+            ' 新訂單全額視為未付款
+            Dim orderAmount = order.o_total_amount
 
-                If isDelete Then
-                    ' 刪除訂單時減少金額
-                    If monthlyAccount IsNot Nothing Then
-                        monthlyAccount.ma_total_amount -= orderAmount
-                        monthlyAccount.ma_unpaid_amount -= orderAmount
+            If isDelete Then
+                ' 刪除訂單時減少金額
+                If monthlyAccount IsNot Nothing Then
+                    monthlyAccount.ma_total_amount -= orderAmount
+                    monthlyAccount.ma_unpaid_amount -= orderAmount
 
-                        If monthlyAccount.ma_total_amount <= 0 Then
-                            ' 如果該月已無訂單，刪除月度記錄
-                            db.monthly_account.Remove(monthlyAccount)
-                        Else
-                            monthlyAccount.ma_status = monthlyAccount.ma_unpaid_amount <= 0
-                            monthlyAccount.ma_last_updated = Date.Now
-                        End If
+                    If monthlyAccount.ma_total_amount <= 0 Then
+                        ' 如果該月已無訂單，刪除月度記錄
+                        _db.monthly_account.Remove(monthlyAccount)
+                    Else
+                        monthlyAccount.ma_status = monthlyAccount.ma_unpaid_amount <= 0
+                        monthlyAccount.ma_last_updated = Date.Now
                     End If
-                ElseIf isNew Then
-                    ' 新增訂單
+                End If
+            ElseIf isNew Then
+                ' 新增訂單
+                If monthlyAccount Is Nothing Then
+                    ' 如果不存在，創建新記錄
+                    monthlyAccount = New monthly_account With {
+                        .ma_cus_id = customerId,
+                        .ma_year = year,
+                        .ma_month = month,
+                        .ma_total_amount = orderAmount,
+                        .ma_paid_amount = 0,
+                        .ma_unpaid_amount = orderAmount,
+                        .ma_status = False,
+                        .ma_last_updated = Date.Now
+                    }
+                    _db.monthly_account.Add(monthlyAccount)
+                Else
+                    ' 如果存在，增加金額
+                    monthlyAccount.ma_total_amount += orderAmount
+                    monthlyAccount.ma_unpaid_amount += orderAmount
+                    monthlyAccount.ma_status = False
+                    monthlyAccount.ma_last_updated = Date.Now
+                End If
+            Else
+                ' 更新訂單
+                ' 檢索原始訂單資料進行比較
+                Dim oldOrder = _db.orders.AsNoTracking.FirstOrDefault(Function(x) x.o_id = order.o_id)
+
+                If oldOrder IsNot Nothing Then
+                    Dim amountDiff = orderAmount - oldOrder.o_total_amount
+
                     If monthlyAccount Is Nothing Then
                         ' 如果不存在，創建新記錄
                         monthlyAccount = New monthly_account With {
@@ -109,48 +144,19 @@ Public Class MonthlyAccountService
                             .ma_status = False,
                             .ma_last_updated = Date.Now
                         }
-                        db.monthly_account.Add(monthlyAccount)
+                        _db.monthly_account.Add(monthlyAccount)
                     Else
-                        ' 如果存在，增加金額
-                        monthlyAccount.ma_total_amount += orderAmount
-                        monthlyAccount.ma_unpaid_amount += orderAmount
-                        monthlyAccount.ma_status = False
+                        ' 更新金額
+                        monthlyAccount.ma_total_amount += amountDiff
+                        monthlyAccount.ma_unpaid_amount += amountDiff
+                        monthlyAccount.ma_status = monthlyAccount.ma_unpaid_amount <= 0
                         monthlyAccount.ma_last_updated = Date.Now
                     End If
-                Else
-                    ' 更新訂單
-                    ' 檢索原始訂單資料進行比較
-                    Dim oldOrder = db.orders.AsNoTracking.FirstOrDefault(Function(x) x.o_id = order.o_id)
-
-                    If oldOrder IsNot Nothing Then
-                        Dim amountDiff = orderAmount - oldOrder.o_total_amount
-
-                        If monthlyAccount Is Nothing Then
-                            ' 如果不存在，創建新記錄
-                            monthlyAccount = New monthly_account With {
-                                .ma_cus_id = customerId,
-                                .ma_year = year,
-                                .ma_month = month,
-                                .ma_total_amount = orderAmount,
-                                .ma_paid_amount = 0,
-                                .ma_unpaid_amount = orderAmount,
-                                .ma_status = False,
-                                .ma_last_updated = Date.Now
-                            }
-                            db.monthly_account.Add(monthlyAccount)
-                        Else
-                            ' 更新金額
-                            monthlyAccount.ma_total_amount += amountDiff
-                            monthlyAccount.ma_unpaid_amount += amountDiff
-                            monthlyAccount.ma_status = monthlyAccount.ma_unpaid_amount <= 0
-                            monthlyAccount.ma_last_updated = Date.Now
-                        End If
-                    End If
                 End If
+            End If
 
-                db.SaveChanges()
-                Return True
-            End Using
+            _db.SaveChanges()
+            Return True
         Catch ex As Exception
             Console.WriteLine("更新月度帳單時發生錯誤: " & ex.Message)
             Return False

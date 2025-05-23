@@ -1,4 +1,6 @@
-﻿Public Class PurBarrelPresenter
+﻿Imports System.IO
+
+Public Class PurBarrelPresenter
     Private ReadOnly _view As IPurchaseBarrelView
     Private ReadOnly _pbRep As IPurchaseBarrelRep
     Private ReadOnly _vendorRep As IManufacturerRep
@@ -148,6 +150,48 @@
                 MsgBox(ex.Message)
             End Try
         End Using
+    End Sub
+
+    Public Sub Print(datas As List(Of PurchaseBarrelVM))
+        Try
+            Dim tempPath = Path.Combine(Application.StartupPath, "Report", "新瓶採購範本檔.xlsx")
+
+            Using xml As New CloseXML_Excel(tempPath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    Dim rowIndex As Integer = 3
+
+                    For i As Integer = 0 To datas.Count - 1
+                        .WriteToCell(rowIndex + i, 1, datas(i).日期)
+                        .WriteToCell(rowIndex + i, 2, datas(i).廠商名稱)
+                        .WriteToCell(rowIndex + i, 3, datas(i).公司)
+                        .WriteToCell(rowIndex + i, 4, datas(i).數量_50.ToString())
+                        .WriteToCell(rowIndex + i, 5, datas(i).單價_50.ToString())
+                        .WriteToCell(rowIndex + i, 6, datas(i).數量_20.ToString())
+                        .WriteToCell(rowIndex + i, 7, datas(i).單價_20.ToString())
+                        .WriteToCell(rowIndex + i, 8, datas(i).數量_16.ToString())
+                        .WriteToCell(rowIndex + i, 9, datas(i).單價_16.ToString())
+                        .WriteToCell(rowIndex + i, 10, datas(i).數量_10.ToString())
+                        .WriteToCell(rowIndex + i, 11, datas(i).單價_10.ToString())
+                        .WriteToCell(rowIndex + i, 12, datas(i).數量_4.ToString())
+                        .WriteToCell(rowIndex + i, 13, datas(i).單價_4.ToString())
+                        .WriteToCell(rowIndex + i, 14, datas(i).數量_18.ToString())
+                        .WriteToCell(rowIndex + i, 15, datas(i).單價_18.ToString())
+                        .WriteToCell(rowIndex + i, 16, datas(i).數量_14.ToString())
+                        .WriteToCell(rowIndex + i, 17, datas(i).單價_14.ToString())
+                        .WriteToCell(rowIndex + i, 18, datas(i).數量_5.ToString())
+                        .WriteToCell(rowIndex + i, 19, datas(i).單價_5.ToString())
+                        .WriteToCell(rowIndex + i, 20, datas(i).數量_2.ToString())
+                        .WriteToCell(rowIndex + i, 21, datas(i).單價_2.ToString())
+                    Next
+
+                    .SaveExcel("新瓶採購")
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     Private Sub Validate(input As purchase_barrel)

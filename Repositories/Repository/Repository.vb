@@ -6,6 +6,12 @@ Public Class Repository(Of TEntity As Class)
     Protected ReadOnly _context As gas_accounting_systemEntities
     Protected ReadOnly _dbSet As DbSet(Of TEntity)
 
+    Public ReadOnly Property Context As DbContext Implements IRepository(Of TEntity).Context
+        Get
+            Return _context
+        End Get
+    End Property
+
     Public Sub New(context As gas_accounting_systemEntities)
         _context = context
         _dbSet = context.Set(Of TEntity)

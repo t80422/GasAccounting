@@ -232,12 +232,7 @@ Public Class PurchasePresenter
                     Next
 
                     '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "大氣採購.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '取得印表機
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    .SaveExcel("大氣採購")
                 End With
             End Using
         Catch ex As Exception

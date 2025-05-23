@@ -695,6 +695,12 @@
 
     Public Sub IPurchaseView_SetDriveVendorCmb(items As List(Of SelectListItem)) Implements IPurchaseView.SetDriveVendorCmb
         SetComboBox(cmbDriveCmp, items)
+
+        ' 預設選取「萬和汽車貨運」
+        Dim index = items.FindIndex(Function(x) x.Display.Contains("萬和汽車貨運"))
+        If index >= 0 Then
+            cmbDriveCmp.SelectedIndex = index
+        End If
     End Sub
 
     Public Sub SetDefaultPrice(unitPrice As Single, DeliveryUnitPrice As Single) Implements IPurchaseView.SetDefaultPrice
@@ -897,6 +903,11 @@
         Dim id As Integer = row.Cells("編號").Value
 
         _purchaseBarrel.LoadDetail(id)
+    End Sub
+
+    '採購管理-新瓶採購-dgv
+    Private Sub btnPrint_NewBarrel_Click(sender As Object, e As EventArgs) Handles btnPrint_NewBarrel.Click
+        _purchaseBarrel.Print(dgvPurchaseBarrel.DataSource)
     End Sub
 
     ''' <summary>
@@ -2085,16 +2096,23 @@
         Dim cmb As ComboBox = sender
         Dim paymentType As String = cmb.Text
         Dim ctrlVisibility As New Dictionary(Of String, Control()) From {
-            {"支票", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, lblCheBankAccReq, lblBankAcc, txtCheAcctNum_payment}},
+            {"支票", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, lblCheBankAccReq, lblBankAcc, txtCheAcctNum_payment, lblBankRequired_payment, lblBank_payment, cmbBank_payment}},
             {"銀行", {lblBankRequired_payment, lblBank_payment, cmbBank_payment}}
         }
 
-        For Each kvp In ctrlVisibility
-            Dim isVisible As Boolean = (paymentType = kvp.Key)
-            For Each ctrl In kvp.Value
-                ctrl.Visible = isVisible
+        ' 先隱藏所有相關控制項
+        For Each arr In ctrlVisibility.Values
+            For Each ctrl In arr
+                ctrl.Visible = False
             Next
         Next
+
+        ' 再依照 paymentType 顯示對應控制項
+        If ctrlVisibility.ContainsKey(paymentType) Then
+            For Each ctrl In ctrlVisibility(paymentType)
+                ctrl.Visible = True
+            Next
+        End If
     End Sub
 
     '支出管理-付款作業-選擇廠商時搜尋應付未付
@@ -2236,7 +2254,7 @@
         Dim db As New gas_accounting_systemEntities
         Using frm As New frmSearch_Collection(New SubjectRep(db), New CustomerRep(db))
             If frm.ShowDialog = DialogResult.OK Then
-                _collect.LoadList(frm.criteria)
+                _collect.LoadList(frm.Criteria)
             End If
         End Using
     End Sub

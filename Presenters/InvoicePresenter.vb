@@ -1,4 +1,6 @@
-﻿''' <summary>
+﻿Imports NLog
+
+''' <summary>
 ''' 發票管理
 ''' </summary>
 Public Class InvoicePresenter
@@ -7,6 +9,7 @@ Public Class InvoicePresenter
     Private ReadOnly _invoiceRep As IInvoiceRep
     Private ReadOnly _priceCalSer As IPriceCalculationService
     Private ReadOnly _orderRep As IOrderRep
+    Private Shared ReadOnly logger As Logger = LogManager.GetCurrentClassLogger()
 
     Public Sub New(view As IInvoiceView, cusRep As ICustomerRep, invoiceRep As IInvoiceRep, priceCalSer As IPriceCalculationService, orderRep As IOrderRep)
         _view = view
@@ -124,7 +127,8 @@ Public Class InvoicePresenter
 
             _view.DisplayPrices(unitPrice, tax.ToString("f2"), amount)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MsgBox("計算價格失敗")
+            logger.Error(ex, "計算價格失敗")
         End Try
     End Sub
 

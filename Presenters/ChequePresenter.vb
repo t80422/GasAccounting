@@ -114,13 +114,7 @@ Public Class ChequePresenter
                         rowIndex += 1
                     Next
 
-                    '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "支票管理.xlsx")
-                    .SaveAs(exportFilePath)
-
-                    '取得印表機
-                    Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName)
+                    .SaveExcel("支票管理")
                 End With
             End Using
         Catch ex As Exception

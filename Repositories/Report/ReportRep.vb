@@ -488,7 +488,7 @@
     Public Function GetNewBarrelDetails(month As Date) As NewBarrelDetails Implements IReportRep.GetNewBarrelDetails
         Try
             Dim result As New NewBarrelDetails
-            Dim barrelTypes = {"50Kg", "20Kg", "16Kg", "10Kg", "4Kg"}
+            Dim barrelTypes = {"50", "20", "16", "10", "4"}
             Dim endDate = month.AddMonths(1)
 
             '取得上期結餘
@@ -517,19 +517,6 @@
                 .PayUnitPrice10 = payPrices.pb_UnitPrice_10
                 .PayUnitPrice4 = payPrices.pb_UnitPrice_4
             End With
-
-
-            '取得銷售價格
-            'Dim salePrices = _context.gas_barrel.ToDictionary(Function(x) x.gb_Name, Function(x) x.gb_SalesPrice)
-
-            'With result
-            '    .IncomeUnitPrice50 = salePrices("50Kg")
-            '    .IncomeUnitPrice20 = salePrices("20Kg")
-            '    .IncomeUnitPrice16 = salePrices("16Kg")
-            '    .IncomeUnitPrice10 = salePrices("10Kg")
-            '    .IncomeUnitPrice4 = salePrices("4Kg")
-            'End With
-
 
             '取得進貨數據
             Dim inData = _context.purchase_barrel.Where(Function(x) x.pb_Date.Year = month.Year AndAlso x.pb_Date.Month = month.Month).
@@ -957,7 +944,7 @@
             }
 
             Dim targetCompanies As New List(Of String) From {"豐合能源股份有限公司", "豐牛有限公司"}
-            Dim monthPart = months.Split("/"c)
+            Dim monthPart = months.Split("-"c)
             Dim startMonth = Integer.Parse(monthPart(0))
             Dim endMonth = Integer.Parse(monthPart(1))
             Dim startDate = New Date(year, startMonth, 1)
@@ -1024,7 +1011,7 @@
     Public Function GetSplitCompany(year As Integer, months As String) As SplitCompanyInvoice Implements IReportRep.GetSplitCompany
         Try
             Dim result As New SplitCompanyInvoice
-            Dim monthPart = months.Split("/"c)
+            Dim monthPart = months.Split("-"c)
             Dim startMonth = Integer.Parse(monthPart(0))
             Dim endMonth = Integer.Parse(monthPart(1))
             Dim startDate = New Date(year, startMonth, 1)

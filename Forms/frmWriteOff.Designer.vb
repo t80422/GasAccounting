@@ -134,7 +134,7 @@ Partial Class frmWriteOff
         Me.dgvMonth.Location = New System.Drawing.Point(12, 69)
         Me.dgvMonth.Name = "dgvMonth"
         Me.dgvMonth.RowTemplate.Height = 24
-        Me.dgvMonth.Size = New System.Drawing.Size(550, 382)
+        Me.dgvMonth.Size = New System.Drawing.Size(750, 382)
         Me.dgvMonth.TabIndex = 10
         '
         'btnConfirm
@@ -151,7 +151,7 @@ Partial Class frmWriteOff
         Me.dgvDetail.AllowUserToAddRows = False
         Me.dgvDetail.AllowUserToDeleteRows = False
         Me.dgvDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvDetail.Location = New System.Drawing.Point(568, 69)
+        Me.dgvDetail.Location = New System.Drawing.Point(768, 69)
         Me.dgvDetail.Name = "dgvDetail"
         Me.dgvDetail.RowTemplate.Height = 24
         Me.dgvDetail.Size = New System.Drawing.Size(245, 382)
@@ -179,7 +179,7 @@ Partial Class frmWriteOff
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(824, 463)
+        Me.ClientSize = New System.Drawing.Size(1024, 463)
         Me.Controls.Add(Me.btnAuto)
         Me.Controls.Add(Me.btnInit)
         Me.Controls.Add(Me.dgvDetail)

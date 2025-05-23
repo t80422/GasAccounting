@@ -216,6 +216,11 @@ Public Class CloseXML_Excel
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 另存新檔
+    ''' </summary>
+    ''' <param name="fileName">檔案名稱</param>
+    ''' <returns></returns>
     Public Function SaveExcel(fileName As String) As String
         Using saveDialog As New SaveFileDialog
             With saveDialog

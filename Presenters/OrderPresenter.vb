@@ -40,7 +40,7 @@ Public Class OrderPresenter
         _aeSer = aeSer
         _printerSer = printerSer
         _ocmSer = ocmSer
-        _maService = New MonthlyAccountService()
+        _maService = New MonthlyAccountService(_ordRep.Context)
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -135,7 +135,7 @@ Public Class OrderPresenter
         End Try
     End Sub
 
-    Public Async Sub CalculateStkAndPrice(isIn As Boolean)
+    Public Sub CalculateStkAndPrice(isIn As Boolean)
         Try
             If currentCustomer Is Nothing Then
                 MsgBox("請先選擇客戶")
@@ -272,7 +272,7 @@ Public Class OrderPresenter
             Try
                 Dim orderInput = _view.GetUserInput()
                 Validate(orderInput)
-                Dim insert = Await _ordRep.AddAsync(orderInput)
+                Dim order = Await _ordRep.AddAsync(orderInput)
 
                 _view.GetCusStkInput(currentCustomer)
 
@@ -308,7 +308,7 @@ Public Class OrderPresenter
                 _aeSer.AddEntries(entries)
 
                 ' 同步更新月度帳單資料
-                _maService.SyncOrderToMonthlyAccount(insert, True, False)
+                _maService.SyncOrderToMonthlyAccount(order.o_id, True, False)
 
                 Await _cusRep.SaveChangesAsync
 
@@ -317,10 +317,9 @@ Public Class OrderPresenter
                 Await LoadList(False)
                 MsgBox("新增成功")
 
-                Return insert.o_id
+                Return order.o_id
             Catch ex As Exception
                 transaction.Rollback()
-                Console.WriteLine(ex.StackTrace)
 
                 Dim innerEx = ex
                 While innerEx.InnerException IsNot Nothing
@@ -374,7 +373,7 @@ Public Class OrderPresenter
                 End If
 
                 ' 同步更新月度帳單資料
-                _maService.SyncOrderToMonthlyAccount(currentOrder, False, True)
+                _maService.SyncOrderToMonthlyAccount(currentOrder.o_id, False, True)
 
                 ' 銷帳
                 _ocmSer.DeleteOrder(currentOrder.o_id)
@@ -524,7 +523,7 @@ Public Class OrderPresenter
                 Await _service.UpdateOrAddAsync(orderInput.o_date)
 
                 ' 同步更新月度帳單資料
-                _maService.SyncOrderToMonthlyAccount(orderInput, False, False)
+                _maService.SyncOrderToMonthlyAccount(orderInput.o_id, False, False)
 
                 Await _cusRep.SaveChangesAsync
                 transaction.Commit()

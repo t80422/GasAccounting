@@ -1,6 +1,7 @@
 ﻿Imports System.Data.Entity
 
 Public Interface IRepository(Of TEntity As Class)
+    ReadOnly Property Context As DbContext
     Function GetAllAsync() As Task(Of IEnumerable(Of TEntity))
     Function GetByIdAsync(id As Integer) As Task(Of TEntity)
     Function AddAsync(entity As TEntity) As Task(Of TEntity)
