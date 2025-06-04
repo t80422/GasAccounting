@@ -698,7 +698,7 @@
 
         ' 預設選取「萬和汽車貨運」
         Dim index = items.FindIndex(Function(x) x.Display.Contains("萬和汽車貨運"))
-        If index >= 0 Then
+        If cmbDriveCmp.Items.Count > 0 AndAlso index >= 0 Then
             cmbDriveCmp.SelectedIndex = index
         End If
     End Sub

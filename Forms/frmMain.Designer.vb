@@ -1017,6 +1017,9 @@ Partial Class frmMain
         Me.Label132 = New System.Windows.Forms.Label()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.lblSubjects_col = New System.Windows.Forms.Label()
+        Me.cmbSubjects = New System.Windows.Forms.ComboBox()
+        Me.Label104 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -8805,10 +8808,13 @@ Partial Class frmMain
         Me.tpCollection.Controls.Add(Me.Label98)
         Me.tpCollection.Controls.Add(Me.cmbBank_col)
         Me.tpCollection.Controls.Add(Me.lblBankAccount_col)
+        Me.tpCollection.Controls.Add(Me.Label104)
         Me.tpCollection.Controls.Add(Me.Label99)
         Me.tpCollection.Controls.Add(Me.lblChequeReq_col)
         Me.tpCollection.Controls.Add(Me.Label97)
         Me.tpCollection.Controls.Add(Me.Label96)
+        Me.tpCollection.Controls.Add(Me.cmbSubjects)
+        Me.tpCollection.Controls.Add(Me.lblSubjects_col)
         Me.tpCollection.Controls.Add(Me.txtCusName_col)
         Me.tpCollection.Controls.Add(Me.txtCusId_col)
         Me.tpCollection.Controls.Add(Me.btnQueryCus_col)
@@ -8912,7 +8918,7 @@ Partial Class frmMain
         '
         'txtPayBank
         '
-        Me.txtPayBank.Location = New System.Drawing.Point(1050, 56)
+        Me.txtPayBank.Location = New System.Drawing.Point(1661, 102)
         Me.txtPayBank.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtPayBank.Name = "txtPayBank"
         Me.txtPayBank.Size = New System.Drawing.Size(165, 30)
@@ -8924,7 +8930,7 @@ Partial Class frmMain
         '
         Me.lblPayBank.AutoSize = True
         Me.lblPayBank.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblPayBank.Location = New System.Drawing.Point(906, 62)
+        Me.lblPayBank.Location = New System.Drawing.Point(1559, 107)
         Me.lblPayBank.Name = "lblPayBank"
         Me.lblPayBank.Size = New System.Drawing.Size(93, 19)
         Me.lblPayBank.TabIndex = 450
@@ -9109,7 +9115,7 @@ Partial Class frmMain
         '
         Me.Label97.AutoSize = True
         Me.Label97.ForeColor = System.Drawing.Color.Red
-        Me.Label97.Location = New System.Drawing.Point(880, 16)
+        Me.Label97.Location = New System.Drawing.Point(880, 62)
         Me.Label97.Name = "Label97"
         Me.Label97.Size = New System.Drawing.Size(20, 19)
         Me.Label97.TabIndex = 424
@@ -9256,7 +9262,7 @@ Partial Class frmMain
         '
         Me.cmbType_col.FormattingEnabled = True
         Me.cmbType_col.Items.AddRange(New Object() {"現金", "銀行", "支票"})
-        Me.cmbType_col.Location = New System.Drawing.Point(1050, 12)
+        Me.cmbType_col.Location = New System.Drawing.Point(1050, 58)
         Me.cmbType_col.Name = "cmbType_col"
         Me.cmbType_col.Size = New System.Drawing.Size(165, 27)
         Me.cmbType_col.TabIndex = 407
@@ -9318,7 +9324,7 @@ Partial Class frmMain
         '
         Me.lblType_col.AutoSize = True
         Me.lblType_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblType_col.Location = New System.Drawing.Point(906, 16)
+        Me.lblType_col.Location = New System.Drawing.Point(906, 62)
         Me.lblType_col.Name = "lblType_col"
         Me.lblType_col.Size = New System.Drawing.Size(93, 19)
         Me.lblType_col.TabIndex = 398
@@ -11458,6 +11464,35 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
+        'lblSubjects_col
+        '
+        Me.lblSubjects_col.AutoSize = True
+        Me.lblSubjects_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.lblSubjects_col.Location = New System.Drawing.Point(906, 16)
+        Me.lblSubjects_col.Name = "lblSubjects_col"
+        Me.lblSubjects_col.Size = New System.Drawing.Size(95, 19)
+        Me.lblSubjects_col.TabIndex = 421
+        Me.lblSubjects_col.Text = "科    目"
+        '
+        'cmbSubjects
+        '
+        Me.cmbSubjects.FormattingEnabled = True
+        Me.cmbSubjects.Location = New System.Drawing.Point(1050, 12)
+        Me.cmbSubjects.Name = "cmbSubjects"
+        Me.cmbSubjects.Size = New System.Drawing.Size(165, 27)
+        Me.cmbSubjects.TabIndex = 422
+        Me.cmbSubjects.Tag = "col_s_Id"
+        '
+        'Label104
+        '
+        Me.Label104.AutoSize = True
+        Me.Label104.ForeColor = System.Drawing.Color.Red
+        Me.Label104.Location = New System.Drawing.Point(880, 16)
+        Me.Label104.Name = "Label104"
+        Me.Label104.Size = New System.Drawing.Size(20, 19)
+        Me.Label104.TabIndex = 428
+        Me.Label104.Text = "*"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -12612,4 +12647,7 @@ Partial Class frmMain
     Friend WithEvents txtBarralUnitPrice_50 As TextBox
     Friend WithEvents Label100 As Label
     Friend WithEvents btnPrint_NewBarrel As Button
+    Friend WithEvents Label104 As Label
+    Friend WithEvents cmbSubjects As ComboBox
+    Friend WithEvents lblSubjects_col As Label
 End Class
