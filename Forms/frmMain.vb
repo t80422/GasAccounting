@@ -117,7 +117,7 @@
         _invoice = New InvoicePresenter(Me, cusRep, invoiceRep, priceCalSer, ordRep)
         _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
         _order = New OrderPresenter(Me, cusRep, carRep, ordRep, gbRep, barMBSer, priceCalSer, aeSer, printerSer, ocmSer)
-        _payment = New PaymentPresenter(Me, manuRep, bankRep, subjectRep, compRep, paymentRep, bmbService, cheRep, aeSer)
+        _payment = New PaymentPresenter(Me, manuRep, subjectRep, compRep, paymentRep, bmbService, cheRep, aeSer)
         _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep, aeSer)
         _report = New ReportPresenter(Me, reportRep, bankRep, compRep, printerSer, colRep)
         _subjects = New SubjectsPresenter(Me, subjectRep)
@@ -172,7 +172,7 @@
         Dim textBoxes = New List(Of TextBox) From {txtGasPrice, txtGasPrice_c, txtGasPriceDelivery, txtGasPriceDelivery_c}
 
         textBoxes.ForEach(Sub(txt) AddHandler txt.KeyPress, AddressOf FloatOnly_TextBox)
-        End Sub
+    End Sub
 
     ''' <summary>
     ''' 初始化各TabPage
@@ -1946,10 +1946,6 @@
         SetComboBox(cmbManu_payment, data)
     End Sub
 
-    Public Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateBankDropdown
-        SetComboBox(cmbBank_payment, data)
-    End Sub
-
     Public Sub PopulateSubjectDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateSubjectDropdown
         SetComboBox(cmbSubjects_payment, data)
     End Sub
@@ -1964,7 +1960,6 @@
 
     Public Function GetSearchCriteria() As PaymentSearchCriteria Implements IPaymentView.GetSearchCriteria
         Return New PaymentSearchCriteria With {
-            .BankId = cmbBank_payment.SelectedItem?.Value,
             .ChequeNo = txtCheNo_payment.Text.Trim,
             .CompanyId = cmbCompany_payment.SelectedItem?.Value,
             .IsSearchDate = chkIsSearchDate_payment.Checked,
@@ -1984,7 +1979,6 @@
 
     Private Sub IPaymentView_Show(data As PaymentVM) Implements IPaymentView.Show
         AutoMapEntityToControls(data.Payment, tpPayment)
-        txtCheAcctNum_payment.Text = data.CheAcctNum
     End Sub
 
     Private Function IPaymentView_GetUserInput() As payment Implements IBaseView(Of payment, PaymentListVM).GetUserInput
@@ -2018,8 +2012,6 @@
 
         If String.IsNullOrEmpty(data.p_Type) Then
             Throw New Exception("請選擇付款類型")
-        ElseIf data.p_Type = "銀行" AndAlso Not data.p_bank_Id.HasValue Then
-            Throw New Exception("請選擇銀行帳號")
         ElseIf data.p_Type = "支票" AndAlso String.IsNullOrEmpty(data.p_Cheque) Then
             Throw New Exception("請選擇支票號碼")
         End If
@@ -2031,14 +2023,17 @@
         If data.p_Type <> "支票" Then data.p_CashingDate = Nothing
 
         Return New PaymentVM With {
-            .Payment = data,
-            .CheAcctNum = txtCheAcctNum_payment.Text
+            .Payment = data
         }
     End Function
 
     Private Sub IPaymentView_ClearInput() Implements IBaseView(Of payment, PaymentListVM).ClearInput
         ClearControls(tpPayment)
         dgvAmountDue.DataSource = Nothing
+    End Sub
+
+    Public Sub ShowVendorAccount(data As String) Implements IPaymentView.ShowVendorAccount
+        txtAccount_payment.Text = data
     End Sub
 
     '支出管理-付款作業-取消
@@ -2055,7 +2050,6 @@
 
     '支出管理-付款作業-dgv
     Private Async Sub dgvPayment_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPayment.SelectionChanged, dgvPayment.CellMouseClick
-
         Dim id = DGV_SelectionChanged(sender)
         If id > 0 Then
             Await _payment.LoadPaymentDetailAsync(id)
@@ -2096,8 +2090,8 @@
         Dim cmb As ComboBox = sender
         Dim paymentType As String = cmb.Text
         Dim ctrlVisibility As New Dictionary(Of String, Control()) From {
-            {"支票", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, lblCheBankAccReq, lblBankAcc, txtCheAcctNum_payment, lblBankRequired_payment, lblBank_payment, cmbBank_payment}},
-            {"銀行", {lblBankRequired_payment, lblBank_payment, cmbBank_payment}}
+            {"支票", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, txtAccount_payment, lblBankRequired_payment, lblBank_payment}},
+            {"銀行", {lblBankRequired_payment, lblBank_payment, txtAccount_payment}}
         }
 
         ' 先隱藏所有相關控制項
@@ -2115,21 +2109,15 @@
         End If
     End Sub
 
-    '支出管理-付款作業-選擇廠商時搜尋應付未付
+    '支出管理-付款作業-選擇廠商
     Private Sub cmbManu_payment_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbManu_payment.SelectionChangeCommitted
         _payment.LoadVendorAmountDue(cmbManu_payment.SelectedValue)
+        _payment.ShowVendorAccountAsync(cmbManu_payment.SelectedValue)
     End Sub
 
     '支出管理-付款作業-列印
     Private Sub btnPrint_pay_Click(sender As Object, e As EventArgs) Handles btnPrint_pay.Click
         _payment.Print()
-    End Sub
-
-    '支出管理-付款作業-公司 選擇
-    Private Async Sub cmbCompany_payment_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbCompany_payment.SelectionChangeCommitted
-        Dim cmbCompany As ComboBox = sender
-        Console.WriteLine(cmbCompany.SelectedValue)
-        Await _payment.LoadBanksDropdownAsync(cmbCompany.SelectedValue)
     End Sub
 
     Public Sub DisplayList(data As List(Of CollectionVM)) Implements IBaseView(Of collection, CollectionVM).DisplayList
@@ -2375,7 +2363,11 @@
 
     '會計管理-支票管理-查詢
     Private Sub btnQuery_che_Click(sender As Object, e As EventArgs) Handles btnQuery_che.Click
-        _cheque.Query(dtpQueryStart_che.Value, dtpQueryEnd_che.Value)
+        Using frm As New Search_Cheque
+            If frm.ShowDialog = DialogResult.OK Then
+                _cheque.LoadList(frm.Criteria)
+            End If
+        End Using
     End Sub
 
     '會計管理-支票管理-全選
@@ -2385,11 +2377,6 @@
                 row.Cells("ChkCol").Value = True
             End If
         Next
-    End Sub
-
-    '會計管理-支票管理-未兌現查詢
-    Private Sub btnNotHonoredQuery_Click(sender As Object, e As EventArgs) Handles btnNotHonoredQuery.Click
-        _cheque.ShowCollectionYetList(dtpQueryStart_che.Value.Date, dtpQueryEnd_che.Value.Date)
     End Sub
 
     '會計管理-支票管理-轉為已代收

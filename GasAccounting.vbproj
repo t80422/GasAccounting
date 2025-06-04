@@ -384,6 +384,12 @@
     <Compile Include="Forms\frmWriteOff.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Search_Cheque.Designer.vb">
+      <DependentUpon>Search_Cheque.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Search_Cheque.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Models\accounting_entry.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -433,6 +439,7 @@
     <Compile Include="Models\Report\TransactionItem.vb" />
     <Compile Include="Models\Report\Subpoena.vb" />
     <Compile Include="Models\SearchCriteria\CarSC.vb" />
+    <Compile Include="Models\SearchCriteria\ChequeSC.vb" />
     <Compile Include="Models\SearchCriteria\ChequeSearchCriteria.vb" />
     <Compile Include="Models\SearchCriteria\CollectionSearchCriteria.vb" />
     <Compile Include="Models\SearchCriteria\InvoiceSplitSearchCriteria.vb" />
@@ -730,6 +737,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmWriteOff.resx">
       <DependentUpon>frmWriteOff.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Search_Cheque.resx">
+      <DependentUpon>Search_Cheque.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

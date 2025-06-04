@@ -1,7 +1,6 @@
 ﻿Public Class PaymentPresenter
     Private ReadOnly _view As IPaymentView
     Private ReadOnly _manufaturerRep As IManufacturerRep
-    Private ReadOnly _bankRep As IBankRep
     Private ReadOnly _subjectRep As ISubjectRep
     Private ReadOnly _companyRep As ICompanyRep
     Private ReadOnly _paymentRep As IPaymentRep
@@ -11,11 +10,10 @@
     Private ReadOnly _report As New ReportService
     Private selectData As payment
 
-    Public Sub New(view As IPaymentView, manufaturerRep As IManufacturerRep, bankRep As IBankRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
+    Public Sub New(view As IPaymentView, manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
                    bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService)
         _view = view
         _manufaturerRep = manufaturerRep
-        _bankRep = bankRep
         _subjectRep = subjectRep
         _companyRep = companyRep
         _paymentRep = paymentRep
@@ -30,7 +28,6 @@
 
             Await Task.WhenAll(
                 LoadVendorDropdownAsync,
-                LoadBanksDropdownAsync,
                 LoadSubjectDropdownAsync,
                 LoadCompanyDropdownAsync
             )
@@ -69,14 +66,12 @@
                 Dim payment = input.Payment
                 Await _paymentRep.AddAsync(payment)
 
-                If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_Date)
-
                 If payment.p_Type = "支票" Then
                     Dim cheque = New cheque With {
                         .che_ReceivedDate = payment.p_Date,
                         .che_Number = payment.p_Cheque,
                         .che_Amount = payment.p_Amount,
-                        .che_AccountNumber = input.CheAcctNum,
+                        .che_AccountNumber = payment.manufacturer.manu_account,
                         .chu_State = "未兌現"
                     }
 
@@ -105,15 +100,12 @@
 
                 Await _paymentRep.UpdateAsync(selectData, payment)
 
-                ' 更新付款記錄
-                If payment.p_Type = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(payment.p_bank_Id, payment.p_Date)
-
                 If payment.p_Type = "支票" Then
                     Dim cheque = New cheque With {
                         .che_ReceivedDate = payment.p_Date,
                         .che_Number = payment.p_Cheque,
                         .che_Amount = payment.p_Amount,
-                        .che_AccountNumber = input.CheAcctNum,
+                        .che_AccountNumber = payment.manufacturer.manu_account,
                         .chu_State = "未兌現"
                     }
 
@@ -174,13 +166,12 @@
         Try
             selectData = Await _paymentRep.GetByIdAsync(id)
 
-            Dim cheque = Await _chequeRep.GetByNumberAsync(selectData.p_Cheque)
             Dim data = New PaymentVM With {
-            .Payment = selectData,
-            .CheAcctNum = cheque?.che_AccountNumber
+            .Payment = selectData
             }
 
             _view.Show(data)
+            ShowVendorAccountAsync(data.Payment.p_m_Id)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -205,15 +196,6 @@
             _view.PopulateVendorDropdown(vendors)
         Catch ex As Exception
             Throw
-        End Try
-    End Function
-
-    Public Async Function LoadBanksDropdownAsync(Optional companyId As Integer? = Nothing) As Task
-        Try
-            Dim banks = Await _bankRep.GetBankDropdownAsync(companyId)
-            _view.PopulateBankDropdown(banks)
-        Catch ex As Exception
-            MsgBox(ex.Message)
         End Try
     End Function
 
@@ -299,4 +281,9 @@
 
         Return entries
     End Function
+
+    Public Async Sub ShowVendorAccountAsync(vendorId As Integer)
+        Dim vendor = Await _manufaturerRep.GetByIdAsync(vendorId)
+        _view.ShowVendorAccount(vendor.manu_account)
+    End Sub
 End Class

@@ -7,11 +7,6 @@
     Sub PopulateVendorDropdown(data As IReadOnlyList(Of SelectListItem))
 
     ''' <summary>
-    ''' 設定銀行下拉選單
-    ''' </summary>
-    Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem))
-
-    ''' <summary>
     ''' 設定科目下拉選單
     ''' </summary>
     Sub PopulateSubjectDropdown(data As IReadOnlyList(Of SelectListItem))
@@ -35,5 +30,13 @@
     Function GetSearchCriteria() As PaymentSearchCriteria
 
     Function GetInput() As PaymentVM
+
     Sub Show(data As PaymentVM)
+
+    ''' <summary>
+    ''' 顯示廠商帳號
+    ''' </summary>
+    ''' <param name="data"></param>
+    ''' <returns></returns>
+    Sub ShowVendorAccount(data As String)
 End Interface

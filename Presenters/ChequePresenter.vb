@@ -15,18 +15,19 @@ Public Class ChequePresenter
     ''' 取得列表
     ''' </summary>
     ''' <param name="conditions"></param>
-    Public Sub LoadList(Optional conditions As Object = Nothing)
+    Public Sub LoadList(Optional conditions As ChequeSC = Nothing)
         Try
             Using db As New gas_accounting_systemEntities
                 Dim query = db.cheques.AsQueryable
 
                 If conditions IsNot Nothing Then
-                    query = SetSearchConditions(query, conditions)
+                    If conditions.IsDate Then query = query.Where(Function(x) x.che_ReceivedDate > conditions.StartDate AndAlso x.che_ReceivedDate < conditions.EndDate)
+                    If Not String.IsNullOrEmpty(conditions.Status) Then query = query.Where(Function(x) x.chu_State = conditions.Status)
+                Else
+                    query = query.Where(Function(x) x.chu_State <> "已兌現")
                 End If
-
                 _view.ShowList(SetListViewModel(query))
             End Using
-
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -121,10 +122,6 @@ Public Class ChequePresenter
             MsgBox(ex.Message)
         End Try
     End Sub
-
-    Private Function SetSearchConditions(query As IQueryable(Of cheque), conditions As Object) As IQueryable(Of cheque)
-        Throw New NotImplementedException()
-    End Function
 
     Private Function SetListViewModel(query As IQueryable(Of cheque)) As List(Of ChequeVM)
         Return query.Select(Function(x) New ChequeVM With {
