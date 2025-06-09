@@ -15,6 +15,10 @@
         SetupDGV()
         LoadUnpaidMonths()
 
+        Dim dgvs = GetControlInParent(Of DataGridView)(Me)
+        dgvs.ForEach(Sub(dgv) AddHandler dgv.ColumnWidthChanged, AddressOf SaveDataGridWidth)
+        ReadDataGridWidth(dgvs)
+
         Using db As New gas_accounting_systemEntities
             If db.monthly_account.Any Then btnInit.Visible = False
         End Using

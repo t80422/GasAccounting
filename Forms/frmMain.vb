@@ -2117,7 +2117,11 @@
 
     '支出管理-付款作業-列印
     Private Sub btnPrint_pay_Click(sender As Object, e As EventArgs) Handles btnPrint_pay.Click
-        _payment.Print()
+        Using frm As New Print_Subpoena
+            If frm.ShowDialog = DialogResult.OK Then
+                _payment.Print(frm.SelectDate, frm.Type)
+            End If
+        End Using
     End Sub
 
     Public Sub DisplayList(data As List(Of CollectionVM)) Implements IBaseView(Of collection, CollectionVM).DisplayList
@@ -2174,6 +2178,9 @@
 
         ' 解鎖"收款類型"
         cmbType_col.Enabled = True
+
+        dtpDate_col.Value = Now.Date
+        DateTimePicker14.Value = Now.Date
     End Sub
 
     '收入管理-收款作業-搜尋
@@ -2218,15 +2225,6 @@
         End If
     End Sub
 
-    '收入管理-收款作業-支票號碼改變
-    Private Sub txtCheque_col_TextChanged(sender As Object, e As EventArgs) Handles txtCheque_col.TextChanged
-        If Not String.IsNullOrEmpty(txtCheque_col.Text) AndAlso _cheque.IsCollected(txtCheque_col.Text) Then
-            btnCashing.Visible = True
-        Else
-            btnCashing.Visible = False
-        End If
-    End Sub
-
     '收入管理-收款作業-修改
     Private Sub btnEdit_col_Click(sender As Object, e As EventArgs) Handles btnEdit_col.Click
         _collect.Edit()
@@ -2245,11 +2243,6 @@
                 _collect.LoadList(frm.Criteria)
             End If
         End Using
-    End Sub
-
-    '收入管理-收款作業-支票兌現
-    Private Sub btnCashing_Click(sender As Object, e As EventArgs) Handles btnCashing.Click
-        _collect.UpdateCheque()
     End Sub
 
     '收入管理-收款作業-搜尋客戶
@@ -2283,7 +2276,11 @@
 
     '收入管理-收款作業-列印
     Private Sub btnPrint_Col_Click(sender As Object, e As EventArgs) Handles btnPrint_Col.Click
-        _collect.Print()
+        Using frm As New Print_Subpoena
+            If frm.ShowDialog = DialogResult.OK Then
+                _collect.Print(frm.SelectDate, frm.Type)
+            End If
+        End Using
     End Sub
 
     Public Sub ShowList(data As List(Of ChequeVM)) Implements ICommonView_old(Of cheque, ChequeVM).ShowList

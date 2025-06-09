@@ -78,20 +78,17 @@ Public Class PaymentRep
         End Try
     End Function
 
-    Public Function GetSubpoenaData(day As Date, Optional isIncome As Boolean = False) As Subpoena Implements IPaymentRep.GetSubpoenaData
+    Public Function GetSubpoenaData(selectDate As Date, isIncome As Boolean) As List(Of SubpoenaDTO) Implements IPaymentRep.GetSubpoenaData
         Try
-            Dim query = _dbSet.Where(Function(x) x.p_Date = day)
+            Dim query = _dbSet.Where(Function(x) x.p_Date = selectDate)
 
-            Dim result = If(isIncome, query.Where(Function(x) x.p_Type = "現金"), query.Where(Function(x) x.p_Type = "銀行" Or x.p_Type = "支票")).
-                Select(Function(x) New TransactionItem With {
-                    .AccountName = x.subject.s_name,
+            Return If(isIncome, query.Where(Function(x) x.p_Type = "現金"), query.Where(Function(x) x.p_Type = "銀行" Or x.p_Type = "支票")).
+                Select(Function(x) New SubpoenaDTO With {
+                    .SubjectName = x.subject.s_name,
                     .Amount = x.p_Amount,
-                    .Summary = x.p_Memo
+                    .Summary = x.p_Memo,
+                    .Code = x.manufacturer.manu_code
                 }).ToList
-
-            Return New Subpoena With {
-                .CreditItems = result
-            }
         Catch ex As Exception
             Throw
         End Try

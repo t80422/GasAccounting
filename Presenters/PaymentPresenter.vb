@@ -1,4 +1,6 @@
-﻿Public Class PaymentPresenter
+﻿Imports NLog.Time
+
+Public Class PaymentPresenter
     Private ReadOnly _view As IPaymentView
     Private ReadOnly _manufaturerRep As IManufacturerRep
     Private ReadOnly _subjectRep As ISubjectRep
@@ -177,14 +179,20 @@
         End Try
     End Function
 
-    Public Sub Print()
+    Public Sub Print(selectDate As Date, type As String)
         Try
-            Dim today = Now.Date
-            Dim transferDatas = _paymentRep.GetSubpoenaData(today)
-            Dim cashIncomDatas = _paymentRep.GetSubpoenaData(today, True)
+            Dim data As New List(Of SubpoenaDTO)
 
-            _report.GeneratorTransferSubpoena(today, transferDatas)
-            _report.GeneratorCashIncomeSubpoena(today, cashIncomDatas, False)
+            Select Case type
+                Case "現金"
+                    data = _paymentRep.GetSubpoenaData(selectDate, True)
+                Case "轉帳"
+                    data = _paymentRep.GetSubpoenaData(selectDate, False)
+                Case Else
+                    Throw New Exception("類型錯誤")
+            End Select
+
+            _report.GeneratorSubpoena(selectDate, data, type = "現金", False)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try

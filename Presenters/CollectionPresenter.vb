@@ -65,6 +65,7 @@ Public Class CollectionPresenter
                 input.col_UnmatchedAmount = input.col_Amount
 
                 Dim col = Await _colRep.AddAsync(input)
+                Dim chequeNo As String = ""
 
                 Select Case input.col_Type
                     Case "支票"
@@ -74,6 +75,21 @@ Public Class CollectionPresenter
                         Await _chequeRep.AddAsync(cheInput)
                     Case "銀行"
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
+
+                        ' 支票兌現
+                        chequeNo = InputBox("若不須沖銷支票則取消", "請輸入支票號碼")
+
+                        If Not String.IsNullOrEmpty(chequeNo) Then
+                            Dim cheque = Await _chequeRep.GetByNumberAsync(chequeNo)
+
+                            If cheque Is Nothing Then
+                                Throw New Exception("找不到此支票")
+                            Else
+                                cheque.chu_State = "已兌現"
+                                cheque.che_CashingDate = col.col_Date
+                                col.col_Cheque = chequeNo
+                            End If
+                        End If
                 End Select
 
                 Dim entries = CreatePaymentEntries(input)
@@ -171,15 +187,23 @@ Public Class CollectionPresenter
                 ' 銷帳
                 _ocmSer.DeleteCollection(_currentData.col_Id)
 
-                '刪除資料
-                Await _colRep.DeleteAsync(_currentData)
-
                 If payType = "支票" Then
                     Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
                     Await _chequeRep.DeleteAsync(cheque.che_Id)
                 ElseIf payType = "銀行" Then
                     Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+
+                    ' 更新 支票資訊
+                    Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+
+                    If cheque IsNot Nothing Then
+                        cheque.che_CashingDate = Nothing
+                        cheque.chu_State = "已代收"
+                    End If
                 End If
+
+                '刪除資料
+                Await _colRep.DeleteAsync(_currentData)
 
                 _aeSer.DeleteEntries("收款作業", _currentData.col_Id)
 
@@ -191,21 +215,6 @@ Public Class CollectionPresenter
                 MsgBox(ex.Message)
             End Try
         End Using
-    End Sub
-
-    Public Async Sub UpdateCheque()
-        Try
-            If _currentData Is Nothing Then Return
-
-            Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
-            cheque.che_CashingDate = Now
-            cheque.chu_State = "已兌現"
-            Await _chequeRep.SaveChangesAsync()
-            Initialize()
-            MsgBox("兌現成功")
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
     End Sub
 
     Private Sub Validate(data As collection)
@@ -230,13 +239,29 @@ Public Class CollectionPresenter
         Return _cusRep.GetByCusCode(cusCode)
     End Function
 
-    Public Sub Print()
-        Dim today = Now.Date
-        Dim transferDatas = _colRep.GetTransferSubpoenaData(today)
-        Dim cashIncomDatas = _colRep.GetTransferSubpoenaData(today, True)
+    ''' <summary>
+    ''' 列印
+    ''' </summary>
+    ''' <param name="selectDate">選擇日期</param>
+    ''' <param name="type">傳票類型:現金、轉帳</param>
+    Public Sub Print(selectDate As Date, type As String)
+        Try
+            ' 取得資料
+            Dim data As New List(Of SubpoenaDTO)
 
-        _report.GeneratorTransferSubpoena(today, transferDatas)
-        _report.GeneratorCashIncomeSubpoena(today, cashIncomDatas, True)
+            Select Case type
+                Case "現金"
+                    data = _colRep.GetSubpoenaData(selectDate, True)
+                Case "轉帳"
+                    data = _colRep.GetSubpoenaData(selectDate, False)
+                Case Else
+                    Throw New Exception("type 傳票類型 錯誤")
+            End Select
+
+            _report.GeneratorSubpoena(selectDate, data, type = "現金", True)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     Private Function CreatePaymentEntries(data As collection) As List(Of accounting_entry)

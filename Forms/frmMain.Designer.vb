@@ -764,7 +764,6 @@ Partial Class frmMain
         Me.lblAbleCashingDate = New System.Windows.Forms.Label()
         Me.txtPayBank = New System.Windows.Forms.TextBox()
         Me.lblPayBank = New System.Windows.Forms.Label()
-        Me.btnCashing = New System.Windows.Forms.Button()
         Me.txtCashingDate = New System.Windows.Forms.TextBox()
         Me.txtCusCode_col = New System.Windows.Forms.TextBox()
         Me.txtCheAcctNum = New System.Windows.Forms.TextBox()
@@ -812,6 +811,7 @@ Partial Class frmMain
         Me.tpAccountingManage = New System.Windows.Forms.TabPage()
         Me.TabControl6 = New System.Windows.Forms.TabControl()
         Me.tpCheque = New System.Windows.Forms.TabPage()
+        Me.btnQuery_che = New System.Windows.Forms.Button()
         Me.btnSelectAll = New System.Windows.Forms.Button()
         Me.btnChange = New System.Windows.Forms.Button()
         Me.TextBox23 = New System.Windows.Forms.TextBox()
@@ -1010,7 +1010,6 @@ Partial Class frmMain
         Me.Label132 = New System.Windows.Forms.Label()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnQuery_che = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -6076,11 +6075,11 @@ Partial Class frmMain
         'btnPrint_pay
         '
         Me.btnPrint_pay.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnPrint_pay.Location = New System.Drawing.Point(788, 236)
+        Me.btnPrint_pay.Location = New System.Drawing.Point(632, 236)
         Me.btnPrint_pay.Name = "btnPrint_pay"
         Me.btnPrint_pay.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_pay.TabIndex = 457
-        Me.btnPrint_pay.Text = "列    印"
+        Me.btnPrint_pay.Text = "列印傳票"
         Me.btnPrint_pay.UseVisualStyleBackColor = False
         '
         'chkCashing
@@ -6390,7 +6389,7 @@ Partial Class frmMain
         'btnQuery_payment
         '
         Me.btnQuery_payment.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_payment.Location = New System.Drawing.Point(632, 236)
+        Me.btnQuery_payment.Location = New System.Drawing.Point(788, 236)
         Me.btnQuery_payment.Name = "btnQuery_payment"
         Me.btnQuery_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_payment.TabIndex = 405
@@ -8745,7 +8744,6 @@ Partial Class frmMain
         Me.tpCollection.Controls.Add(Me.lblAbleCashingDate)
         Me.tpCollection.Controls.Add(Me.txtPayBank)
         Me.tpCollection.Controls.Add(Me.lblPayBank)
-        Me.tpCollection.Controls.Add(Me.btnCashing)
         Me.tpCollection.Controls.Add(Me.txtCashingDate)
         Me.tpCollection.Controls.Add(Me.txtCusCode_col)
         Me.tpCollection.Controls.Add(Me.txtCheAcctNum)
@@ -8801,11 +8799,11 @@ Partial Class frmMain
         'btnPrint_Col
         '
         Me.btnPrint_Col.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnPrint_Col.Location = New System.Drawing.Point(944, 179)
+        Me.btnPrint_Col.Location = New System.Drawing.Point(788, 179)
         Me.btnPrint_Col.Name = "btnPrint_Col"
         Me.btnPrint_Col.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_Col.TabIndex = 456
-        Me.btnPrint_Col.Text = "列    印"
+        Me.btnPrint_Col.Text = "列印傳票"
         Me.btnPrint_Col.UseVisualStyleBackColor = False
         '
         'TextBox14
@@ -8831,7 +8829,7 @@ Partial Class frmMain
         'btnWriteOff
         '
         Me.btnWriteOff.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnWriteOff.Location = New System.Drawing.Point(788, 179)
+        Me.btnWriteOff.Location = New System.Drawing.Point(632, 179)
         Me.btnWriteOff.Name = "btnWriteOff"
         Me.btnWriteOff.Size = New System.Drawing.Size(140, 44)
         Me.btnWriteOff.TabIndex = 453
@@ -8841,7 +8839,7 @@ Partial Class frmMain
         'btnQuery_col
         '
         Me.btnQuery_col.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_col.Location = New System.Drawing.Point(1100, 179)
+        Me.btnQuery_col.Location = New System.Drawing.Point(944, 179)
         Me.btnQuery_col.Name = "btnQuery_col"
         Me.btnQuery_col.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_col.TabIndex = 405
@@ -8888,17 +8886,6 @@ Partial Class frmMain
         Me.lblPayBank.TabIndex = 450
         Me.lblPayBank.Text = "付款銀行"
         Me.lblPayBank.Visible = False
-        '
-        'btnCashing
-        '
-        Me.btnCashing.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnCashing.Location = New System.Drawing.Point(632, 179)
-        Me.btnCashing.Name = "btnCashing"
-        Me.btnCashing.Size = New System.Drawing.Size(140, 44)
-        Me.btnCashing.TabIndex = 447
-        Me.btnCashing.Text = "支票兌現"
-        Me.btnCashing.UseVisualStyleBackColor = False
-        Me.btnCashing.Visible = False
         '
         'txtCashingDate
         '
@@ -9402,6 +9389,16 @@ Partial Class frmMain
         Me.tpCheque.TabIndex = 18
         Me.tpCheque.Text = "支票管理"
         Me.tpCheque.UseVisualStyleBackColor = True
+        '
+        'btnQuery_che
+        '
+        Me.btnQuery_che.BackColor = System.Drawing.Color.Lime
+        Me.btnQuery_che.Location = New System.Drawing.Point(632, 88)
+        Me.btnQuery_che.Name = "btnQuery_che"
+        Me.btnQuery_che.Size = New System.Drawing.Size(140, 44)
+        Me.btnQuery_che.TabIndex = 435
+        Me.btnQuery_che.Text = "查  詢"
+        Me.btnQuery_che.UseVisualStyleBackColor = False
         '
         'btnSelectAll
         '
@@ -11378,16 +11375,6 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'btnQuery_che
-        '
-        Me.btnQuery_che.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_che.Location = New System.Drawing.Point(632, 88)
-        Me.btnQuery_che.Name = "btnQuery_che"
-        Me.btnQuery_che.Size = New System.Drawing.Size(140, 44)
-        Me.btnQuery_che.TabIndex = 435
-        Me.btnQuery_che.Text = "查  詢"
-        Me.btnQuery_che.UseVisualStyleBackColor = False
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -11397,7 +11384,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.14.10"
+        Me.Text = "豐原瓦斯會計系統 v0.14.11"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -12199,7 +12186,6 @@ Partial Class frmMain
     Friend WithEvents txtCusCode_ord As TextBox
     Friend WithEvents txtCusCode_col As TextBox
     Friend WithEvents txtCashingDate As TextBox
-    Friend WithEvents btnCashing As Button
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents grpCusStk As GroupBox
     Friend WithEvents TextBox24 As TextBox
