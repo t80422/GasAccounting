@@ -78,7 +78,7 @@ Public Class ReportService
     ''' <param name="isIncome">true:收入 false:支出</param>
     Public Sub GeneratorSubpoena(day As Date, datas As List(Of SubpoenaDTO), isCash As Boolean, isIncome As Boolean)
         Try
-            Dim templateFileName = "傳票範本檔.xlsx"
+            Dim templateFileName = "現金傳票範本檔.xlsx"
             Dim filePath = Path.Combine(Application.StartupPath, "Report", templateFileName)
 
             Using xml As New CloseXML_Excel(filePath)

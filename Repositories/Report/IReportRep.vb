@@ -158,4 +158,11 @@
     ''' <param name="months"></param>
     ''' <returns></returns>
     Function GetSplitCompany(year As Integer, months As String) As SplitCompanyInvoice
+
+    ''' <summary>
+    ''' 取得每日科目彙總表
+    ''' </summary>
+    ''' <param name="day"></param>
+    ''' <returns></returns>
+    Function GetDailySubjectSummary(day As Date) As List(Of DailySubjectSummary)
 End Interface

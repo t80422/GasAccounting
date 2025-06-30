@@ -915,6 +915,10 @@ Partial Class frmMain
         Me.dtpDate_ii = New System.Windows.Forms.DateTimePicker()
         Me.Label189 = New System.Windows.Forms.Label()
         Me.tpReport = New System.Windows.Forms.TabPage()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.btnDSS = New System.Windows.Forms.Button()
+        Me.Label65 = New System.Windows.Forms.Label()
+        Me.dtpDate_DSS = New System.Windows.Forms.DateTimePicker()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.txtCusCode_dcr = New System.Windows.Forms.TextBox()
         Me.btnMonthlyCusReceivable = New System.Windows.Forms.Button()
@@ -1083,6 +1087,7 @@ Partial Class frmMain
         Me.GroupBox25.SuspendLayout
         CType(Me.dgvInvoiceIn, System.ComponentModel.ISupportInitialize).BeginInit
         Me.tpReport.SuspendLayout
+        Me.GroupBox2.SuspendLayout
         Me.GroupBox7.SuspendLayout
         Me.GroupBox26.SuspendLayout
         Me.GroupBox24.SuspendLayout
@@ -6291,9 +6296,9 @@ Partial Class frmMain
         Me.lblSubjects_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.lblSubjects_payment.Location = New System.Drawing.Point(954, 14)
         Me.lblSubjects_payment.Name = "lblSubjects_payment"
-        Me.lblSubjects_payment.Size = New System.Drawing.Size(95, 19)
+        Me.lblSubjects_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblSubjects_payment.TabIndex = 419
-        Me.lblSubjects_payment.Text = "科    目"
+        Me.lblSubjects_payment.Text = "借方科目"
         '
         'lblBankRequired_payment
         '
@@ -9095,9 +9100,9 @@ Partial Class frmMain
         Me.lblSubjects_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.lblSubjects_col.Location = New System.Drawing.Point(906, 16)
         Me.lblSubjects_col.Name = "lblSubjects_col"
-        Me.lblSubjects_col.Size = New System.Drawing.Size(95, 19)
+        Me.lblSubjects_col.Size = New System.Drawing.Size(93, 19)
         Me.lblSubjects_col.TabIndex = 421
-        Me.lblSubjects_col.Text = "科    目"
+        Me.lblSubjects_col.Text = "貸方科目"
         '
         'txtCusName_col
         '
@@ -9296,7 +9301,7 @@ Partial Class frmMain
         Me.lblType_col.Name = "lblType_col"
         Me.lblType_col.Size = New System.Drawing.Size(93, 19)
         Me.lblType_col.TabIndex = 398
-        Me.lblType_col.Text = "收款類型"
+        Me.lblType_col.Text = "借方科目"
         '
         'Label110
         '
@@ -10424,6 +10429,7 @@ Partial Class frmMain
         '
         'tpReport
         '
+        Me.tpReport.Controls.Add(Me.GroupBox2)
         Me.tpReport.Controls.Add(Me.GroupBox7)
         Me.tpReport.Controls.Add(Me.GroupBox26)
         Me.tpReport.Controls.Add(Me.GroupBox24)
@@ -10450,6 +10456,44 @@ Partial Class frmMain
         Me.tpReport.TabIndex = 28
         Me.tpReport.Text = "報表"
         Me.tpReport.UseVisualStyleBackColor = True
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.btnDSS)
+        Me.GroupBox2.Controls.Add(Me.Label65)
+        Me.GroupBox2.Controls.Add(Me.dtpDate_DSS)
+        Me.GroupBox2.Location = New System.Drawing.Point(485, 731)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(505, 70)
+        Me.GroupBox2.TabIndex = 477
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "每日科目彙總表"
+        '
+        'btnDSS
+        '
+        Me.btnDSS.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnDSS.Location = New System.Drawing.Point(259, 29)
+        Me.btnDSS.Name = "btnDSS"
+        Me.btnDSS.Size = New System.Drawing.Size(72, 30)
+        Me.btnDSS.TabIndex = 25
+        Me.btnDSS.Text = "產生"
+        Me.btnDSS.UseVisualStyleBackColor = False
+        '
+        'Label65
+        '
+        Me.Label65.AutoSize = True
+        Me.Label65.Location = New System.Drawing.Point(6, 35)
+        Me.Label65.Name = "Label65"
+        Me.Label65.Size = New System.Drawing.Size(51, 19)
+        Me.Label65.TabIndex = 1
+        Me.Label65.Text = "日期"
+        '
+        'dtpDate_DSS
+        '
+        Me.dtpDate_DSS.Location = New System.Drawing.Point(63, 29)
+        Me.dtpDate_DSS.Name = "dtpDate_DSS"
+        Me.dtpDate_DSS.Size = New System.Drawing.Size(190, 30)
+        Me.dtpDate_DSS.TabIndex = 0
         '
         'GroupBox7
         '
@@ -11384,7 +11428,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.14.11"
+        Me.Text = "豐原瓦斯會計系統 v0.14.12"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -11497,6 +11541,8 @@ Partial Class frmMain
         CType(Me.dgvInvoiceIn, System.ComponentModel.ISupportInitialize).EndInit
         Me.tpReport.ResumeLayout(False)
         Me.tpReport.PerformLayout
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout
         Me.GroupBox7.ResumeLayout(False)
         Me.GroupBox7.PerformLayout
         Me.GroupBox26.ResumeLayout(False)
@@ -12520,4 +12566,8 @@ Partial Class frmMain
     Friend WithEvents lblSubjects_col As Label
     Friend WithEvents txtAccount_payment As TextBox
     Friend WithEvents btnQuery_che As Button
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents Label65 As Label
+    Friend WithEvents dtpDate_DSS As DateTimePicker
+    Friend WithEvents btnDSS As Button
 End Class

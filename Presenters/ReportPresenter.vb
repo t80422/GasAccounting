@@ -1577,6 +1577,53 @@ Public Class ReportPresenter
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 產生每日科目彙總表
+    ''' </summary>
+    Public Sub GenerateDailySubjectSummary(day As Date)
+        Try
+            '取得資料
+            Dim data As List(Of DailySubjectSummary) = _rep.GetDailySubjectSummary(day)
+
+            '取得範本檔
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "每日科目彙總表範本檔.xlsx")
+
+            '套版
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+                    Dim title = day.ToString("yyyy年MM月dd日") + " 科目彙總表"
+
+                    .WriteToCell("A1", title)
+
+                    Dim rowIndex As Integer = 3
+                    Dim totalBalance As Double = 0
+
+                    For i As Integer = 0 To data.Count - 1
+                        Dim item = data(i)
+                        .WriteToCell("A", rowIndex, item.Subject)
+                        .WriteToCell("C", rowIndex, item.Debit.ToString)
+                        .WriteToCell("D", rowIndex, item.Credit.ToString)
+                        Dim balance = item.Debit - item.Credit
+                        .WriteToCell("E", rowIndex, (balance).ToString)
+                        totalBalance += balance
+                        rowIndex += 1
+                    Next
+
+                    .WriteToCell("A", rowIndex, "合計")
+                    .WriteToCell("C", rowIndex, data.Sum(Function(x) x.Debit).ToString)
+                    .WriteToCell("D", rowIndex, data.Sum(Function(x) x.Credit).ToString)
+                    .WriteToCell("E", rowIndex, totalBalance.ToString)
+
+                    '存檔
+                    .SaveExcel(title)
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
     Public Async Sub LoadBankAccount()
         Try
             Dim items = Await _bankRep.GetBankDropdownAsync

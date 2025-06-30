@@ -2542,6 +2542,11 @@
         End If
     End Sub
 
+    '會計管理-報表-每日科目彙總表
+    Private Sub btnDSS_Click(sender As Object, e As EventArgs) Handles btnDSS.Click
+        _report.GenerateDailySubjectSummary(dtpDate_DSS.Value)
+    End Sub
+
     Private Function IGasCheckoutView_GetUserInput() As PurchaseCondition Implements IGasCheckoutView.GetUserInput
         Return New PurchaseCondition With {
             .StartDate = dtpStart_gc.Value.Date,

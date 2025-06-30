@@ -429,6 +429,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Report\BillsReceivable.vb" />
+    <Compile Include="Models\Report\DailySubjectSummary.vb" />
     <Compile Include="Models\Report\EnergyBureau.vb" />
     <Compile Include="Models\Report\SplitCompanyInvoice.vb" />
     <Compile Include="Models\Report\IncomeStatementModel.vb" />

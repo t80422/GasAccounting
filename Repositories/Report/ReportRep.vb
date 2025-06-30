@@ -1,4 +1,6 @@
-﻿Public Class ReportRep
+﻿Imports System.Data.Entity
+
+Public Class ReportRep
     Implements IReportRep
 
     Private _context As gas_accounting_systemEntities
@@ -1084,6 +1086,67 @@
                 .Amount = specialInvoices.Sum(Function(x) x.i_Amount),
                 .TaxAmount = specialInvoices.Sum(Function(x) x.i_Tax)
             }
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetDailySubjectSummary(day As Date) As List(Of DailySubjectSummary) Implements IReportRep.GetDailySubjectSummary
+        Try
+            Dim subjectSummary As New Dictionary(Of String, DailySubjectSummary)
+
+            ' 取得收入管理當日的科目彙總
+            Dim collectionDatas = _context.collections.Where(Function(x) x.col_Date = day.Date).AsNoTracking().ToList()
+
+            ' 收入管理 - 借方 (科目名稱)
+            For Each group In collectionDatas.GroupBy(Function(x) x.subject.s_name)
+                Dim subject = group.Key
+                Dim amount = group.Sum(Function(x) x.col_Amount)
+
+                If Not subjectSummary.ContainsKey(subject) Then
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                End If
+                subjectSummary(subject).Debit += amount
+            Next
+
+            ' 收入管理 - 貸方 (收入類型)
+            For Each group In collectionDatas.GroupBy(Function(x) x.col_Type)
+                Dim subject = group.Key
+                Dim amount = group.Sum(Function(x) x.col_Amount)
+
+                If Not subjectSummary.ContainsKey(subject) Then
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                End If
+                subjectSummary(subject).Credit += amount
+            Next
+
+            ' 取得支出管理當日的科目彙總
+            Dim paymentDatas = _context.payments.Where(Function(x) x.p_Date = day.Date).AsNoTracking().ToList()
+
+            ' 支出管理 - 貸方 (科目名稱)
+            For Each group In paymentDatas.GroupBy(Function(x) x.subject.s_name)
+                Dim subject = group.Key
+                Dim amount = group.Sum(Function(x) x.p_Amount)
+
+                If Not subjectSummary.ContainsKey(subject) Then
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                End If
+                subjectSummary(subject).Credit += amount
+            Next
+
+            ' 支出管理 - 借方 (支出類型)
+            For Each group In paymentDatas.GroupBy(Function(x) x.p_Type)
+                Dim subject = group.Key
+                Dim amount = group.Sum(Function(x) x.p_Amount)
+
+                If Not subjectSummary.ContainsKey(subject) Then
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                End If
+                subjectSummary(subject).Debit += amount
+            Next
+
+            Return subjectSummary.Values.ToList()
+
         Catch ex As Exception
             Throw
         End Try
