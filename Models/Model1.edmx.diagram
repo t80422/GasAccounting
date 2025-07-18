@@ -77,6 +77,9 @@
         <EntityTypeShape EntityType="gas_accounting_systemModel.scrap_barrel_detail" Width="1.5" PointX="16.25" PointY="23.875" />
         <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.closing_entry" Width="1.5" PointX="8.25" PointY="0.75" />
+        <AssociationConnector Association="gas_accounting_systemModel.closing_entry_ibfk_1" />
+        <AssociationConnector Association="gas_accounting_systemModel.closing_entry_ibfk_2" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

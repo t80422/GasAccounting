@@ -360,6 +360,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DependencyContainer.vb" />
     <Compile Include="Forms\frmDatePicker.Designer.vb">
       <DependentUpon>frmDatePicker.vb</DependentUpon>
     </Compile>
@@ -396,11 +397,23 @@
     <Compile Include="Forms\Search_Cheque.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Search_ClosingEntry.Designer.vb">
+      <DependentUpon>Search_ClosingEntry.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Search_ClosingEntry.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Search_Inspection.Designer.vb">
       <DependentUpon>Search_Inspection.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\Search_Inspection.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ucClosingEntry.Designer.vb">
+      <DependentUpon>ucClosingEntry.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ucClosingEntry.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Models\accounting_entry.vb">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -412,6 +425,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\barrel_monthly_balances.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\closing_entry.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GasBarrelQtyDTO.vb" />
@@ -463,6 +479,7 @@
     <Compile Include="Models\SearchCriteria\CarSC.vb" />
     <Compile Include="Models\SearchCriteria\ChequeSC.vb" />
     <Compile Include="Models\SearchCriteria\ChequeSearchCriteria.vb" />
+    <Compile Include="Models\SearchCriteria\ClosingEntrySC.vb" />
     <Compile Include="Models\SearchCriteria\CollectionSearchCriteria.vb" />
     <Compile Include="Models\SearchCriteria\InspectionSC.vb" />
     <Compile Include="Models\SearchCriteria\InvoiceSplitSearchCriteria.vb" />
@@ -473,6 +490,7 @@
     <Compile Include="Models\RolesAndPermissionsResult.vb" />
     <Compile Include="Models\SearchCriteria\PaymentSearchCriteria.vb" />
     <Compile Include="Models\SearchCriteria\PurBarrelSC.vb" />
+    <Compile Include="Models\ViewModels\ClosingEntryVM.vb" />
     <Compile Include="Models\ViewModels\GasBarrelVM.vb" />
     <Compile Include="Models\ViewModels\InspectionVM.vb" />
     <Compile Include="Models\ViewModels\InvioceVM.vb" />
@@ -489,11 +507,14 @@
     </Compile>
     <Compile Include="Presenters\BasicPricePresenter.vb" />
     <Compile Include="Presenters\CarPresenter.vb" />
+    <Compile Include="Presenters\ClosingEntryPresenter.vb" />
     <Compile Include="Presenters\GasBarrelPresenter.vb" />
     <Compile Include="Presenters\GasCheckoutPresenter.vb" />
     <Compile Include="Presenters\InspectionPresenter.vb" />
     <Compile Include="Presenters\ScrapBarrelDetailPresenter.vb" />
     <Compile Include="Presenters\ScrapBarrelPresenter.vb" />
+    <Compile Include="Repositories\ClosingEntry\ClosingEntryRep.vb" />
+    <Compile Include="Repositories\ClosingEntry\IClosingEntryRep.vb" />
     <Compile Include="Repositories\Inspection\IInspectionRep.vb" />
     <Compile Include="Repositories\Inspection\InspectionRep.vb" />
     <Compile Include="Repositories\OrderCollectionMapping\IOrderCollectionMappingRep.vb" />
@@ -572,15 +593,10 @@
     <Compile Include="Services\PriceCalculation\PriceCalculationService.vb" />
     <Compile Include="Services\Printer\PrinterService.vb" />
     <Compile Include="Services\ReportService.vb" />
-    <Compile Include="ucScrapBarrel.Designer.vb">
-      <DependentUpon>ucScrapBarrel.vb</DependentUpon>
-    </Compile>
-    <Compile Include="ucScrapBarrel.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Views\IBaseView.vb" />
     <Compile Include="Views\IBasicPriceView.vb" />
     <Compile Include="Views\ICarView.vb" />
+    <Compile Include="Views\IClosingEntryView.vb" />
     <Compile Include="Views\IGasBarrelView.vb" />
     <Compile Include="Views\IGasCheckoutView.vb" />
     <Compile Include="Views\IInspectionView.vb" />
@@ -788,17 +804,20 @@
     <EmbeddedResource Include="Forms\Search_Cheque.resx">
       <DependentUpon>Search_Cheque.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Search_ClosingEntry.resx">
+      <DependentUpon>Search_ClosingEntry.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Search_Inspection.resx">
       <DependentUpon>Search_Inspection.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ucClosingEntry.resx">
+      <DependentUpon>ucClosingEntry.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ucScrapBarrel.resx">
-      <DependentUpon>ucScrapBarrel.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

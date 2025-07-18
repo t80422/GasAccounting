@@ -101,6 +101,19 @@
           <Property Name="che_PayBankName" Type="varchar" MaxLength="50" />
           <Property Name="che_col_Id" Type="int" />
         </EntityType>
+        <EntityType Name="closing_entry">
+          <Key>
+            <PropertyRef Name="ce_Id" />
+          </Key>
+          <Property Name="ce_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ce_Date" Type="date" />
+          <Property Name="ce_Debit" Type="int" />
+          <Property Name="ce_DebitMemo" Type="varchar" MaxLength="255" />
+          <Property Name="ce_DebitAmount" Type="double" />
+          <Property Name="ce_Credit" Type="int" />
+          <Property Name="ce_CreditMemo" Type="varchar" MaxLength="255" />
+          <Property Name="ce_CreditAmount" Type="double" />
+        </EntityType>
         <EntityType Name="collection">
           <Key>
             <PropertyRef Name="col_Id" />
@@ -681,6 +694,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="closing_entry_ibfk_1">
+          <End Role="subjects" Type="Self.subjects" Multiplicity="0..1" />
+          <End Role="closing_entry" Type="Self.closing_entry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subjects">
+              <PropertyRef Name="s_id" />
+            </Principal>
+            <Dependent Role="closing_entry">
+              <PropertyRef Name="ce_Credit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="closing_entry_ibfk_2">
+          <End Role="subjects" Type="Self.subjects" Multiplicity="0..1" />
+          <End Role="closing_entry" Type="Self.closing_entry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subjects">
+              <PropertyRef Name="s_id" />
+            </Principal>
+            <Dependent Role="closing_entry">
+              <PropertyRef Name="ce_Debit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="collection_ibfk_1">
           <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
           <End Role="collection" Type="Self.collection" Multiplicity="*" />
@@ -1093,6 +1130,7 @@
           <EntitySet Name="basic_price" EntityType="Self.basic_price" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="car" EntityType="Self.car" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="cheque" EntityType="Self.cheque" Schema="gas_accounting_system" store:Type="Tables" />
+          <EntitySet Name="closing_entry" EntityType="Self.closing_entry" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="collection" EntityType="Self.collection" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="company" EntityType="Self.company" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="customer" EntityType="Self.customer" Schema="gas_accounting_system" store:Type="Tables" />
@@ -1145,6 +1183,14 @@
           <AssociationSet Name="cheque_ibfk_1" Association="Self.cheque_ibfk_1">
             <End Role="collection" EntitySet="collection" />
             <End Role="cheque" EntitySet="cheque" />
+          </AssociationSet>
+          <AssociationSet Name="closing_entry_ibfk_1" Association="Self.closing_entry_ibfk_1">
+            <End Role="subjects" EntitySet="subjects" />
+            <End Role="closing_entry" EntitySet="closing_entry" />
+          </AssociationSet>
+          <AssociationSet Name="closing_entry_ibfk_2" Association="Self.closing_entry_ibfk_2">
+            <End Role="subjects" EntitySet="subjects" />
+            <End Role="closing_entry" EntitySet="closing_entry" />
           </AssociationSet>
           <AssociationSet Name="collection_ibfk_1" Association="Self.collection_ibfk_1">
             <End Role="customer" EntitySet="customer" />
@@ -1475,6 +1521,15 @@
           <AssociationSet Name="scrap_barrel_detail_ibfk_2" Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2">
             <End Role="scrap_barrel" EntitySet="scrap_barrel" />
             <End Role="scrap_barrel_detail" EntitySet="scrap_barrel_detail" />
+          </AssociationSet>
+          <EntitySet Name="closing_entry" EntityType="gas_accounting_systemModel.closing_entry" />
+          <AssociationSet Name="closing_entry_ibfk_1" Association="gas_accounting_systemModel.closing_entry_ibfk_1">
+            <End Role="subject" EntitySet="subjects" />
+            <End Role="closing_entry" EntitySet="closing_entry" />
+          </AssociationSet>
+          <AssociationSet Name="closing_entry_ibfk_2" Association="gas_accounting_systemModel.closing_entry_ibfk_2">
+            <End Role="subject" EntitySet="subjects" />
+            <End Role="closing_entry" EntitySet="closing_entry" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="accounting_entry">
@@ -1887,6 +1942,8 @@
           <NavigationProperty Name="accounting_entry" Relationship="gas_accounting_systemModel.accounting_entry_ibfk_1" FromRole="subject" ToRole="accounting_entry" />
           <NavigationProperty Name="collections" Relationship="gas_accounting_systemModel.collection_ibfk_2" FromRole="subject" ToRole="collection" />
           <NavigationProperty Name="payments" Relationship="gas_accounting_systemModel.payment_ibfk_1" FromRole="subject" ToRole="payment" />
+          <NavigationProperty Name="closing_entry" Relationship="gas_accounting_systemModel.closing_entry_ibfk_1" FromRole="subject" ToRole="closing_entry" />
+          <NavigationProperty Name="closing_entry1" Relationship="gas_accounting_systemModel.closing_entry_ibfk_2" FromRole="subject" ToRole="closing_entry" />
         </EntityType>
         <Association Name="accounting_entry_ibfk_1">
           <End Type="gas_accounting_systemModel.subject" Role="subject" Multiplicity="1" />
@@ -2637,6 +2694,45 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="closing_entry">
+          <Key>
+            <PropertyRef Name="ce_Id" />
+          </Key>
+          <Property Name="ce_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ce_Date" Type="DateTime" />
+          <Property Name="ce_Debit" Type="Int32" />
+          <Property Name="ce_DebitMemo" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ce_DebitAmount" Type="Double" />
+          <Property Name="ce_Credit" Type="Int32" />
+          <Property Name="ce_CreditMemo" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ce_CreditAmount" Type="Double" />
+          <NavigationProperty Name="subject" Relationship="gas_accounting_systemModel.closing_entry_ibfk_1" FromRole="closing_entry" ToRole="subject" />
+          <NavigationProperty Name="subject1" Relationship="gas_accounting_systemModel.closing_entry_ibfk_2" FromRole="closing_entry" ToRole="subject" />
+        </EntityType>
+        <Association Name="closing_entry_ibfk_1">
+          <End Type="gas_accounting_systemModel.subject" Role="subject" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.closing_entry" Role="closing_entry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subject">
+              <PropertyRef Name="s_id" />
+            </Principal>
+            <Dependent Role="closing_entry">
+              <PropertyRef Name="ce_Credit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="closing_entry_ibfk_2">
+          <End Type="gas_accounting_systemModel.subject" Role="subject" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.closing_entry" Role="closing_entry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="subject">
+              <PropertyRef Name="s_id" />
+            </Principal>
+            <Dependent Role="closing_entry">
+              <PropertyRef Name="ce_Debit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3258,6 +3354,20 @@
                 <ScalarProperty Name="sbd_Qty50" ColumnName="sbd_Qty50" />
                 <ScalarProperty Name="sbd_cus_Id" ColumnName="sbd_cus_Id" />
                 <ScalarProperty Name="sbd_Id" ColumnName="sbd_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="closing_entry">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.closing_entry">
+              <MappingFragment StoreEntitySet="closing_entry">
+                <ScalarProperty Name="ce_CreditAmount" ColumnName="ce_CreditAmount" />
+                <ScalarProperty Name="ce_CreditMemo" ColumnName="ce_CreditMemo" />
+                <ScalarProperty Name="ce_Credit" ColumnName="ce_Credit" />
+                <ScalarProperty Name="ce_DebitAmount" ColumnName="ce_DebitAmount" />
+                <ScalarProperty Name="ce_DebitMemo" ColumnName="ce_DebitMemo" />
+                <ScalarProperty Name="ce_Debit" ColumnName="ce_Debit" />
+                <ScalarProperty Name="ce_Date" ColumnName="ce_Date" />
+                <ScalarProperty Name="ce_Id" ColumnName="ce_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

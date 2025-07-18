@@ -908,6 +908,7 @@ Partial Class frmMain
         Me.txtCusCode_sbd = New System.Windows.Forms.TextBox()
         Me.txtCusName_sbd = New System.Windows.Forms.TextBox()
         Me.grpSB = New System.Windows.Forms.GroupBox()
+        Me.txtSBId = New System.Windows.Forms.TextBox()
         Me.Label325 = New System.Windows.Forms.Label()
         Me.dtpSC = New System.Windows.Forms.DateTimePicker()
         Me.grpPrice_sb = New System.Windows.Forms.GroupBox()
@@ -1139,9 +1140,9 @@ Partial Class frmMain
         Me.btnGasPayableDetail = New System.Windows.Forms.Button()
         Me.cmbManu = New System.Windows.Forms.ComboBox()
         Me.Label132 = New System.Windows.Forms.Label()
+        Me.tpClosingEntry = New System.Windows.Forms.TabPage()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.txtSBId = New System.Windows.Forms.TextBox()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -10437,6 +10438,16 @@ Partial Class frmMain
         Me.grpSB.TabStop = False
         Me.grpSB.Text = "月價格設定"
         '
+        'txtSBId
+        '
+        Me.txtSBId.Location = New System.Drawing.Point(570, 121)
+        Me.txtSBId.Name = "txtSBId"
+        Me.txtSBId.ReadOnly = True
+        Me.txtSBId.Size = New System.Drawing.Size(165, 30)
+        Me.txtSBId.TabIndex = 482
+        Me.txtSBId.Tag = "cus_code"
+        Me.txtSBId.Visible = False
+        '
         'Label325
         '
         Me.Label325.AutoSize = True
@@ -10703,6 +10714,7 @@ Partial Class frmMain
         Me.TabControl6.Controls.Add(Me.tpInvoice_Out)
         Me.TabControl6.Controls.Add(Me.tpInvoice_In)
         Me.TabControl6.Controls.Add(Me.tpReport)
+        Me.TabControl6.Controls.Add(Me.tpClosingEntry)
         Me.TabControl6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl6.Location = New System.Drawing.Point(3, 3)
         Me.TabControl6.Name = "TabControl6"
@@ -12762,6 +12774,16 @@ Partial Class frmMain
         Me.Label132.TabIndex = 4
         Me.Label132.Text = "廠商"
         '
+        'tpClosingEntry
+        '
+        Me.tpClosingEntry.Location = New System.Drawing.Point(4, 29)
+        Me.tpClosingEntry.Name = "tpClosingEntry"
+        Me.tpClosingEntry.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpClosingEntry.Size = New System.Drawing.Size(1882, 949)
+        Me.tpClosingEntry.TabIndex = 30
+        Me.tpClosingEntry.Text = "結轉"
+        Me.tpClosingEntry.UseVisualStyleBackColor = True
+        '
         'tpLogOut
         '
         Me.tpLogOut.Location = New System.Drawing.Point(4, 29)
@@ -12771,16 +12793,6 @@ Partial Class frmMain
         Me.tpLogOut.TabIndex = 22
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
-        '
-        'txtSBId
-        '
-        Me.txtSBId.Location = New System.Drawing.Point(570, 121)
-        Me.txtSBId.Name = "txtSBId"
-        Me.txtSBId.ReadOnly = True
-        Me.txtSBId.Size = New System.Drawing.Size(165, 30)
-        Me.txtSBId.TabIndex = 482
-        Me.txtSBId.Tag = "cus_code"
-        Me.txtSBId.Visible = False
         '
         'frmMain
         '
@@ -14077,4 +14089,5 @@ Partial Class frmMain
     Friend WithEvents btnDelete_sbd As Button
     Friend WithEvents btnCancel_sbd As Button
     Friend WithEvents txtSBId As TextBox
+    Friend WithEvents tpClosingEntry As TabPage
 End Class

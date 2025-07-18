@@ -54,6 +54,7 @@
     }
 
     Private _currentPurchase As purchase
+    Private _closingEntryControl As ucClosingEntry
 
     Public Property CurrentPurchase As purchase Implements IPurchaseView.CurrentPurchase
         Get
@@ -135,6 +136,28 @@
         _inspection = New InspectionPresenter(Me, cusRep, inspectionRep)
         _scrapBarrel = New ScrapBarrelPresenter(Me, scrapBarrelRep)
         _scrapBarrelDetail = New ScrapBarrelDetailPresenter(Me, sbdRep, cusRep)
+
+        ' 初始化 DI 容器
+        DependencyContainer.Initialize()
+
+        InitializeUserControls()
+    End Sub
+
+    Private Sub InitializeUserControls()
+        Try
+            ' 使用 Unity 動態建立 UserControl
+            _closingEntryControl = DependencyContainer.Resolve(Of ucClosingEntry)()
+
+            ' 清空 TabPage 中現有的控制項
+            tpClosingEntry.Controls.Clear()
+
+            ' 加入動態建立的 UserControl
+            tpClosingEntry.Controls.Add(_closingEntryControl)
+            _closingEntryControl.Dock = DockStyle.Fill
+
+        Catch ex As Exception
+            MsgBox($"建立 UserControl 失敗：{ex.Message}")
+        End Try
     End Sub
 
     Private Sub InitializeTabPages(permissions As List(Of String))
