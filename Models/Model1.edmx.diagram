@@ -71,6 +71,12 @@
         <EntityTypeShape EntityType="gas_accounting_systemModel.write_off" Width="1.5" PointX="10.5" PointY="19.875" />
         <AssociationConnector Association="gas_accounting_systemModel.write_off_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.write_off_ibfk_2" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.inspection" Width="1.5" PointX="0.75" PointY="8.75" />
+        <AssociationConnector Association="gas_accounting_systemModel.inspection_ibfk_1" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.scrap_barrel" Width="1.5" PointX="14" PointY="15.5" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.scrap_barrel_detail" Width="1.5" PointX="16.25" PointY="23.875" />
+        <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_1" />
+        <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

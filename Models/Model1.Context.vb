@@ -51,5 +51,8 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property payments() As DbSet(Of payment)
     Public Overridable Property gas_barrel() As DbSet(Of gas_barrel)
     Public Overridable Property write_off() As DbSet(Of write_off)
+    Public Overridable Property inspections() As DbSet(Of inspection)
+    Public Overridable Property scrap_barrel() As DbSet(Of scrap_barrel)
+    Public Overridable Property scrap_barrel_detail() As DbSet(Of scrap_barrel_detail)
 
 End Class

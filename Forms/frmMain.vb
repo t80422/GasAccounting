@@ -1,6 +1,7 @@
 ﻿Public Class frmMain
     Implements ISubjectsView, ICompanyView, IManufacturerView, IPurchaseView, ICustomerView, IPricePlanView, IEmployeeView, IBankView, IPaymentView, IUnitPriceHistoryView, ICollectionView, ICheque, IOrderView,
-        IReportView, IGasCheckoutView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, IPurchaseBarrelView, ICarView, IInvoiceSplitView
+        IReportView, IGasCheckoutView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, IPurchaseBarrelView, ICarView, IInvoiceSplitView, IInspectionView, IScrapBarrelView,
+        IScrapBarrelDetailView
 
     Public Structure UserData
         Public Id As Integer
@@ -34,6 +35,9 @@
     Private _order As OrderPresenter
     Private _report As ReportPresenter
     Private _gasCheckout As GasCheckoutPresenter
+    Private _inspection As InspectionPresenter
+    Private _scrapBarrel As ScrapBarrelPresenter
+    Private _scrapBarrelDetail As ScrapBarrelDetailPresenter
 
     Private inputTxts As String(,) = {
         {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_18", "txto_in_14", "txto_in_5", "txto_in_2"},
@@ -100,6 +104,9 @@
         Dim purRep As New PurchaseRep(context)
         Dim manuRep As New ManufacturerRep(context)
         Dim subjectRep As New SubjectRep(context)
+        Dim inspectionRep As New InspectionRep(context)
+        Dim scrapBarrelRep As New ScrapBarrelRep(context)
+        Dim sbdRep As New ScrapBarrelDetailRep(context)
 
         Dim aeSer As IAccountingEntryService = New AccountingEntryService(aeRep)
         Dim barMBSer As IBarrelMonthlyBalanceService = New BarrelMonthlyBalanceService(barMBRep, gbRep, pbRep, ordRep)
@@ -125,6 +132,9 @@
         _permission = New PermissionPresenter(Me, permissionRep)
         _purchase = New PurchasePresenter(Me, purRep, compRep, manuRep, subjectRep, gmbSer, aeSer, printerSer)
         _gasCheckout = New GasCheckoutPresenter(Me, purRep, manuRep)
+        _inspection = New InspectionPresenter(Me, cusRep, inspectionRep)
+        _scrapBarrel = New ScrapBarrelPresenter(Me, scrapBarrelRep)
+        _scrapBarrelDetail = New ScrapBarrelDetailPresenter(Me, sbdRep, cusRep)
     End Sub
 
     Private Sub InitializeTabPages(permissions As List(Of String))
@@ -201,6 +211,8 @@
         btnCancel_gb_Click(btnCancel_gb, EventArgs.Empty)
         btnCancel_pb_Click(btnCancel_pb, EventArgs.Empty)
         btnCancel_ii_Click(btnCancel_ii, EventArgs.Empty)
+        btnCancel_ins_Click(btnCancel_ins, EventArgs.Empty)
+        btnCancel_sb_Click(btnCancel_sb, EventArgs.Empty)
     End Sub
 
     ''' <summary>
@@ -224,6 +236,23 @@
             SetupSalesManagementHandlers()
 #End Region
 
+#Region "檢驗費自動運算"
+            Dim inspectionTypes = New String() {"50", "20", "16", "10", "4", "Switch", "Freight", "RustProof", "Spraying"}
+            For Each t In inspectionTypes
+                Dim qtyCtrl = TryCast(grpIns.Controls("txtQty" & t), TextBox)
+                Dim priceCtrl = TryCast(grpIns.Controls("txtPrice" & t), TextBox)
+                If qtyCtrl IsNot Nothing Then AddHandler qtyCtrl.TextChanged, Sub(sender, e) CalculateInspectionFields()
+                If priceCtrl IsNot Nothing Then AddHandler priceCtrl.TextChanged, Sub(sender, e) CalculateInspectionFields()
+            Next
+#End Region
+
+#Region "報廢桶自動運算"
+            Dim scrapBarrelQtyTxts = New List(Of TextBox) From {
+                txtQty50_sbd, txtQty20_sbd, txtQty16_sbd, txtQty10_sbd, txtQty4_sbd
+            }
+            scrapBarrelQtyTxts.ForEach(Sub(x) AddHandler x.TextChanged, Sub(sender, e) CalculateScrapBarrelDetail())
+#End Region
+
 #Region "大氣採購"
             'SetupGasPurchaseHandlers()
 #End Region
@@ -233,6 +262,72 @@
 #End Region
         Catch ex As Exception
             Throw
+        End Try
+    End Sub
+
+    ' 檢驗費自動計算
+    Private Sub CalculateInspectionFields()
+        Dim types = New String() {"50", "20", "16", "10", "4", "Switch", "Freight", "RustProof", "Spraying"}
+        Dim totalQty As Integer = 0
+        Dim totalAmount As Integer = 0
+        Dim totalPrice As Decimal = 0
+        For Each t In types
+            Dim qtyCtrl = TryCast(grpIns.Controls("txtQty" & t), TextBox)
+            Dim priceCtrl = TryCast(grpIns.Controls("txtPrice" & t), TextBox)
+            Dim amountCtrl = TryCast(grpIns.Controls("txtAmount" & t), TextBox)
+            If qtyCtrl IsNot Nothing AndAlso priceCtrl IsNot Nothing AndAlso amountCtrl IsNot Nothing Then
+                Dim qty As Integer = 0
+                Dim price As Decimal = 0
+                Integer.TryParse(qtyCtrl.Text, qty)
+                Decimal.TryParse(priceCtrl.Text, price)
+                Dim amount = qty * price
+                amountCtrl.Text = amount.ToString()
+                totalQty += qty
+                totalAmount += amount
+                totalPrice += price
+            End If
+        Next
+        txtQtyTotal.Text = totalQty.ToString()
+        txtAmountTotal.Text = totalAmount.ToString()
+        txtPriceTotal.Text = If(types.Length > 0, totalPrice.ToString(), "0")
+    End Sub
+
+    ''' <summary>
+    ''' 計算報廢桶客戶設定金額
+    ''' </summary>
+    Private Sub CalculateScrapBarrelDetail()
+        Try
+            ' 定義容量陣列
+            Dim capacities = {"50", "20", "16", "10", "4"}
+
+            For Each capacity In capacities
+                ' 取得對應的控制項
+                Dim qtyCtrl = TryCast(grpPrice_sbd.Controls($"txtQty{capacity}_sbd"), TextBox)
+                Dim buyPriceCtrl = TryCast(grpPrice_sb.Controls($"txtBuy{capacity}"), TextBox)
+                Dim acquisitionsPriceCtrl = TryCast(grpPrice_sb.Controls($"txtAcquisitions{capacity}"), TextBox)
+                Dim buyResultCtrl = TryCast(grpPrice_sbd.Controls($"txtBuy{capacity}_sbd"), TextBox)
+                Dim acquisitionsResultCtrl = TryCast(grpPrice_sbd.Controls($"txtAcquisitions{capacity}_sbd"), TextBox)
+
+                If qtyCtrl IsNot Nothing AndAlso buyPriceCtrl IsNot Nothing AndAlso
+                   acquisitionsPriceCtrl IsNot Nothing AndAlso buyResultCtrl IsNot Nothing AndAlso
+                   acquisitionsResultCtrl IsNot Nothing Then
+
+                    Dim qty As Integer = 0
+                    Dim buyPrice As Decimal = 0
+                    Dim acquisitionsPrice As Decimal = 0
+
+                    Integer.TryParse(qtyCtrl.Text, qty)
+                    Decimal.TryParse(buyPriceCtrl.Text, buyPrice)
+                    Decimal.TryParse(acquisitionsPriceCtrl.Text, acquisitionsPrice)
+
+                    ' 計算並設定結果
+                    buyResultCtrl.Text = (buyPrice * qty).ToString()
+                    acquisitionsResultCtrl.Text = (acquisitionsPrice * qty).ToString()
+                End If
+            Next
+        Catch ex As Exception
+            ' 錯誤處理 - 記錄錯誤但不顯示給使用者，避免干擾操作
+            Console.WriteLine($"計算報廢桶金額時發生錯誤: {ex.Message}")
         End Try
     End Sub
 
@@ -952,8 +1047,6 @@
         cmbCar_ord.DataSource = Nothing
         cmbCarOut_ord.DataSource = Nothing
 
-        If btnQuery_order.Text = "確  認" Then SetOrderQueryCtrl(btnQuery_order)
-
         SetButtonState(btnCancel_order, True)
 
         '預設運送方式
@@ -1214,8 +1307,8 @@
 
     Private Sub SetupTextBoxHandlers(container As Control, handler As KeyEventHandler, ParamArray prefixes As String())
         For Each txt In container.Controls.OfType(Of TextBox)()
-            If prefixes.Any(Function(prefix) txt.Name.StartsWith(prefix)) Then
-                AddHandler txt.KeyUp, handler
+            If prefixes.Any(Function(prefix) txtAcquisitions50.Name.StartsWith(prefix)) Then
+                AddHandler txtAcquisitions50.KeyUp, handler
             End If
         Next
     End Sub
@@ -1245,7 +1338,7 @@
 
     Private Sub AddDirectionHandlers(container As Control)
         For Each txt In container.Controls.OfType(Of TextBox)().Where(Function(x) Not x.ReadOnly)
-            AddHandler txt.KeyDown, Sub(sender, e) Direction(sender, e, container)
+            AddHandler txtAcquisitions50.KeyDown, Sub(sender, e) Direction(sender, e, container)
         Next
     End Sub
 
@@ -2853,6 +2946,392 @@
             txtName_is.Clear()
         Else
             txtName_is.Text = "分裝費"
+        End If
+    End Sub
+
+    Public Sub ShowCustomer(cus As customer) Implements IInspectionView.ShowCustomer
+        txtCusName_ins.Text = cus.cus_name
+        txtCusCode_ins.Text = cus.cus_code
+        txtCusId_ins.Text = cus.cus_id
+    End Sub
+
+    Public Sub Clear() Implements IInspectionView.Clear
+        ClearControls(tpInspection)
+    End Sub
+
+    Public Sub DisplayList(data As List(Of InspectionVM)) Implements IInspectionView.DisplayList
+        dgvIns.DataSource = data
+    End Sub
+
+    Private Function IInspectionView_GetInput() As inspection Implements IInspectionView.GetInput
+        Dim data As New inspection With {
+            .in_Month = dtpIns.Value.Date
+        }
+
+        With data
+            If String.IsNullOrEmpty(txtCusId_ins.Text) Then
+                Throw New Exception("請先選擇客戶")
+            Else .in_cus_Id = txtCusId_ins.Text
+            End If
+            Dim qty50 As Integer = 0, qty20 As Integer = 0, qty16 As Integer = 0, qty10 As Integer = 0, qty4 As Integer = 0
+            Dim qtySwitch As Integer = 0, qtyFreight As Integer = 0, qtyRustProof As Integer = 0, qtySpraying As Integer = 0, qtyTotal As Integer = 0
+            Dim price50 As Double = 0, price20 As Double = 0, price16 As Double = 0, price10 As Double = 0, price4 As Double = 0
+            Dim priceSwitch As Double = 0, priceFreight As Double = 0, priceRustProof As Double = 0, priceSpraying As Double = 0, priceTotal As Double = 0
+            Dim amount50 As Double = 0, amount20 As Double = 0, amount16 As Double = 0, amount10 As Double = 0, amount4 As Double = 0
+            Dim amountSwitch As Double = 0, amountFreight As Double = 0, amountRustProof As Double = 0, amountSpraying As Double = 0, amountTotal As Double = 0
+
+            Integer.TryParse(txtQty50.Text, qty50)
+            Integer.TryParse(txtQty20.Text, qty20)
+            Integer.TryParse(txtQty16.Text, qty16)
+            Integer.TryParse(txtQty10.Text, qty10)
+            Integer.TryParse(txtQty4.Text, qty4)
+            Integer.TryParse(txtQtySwitch.Text, qtySwitch)
+            Integer.TryParse(txtQtyFreight.Text, qtyFreight)
+            Integer.TryParse(txtQtyRustProof.Text, qtyRustProof)
+            Integer.TryParse(txtQtySpraying.Text, qtySpraying)
+            Integer.TryParse(txtQtyTotal.Text, qtyTotal)
+
+            Double.TryParse(txtPrice50.Text, price50)
+            Double.TryParse(txtPrice20.Text, price20)
+            Double.TryParse(txtPrice16.Text, price16)
+            Double.TryParse(txtPrice10.Text, price10)
+            Double.TryParse(txtPrice4.Text, price4)
+            Double.TryParse(txtPriceSwitch.Text, priceSwitch)
+            Double.TryParse(txtPriceFreight.Text, priceFreight)
+            Double.TryParse(txtPriceRustProof.Text, priceRustProof)
+            Double.TryParse(txtPriceSpraying.Text, priceSpraying)
+            Double.TryParse(txtPriceTotal.Text, priceTotal)
+
+            Double.TryParse(txtAmount50.Text, amount50)
+            Double.TryParse(txtAmount20.Text, amount20)
+            Double.TryParse(txtAmount16.Text, amount16)
+            Double.TryParse(txtAmount10.Text, amount10)
+            Double.TryParse(txtAmount4.Text, amount4)
+            Double.TryParse(txtAmountSwitch.Text, amountSwitch)
+            Double.TryParse(txtAmountFreight.Text, amountFreight)
+            Double.TryParse(txtAmountRustProof.Text, amountRustProof)
+            Double.TryParse(txtAmountSpraying.Text, amountSpraying)
+            Double.TryParse(txtAmountTotal.Text, amountTotal)
+
+            .in_Qty50 = qty50
+            .in_Price50 = price50
+            .in_Amount50 = amount50
+            .in_Qty20 = qty20
+            .in_Price20 = price20
+            .in_Amount20 = amount20
+            .in_Qty16 = qty16
+            .in_Price16 = price16
+            .in_Amount16 = amount16
+            .in_Qty10 = qty10
+            .in_Price10 = price10
+            .in_Amount10 = amount10
+            .in_Qty4 = qty4
+            .in_Price4 = price4
+            .in_Amount4 = amount4
+            .in_QtySwitch = qtySwitch
+            .in_PriceSwitch = priceSwitch
+            .in_AmountSwitch = amountSwitch
+            .in_QtyFreight = qtyFreight
+            .in_PriceFreight = priceFreight
+            .in_AmountFreight = amountFreight
+            .in_QtyRustProof = qtyRustProof
+            .in_PriceRustProof = priceRustProof
+            .in_AmountRustProof = amountRustProof
+            .in_QtySpraying = qtySpraying
+            .in_PriceSpraying = priceSpraying
+            .in_AmountSpraying = amountSpraying
+            .in_QtyTotal = qtyTotal
+            .in_PriceTotal = priceTotal
+            .in_AmountTotal = amountTotal
+        End With
+
+        Return data
+    End Function
+
+    Public Sub ShowDetail(data As inspection) Implements IInspectionView.ShowDetail
+        dtpIns.Value = data.in_Month
+        txtCusId_ins.Text = data.in_cus_Id
+        txtCusCode_ins.Text = data.customer.cus_code
+        txtCusName_ins.Text = data.customer.cus_name
+        txtQty50.Text = data.in_Qty50
+        txtPrice50.Text = data.in_Price50
+        txtAmount50.Text = data.in_Amount50
+        txtQty20.Text = data.in_Qty20
+        txtPrice20.Text = data.in_Price20
+        txtAmount20.Text = data.in_Amount20
+        txtQty16.Text = data.in_Qty16
+        txtPrice16.Text = data.in_Price16
+        txtAmount16.Text = data.in_Amount16
+        txtQty10.Text = data.in_Qty10
+        txtPrice10.Text = data.in_Price10
+        txtAmount10.Text = data.in_Amount10
+        txtQty4.Text = data.in_Qty4
+        txtPrice4.Text = data.in_Price4
+        txtAmount4.Text = data.in_Amount4
+        txtQtySwitch.Text = data.in_QtySwitch
+        txtPriceSwitch.Text = data.in_PriceSwitch
+        txtAmountSwitch.Text = data.in_AmountSwitch
+        txtQtyFreight.Text = data.in_QtyFreight
+        txtPriceFreight.Text = data.in_PriceFreight
+        txtAmountFreight.Text = data.in_AmountFreight
+        txtQtyRustProof.Text = data.in_QtyRustProof
+        txtPriceRustProof.Text = data.in_PriceRustProof
+        txtAmountRustProof.Text = data.in_AmountRustProof
+        txtQtySpraying.Text = data.in_QtySpraying
+        txtPriceSpraying.Text = data.in_PriceSpraying
+        txtAmountSpraying.Text = data.in_AmountSpraying
+        txtQtyTotal.Text = data.in_QtyTotal
+        txtPriceTotal.Text = data.in_PriceTotal
+        txtAmountTotal.Text = data.in_AmountTotal
+    End Sub
+
+    ' 支出管理-檢驗費-搜尋客戶
+    Private Sub btnCus_ins_Click(sender As Object, e As EventArgs) Handles btnCus_ins.Click
+        Using searchForm As New frmQueryCustomer
+            If searchForm.ShowDialog = DialogResult.OK Then
+                txtCusId_ins.Text = searchForm.CusId
+                txtCusCode_ins.Text = searchForm.CusCode
+                txtCusName_ins.Text = searchForm.CusName
+            End If
+        End Using
+    End Sub
+
+    ' 支出管理-檢驗費-客戶代號
+    Private Sub txtCusCode_ins_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCusCode_ins.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            _inspection.GetCustomerByCusCode(txtCusCode_ins.Text)
+        End If
+    End Sub
+
+    ' 支出管理-檢驗費-取消
+    Private Sub btnCancel_ins_Click(sender As Object, e As EventArgs) Handles btnCancel_ins.Click
+        SetButtonState(sender, True)
+        _inspection.Reset()
+    End Sub
+
+    ' 支出管理-檢驗費-新增
+    Private Sub btnCreate_ins_Click(sender As Object, e As EventArgs) Handles btnCreate_ins.Click
+        _inspection.Add()
+    End Sub
+
+    ' 支出管理-檢驗費-dgv
+    Private Sub dgvIns_CellMouseClick(sender As Object, e As EventArgs) Handles dgvIns.CellMouseClick, dgvIns.SelectionChanged
+        Dim ctrl As DataGridView = sender
+
+        If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
+
+        SetButtonState(ctrl, False)
+
+        Dim id = ctrl.SelectedRows(0).Cells(0).Value
+        _inspection.LoadDetail(id)
+    End Sub
+
+    ' 支出管理-檢驗費-修改
+    Private Sub btnEdit_ins_Click(sender As Object, e As EventArgs) Handles btnEdit_ins.Click
+        SetButtonState(sender, True)
+        _inspection.Update()
+    End Sub
+
+    ' 支出管理-檢驗費-修改
+    Private Sub btnDelete_ins_Click(sender As Object, e As EventArgs) Handles btnDelete_ins.Click
+        _inspection.Delete()
+    End Sub
+
+    ' 支出管理-檢驗費-查詢
+    Private Sub btnSearch_ins_Click(sender As Object, e As EventArgs) Handles btnSearch_ins.Click
+        Using frm As New Search_Inspection
+            If frm.ShowDialog = DialogResult.OK Then
+                _inspection.LoadList(frm.Criteria)
+            End If
+        End Using
+    End Sub
+
+    ' 支出管理-檢驗費-列印
+    Private Sub btnPrint_ins_Click(sender As Object, e As EventArgs) Handles btnPrint_ins.Click
+        _inspection.Print()
+    End Sub
+
+    Private Sub IScrapBarrelView_ClearInput() Implements IScrapBarrelView.ClearInput
+        ClearControls(grpSB)
+    End Sub
+
+    Private Function IScrapBarrelView_GetInput() As scrap_barrel Implements IScrapBarrelView.GetInput
+        Return New scrap_barrel With {
+            .sb_Month = dtpSC.Value.Date,
+            .sb_Acquisitions50 = If(String.IsNullOrEmpty(txtAcquisitions50.Text), 0, CInt(txtAcquisitions50.Text)),
+            .sb_Buy50 = If(String.IsNullOrEmpty(txtBuy50.Text), 0, CInt(txtBuy50.Text)),
+            .sb_Acquisitions20 = If(String.IsNullOrEmpty(txtAcquisitions20.Text), 0, CInt(txtAcquisitions20.Text)),
+            .sb_Buy20 = If(String.IsNullOrEmpty(txtBuy20.Text), 0, CInt(txtBuy20.Text)),
+            .sb_Acquisitions16 = If(String.IsNullOrEmpty(txtAcquisitions16.Text), 0, CInt(txtAcquisitions16.Text)),
+            .sb_Buy16 = If(String.IsNullOrEmpty(txtBuy16.Text), 0, CInt(txtBuy16.Text)),
+            .sb_Acquisitions10 = If(String.IsNullOrEmpty(txtAcquisitions10.Text), 0, CInt(txtAcquisitions10.Text)),
+            .sb_Buy10 = If(String.IsNullOrEmpty(txtBuy10.Text), 0, CInt(txtBuy10.Text)),
+            .sb_Acquisitions4 = If(String.IsNullOrEmpty(txtAcquisitions4.Text), 0, CInt(txtAcquisitions4.Text)),
+            .sb_Buy4 = If(String.IsNullOrEmpty(txtBuy4.Text), 0, CInt(txtBuy4.Text))
+        }
+    End Function
+
+    Public Sub ShowList(data As List(Of ScrapBarrelVM)) Implements IScrapBarrelView.ShowList
+        dgvSB.DataSource = data
+    End Sub
+
+    Public Sub ShowDetail(data As scrap_barrel) Implements IScrapBarrelView.ShowDetail
+        dtpSC.Value = data.sb_Month.Value
+        txtAcquisitions50.Text = data.sb_Acquisitions50
+        txtBuy50.Text = data.sb_Buy50
+        txtAcquisitions20.Text = data.sb_Acquisitions20
+        txtBuy20.Text = data.sb_Buy20
+        txtAcquisitions16.Text = data.sb_Acquisitions16
+        txtBuy16.Text = data.sb_Buy16
+        txtAcquisitions10.Text = data.sb_Acquisitions10
+        txtBuy10.Text = data.sb_Buy10
+        txtAcquisitions4.Text = data.sb_Acquisitions4
+        txtBuy4.Text = data.sb_Buy4
+        txtSBId.Text = data.sb_Id
+    End Sub
+
+    ' 收入管理-報廢桶-月價格設定-取消
+    Private Sub btnCancel_sb_Click(sender As Object, e As EventArgs) Handles btnCancel_sb.Click
+        SetButtonState(sender, True)
+        _scrapBarrel.Reset()
+        _scrapBarrelDetail.Reset()
+        grpSBD.Enabled = False
+        btnCancel_sbd_Click(btnCancel_sbd, EventArgs.Empty)
+    End Sub
+
+    ' 收入管理-報廢桶-月價格設定-新增
+    Private Sub btnCreate_sb_Click(sender As Object, e As EventArgs) Handles btnCreate_sb.Click
+        _scrapBarrel.Add()
+    End Sub
+
+    ' 收入管理-報廢桶-月價格設定-dgv
+    Private Sub dgvSB_CellMouseClick(sender As Object, e As EventArgs) Handles dgvSB.CellMouseClick, dgvSB.SelectionChanged
+        Dim ctrl As DataGridView = sender
+
+        If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
+
+        SetButtonState(ctrl, False)
+
+        Dim id = ctrl.SelectedRows(0).Cells(0).Value
+        _scrapBarrel.LoadDetail(id)
+        grpSBD.Enabled = True
+
+        btnCancel_sbd_Click(btnCancel_sbd, EventArgs.Empty)
+    End Sub
+
+    ' 收入管理-報廢桶-月價格設定-修改
+    Private Sub BtnEdit_sb_Click(sender As Object, e As EventArgs) Handles BtnEdit_sb.Click
+        _scrapBarrel.Update()
+    End Sub
+
+    ' 收入管理-報廢桶-月價格設定-刪除
+    Private Sub btnDelete_sb_Click(sender As Object, e As EventArgs) Handles btnDelete_sb.Click
+        _scrapBarrel.Delete()
+    End Sub
+
+    ' 收入管理-報廢桶-月價格設定-列印
+    Private Sub btnPrint_sb_Click(sender As Object, e As EventArgs) Handles btnPrint_sb.Click
+        Dim sbId = dgvSB.SelectedRows(0).Cells(0).Value.ToString()
+        _scrapBarrel.Print(sbId)
+    End Sub
+
+    Private Sub IScrapBarrelDetailView_ClearInput() Implements IScrapBarrelDetailView.ClearInput
+        ClearControls(grpSBD)
+    End Sub
+
+    Private Sub IScrapBarrelDetailView_ShowList(data As List(Of ScrapBarrelDetailVM)) Implements IScrapBarrelDetailView.ShowList
+        dgvSBD.DataSource = data
+    End Sub
+
+    Private Function IScrapBarrelDetailView_GetInput() As scrap_barrel_detail Implements IScrapBarrelDetailView.GetInput
+        If String.IsNullOrEmpty(txtCusId_sbd.Text) Then Throw New Exception("請選擇用戶")
+
+        Return New scrap_barrel_detail With {
+            .sbd_cus_Id = txtCusId_sbd.Text,
+            .sbd_Qty50 = If(String.IsNullOrEmpty(txtQty50_sbd.Text), 0, CInt(txtQty50_sbd.Text)),
+            .sbd_Qty20 = If(String.IsNullOrEmpty(txtQty20_sbd.Text), 0, CInt(txtQty20_sbd.Text)),
+            .sbd_Qty16 = If(String.IsNullOrEmpty(txtQty16_sbd.Text), 0, CInt(txtQty16_sbd.Text)),
+            .sbd_Qty10 = If(String.IsNullOrEmpty(txtQty10_sbd.Text), 0, CInt(txtQty10_sbd.Text)),
+            .sbd_Qty4 = If(String.IsNullOrEmpty(txtQty4_sbd.Text), 0, CInt(txtQty4_sbd.Text)),
+            .sbd_sb_Id = txtSBId.Text
+        }
+    End Function
+
+    Private Sub IScrapBarrelDetailView_ShowDetail(data As scrap_barrel_detail) Implements IScrapBarrelDetailView.ShowDetail
+        txtCusId_sbd.Text = data.sbd_cus_Id
+        txtCusCode_sbd.Text = data.customer.cus_code
+        txtCusName_sbd.Text = data.customer.cus_name
+        txtQty50_sbd.Text = data.sbd_Qty50
+        txtQty20_sbd.Text = data.sbd_Qty20
+        txtQty16_sbd.Text = data.sbd_Qty16
+        txtQty10_sbd.Text = data.sbd_Qty10
+        txtQty4_sbd.Text = data.sbd_Qty4
+    End Sub
+
+    ' 收入管理-報廢桶-客戶設定-取消
+    Private Sub btnCancel_sbd_Click(sender As Object, e As EventArgs) Handles btnCancel_sbd.Click
+        SetButtonState(sender, True)
+        _scrapBarrelDetail.Reset()
+        dgvSBD.DataSource = Nothing
+
+        Dim sbId = txtSBId.Text
+        If Not String.IsNullOrEmpty(sbId) Then
+            _scrapBarrelDetail.LoadList(sbId)
+        End If
+    End Sub
+
+    ' 收入管理-報廢桶-客戶設定-新增
+    Private Sub btnCreate_sbd_Click(sender As Object, e As EventArgs) Handles btnCreate_sbd.Click
+        _scrapBarrelDetail.Add()
+        _scrapBarrelDetail.LoadList(txtSBId.Text)
+    End Sub
+
+    ' 收入管理-報廢桶-客戶設定-dgv
+    Private Sub dgvSBD_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvSBD.CellMouseClick
+        Dim ctrl As DataGridView = sender
+
+        If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
+
+        SetButtonState(ctrl, False)
+
+        Dim id = ctrl.SelectedRows(0).Cells(0).Value
+        _scrapBarrelDetail.LoadDetail(id)
+    End Sub
+
+    ' 收入管理-報廢桶-客戶設定-修改
+    Private Sub btnEdit_sbd_Click(sender As Object, e As EventArgs) Handles btnEdit_sbd.Click
+        _scrapBarrelDetail.Update()
+        _scrapBarrelDetail.LoadList(txtSBId.Text)
+    End Sub
+
+    ' 收入管理-報廢桶-客戶設定-刪除
+    Private Sub btnDelete_sbd_Click(sender As Object, e As EventArgs) Handles btnDelete_sbd.Click
+        _scrapBarrelDetail.Delete()
+        _scrapBarrelDetail.LoadList(txtSBId.Text)
+    End Sub
+
+    ' 收入管理-報廢桶-客戶設定-搜尋客戶
+    Private Sub btnSearchCus_sbd_Click(sender As Object, e As EventArgs) Handles btnSearchCus_sbd.Click
+        Using searchForm As New frmQueryCustomer
+            If searchForm.ShowDialog = DialogResult.OK Then
+                txtCusId_sbd.Text = searchForm.CusId
+                txtCusCode_sbd.Text = searchForm.CusCode
+                txtCusName_sbd.Text = searchForm.CusName
+            End If
+        End Using
+    End Sub
+
+    ' 收入管理-報廢桶-客戶設定-客戶代號
+    Private Sub txtCusCode_sbd_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCusCode_sbd.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            Dim cus = _scrapBarrelDetail.GetCusByCusCode(txtCusCode_sbd.Text)
+            If cus IsNot Nothing Then
+                txtCusId_sbd.Text = cus.cus_id
+                txtCusCode_sbd.Text = cus.cus_code
+                txtCusName_sbd.Text = cus.cus_name
+            Else
+                MsgBox("找不到客戶")
+            End If
         End If
     End Sub
 End Class

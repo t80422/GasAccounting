@@ -56,5 +56,7 @@ Partial Public Class customer
     Public Overridable Property invoices As ICollection(Of invoice) = New HashSet(Of invoice)
     Public Overridable Property monthly_account As ICollection(Of monthly_account) = New HashSet(Of monthly_account)
     Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
+    Public Overridable Property inspections As ICollection(Of inspection) = New HashSet(Of inspection)
+    Public Overridable Property scrap_barrel_detail As ICollection(Of scrap_barrel_detail) = New HashSet(Of scrap_barrel_detail)
 
 End Class

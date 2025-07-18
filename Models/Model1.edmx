@@ -208,6 +208,44 @@
           <Property Name="gmb_SaleTotal" Type="int" Nullable="false" />
           <Property Name="gmb_ClosingBalance" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="inspection">
+          <Key>
+            <PropertyRef Name="in_Id" />
+          </Key>
+          <Property Name="in_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="in_Month" Type="date" />
+          <Property Name="in_cus_Id" Type="int" />
+          <Property Name="in_Qty50" Type="int" />
+          <Property Name="in_Price50" Type="double" />
+          <Property Name="in_Amount50" Type="double" />
+          <Property Name="in_Qty20" Type="int" />
+          <Property Name="in_Price20" Type="double" />
+          <Property Name="in_Amount20" Type="double" />
+          <Property Name="in_Qty16" Type="int" />
+          <Property Name="in_Price16" Type="double" />
+          <Property Name="in_Amount16" Type="double" />
+          <Property Name="in_Qty10" Type="int" />
+          <Property Name="in_Price10" Type="double" />
+          <Property Name="in_Amount10" Type="double" />
+          <Property Name="in_Qty4" Type="int" />
+          <Property Name="in_Price4" Type="double" />
+          <Property Name="in_Amount4" Type="double" />
+          <Property Name="in_QtySwitch" Type="int" />
+          <Property Name="in_PriceSwitch" Type="double" />
+          <Property Name="in_AmountSwitch" Type="double" />
+          <Property Name="in_QtyFreight" Type="int" />
+          <Property Name="in_PriceFreight" Type="double" />
+          <Property Name="in_AmountFreight" Type="double" />
+          <Property Name="in_QtyRustProof" Type="int" />
+          <Property Name="in_PriceRustProof" Type="double" />
+          <Property Name="in_AmountRustProof" Type="double" />
+          <Property Name="in_QtySpraying" Type="int" />
+          <Property Name="in_PriceSpraying" Type="int" />
+          <Property Name="in_AmountSpraying" Type="int" />
+          <Property Name="in_QtyTotal" Type="int" />
+          <Property Name="in_PriceTotal" Type="double" />
+          <Property Name="in_AmountTotal" Type="double" />
+        </EntityType>
         <EntityType Name="invoice">
           <Key>
             <PropertyRef Name="i_Id" />
@@ -495,6 +533,36 @@
           <Property Name="r_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="r_name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="scrap_barrel">
+          <Key>
+            <PropertyRef Name="sb_Id" />
+          </Key>
+          <Property Name="sb_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sb_Month" Type="date" />
+          <Property Name="sb_Acquisitions50" Type="int" />
+          <Property Name="sb_Buy50" Type="int" />
+          <Property Name="sb_Acquisitions20" Type="int" />
+          <Property Name="sb_Buy20" Type="int" />
+          <Property Name="sb_Acquisitions16" Type="int" />
+          <Property Name="sb_Buy16" Type="int" />
+          <Property Name="sb_Acquisitions10" Type="int" />
+          <Property Name="sb_Buy10" Type="int" />
+          <Property Name="sb_Acquisitions4" Type="int" />
+          <Property Name="sb_Buy4" Type="int" />
+        </EntityType>
+        <EntityType Name="scrap_barrel_detail">
+          <Key>
+            <PropertyRef Name="sbd_Id" />
+          </Key>
+          <Property Name="sbd_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sbd_cus_Id" Type="int" />
+          <Property Name="sbd_Qty50" Type="int" />
+          <Property Name="sbd_Qty20" Type="int" />
+          <Property Name="sbd_Qty16" Type="int" />
+          <Property Name="sbd_Qty10" Type="int" />
+          <Property Name="sbd_Qty4" Type="int" />
+          <Property Name="sbd_sb_Id" Type="int" />
+        </EntityType>
         <EntityType Name="stock">
           <Key>
             <PropertyRef Name="stk_Id" />
@@ -708,6 +776,18 @@
             </Principal>
             <Dependent Role="gas_monthly_balances">
               <PropertyRef Name="gmb_comp_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="inspection_ibfk_1">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="inspection" Type="Self.inspection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="cus_id" />
+            </Principal>
+            <Dependent Role="inspection">
+              <PropertyRef Name="in_cus_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -953,6 +1033,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="scrap_barrel_detail_ibfk_1">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="scrap_barrel_detail" Type="Self.scrap_barrel_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="cus_id" />
+            </Principal>
+            <Dependent Role="scrap_barrel_detail">
+              <PropertyRef Name="sbd_cus_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="scrap_barrel_detail_ibfk_2">
+          <End Role="scrap_barrel" Type="Self.scrap_barrel" Multiplicity="0..1" />
+          <End Role="scrap_barrel_detail" Type="Self.scrap_barrel_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="scrap_barrel">
+              <PropertyRef Name="sb_Id" />
+            </Principal>
+            <Dependent Role="scrap_barrel_detail">
+              <PropertyRef Name="sbd_sb_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="write_off_ibfk_1">
           <End Role="collection" Type="Self.collection" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -995,6 +1099,7 @@
           <EntitySet Name="employee" EntityType="Self.employee" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="gas_barrel" EntityType="Self.gas_barrel" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="gas_monthly_balances" EntityType="Self.gas_monthly_balances" Schema="gas_accounting_system" store:Type="Tables" />
+          <EntitySet Name="inspection" EntityType="Self.inspection" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="invoice" EntityType="Self.invoice" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="invoice_split" EntityType="Self.invoice_split" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="manufacturer" EntityType="Self.manufacturer" Schema="gas_accounting_system" store:Type="Tables" />
@@ -1008,6 +1113,8 @@
           <EntitySet Name="purchase_barrel" EntityType="Self.purchase_barrel" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="rolepermission" EntityType="Self.rolepermission" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="roles" EntityType="Self.roles" Schema="gas_accounting_system" store:Type="Tables" />
+          <EntitySet Name="scrap_barrel" EntityType="Self.scrap_barrel" Schema="gas_accounting_system" store:Type="Tables" />
+          <EntitySet Name="scrap_barrel_detail" EntityType="Self.scrap_barrel_detail" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="stock" EntityType="Self.stock" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="subjects" EntityType="Self.subjects" Schema="gas_accounting_system" store:Type="Tables" />
           <EntitySet Name="write_off" EntityType="Self.write_off" Schema="gas_accounting_system" store:Type="Tables" />
@@ -1070,6 +1177,10 @@
           <AssociationSet Name="gas_monthly_balances_ibfk_1" Association="Self.gas_monthly_balances_ibfk_1">
             <End Role="company" EntitySet="company" />
             <End Role="gas_monthly_balances" EntitySet="gas_monthly_balances" />
+          </AssociationSet>
+          <AssociationSet Name="inspection_ibfk_1" Association="Self.inspection_ibfk_1">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="inspection" EntitySet="inspection" />
           </AssociationSet>
           <AssociationSet Name="invoice_ibfk_1" Association="Self.invoice_ibfk_1">
             <End Role="customer" EntitySet="customer" />
@@ -1150,6 +1261,14 @@
           <AssociationSet Name="rolepermission_ibfk_2" Association="Self.rolepermission_ibfk_2">
             <End Role="roles" EntitySet="roles" />
             <End Role="rolepermission" EntitySet="rolepermission" />
+          </AssociationSet>
+          <AssociationSet Name="scrap_barrel_detail_ibfk_1" Association="Self.scrap_barrel_detail_ibfk_1">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="scrap_barrel_detail" EntitySet="scrap_barrel_detail" />
+          </AssociationSet>
+          <AssociationSet Name="scrap_barrel_detail_ibfk_2" Association="Self.scrap_barrel_detail_ibfk_2">
+            <End Role="scrap_barrel" EntitySet="scrap_barrel" />
+            <End Role="scrap_barrel_detail" EntitySet="scrap_barrel_detail" />
           </AssociationSet>
           <AssociationSet Name="write_off_ibfk_1" Association="Self.write_off_ibfk_1">
             <End Role="collection" EntitySet="collection" />
@@ -1341,6 +1460,21 @@
           <AssociationSet Name="write_off_ibfk_2" Association="gas_accounting_systemModel.write_off_ibfk_2">
             <End Role="monthly_account" EntitySet="monthly_account" />
             <End Role="write_off" EntitySet="write_off" />
+          </AssociationSet>
+          <EntitySet Name="inspections" EntityType="gas_accounting_systemModel.inspection" />
+          <AssociationSet Name="inspection_ibfk_1" Association="gas_accounting_systemModel.inspection_ibfk_1">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="inspection" EntitySet="inspections" />
+          </AssociationSet>
+          <EntitySet Name="scrap_barrel" EntityType="gas_accounting_systemModel.scrap_barrel" />
+          <EntitySet Name="scrap_barrel_detail" EntityType="gas_accounting_systemModel.scrap_barrel_detail" />
+          <AssociationSet Name="scrap_barrel_detail_ibfk_1" Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_1">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="scrap_barrel_detail" EntitySet="scrap_barrel_detail" />
+          </AssociationSet>
+          <AssociationSet Name="scrap_barrel_detail_ibfk_2" Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2">
+            <End Role="scrap_barrel" EntitySet="scrap_barrel" />
+            <End Role="scrap_barrel_detail" EntitySet="scrap_barrel_detail" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="accounting_entry">
@@ -1543,6 +1677,8 @@
           <NavigationProperty Name="invoices" Relationship="gas_accounting_systemModel.invoice_ibfk_1" FromRole="customer" ToRole="invoice" />
           <NavigationProperty Name="monthly_account" Relationship="gas_accounting_systemModel.monthly_account_ibfk_1" FromRole="customer" ToRole="monthly_account" />
           <NavigationProperty Name="orders" Relationship="gas_accounting_systemModel.orders_ibfk_5" FromRole="customer" ToRole="order" />
+          <NavigationProperty Name="inspections" Relationship="gas_accounting_systemModel.inspection_ibfk_1" FromRole="customer" ToRole="inspection" />
+          <NavigationProperty Name="scrap_barrel_detail" Relationship="gas_accounting_systemModel.scrap_barrel_detail_ibfk_1" FromRole="customer" ToRole="scrap_barrel_detail" />
         </EntityType>
         <EntityType Name="employee">
           <Key>
@@ -2393,6 +2529,114 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="inspection">
+          <Key>
+            <PropertyRef Name="in_Id" />
+          </Key>
+          <Property Name="in_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="in_Month" Type="DateTime" />
+          <Property Name="in_cus_Id" Type="Int32" />
+          <Property Name="in_Qty50" Type="Int32" />
+          <Property Name="in_Price50" Type="Double" />
+          <Property Name="in_Amount50" Type="Double" />
+          <Property Name="in_Qty20" Type="Int32" />
+          <Property Name="in_Price20" Type="Double" />
+          <Property Name="in_Amount20" Type="Double" />
+          <Property Name="in_Qty16" Type="Int32" />
+          <Property Name="in_Price16" Type="Double" />
+          <Property Name="in_Amount16" Type="Double" />
+          <Property Name="in_Qty10" Type="Int32" />
+          <Property Name="in_Price10" Type="Double" />
+          <Property Name="in_Amount10" Type="Double" />
+          <Property Name="in_Qty4" Type="Int32" />
+          <Property Name="in_Price4" Type="Double" />
+          <Property Name="in_Amount4" Type="Double" />
+          <Property Name="in_QtySwitch" Type="Int32" />
+          <Property Name="in_PriceSwitch" Type="Double" />
+          <Property Name="in_AmountSwitch" Type="Double" />
+          <Property Name="in_QtyFreight" Type="Int32" />
+          <Property Name="in_PriceFreight" Type="Double" />
+          <Property Name="in_AmountFreight" Type="Double" />
+          <Property Name="in_QtyRustProof" Type="Int32" />
+          <Property Name="in_PriceRustProof" Type="Double" />
+          <Property Name="in_AmountRustProof" Type="Double" />
+          <Property Name="in_QtySpraying" Type="Int32" />
+          <Property Name="in_PriceSpraying" Type="Int32" />
+          <Property Name="in_AmountSpraying" Type="Int32" />
+          <Property Name="in_QtyTotal" Type="Int32" />
+          <Property Name="in_PriceTotal" Type="Double" />
+          <Property Name="in_AmountTotal" Type="Double" />
+          <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.inspection_ibfk_1" FromRole="inspection" ToRole="customer" />
+        </EntityType>
+        <Association Name="inspection_ibfk_1">
+          <End Type="gas_accounting_systemModel.customer" Role="customer" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.inspection" Role="inspection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="cus_id" />
+            </Principal>
+            <Dependent Role="inspection">
+              <PropertyRef Name="in_cus_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="scrap_barrel">
+          <Key>
+            <PropertyRef Name="sb_Id" />
+          </Key>
+          <Property Name="sb_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sb_Month" Type="DateTime" />
+          <Property Name="sb_Acquisitions50" Type="Int32" />
+          <Property Name="sb_Buy50" Type="Int32" />
+          <Property Name="sb_Acquisitions20" Type="Int32" />
+          <Property Name="sb_Buy20" Type="Int32" />
+          <Property Name="sb_Acquisitions16" Type="Int32" />
+          <Property Name="sb_Buy16" Type="Int32" />
+          <Property Name="sb_Acquisitions10" Type="Int32" />
+          <Property Name="sb_Buy10" Type="Int32" />
+          <Property Name="sb_Acquisitions4" Type="Int32" />
+          <Property Name="sb_Buy4" Type="Int32" />
+          <NavigationProperty Name="scrap_barrel_detail" Relationship="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2" FromRole="scrap_barrel" ToRole="scrap_barrel_detail" />
+        </EntityType>
+        <EntityType Name="scrap_barrel_detail">
+          <Key>
+            <PropertyRef Name="sbd_Id" />
+          </Key>
+          <Property Name="sbd_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sbd_cus_Id" Type="Int32" />
+          <Property Name="sbd_Qty50" Type="Int32" />
+          <Property Name="sbd_Qty20" Type="Int32" />
+          <Property Name="sbd_Qty16" Type="Int32" />
+          <Property Name="sbd_Qty10" Type="Int32" />
+          <Property Name="sbd_Qty4" Type="Int32" />
+          <Property Name="sbd_sb_Id" Type="Int32" />
+          <NavigationProperty Name="customer" Relationship="gas_accounting_systemModel.scrap_barrel_detail_ibfk_1" FromRole="scrap_barrel_detail" ToRole="customer" />
+          <NavigationProperty Name="scrap_barrel" Relationship="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2" FromRole="scrap_barrel_detail" ToRole="scrap_barrel" />
+        </EntityType>
+        <Association Name="scrap_barrel_detail_ibfk_1">
+          <End Type="gas_accounting_systemModel.customer" Role="customer" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.scrap_barrel_detail" Role="scrap_barrel_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="cus_id" />
+            </Principal>
+            <Dependent Role="scrap_barrel_detail">
+              <PropertyRef Name="sbd_cus_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="scrap_barrel_detail_ibfk_2">
+          <End Type="gas_accounting_systemModel.scrap_barrel" Role="scrap_barrel" Multiplicity="0..1" />
+          <End Type="gas_accounting_systemModel.scrap_barrel_detail" Role="scrap_barrel_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="scrap_barrel">
+              <PropertyRef Name="sb_Id" />
+            </Principal>
+            <Dependent Role="scrap_barrel_detail">
+              <PropertyRef Name="sbd_sb_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2943,6 +3187,77 @@
                 <ScalarProperty Name="wo_amount" ColumnName="wo_amount" />
                 <ScalarProperty Name="wo_col_id" ColumnName="wo_col_id" />
                 <ScalarProperty Name="wo_id" ColumnName="wo_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="inspections">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.inspection">
+              <MappingFragment StoreEntitySet="inspection">
+                <ScalarProperty Name="in_AmountTotal" ColumnName="in_AmountTotal" />
+                <ScalarProperty Name="in_PriceTotal" ColumnName="in_PriceTotal" />
+                <ScalarProperty Name="in_QtyTotal" ColumnName="in_QtyTotal" />
+                <ScalarProperty Name="in_AmountSpraying" ColumnName="in_AmountSpraying" />
+                <ScalarProperty Name="in_PriceSpraying" ColumnName="in_PriceSpraying" />
+                <ScalarProperty Name="in_QtySpraying" ColumnName="in_QtySpraying" />
+                <ScalarProperty Name="in_AmountRustProof" ColumnName="in_AmountRustProof" />
+                <ScalarProperty Name="in_PriceRustProof" ColumnName="in_PriceRustProof" />
+                <ScalarProperty Name="in_QtyRustProof" ColumnName="in_QtyRustProof" />
+                <ScalarProperty Name="in_AmountFreight" ColumnName="in_AmountFreight" />
+                <ScalarProperty Name="in_PriceFreight" ColumnName="in_PriceFreight" />
+                <ScalarProperty Name="in_QtyFreight" ColumnName="in_QtyFreight" />
+                <ScalarProperty Name="in_AmountSwitch" ColumnName="in_AmountSwitch" />
+                <ScalarProperty Name="in_PriceSwitch" ColumnName="in_PriceSwitch" />
+                <ScalarProperty Name="in_QtySwitch" ColumnName="in_QtySwitch" />
+                <ScalarProperty Name="in_Amount4" ColumnName="in_Amount4" />
+                <ScalarProperty Name="in_Price4" ColumnName="in_Price4" />
+                <ScalarProperty Name="in_Qty4" ColumnName="in_Qty4" />
+                <ScalarProperty Name="in_Amount10" ColumnName="in_Amount10" />
+                <ScalarProperty Name="in_Price10" ColumnName="in_Price10" />
+                <ScalarProperty Name="in_Qty10" ColumnName="in_Qty10" />
+                <ScalarProperty Name="in_Amount16" ColumnName="in_Amount16" />
+                <ScalarProperty Name="in_Price16" ColumnName="in_Price16" />
+                <ScalarProperty Name="in_Qty16" ColumnName="in_Qty16" />
+                <ScalarProperty Name="in_Amount20" ColumnName="in_Amount20" />
+                <ScalarProperty Name="in_Price20" ColumnName="in_Price20" />
+                <ScalarProperty Name="in_Qty20" ColumnName="in_Qty20" />
+                <ScalarProperty Name="in_Amount50" ColumnName="in_Amount50" />
+                <ScalarProperty Name="in_Price50" ColumnName="in_Price50" />
+                <ScalarProperty Name="in_Qty50" ColumnName="in_Qty50" />
+                <ScalarProperty Name="in_cus_Id" ColumnName="in_cus_Id" />
+                <ScalarProperty Name="in_Month" ColumnName="in_Month" />
+                <ScalarProperty Name="in_Id" ColumnName="in_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="scrap_barrel">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.scrap_barrel">
+              <MappingFragment StoreEntitySet="scrap_barrel">
+                <ScalarProperty Name="sb_Buy4" ColumnName="sb_Buy4" />
+                <ScalarProperty Name="sb_Acquisitions4" ColumnName="sb_Acquisitions4" />
+                <ScalarProperty Name="sb_Buy10" ColumnName="sb_Buy10" />
+                <ScalarProperty Name="sb_Acquisitions10" ColumnName="sb_Acquisitions10" />
+                <ScalarProperty Name="sb_Buy16" ColumnName="sb_Buy16" />
+                <ScalarProperty Name="sb_Acquisitions16" ColumnName="sb_Acquisitions16" />
+                <ScalarProperty Name="sb_Buy20" ColumnName="sb_Buy20" />
+                <ScalarProperty Name="sb_Acquisitions20" ColumnName="sb_Acquisitions20" />
+                <ScalarProperty Name="sb_Buy50" ColumnName="sb_Buy50" />
+                <ScalarProperty Name="sb_Acquisitions50" ColumnName="sb_Acquisitions50" />
+                <ScalarProperty Name="sb_Month" ColumnName="sb_Month" />
+                <ScalarProperty Name="sb_Id" ColumnName="sb_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="scrap_barrel_detail">
+            <EntityTypeMapping TypeName="gas_accounting_systemModel.scrap_barrel_detail">
+              <MappingFragment StoreEntitySet="scrap_barrel_detail">
+                <ScalarProperty Name="sbd_sb_Id" ColumnName="sbd_sb_Id" />
+                <ScalarProperty Name="sbd_Qty4" ColumnName="sbd_Qty4" />
+                <ScalarProperty Name="sbd_Qty10" ColumnName="sbd_Qty10" />
+                <ScalarProperty Name="sbd_Qty16" ColumnName="sbd_Qty16" />
+                <ScalarProperty Name="sbd_Qty20" ColumnName="sbd_Qty20" />
+                <ScalarProperty Name="sbd_Qty50" ColumnName="sbd_Qty50" />
+                <ScalarProperty Name="sbd_cus_Id" ColumnName="sbd_cus_Id" />
+                <ScalarProperty Name="sbd_Id" ColumnName="sbd_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

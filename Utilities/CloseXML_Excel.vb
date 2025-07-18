@@ -168,6 +168,54 @@ Public Class CloseXML_Excel
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 在指定位置下方插入多列
+    ''' </summary>
+    ''' <param name="rowIndex">要插入新列的位置,從1開始</param>
+    ''' <param name="count">要插入的列數</param>
+    Public Sub InsertRowsBelow(rowIndex As Integer, count As Integer)
+        Try
+            Worksheet.Row(rowIndex).InsertRowsBelow(count)
+        Catch ex As Exception
+            Throw New Exception($"在第 {rowIndex} 行下方插入 {count} 列時發生錯誤: {ex.Message}", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 複製指定範圍到目標位置（包含格式、合併儲存格等）
+    ''' </summary>
+    ''' <param name="sourceRange">來源範圍，例如 "A5:G7"</param>
+    ''' <param name="targetStartCell">目標起始位置，例如 "A8"</param>
+    Public Sub CopyRange(sourceRange As String, targetStartCell As String)
+        Try
+            Dim source = Worksheet.Range(sourceRange)
+            Dim target = Worksheet.Range(targetStartCell)
+            source.CopyTo(target)
+        Catch ex As Exception
+            Throw New Exception($"複製範圍 {sourceRange} 到 {targetStartCell} 時發生錯誤: {ex.Message}", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 複製指定行範圍到目標位置並插入新行
+    ''' </summary>
+    ''' <param name="startRow">來源起始行</param>
+    ''' <param name="endRow">來源結束行</param>
+    ''' <param name="targetRow">目標起始行</param>
+    Public Sub CopyAndInsertRows(startRow As Integer, endRow As Integer, targetRow As Integer)
+        Try
+            Dim rowCount = endRow - startRow + 1
+            ' 先插入足夠的行
+            Worksheet.Row(targetRow).InsertRowsBelow(rowCount)
+            ' 然後複製格式和內容
+            Dim sourceRange = Worksheet.Range(startRow, 1, endRow, Worksheet.ColumnsUsed().Count())
+            Dim targetRange = Worksheet.Range(targetRow + 1, 1, targetRow + rowCount, Worksheet.ColumnsUsed().Count())
+            sourceRange.CopyTo(targetRange)
+        Catch ex As Exception
+            Throw New Exception($"複製並插入行 {startRow}:{endRow} 到第 {targetRow} 行時發生錯誤: {ex.Message}", ex)
+        End Try
+    End Sub
+
     Public Sub Print(filePath As String, printerName As String, Optional repeatFromRow As Integer = 0, Optional repeatToRow As Integer = 0)
         With Worksheet.PageSetup
             If repeatFromRow > 0 AndAlso repeatToRow > 0 Then
@@ -236,6 +284,8 @@ Public Class CloseXML_Excel
             Return Nothing
         End Using
     End Function
+
+    
     Private Sub SetCellFormat(cell As IXLCell, formatOptions As CellFormatOptions)
         cell.Style.Font.FontName = formatOptions.FontName
         cell.Style.Font.FontSize = formatOptions.FontSize

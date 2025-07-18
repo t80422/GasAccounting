@@ -528,6 +528,67 @@ Partial Class frmMain
         Me.Label190 = New System.Windows.Forms.Label()
         Me.Label191 = New System.Windows.Forms.Label()
         Me.Label192 = New System.Windows.Forms.Label()
+        Me.tpInspection = New System.Windows.Forms.TabPage()
+        Me.txtCusId_ins = New System.Windows.Forms.TextBox()
+        Me.dgvIns = New System.Windows.Forms.DataGridView()
+        Me.btnPrint_ins = New System.Windows.Forms.Button()
+        Me.btnSearch_ins = New System.Windows.Forms.Button()
+        Me.btnCancel_ins = New System.Windows.Forms.Button()
+        Me.btnDelete_ins = New System.Windows.Forms.Button()
+        Me.btnEdit_ins = New System.Windows.Forms.Button()
+        Me.btnCreate_ins = New System.Windows.Forms.Button()
+        Me.grpIns = New System.Windows.Forms.GroupBox()
+        Me.txtAmount20 = New System.Windows.Forms.TextBox()
+        Me.txtAmount50 = New System.Windows.Forms.TextBox()
+        Me.txtPriceTotal = New System.Windows.Forms.TextBox()
+        Me.Label265 = New System.Windows.Forms.Label()
+        Me.txtAmountTotal = New System.Windows.Forms.TextBox()
+        Me.txtAmountSpraying = New System.Windows.Forms.TextBox()
+        Me.txtAmountRustProof = New System.Windows.Forms.TextBox()
+        Me.txtAmountFreight = New System.Windows.Forms.TextBox()
+        Me.txtAmountSwitch = New System.Windows.Forms.TextBox()
+        Me.txtAmount4 = New System.Windows.Forms.TextBox()
+        Me.txtAmount10 = New System.Windows.Forms.TextBox()
+        Me.txtAmount16 = New System.Windows.Forms.TextBox()
+        Me.txtQtyTotal = New System.Windows.Forms.TextBox()
+        Me.txtPriceSpraying = New System.Windows.Forms.TextBox()
+        Me.txtPriceFreight = New System.Windows.Forms.TextBox()
+        Me.txtPrice10 = New System.Windows.Forms.TextBox()
+        Me.txtPrice16 = New System.Windows.Forms.TextBox()
+        Me.txtQtyFreight = New System.Windows.Forms.TextBox()
+        Me.txtQtySwitch = New System.Windows.Forms.TextBox()
+        Me.txtQty4 = New System.Windows.Forms.TextBox()
+        Me.txtQty10 = New System.Windows.Forms.TextBox()
+        Me.txtQty16 = New System.Windows.Forms.TextBox()
+        Me.txtPriceRustProof = New System.Windows.Forms.TextBox()
+        Me.txtPriceSwitch = New System.Windows.Forms.TextBox()
+        Me.txtPrice4 = New System.Windows.Forms.TextBox()
+        Me.txtPrice20 = New System.Windows.Forms.TextBox()
+        Me.txtPrice50 = New System.Windows.Forms.TextBox()
+        Me.txtQtySpraying = New System.Windows.Forms.TextBox()
+        Me.txtQtyRustProof = New System.Windows.Forms.TextBox()
+        Me.txtQty20 = New System.Windows.Forms.TextBox()
+        Me.txtQty50 = New System.Windows.Forms.TextBox()
+        Me.Label263 = New System.Windows.Forms.Label()
+        Me.Label262 = New System.Windows.Forms.Label()
+        Me.Label261 = New System.Windows.Forms.Label()
+        Me.Label260 = New System.Windows.Forms.Label()
+        Me.Label259 = New System.Windows.Forms.Label()
+        Me.Label258 = New System.Windows.Forms.Label()
+        Me.Label257 = New System.Windows.Forms.Label()
+        Me.Label256 = New System.Windows.Forms.Label()
+        Me.Label255 = New System.Windows.Forms.Label()
+        Me.Label252 = New System.Windows.Forms.Label()
+        Me.Label249 = New System.Windows.Forms.Label()
+        Me.Label162 = New System.Windows.Forms.Label()
+        Me.Label161 = New System.Windows.Forms.Label()
+        Me.txtCusCode_ins = New System.Windows.Forms.TextBox()
+        Me.txtCusName_ins = New System.Windows.Forms.TextBox()
+        Me.btnCus_ins = New System.Windows.Forms.Button()
+        Me.Label102 = New System.Windows.Forms.Label()
+        Me.Label116 = New System.Windows.Forms.Label()
+        Me.dtpIns = New System.Windows.Forms.DateTimePicker()
+        Me.Label94 = New System.Windows.Forms.Label()
         Me.tpOrder = New System.Windows.Forms.TabPage()
         Me.txtUnpaid = New System.Windows.Forms.TextBox()
         Me.Label137 = New System.Windows.Forms.Label()
@@ -808,6 +869,72 @@ Partial Class frmMain
         Me.Label110 = New System.Windows.Forms.Label()
         Me.Label112 = New System.Windows.Forms.Label()
         Me.Label109 = New System.Windows.Forms.Label()
+        Me.tpSB = New System.Windows.Forms.TabPage()
+        Me.grpSBD = New System.Windows.Forms.GroupBox()
+        Me.dgvSBD = New System.Windows.Forms.DataGridView()
+        Me.btnCreate_sbd = New System.Windows.Forms.Button()
+        Me.btnEdit_sbd = New System.Windows.Forms.Button()
+        Me.btnDelete_sbd = New System.Windows.Forms.Button()
+        Me.btnCancel_sbd = New System.Windows.Forms.Button()
+        Me.grpPrice_sbd = New System.Windows.Forms.GroupBox()
+        Me.txtAcquisitions10_sbd = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions16_sbd = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions4_sbd = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions20_sbd = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions50_sbd = New System.Windows.Forms.TextBox()
+        Me.Label328 = New System.Windows.Forms.Label()
+        Me.txtBuy10_sbd = New System.Windows.Forms.TextBox()
+        Me.txtBuy16_sbd = New System.Windows.Forms.TextBox()
+        Me.txtQty4_sbd = New System.Windows.Forms.TextBox()
+        Me.txtQty10_sbd = New System.Windows.Forms.TextBox()
+        Me.txtQty16_sbd = New System.Windows.Forms.TextBox()
+        Me.txtBuy4_sbd = New System.Windows.Forms.TextBox()
+        Me.txtBuy20_sbd = New System.Windows.Forms.TextBox()
+        Me.txtBuy50_sbd = New System.Windows.Forms.TextBox()
+        Me.txtQty20_sbd = New System.Windows.Forms.TextBox()
+        Me.txtQty50_sbd = New System.Windows.Forms.TextBox()
+        Me.Label275 = New System.Windows.Forms.Label()
+        Me.Label276 = New System.Windows.Forms.Label()
+        Me.Label279 = New System.Windows.Forms.Label()
+        Me.Label301 = New System.Windows.Forms.Label()
+        Me.Label302 = New System.Windows.Forms.Label()
+        Me.Label319 = New System.Windows.Forms.Label()
+        Me.Label326 = New System.Windows.Forms.Label()
+        Me.Label327 = New System.Windows.Forms.Label()
+        Me.Label324 = New System.Windows.Forms.Label()
+        Me.Label323 = New System.Windows.Forms.Label()
+        Me.txtCusId_sbd = New System.Windows.Forms.TextBox()
+        Me.btnSearchCus_sbd = New System.Windows.Forms.Button()
+        Me.txtCusCode_sbd = New System.Windows.Forms.TextBox()
+        Me.txtCusName_sbd = New System.Windows.Forms.TextBox()
+        Me.grpSB = New System.Windows.Forms.GroupBox()
+        Me.Label325 = New System.Windows.Forms.Label()
+        Me.dtpSC = New System.Windows.Forms.DateTimePicker()
+        Me.grpPrice_sb = New System.Windows.Forms.GroupBox()
+        Me.txtBuy10 = New System.Windows.Forms.TextBox()
+        Me.txtBuy16 = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions4 = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions10 = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions16 = New System.Windows.Forms.TextBox()
+        Me.txtBuy4 = New System.Windows.Forms.TextBox()
+        Me.txtBuy20 = New System.Windows.Forms.TextBox()
+        Me.txtBuy50 = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions20 = New System.Windows.Forms.TextBox()
+        Me.txtAcquisitions50 = New System.Windows.Forms.TextBox()
+        Me.Label303 = New System.Windows.Forms.Label()
+        Me.Label315 = New System.Windows.Forms.Label()
+        Me.Label316 = New System.Windows.Forms.Label()
+        Me.Label317 = New System.Windows.Forms.Label()
+        Me.Label318 = New System.Windows.Forms.Label()
+        Me.Label320 = New System.Windows.Forms.Label()
+        Me.Label321 = New System.Windows.Forms.Label()
+        Me.Label322 = New System.Windows.Forms.Label()
+        Me.dgvSB = New System.Windows.Forms.DataGridView()
+        Me.btnCreate_sb = New System.Windows.Forms.Button()
+        Me.btnPrint_sb = New System.Windows.Forms.Button()
+        Me.BtnEdit_sb = New System.Windows.Forms.Button()
+        Me.btnDelete_sb = New System.Windows.Forms.Button()
+        Me.btnCancel_sb = New System.Windows.Forms.Button()
         Me.tpAccountingManage = New System.Windows.Forms.TabPage()
         Me.TabControl6 = New System.Windows.Forms.TabControl()
         Me.tpCheque = New System.Windows.Forms.TabPage()
@@ -1014,6 +1141,7 @@ Partial Class frmMain
         Me.Label132 = New System.Windows.Forms.Label()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.txtSBId = New System.Windows.Forms.TextBox()
         Me.TabControl1.SuspendLayout
         Me.tpBasic.SuspendLayout
         Me.tcBasicInfo.SuspendLayout
@@ -1065,6 +1193,9 @@ Partial Class frmMain
         CType(Me.dgvAmountDue, System.ComponentModel.ISupportInitialize).BeginInit
         Me.GroupBox1.SuspendLayout
         CType(Me.dgvPayment, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.tpInspection.SuspendLayout
+        CType(Me.dgvIns, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.grpIns.SuspendLayout
         Me.tpOrder.SuspendLayout
         Me.tcInOut.SuspendLayout
         Me.tpIn.SuspendLayout
@@ -1076,6 +1207,13 @@ Partial Class frmMain
         Me.TabControl5.SuspendLayout
         Me.tpCollection.SuspendLayout
         CType(Me.dgvCollection, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.tpSB.SuspendLayout
+        Me.grpSBD.SuspendLayout
+        CType(Me.dgvSBD, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.grpPrice_sbd.SuspendLayout
+        Me.grpSB.SuspendLayout
+        Me.grpPrice_sb.SuspendLayout
+        CType(Me.dgvSB, System.ComponentModel.ISupportInitialize).BeginInit
         Me.tpAccountingManage.SuspendLayout
         Me.TabControl6.SuspendLayout
         Me.tpCheque.SuspendLayout
@@ -6016,6 +6154,7 @@ Partial Class frmMain
         'TabControl3
         '
         Me.TabControl3.Controls.Add(Me.tpPayment)
+        Me.TabControl3.Controls.Add(Me.tpInspection)
         Me.TabControl3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl3.Location = New System.Drawing.Point(3, 3)
         Me.TabControl3.Name = "TabControl3"
@@ -6481,6 +6620,579 @@ Partial Class frmMain
         Me.Label192.Size = New System.Drawing.Size(95, 19)
         Me.Label192.TabIndex = 392
         Me.Label192.Text = "金    額"
+        '
+        'tpInspection
+        '
+        Me.tpInspection.Controls.Add(Me.txtCusId_ins)
+        Me.tpInspection.Controls.Add(Me.dgvIns)
+        Me.tpInspection.Controls.Add(Me.btnPrint_ins)
+        Me.tpInspection.Controls.Add(Me.btnSearch_ins)
+        Me.tpInspection.Controls.Add(Me.btnCancel_ins)
+        Me.tpInspection.Controls.Add(Me.btnDelete_ins)
+        Me.tpInspection.Controls.Add(Me.btnEdit_ins)
+        Me.tpInspection.Controls.Add(Me.btnCreate_ins)
+        Me.tpInspection.Controls.Add(Me.grpIns)
+        Me.tpInspection.Controls.Add(Me.txtCusCode_ins)
+        Me.tpInspection.Controls.Add(Me.txtCusName_ins)
+        Me.tpInspection.Controls.Add(Me.btnCus_ins)
+        Me.tpInspection.Controls.Add(Me.Label102)
+        Me.tpInspection.Controls.Add(Me.Label116)
+        Me.tpInspection.Controls.Add(Me.dtpIns)
+        Me.tpInspection.Controls.Add(Me.Label94)
+        Me.tpInspection.Location = New System.Drawing.Point(4, 29)
+        Me.tpInspection.Name = "tpInspection"
+        Me.tpInspection.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpInspection.Size = New System.Drawing.Size(1882, 949)
+        Me.tpInspection.TabIndex = 23
+        Me.tpInspection.Text = "檢驗費"
+        Me.tpInspection.UseVisualStyleBackColor = True
+        '
+        'txtCusId_ins
+        '
+        Me.txtCusId_ins.Location = New System.Drawing.Point(800, 60)
+        Me.txtCusId_ins.Name = "txtCusId_ins"
+        Me.txtCusId_ins.ReadOnly = True
+        Me.txtCusId_ins.Size = New System.Drawing.Size(165, 30)
+        Me.txtCusId_ins.TabIndex = 465
+        Me.txtCusId_ins.Tag = "cus_code"
+        Me.txtCusId_ins.Visible = False
+        '
+        'dgvIns
+        '
+        Me.dgvIns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvIns.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgvIns.Location = New System.Drawing.Point(3, 186)
+        Me.dgvIns.Name = "dgvIns"
+        Me.dgvIns.ReadOnly = True
+        Me.dgvIns.RowTemplate.Height = 24
+        Me.dgvIns.Size = New System.Drawing.Size(1876, 760)
+        Me.dgvIns.TabIndex = 464
+        '
+        'btnPrint_ins
+        '
+        Me.btnPrint_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnPrint_ins.Location = New System.Drawing.Point(630, 124)
+        Me.btnPrint_ins.Name = "btnPrint_ins"
+        Me.btnPrint_ins.Size = New System.Drawing.Size(140, 44)
+        Me.btnPrint_ins.TabIndex = 463
+        Me.btnPrint_ins.Text = "列   印"
+        Me.btnPrint_ins.UseVisualStyleBackColor = False
+        '
+        'btnSearch_ins
+        '
+        Me.btnSearch_ins.BackColor = System.Drawing.Color.Lime
+        Me.btnSearch_ins.Location = New System.Drawing.Point(786, 124)
+        Me.btnSearch_ins.Name = "btnSearch_ins"
+        Me.btnSearch_ins.Size = New System.Drawing.Size(140, 44)
+        Me.btnSearch_ins.TabIndex = 462
+        Me.btnSearch_ins.Text = "查  詢"
+        Me.btnSearch_ins.UseVisualStyleBackColor = False
+        '
+        'btnCancel_ins
+        '
+        Me.btnCancel_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancel_ins.Location = New System.Drawing.Point(474, 124)
+        Me.btnCancel_ins.Name = "btnCancel_ins"
+        Me.btnCancel_ins.Size = New System.Drawing.Size(140, 44)
+        Me.btnCancel_ins.TabIndex = 461
+        Me.btnCancel_ins.Text = "取  消"
+        Me.btnCancel_ins.UseVisualStyleBackColor = False
+        '
+        'btnDelete_ins
+        '
+        Me.btnDelete_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnDelete_ins.Location = New System.Drawing.Point(318, 124)
+        Me.btnDelete_ins.Name = "btnDelete_ins"
+        Me.btnDelete_ins.Size = New System.Drawing.Size(140, 44)
+        Me.btnDelete_ins.TabIndex = 460
+        Me.btnDelete_ins.Text = "刪  除"
+        Me.btnDelete_ins.UseVisualStyleBackColor = False
+        '
+        'btnEdit_ins
+        '
+        Me.btnEdit_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnEdit_ins.Location = New System.Drawing.Point(162, 124)
+        Me.btnEdit_ins.Name = "btnEdit_ins"
+        Me.btnEdit_ins.Size = New System.Drawing.Size(140, 44)
+        Me.btnEdit_ins.TabIndex = 459
+        Me.btnEdit_ins.Text = "修  改"
+        Me.btnEdit_ins.UseVisualStyleBackColor = False
+        '
+        'btnCreate_ins
+        '
+        Me.btnCreate_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCreate_ins.Location = New System.Drawing.Point(10, 124)
+        Me.btnCreate_ins.Name = "btnCreate_ins"
+        Me.btnCreate_ins.Size = New System.Drawing.Size(140, 44)
+        Me.btnCreate_ins.TabIndex = 458
+        Me.btnCreate_ins.Tag = ""
+        Me.btnCreate_ins.Text = "新  增"
+        Me.btnCreate_ins.UseVisualStyleBackColor = False
+        '
+        'grpIns
+        '
+        Me.grpIns.Controls.Add(Me.txtAmount20)
+        Me.grpIns.Controls.Add(Me.txtAmount50)
+        Me.grpIns.Controls.Add(Me.txtPriceTotal)
+        Me.grpIns.Controls.Add(Me.Label265)
+        Me.grpIns.Controls.Add(Me.txtAmountTotal)
+        Me.grpIns.Controls.Add(Me.txtAmountSpraying)
+        Me.grpIns.Controls.Add(Me.txtAmountRustProof)
+        Me.grpIns.Controls.Add(Me.txtAmountFreight)
+        Me.grpIns.Controls.Add(Me.txtAmountSwitch)
+        Me.grpIns.Controls.Add(Me.txtAmount4)
+        Me.grpIns.Controls.Add(Me.txtAmount10)
+        Me.grpIns.Controls.Add(Me.txtAmount16)
+        Me.grpIns.Controls.Add(Me.txtQtyTotal)
+        Me.grpIns.Controls.Add(Me.txtPriceSpraying)
+        Me.grpIns.Controls.Add(Me.txtPriceFreight)
+        Me.grpIns.Controls.Add(Me.txtPrice10)
+        Me.grpIns.Controls.Add(Me.txtPrice16)
+        Me.grpIns.Controls.Add(Me.txtQtyFreight)
+        Me.grpIns.Controls.Add(Me.txtQtySwitch)
+        Me.grpIns.Controls.Add(Me.txtQty4)
+        Me.grpIns.Controls.Add(Me.txtQty10)
+        Me.grpIns.Controls.Add(Me.txtQty16)
+        Me.grpIns.Controls.Add(Me.txtPriceRustProof)
+        Me.grpIns.Controls.Add(Me.txtPriceSwitch)
+        Me.grpIns.Controls.Add(Me.txtPrice4)
+        Me.grpIns.Controls.Add(Me.txtPrice20)
+        Me.grpIns.Controls.Add(Me.txtPrice50)
+        Me.grpIns.Controls.Add(Me.txtQtySpraying)
+        Me.grpIns.Controls.Add(Me.txtQtyRustProof)
+        Me.grpIns.Controls.Add(Me.txtQty20)
+        Me.grpIns.Controls.Add(Me.txtQty50)
+        Me.grpIns.Controls.Add(Me.Label263)
+        Me.grpIns.Controls.Add(Me.Label262)
+        Me.grpIns.Controls.Add(Me.Label261)
+        Me.grpIns.Controls.Add(Me.Label260)
+        Me.grpIns.Controls.Add(Me.Label259)
+        Me.grpIns.Controls.Add(Me.Label258)
+        Me.grpIns.Controls.Add(Me.Label257)
+        Me.grpIns.Controls.Add(Me.Label256)
+        Me.grpIns.Controls.Add(Me.Label255)
+        Me.grpIns.Controls.Add(Me.Label252)
+        Me.grpIns.Controls.Add(Me.Label249)
+        Me.grpIns.Controls.Add(Me.Label162)
+        Me.grpIns.Controls.Add(Me.Label161)
+        Me.grpIns.Location = New System.Drawing.Point(1030, 6)
+        Me.grpIns.Name = "grpIns"
+        Me.grpIns.Size = New System.Drawing.Size(630, 162)
+        Me.grpIns.TabIndex = 451
+        Me.grpIns.TabStop = False
+        '
+        'txtAmount20
+        '
+        Me.txtAmount20.Location = New System.Drawing.Point(119, 120)
+        Me.txtAmount20.Name = "txtAmount20"
+        Me.txtAmount20.ReadOnly = True
+        Me.txtAmount20.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount20.TabIndex = 43
+        '
+        'txtAmount50
+        '
+        Me.txtAmount50.Location = New System.Drawing.Point(63, 120)
+        Me.txtAmount50.Name = "txtAmount50"
+        Me.txtAmount50.ReadOnly = True
+        Me.txtAmount50.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount50.TabIndex = 42
+        '
+        'txtPriceTotal
+        '
+        Me.txtPriceTotal.Location = New System.Drawing.Point(567, 84)
+        Me.txtPriceTotal.Name = "txtPriceTotal"
+        Me.txtPriceTotal.ReadOnly = True
+        Me.txtPriceTotal.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceTotal.TabIndex = 41
+        '
+        'Label265
+        '
+        Me.Label265.AutoSize = True
+        Me.Label265.Location = New System.Drawing.Point(567, 26)
+        Me.Label265.Name = "Label265"
+        Me.Label265.Size = New System.Drawing.Size(51, 19)
+        Me.Label265.TabIndex = 40
+        Me.Label265.Text = "合計"
+        '
+        'txtAmountTotal
+        '
+        Me.txtAmountTotal.Location = New System.Drawing.Point(567, 120)
+        Me.txtAmountTotal.Name = "txtAmountTotal"
+        Me.txtAmountTotal.ReadOnly = True
+        Me.txtAmountTotal.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountTotal.TabIndex = 39
+        '
+        'txtAmountSpraying
+        '
+        Me.txtAmountSpraying.Location = New System.Drawing.Point(511, 120)
+        Me.txtAmountSpraying.Name = "txtAmountSpraying"
+        Me.txtAmountSpraying.ReadOnly = True
+        Me.txtAmountSpraying.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountSpraying.TabIndex = 38
+        '
+        'txtAmountRustProof
+        '
+        Me.txtAmountRustProof.Location = New System.Drawing.Point(455, 120)
+        Me.txtAmountRustProof.Name = "txtAmountRustProof"
+        Me.txtAmountRustProof.ReadOnly = True
+        Me.txtAmountRustProof.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountRustProof.TabIndex = 37
+        '
+        'txtAmountFreight
+        '
+        Me.txtAmountFreight.Location = New System.Drawing.Point(399, 120)
+        Me.txtAmountFreight.Name = "txtAmountFreight"
+        Me.txtAmountFreight.ReadOnly = True
+        Me.txtAmountFreight.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountFreight.TabIndex = 36
+        '
+        'txtAmountSwitch
+        '
+        Me.txtAmountSwitch.Location = New System.Drawing.Point(343, 120)
+        Me.txtAmountSwitch.Name = "txtAmountSwitch"
+        Me.txtAmountSwitch.ReadOnly = True
+        Me.txtAmountSwitch.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountSwitch.TabIndex = 35
+        '
+        'txtAmount4
+        '
+        Me.txtAmount4.Location = New System.Drawing.Point(287, 120)
+        Me.txtAmount4.Name = "txtAmount4"
+        Me.txtAmount4.ReadOnly = True
+        Me.txtAmount4.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount4.TabIndex = 34
+        '
+        'txtAmount10
+        '
+        Me.txtAmount10.Location = New System.Drawing.Point(231, 120)
+        Me.txtAmount10.Name = "txtAmount10"
+        Me.txtAmount10.ReadOnly = True
+        Me.txtAmount10.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount10.TabIndex = 33
+        '
+        'txtAmount16
+        '
+        Me.txtAmount16.Location = New System.Drawing.Point(175, 120)
+        Me.txtAmount16.Name = "txtAmount16"
+        Me.txtAmount16.ReadOnly = True
+        Me.txtAmount16.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount16.TabIndex = 32
+        '
+        'txtQtyTotal
+        '
+        Me.txtQtyTotal.Location = New System.Drawing.Point(567, 48)
+        Me.txtQtyTotal.Name = "txtQtyTotal"
+        Me.txtQtyTotal.ReadOnly = True
+        Me.txtQtyTotal.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtyTotal.TabIndex = 31
+        '
+        'txtPriceSpraying
+        '
+        Me.txtPriceSpraying.Location = New System.Drawing.Point(511, 84)
+        Me.txtPriceSpraying.Name = "txtPriceSpraying"
+        Me.txtPriceSpraying.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceSpraying.TabIndex = 30
+        '
+        'txtPriceFreight
+        '
+        Me.txtPriceFreight.Location = New System.Drawing.Point(399, 84)
+        Me.txtPriceFreight.Name = "txtPriceFreight"
+        Me.txtPriceFreight.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceFreight.TabIndex = 29
+        '
+        'txtPrice10
+        '
+        Me.txtPrice10.Location = New System.Drawing.Point(231, 84)
+        Me.txtPrice10.Name = "txtPrice10"
+        Me.txtPrice10.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice10.TabIndex = 28
+        '
+        'txtPrice16
+        '
+        Me.txtPrice16.Location = New System.Drawing.Point(175, 84)
+        Me.txtPrice16.Name = "txtPrice16"
+        Me.txtPrice16.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice16.TabIndex = 27
+        '
+        'txtQtyFreight
+        '
+        Me.txtQtyFreight.Location = New System.Drawing.Point(399, 48)
+        Me.txtQtyFreight.Name = "txtQtyFreight"
+        Me.txtQtyFreight.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtyFreight.TabIndex = 26
+        '
+        'txtQtySwitch
+        '
+        Me.txtQtySwitch.Location = New System.Drawing.Point(343, 48)
+        Me.txtQtySwitch.Name = "txtQtySwitch"
+        Me.txtQtySwitch.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtySwitch.TabIndex = 25
+        '
+        'txtQty4
+        '
+        Me.txtQty4.Location = New System.Drawing.Point(287, 48)
+        Me.txtQty4.Name = "txtQty4"
+        Me.txtQty4.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty4.TabIndex = 24
+        '
+        'txtQty10
+        '
+        Me.txtQty10.Location = New System.Drawing.Point(231, 48)
+        Me.txtQty10.Name = "txtQty10"
+        Me.txtQty10.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty10.TabIndex = 23
+        '
+        'txtQty16
+        '
+        Me.txtQty16.Location = New System.Drawing.Point(175, 48)
+        Me.txtQty16.Name = "txtQty16"
+        Me.txtQty16.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty16.TabIndex = 22
+        '
+        'txtPriceRustProof
+        '
+        Me.txtPriceRustProof.Location = New System.Drawing.Point(455, 84)
+        Me.txtPriceRustProof.Name = "txtPriceRustProof"
+        Me.txtPriceRustProof.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceRustProof.TabIndex = 21
+        '
+        'txtPriceSwitch
+        '
+        Me.txtPriceSwitch.Location = New System.Drawing.Point(343, 84)
+        Me.txtPriceSwitch.Name = "txtPriceSwitch"
+        Me.txtPriceSwitch.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceSwitch.TabIndex = 20
+        '
+        'txtPrice4
+        '
+        Me.txtPrice4.Location = New System.Drawing.Point(287, 84)
+        Me.txtPrice4.Name = "txtPrice4"
+        Me.txtPrice4.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice4.TabIndex = 19
+        '
+        'txtPrice20
+        '
+        Me.txtPrice20.Location = New System.Drawing.Point(119, 84)
+        Me.txtPrice20.Name = "txtPrice20"
+        Me.txtPrice20.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice20.TabIndex = 18
+        '
+        'txtPrice50
+        '
+        Me.txtPrice50.Location = New System.Drawing.Point(63, 84)
+        Me.txtPrice50.Name = "txtPrice50"
+        Me.txtPrice50.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice50.TabIndex = 17
+        '
+        'txtQtySpraying
+        '
+        Me.txtQtySpraying.Location = New System.Drawing.Point(511, 48)
+        Me.txtQtySpraying.Name = "txtQtySpraying"
+        Me.txtQtySpraying.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtySpraying.TabIndex = 16
+        '
+        'txtQtyRustProof
+        '
+        Me.txtQtyRustProof.Location = New System.Drawing.Point(455, 48)
+        Me.txtQtyRustProof.Name = "txtQtyRustProof"
+        Me.txtQtyRustProof.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtyRustProof.TabIndex = 15
+        '
+        'txtQty20
+        '
+        Me.txtQty20.Location = New System.Drawing.Point(119, 48)
+        Me.txtQty20.Name = "txtQty20"
+        Me.txtQty20.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty20.TabIndex = 14
+        '
+        'txtQty50
+        '
+        Me.txtQty50.Location = New System.Drawing.Point(63, 48)
+        Me.txtQty50.Name = "txtQty50"
+        Me.txtQty50.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty50.TabIndex = 13
+        '
+        'Label263
+        '
+        Me.Label263.AutoSize = True
+        Me.Label263.Location = New System.Drawing.Point(511, 26)
+        Me.Label263.Name = "Label263"
+        Me.Label263.Size = New System.Drawing.Size(51, 19)
+        Me.Label263.TabIndex = 12
+        Me.Label263.Text = "噴字"
+        '
+        'Label262
+        '
+        Me.Label262.AutoSize = True
+        Me.Label262.Location = New System.Drawing.Point(455, 26)
+        Me.Label262.Name = "Label262"
+        Me.Label262.Size = New System.Drawing.Size(51, 19)
+        Me.Label262.TabIndex = 11
+        Me.Label262.Text = "防鏽"
+        '
+        'Label261
+        '
+        Me.Label261.AutoSize = True
+        Me.Label261.Location = New System.Drawing.Point(399, 26)
+        Me.Label261.Name = "Label261"
+        Me.Label261.Size = New System.Drawing.Size(51, 19)
+        Me.Label261.TabIndex = 10
+        Me.Label261.Text = "運費"
+        '
+        'Label260
+        '
+        Me.Label260.AutoSize = True
+        Me.Label260.Location = New System.Drawing.Point(332, 26)
+        Me.Label260.Name = "Label260"
+        Me.Label260.Size = New System.Drawing.Size(72, 19)
+        Me.Label260.TabIndex = 9
+        Me.Label260.Text = "開關頭"
+        '
+        'Label259
+        '
+        Me.Label259.AutoSize = True
+        Me.Label259.Location = New System.Drawing.Point(302, 26)
+        Me.Label259.Name = "Label259"
+        Me.Label259.Size = New System.Drawing.Size(20, 19)
+        Me.Label259.TabIndex = 8
+        Me.Label259.Text = "4"
+        '
+        'Label258
+        '
+        Me.Label258.AutoSize = True
+        Me.Label258.Location = New System.Drawing.Point(241, 26)
+        Me.Label258.Name = "Label258"
+        Me.Label258.Size = New System.Drawing.Size(31, 19)
+        Me.Label258.TabIndex = 7
+        Me.Label258.Text = "10"
+        '
+        'Label257
+        '
+        Me.Label257.AutoSize = True
+        Me.Label257.Location = New System.Drawing.Point(185, 26)
+        Me.Label257.Name = "Label257"
+        Me.Label257.Size = New System.Drawing.Size(31, 19)
+        Me.Label257.TabIndex = 6
+        Me.Label257.Text = "16"
+        '
+        'Label256
+        '
+        Me.Label256.AutoSize = True
+        Me.Label256.Location = New System.Drawing.Point(129, 26)
+        Me.Label256.Name = "Label256"
+        Me.Label256.Size = New System.Drawing.Size(31, 19)
+        Me.Label256.TabIndex = 5
+        Me.Label256.Text = "20"
+        '
+        'Label255
+        '
+        Me.Label255.AutoSize = True
+        Me.Label255.Location = New System.Drawing.Point(73, 26)
+        Me.Label255.Name = "Label255"
+        Me.Label255.Size = New System.Drawing.Size(31, 19)
+        Me.Label255.TabIndex = 4
+        Me.Label255.Text = "50"
+        '
+        'Label252
+        '
+        Me.Label252.AutoSize = True
+        Me.Label252.Location = New System.Drawing.Point(6, 126)
+        Me.Label252.Name = "Label252"
+        Me.Label252.Size = New System.Drawing.Size(51, 19)
+        Me.Label252.TabIndex = 3
+        Me.Label252.Text = "金額"
+        '
+        'Label249
+        '
+        Me.Label249.AutoSize = True
+        Me.Label249.Location = New System.Drawing.Point(6, 90)
+        Me.Label249.Name = "Label249"
+        Me.Label249.Size = New System.Drawing.Size(51, 19)
+        Me.Label249.TabIndex = 2
+        Me.Label249.Text = "價格"
+        '
+        'Label162
+        '
+        Me.Label162.AutoSize = True
+        Me.Label162.Location = New System.Drawing.Point(6, 54)
+        Me.Label162.Name = "Label162"
+        Me.Label162.Size = New System.Drawing.Size(51, 19)
+        Me.Label162.TabIndex = 1
+        Me.Label162.Text = "數量"
+        '
+        'Label161
+        '
+        Me.Label161.AutoSize = True
+        Me.Label161.Location = New System.Drawing.Point(6, 26)
+        Me.Label161.Name = "Label161"
+        Me.Label161.Size = New System.Drawing.Size(51, 19)
+        Me.Label161.TabIndex = 0
+        Me.Label161.Text = "公斤"
+        '
+        'txtCusCode_ins
+        '
+        Me.txtCusCode_ins.Location = New System.Drawing.Point(288, 6)
+        Me.txtCusCode_ins.Name = "txtCusCode_ins"
+        Me.txtCusCode_ins.Size = New System.Drawing.Size(165, 30)
+        Me.txtCusCode_ins.TabIndex = 450
+        Me.txtCusCode_ins.Tag = "cus_code"
+        '
+        'txtCusName_ins
+        '
+        Me.txtCusName_ins.Location = New System.Drawing.Point(558, 6)
+        Me.txtCusName_ins.Name = "txtCusName_ins"
+        Me.txtCusName_ins.ReadOnly = True
+        Me.txtCusName_ins.Size = New System.Drawing.Size(378, 30)
+        Me.txtCusName_ins.TabIndex = 448
+        Me.txtCusName_ins.Tag = "cus_name"
+        '
+        'btnCus_ins
+        '
+        Me.btnCus_ins.AutoSize = True
+        Me.btnCus_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnCus_ins.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.btnCus_ins.Location = New System.Drawing.Point(942, 8)
+        Me.btnCus_ins.Name = "btnCus_ins"
+        Me.btnCus_ins.Size = New System.Drawing.Size(82, 26)
+        Me.btnCus_ins.TabIndex = 449
+        Me.btnCus_ins.Text = "搜尋客戶"
+        Me.btnCus_ins.UseVisualStyleBackColor = False
+        '
+        'Label102
+        '
+        Me.Label102.AutoSize = True
+        Me.Label102.Location = New System.Drawing.Point(459, 12)
+        Me.Label102.Name = "Label102"
+        Me.Label102.Size = New System.Drawing.Size(93, 19)
+        Me.Label102.TabIndex = 447
+        Me.Label102.Text = "客戶名稱"
+        '
+        'Label116
+        '
+        Me.Label116.AutoSize = True
+        Me.Label116.Location = New System.Drawing.Point(189, 12)
+        Me.Label116.Name = "Label116"
+        Me.Label116.Size = New System.Drawing.Size(93, 19)
+        Me.Label116.TabIndex = 446
+        Me.Label116.Text = "客戶代號"
+        '
+        'dtpIns
+        '
+        Me.dtpIns.CustomFormat = "yyyy/MM"
+        Me.dtpIns.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpIns.Location = New System.Drawing.Point(63, 6)
+        Me.dtpIns.Name = "dtpIns"
+        Me.dtpIns.Size = New System.Drawing.Size(120, 30)
+        Me.dtpIns.TabIndex = 1
+        '
+        'Label94
+        '
+        Me.Label94.AutoSize = True
+        Me.Label94.Location = New System.Drawing.Point(6, 12)
+        Me.Label94.Name = "Label94"
+        Me.Label94.Size = New System.Drawing.Size(51, 19)
+        Me.Label94.TabIndex = 0
+        Me.Label94.Text = "月份"
         '
         'tpOrder
         '
@@ -8731,6 +9443,7 @@ Partial Class frmMain
         'TabControl5
         '
         Me.TabControl5.Controls.Add(Me.tpCollection)
+        Me.TabControl5.Controls.Add(Me.tpSB)
         Me.TabControl5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl5.Location = New System.Drawing.Point(3, 3)
         Me.TabControl5.Name = "TabControl5"
@@ -9332,6 +10045,646 @@ Partial Class frmMain
         Me.Label109.Size = New System.Drawing.Size(95, 19)
         Me.Label109.TabIndex = 392
         Me.Label109.Text = "金    額"
+        '
+        'tpSB
+        '
+        Me.tpSB.Controls.Add(Me.grpSBD)
+        Me.tpSB.Controls.Add(Me.grpSB)
+        Me.tpSB.Location = New System.Drawing.Point(4, 29)
+        Me.tpSB.Name = "tpSB"
+        Me.tpSB.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpSB.Size = New System.Drawing.Size(1882, 949)
+        Me.tpSB.TabIndex = 21
+        Me.tpSB.Text = "報廢桶"
+        Me.tpSB.UseVisualStyleBackColor = True
+        '
+        'grpSBD
+        '
+        Me.grpSBD.Controls.Add(Me.dgvSBD)
+        Me.grpSBD.Controls.Add(Me.btnCreate_sbd)
+        Me.grpSBD.Controls.Add(Me.btnEdit_sbd)
+        Me.grpSBD.Controls.Add(Me.btnDelete_sbd)
+        Me.grpSBD.Controls.Add(Me.btnCancel_sbd)
+        Me.grpSBD.Controls.Add(Me.grpPrice_sbd)
+        Me.grpSBD.Controls.Add(Me.Label324)
+        Me.grpSBD.Controls.Add(Me.Label323)
+        Me.grpSBD.Controls.Add(Me.txtCusId_sbd)
+        Me.grpSBD.Controls.Add(Me.btnSearchCus_sbd)
+        Me.grpSBD.Controls.Add(Me.txtCusCode_sbd)
+        Me.grpSBD.Controls.Add(Me.txtCusName_sbd)
+        Me.grpSBD.Enabled = False
+        Me.grpSBD.Location = New System.Drawing.Point(789, 6)
+        Me.grpSBD.Name = "grpSBD"
+        Me.grpSBD.Size = New System.Drawing.Size(1087, 937)
+        Me.grpSBD.TabIndex = 483
+        Me.grpSBD.TabStop = False
+        Me.grpSBD.Text = "客戶設定"
+        '
+        'dgvSBD
+        '
+        Me.dgvSBD.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvSBD.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgvSBD.Location = New System.Drawing.Point(3, 264)
+        Me.dgvSBD.Name = "dgvSBD"
+        Me.dgvSBD.ReadOnly = True
+        Me.dgvSBD.RowTemplate.Height = 24
+        Me.dgvSBD.Size = New System.Drawing.Size(1081, 670)
+        Me.dgvSBD.TabIndex = 487
+        '
+        'btnCreate_sbd
+        '
+        Me.btnCreate_sbd.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCreate_sbd.Location = New System.Drawing.Point(6, 199)
+        Me.btnCreate_sbd.Name = "btnCreate_sbd"
+        Me.btnCreate_sbd.Size = New System.Drawing.Size(140, 44)
+        Me.btnCreate_sbd.TabIndex = 483
+        Me.btnCreate_sbd.Tag = ""
+        Me.btnCreate_sbd.Text = "新  增"
+        Me.btnCreate_sbd.UseVisualStyleBackColor = False
+        '
+        'btnEdit_sbd
+        '
+        Me.btnEdit_sbd.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnEdit_sbd.Location = New System.Drawing.Point(162, 199)
+        Me.btnEdit_sbd.Name = "btnEdit_sbd"
+        Me.btnEdit_sbd.Size = New System.Drawing.Size(140, 44)
+        Me.btnEdit_sbd.TabIndex = 484
+        Me.btnEdit_sbd.Text = "修  改"
+        Me.btnEdit_sbd.UseVisualStyleBackColor = False
+        '
+        'btnDelete_sbd
+        '
+        Me.btnDelete_sbd.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnDelete_sbd.Location = New System.Drawing.Point(318, 199)
+        Me.btnDelete_sbd.Name = "btnDelete_sbd"
+        Me.btnDelete_sbd.Size = New System.Drawing.Size(140, 44)
+        Me.btnDelete_sbd.TabIndex = 485
+        Me.btnDelete_sbd.Text = "刪  除"
+        Me.btnDelete_sbd.UseVisualStyleBackColor = False
+        '
+        'btnCancel_sbd
+        '
+        Me.btnCancel_sbd.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancel_sbd.Location = New System.Drawing.Point(474, 199)
+        Me.btnCancel_sbd.Name = "btnCancel_sbd"
+        Me.btnCancel_sbd.Size = New System.Drawing.Size(140, 44)
+        Me.btnCancel_sbd.TabIndex = 486
+        Me.btnCancel_sbd.Text = "取  消"
+        Me.btnCancel_sbd.UseVisualStyleBackColor = False
+        '
+        'grpPrice_sbd
+        '
+        Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions10_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions16_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions4_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions20_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions50_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.Label328)
+        Me.grpPrice_sbd.Controls.Add(Me.txtBuy10_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtBuy16_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtQty4_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtQty10_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtQty16_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtBuy4_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtBuy20_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtBuy50_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtQty20_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.txtQty50_sbd)
+        Me.grpPrice_sbd.Controls.Add(Me.Label275)
+        Me.grpPrice_sbd.Controls.Add(Me.Label276)
+        Me.grpPrice_sbd.Controls.Add(Me.Label279)
+        Me.grpPrice_sbd.Controls.Add(Me.Label301)
+        Me.grpPrice_sbd.Controls.Add(Me.Label302)
+        Me.grpPrice_sbd.Controls.Add(Me.Label319)
+        Me.grpPrice_sbd.Controls.Add(Me.Label326)
+        Me.grpPrice_sbd.Controls.Add(Me.Label327)
+        Me.grpPrice_sbd.Location = New System.Drawing.Point(489, 29)
+        Me.grpPrice_sbd.Name = "grpPrice_sbd"
+        Me.grpPrice_sbd.Size = New System.Drawing.Size(398, 164)
+        Me.grpPrice_sbd.TabIndex = 482
+        Me.grpPrice_sbd.TabStop = False
+        Me.grpPrice_sbd.Text = "價格"
+        '
+        'txtAcquisitions10_sbd
+        '
+        Me.txtAcquisitions10_sbd.Location = New System.Drawing.Point(279, 124)
+        Me.txtAcquisitions10_sbd.Name = "txtAcquisitions10_sbd"
+        Me.txtAcquisitions10_sbd.ReadOnly = True
+        Me.txtAcquisitions10_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions10_sbd.TabIndex = 34
+        '
+        'txtAcquisitions16_sbd
+        '
+        Me.txtAcquisitions16_sbd.Location = New System.Drawing.Point(221, 124)
+        Me.txtAcquisitions16_sbd.Name = "txtAcquisitions16_sbd"
+        Me.txtAcquisitions16_sbd.ReadOnly = True
+        Me.txtAcquisitions16_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions16_sbd.TabIndex = 33
+        '
+        'txtAcquisitions4_sbd
+        '
+        Me.txtAcquisitions4_sbd.Location = New System.Drawing.Point(337, 124)
+        Me.txtAcquisitions4_sbd.Name = "txtAcquisitions4_sbd"
+        Me.txtAcquisitions4_sbd.ReadOnly = True
+        Me.txtAcquisitions4_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions4_sbd.TabIndex = 32
+        '
+        'txtAcquisitions20_sbd
+        '
+        Me.txtAcquisitions20_sbd.Location = New System.Drawing.Point(163, 124)
+        Me.txtAcquisitions20_sbd.Name = "txtAcquisitions20_sbd"
+        Me.txtAcquisitions20_sbd.ReadOnly = True
+        Me.txtAcquisitions20_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions20_sbd.TabIndex = 31
+        '
+        'txtAcquisitions50_sbd
+        '
+        Me.txtAcquisitions50_sbd.Location = New System.Drawing.Point(105, 124)
+        Me.txtAcquisitions50_sbd.Name = "txtAcquisitions50_sbd"
+        Me.txtAcquisitions50_sbd.ReadOnly = True
+        Me.txtAcquisitions50_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions50_sbd.TabIndex = 30
+        '
+        'Label328
+        '
+        Me.Label328.AutoSize = True
+        Me.Label328.Location = New System.Drawing.Point(6, 130)
+        Me.Label328.Name = "Label328"
+        Me.Label328.Size = New System.Drawing.Size(93, 19)
+        Me.Label328.TabIndex = 29
+        Me.Label328.Text = "收購金額"
+        '
+        'txtBuy10_sbd
+        '
+        Me.txtBuy10_sbd.Location = New System.Drawing.Point(279, 86)
+        Me.txtBuy10_sbd.Name = "txtBuy10_sbd"
+        Me.txtBuy10_sbd.ReadOnly = True
+        Me.txtBuy10_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy10_sbd.TabIndex = 28
+        '
+        'txtBuy16_sbd
+        '
+        Me.txtBuy16_sbd.Location = New System.Drawing.Point(221, 86)
+        Me.txtBuy16_sbd.Name = "txtBuy16_sbd"
+        Me.txtBuy16_sbd.ReadOnly = True
+        Me.txtBuy16_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy16_sbd.TabIndex = 27
+        '
+        'txtQty4_sbd
+        '
+        Me.txtQty4_sbd.Location = New System.Drawing.Point(337, 48)
+        Me.txtQty4_sbd.Name = "txtQty4_sbd"
+        Me.txtQty4_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty4_sbd.TabIndex = 24
+        '
+        'txtQty10_sbd
+        '
+        Me.txtQty10_sbd.Location = New System.Drawing.Point(279, 48)
+        Me.txtQty10_sbd.Name = "txtQty10_sbd"
+        Me.txtQty10_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty10_sbd.TabIndex = 23
+        '
+        'txtQty16_sbd
+        '
+        Me.txtQty16_sbd.Location = New System.Drawing.Point(221, 48)
+        Me.txtQty16_sbd.Name = "txtQty16_sbd"
+        Me.txtQty16_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty16_sbd.TabIndex = 22
+        '
+        'txtBuy4_sbd
+        '
+        Me.txtBuy4_sbd.Location = New System.Drawing.Point(337, 86)
+        Me.txtBuy4_sbd.Name = "txtBuy4_sbd"
+        Me.txtBuy4_sbd.ReadOnly = True
+        Me.txtBuy4_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy4_sbd.TabIndex = 19
+        '
+        'txtBuy20_sbd
+        '
+        Me.txtBuy20_sbd.Location = New System.Drawing.Point(163, 86)
+        Me.txtBuy20_sbd.Name = "txtBuy20_sbd"
+        Me.txtBuy20_sbd.ReadOnly = True
+        Me.txtBuy20_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy20_sbd.TabIndex = 18
+        '
+        'txtBuy50_sbd
+        '
+        Me.txtBuy50_sbd.Location = New System.Drawing.Point(105, 86)
+        Me.txtBuy50_sbd.Name = "txtBuy50_sbd"
+        Me.txtBuy50_sbd.ReadOnly = True
+        Me.txtBuy50_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy50_sbd.TabIndex = 17
+        '
+        'txtQty20_sbd
+        '
+        Me.txtQty20_sbd.Location = New System.Drawing.Point(163, 48)
+        Me.txtQty20_sbd.Name = "txtQty20_sbd"
+        Me.txtQty20_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty20_sbd.TabIndex = 14
+        '
+        'txtQty50_sbd
+        '
+        Me.txtQty50_sbd.Location = New System.Drawing.Point(105, 48)
+        Me.txtQty50_sbd.Name = "txtQty50_sbd"
+        Me.txtQty50_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty50_sbd.TabIndex = 13
+        '
+        'Label275
+        '
+        Me.Label275.AutoSize = True
+        Me.Label275.Location = New System.Drawing.Point(352, 26)
+        Me.Label275.Name = "Label275"
+        Me.Label275.Size = New System.Drawing.Size(20, 19)
+        Me.Label275.TabIndex = 8
+        Me.Label275.Text = "4"
+        '
+        'Label276
+        '
+        Me.Label276.AutoSize = True
+        Me.Label276.Location = New System.Drawing.Point(289, 26)
+        Me.Label276.Name = "Label276"
+        Me.Label276.Size = New System.Drawing.Size(31, 19)
+        Me.Label276.TabIndex = 7
+        Me.Label276.Text = "10"
+        '
+        'Label279
+        '
+        Me.Label279.AutoSize = True
+        Me.Label279.Location = New System.Drawing.Point(231, 26)
+        Me.Label279.Name = "Label279"
+        Me.Label279.Size = New System.Drawing.Size(31, 19)
+        Me.Label279.TabIndex = 6
+        Me.Label279.Text = "16"
+        '
+        'Label301
+        '
+        Me.Label301.AutoSize = True
+        Me.Label301.Location = New System.Drawing.Point(173, 26)
+        Me.Label301.Name = "Label301"
+        Me.Label301.Size = New System.Drawing.Size(31, 19)
+        Me.Label301.TabIndex = 5
+        Me.Label301.Text = "20"
+        '
+        'Label302
+        '
+        Me.Label302.AutoSize = True
+        Me.Label302.Location = New System.Drawing.Point(115, 26)
+        Me.Label302.Name = "Label302"
+        Me.Label302.Size = New System.Drawing.Size(31, 19)
+        Me.Label302.TabIndex = 4
+        Me.Label302.Text = "50"
+        '
+        'Label319
+        '
+        Me.Label319.AutoSize = True
+        Me.Label319.Location = New System.Drawing.Point(6, 92)
+        Me.Label319.Name = "Label319"
+        Me.Label319.Size = New System.Drawing.Size(93, 19)
+        Me.Label319.TabIndex = 2
+        Me.Label319.Text = "買價金額"
+        '
+        'Label326
+        '
+        Me.Label326.AutoSize = True
+        Me.Label326.Location = New System.Drawing.Point(6, 54)
+        Me.Label326.Name = "Label326"
+        Me.Label326.Size = New System.Drawing.Size(51, 19)
+        Me.Label326.TabIndex = 1
+        Me.Label326.Text = "數量"
+        '
+        'Label327
+        '
+        Me.Label327.AutoSize = True
+        Me.Label327.Location = New System.Drawing.Point(6, 26)
+        Me.Label327.Name = "Label327"
+        Me.Label327.Size = New System.Drawing.Size(51, 19)
+        Me.Label327.TabIndex = 0
+        Me.Label327.Text = "公斤"
+        '
+        'Label324
+        '
+        Me.Label324.AutoSize = True
+        Me.Label324.Location = New System.Drawing.Point(6, 34)
+        Me.Label324.Name = "Label324"
+        Me.Label324.Size = New System.Drawing.Size(93, 19)
+        Me.Label324.TabIndex = 468
+        Me.Label324.Text = "客戶代號"
+        '
+        'Label323
+        '
+        Me.Label323.AutoSize = True
+        Me.Label323.Location = New System.Drawing.Point(6, 73)
+        Me.Label323.Name = "Label323"
+        Me.Label323.Size = New System.Drawing.Size(93, 19)
+        Me.Label323.TabIndex = 469
+        Me.Label323.Text = "客戶名稱"
+        '
+        'txtCusId_sbd
+        '
+        Me.txtCusId_sbd.Location = New System.Drawing.Point(893, 35)
+        Me.txtCusId_sbd.Name = "txtCusId_sbd"
+        Me.txtCusId_sbd.ReadOnly = True
+        Me.txtCusId_sbd.Size = New System.Drawing.Size(165, 30)
+        Me.txtCusId_sbd.TabIndex = 481
+        Me.txtCusId_sbd.Tag = "cus_code"
+        Me.txtCusId_sbd.Visible = False
+        '
+        'btnSearchCus_sbd
+        '
+        Me.btnSearchCus_sbd.AutoSize = True
+        Me.btnSearchCus_sbd.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnSearchCus_sbd.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.btnSearchCus_sbd.Location = New System.Drawing.Point(276, 29)
+        Me.btnSearchCus_sbd.Name = "btnSearchCus_sbd"
+        Me.btnSearchCus_sbd.Size = New System.Drawing.Size(82, 26)
+        Me.btnSearchCus_sbd.TabIndex = 471
+        Me.btnSearchCus_sbd.Text = "搜尋客戶"
+        Me.btnSearchCus_sbd.UseVisualStyleBackColor = False
+        '
+        'txtCusCode_sbd
+        '
+        Me.txtCusCode_sbd.Location = New System.Drawing.Point(105, 29)
+        Me.txtCusCode_sbd.Name = "txtCusCode_sbd"
+        Me.txtCusCode_sbd.Size = New System.Drawing.Size(165, 30)
+        Me.txtCusCode_sbd.TabIndex = 472
+        Me.txtCusCode_sbd.Tag = "cus_code"
+        '
+        'txtCusName_sbd
+        '
+        Me.txtCusName_sbd.Location = New System.Drawing.Point(105, 67)
+        Me.txtCusName_sbd.Name = "txtCusName_sbd"
+        Me.txtCusName_sbd.ReadOnly = True
+        Me.txtCusName_sbd.Size = New System.Drawing.Size(378, 30)
+        Me.txtCusName_sbd.TabIndex = 470
+        Me.txtCusName_sbd.Tag = "cus_name"
+        '
+        'grpSB
+        '
+        Me.grpSB.Controls.Add(Me.txtSBId)
+        Me.grpSB.Controls.Add(Me.Label325)
+        Me.grpSB.Controls.Add(Me.dtpSC)
+        Me.grpSB.Controls.Add(Me.grpPrice_sb)
+        Me.grpSB.Controls.Add(Me.dgvSB)
+        Me.grpSB.Controls.Add(Me.btnCreate_sb)
+        Me.grpSB.Controls.Add(Me.btnPrint_sb)
+        Me.grpSB.Controls.Add(Me.BtnEdit_sb)
+        Me.grpSB.Controls.Add(Me.btnDelete_sb)
+        Me.grpSB.Controls.Add(Me.btnCancel_sb)
+        Me.grpSB.Location = New System.Drawing.Point(6, 6)
+        Me.grpSB.Name = "grpSB"
+        Me.grpSB.Size = New System.Drawing.Size(777, 937)
+        Me.grpSB.TabIndex = 482
+        Me.grpSB.TabStop = False
+        Me.grpSB.Text = "月價格設定"
+        '
+        'Label325
+        '
+        Me.Label325.AutoSize = True
+        Me.Label325.Location = New System.Drawing.Point(6, 35)
+        Me.Label325.Name = "Label325"
+        Me.Label325.Size = New System.Drawing.Size(51, 19)
+        Me.Label325.TabIndex = 466
+        Me.Label325.Text = "月份"
+        '
+        'dtpSC
+        '
+        Me.dtpSC.CustomFormat = "yyyy/MM"
+        Me.dtpSC.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpSC.Location = New System.Drawing.Point(63, 29)
+        Me.dtpSC.Name = "dtpSC"
+        Me.dtpSC.Size = New System.Drawing.Size(120, 30)
+        Me.dtpSC.TabIndex = 467
+        '
+        'grpPrice_sb
+        '
+        Me.grpPrice_sb.Controls.Add(Me.txtBuy10)
+        Me.grpPrice_sb.Controls.Add(Me.txtBuy16)
+        Me.grpPrice_sb.Controls.Add(Me.txtAcquisitions4)
+        Me.grpPrice_sb.Controls.Add(Me.txtAcquisitions10)
+        Me.grpPrice_sb.Controls.Add(Me.txtAcquisitions16)
+        Me.grpPrice_sb.Controls.Add(Me.txtBuy4)
+        Me.grpPrice_sb.Controls.Add(Me.txtBuy20)
+        Me.grpPrice_sb.Controls.Add(Me.txtBuy50)
+        Me.grpPrice_sb.Controls.Add(Me.txtAcquisitions20)
+        Me.grpPrice_sb.Controls.Add(Me.txtAcquisitions50)
+        Me.grpPrice_sb.Controls.Add(Me.Label303)
+        Me.grpPrice_sb.Controls.Add(Me.Label315)
+        Me.grpPrice_sb.Controls.Add(Me.Label316)
+        Me.grpPrice_sb.Controls.Add(Me.Label317)
+        Me.grpPrice_sb.Controls.Add(Me.Label318)
+        Me.grpPrice_sb.Controls.Add(Me.Label320)
+        Me.grpPrice_sb.Controls.Add(Me.Label321)
+        Me.grpPrice_sb.Controls.Add(Me.Label322)
+        Me.grpPrice_sb.Location = New System.Drawing.Point(189, 29)
+        Me.grpPrice_sb.Name = "grpPrice_sb"
+        Me.grpPrice_sb.Size = New System.Drawing.Size(375, 126)
+        Me.grpPrice_sb.TabIndex = 473
+        Me.grpPrice_sb.TabStop = False
+        Me.grpPrice_sb.Text = "價格"
+        '
+        'txtBuy10
+        '
+        Me.txtBuy10.Location = New System.Drawing.Point(258, 86)
+        Me.txtBuy10.Name = "txtBuy10"
+        Me.txtBuy10.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy10.TabIndex = 28
+        '
+        'txtBuy16
+        '
+        Me.txtBuy16.Location = New System.Drawing.Point(200, 86)
+        Me.txtBuy16.Name = "txtBuy16"
+        Me.txtBuy16.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy16.TabIndex = 27
+        '
+        'txtAcquisitions4
+        '
+        Me.txtAcquisitions4.Location = New System.Drawing.Point(316, 48)
+        Me.txtAcquisitions4.Name = "txtAcquisitions4"
+        Me.txtAcquisitions4.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions4.TabIndex = 24
+        '
+        'txtAcquisitions10
+        '
+        Me.txtAcquisitions10.Location = New System.Drawing.Point(258, 48)
+        Me.txtAcquisitions10.Name = "txtAcquisitions10"
+        Me.txtAcquisitions10.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions10.TabIndex = 23
+        '
+        'txtAcquisitions16
+        '
+        Me.txtAcquisitions16.Location = New System.Drawing.Point(200, 48)
+        Me.txtAcquisitions16.Name = "txtAcquisitions16"
+        Me.txtAcquisitions16.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions16.TabIndex = 22
+        '
+        'txtBuy4
+        '
+        Me.txtBuy4.Location = New System.Drawing.Point(316, 86)
+        Me.txtBuy4.Name = "txtBuy4"
+        Me.txtBuy4.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy4.TabIndex = 19
+        '
+        'txtBuy20
+        '
+        Me.txtBuy20.Location = New System.Drawing.Point(142, 86)
+        Me.txtBuy20.Name = "txtBuy20"
+        Me.txtBuy20.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy20.TabIndex = 18
+        '
+        'txtBuy50
+        '
+        Me.txtBuy50.Location = New System.Drawing.Point(84, 86)
+        Me.txtBuy50.Name = "txtBuy50"
+        Me.txtBuy50.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy50.TabIndex = 17
+        '
+        'txtAcquisitions20
+        '
+        Me.txtAcquisitions20.Location = New System.Drawing.Point(142, 48)
+        Me.txtAcquisitions20.Name = "txtAcquisitions20"
+        Me.txtAcquisitions20.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions20.TabIndex = 14
+        '
+        'txtAcquisitions50
+        '
+        Me.txtAcquisitions50.Location = New System.Drawing.Point(84, 48)
+        Me.txtAcquisitions50.Name = "txtAcquisitions50"
+        Me.txtAcquisitions50.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions50.TabIndex = 13
+        '
+        'Label303
+        '
+        Me.Label303.AutoSize = True
+        Me.Label303.Location = New System.Drawing.Point(331, 26)
+        Me.Label303.Name = "Label303"
+        Me.Label303.Size = New System.Drawing.Size(20, 19)
+        Me.Label303.TabIndex = 8
+        Me.Label303.Text = "4"
+        '
+        'Label315
+        '
+        Me.Label315.AutoSize = True
+        Me.Label315.Location = New System.Drawing.Point(268, 26)
+        Me.Label315.Name = "Label315"
+        Me.Label315.Size = New System.Drawing.Size(31, 19)
+        Me.Label315.TabIndex = 7
+        Me.Label315.Text = "10"
+        '
+        'Label316
+        '
+        Me.Label316.AutoSize = True
+        Me.Label316.Location = New System.Drawing.Point(210, 26)
+        Me.Label316.Name = "Label316"
+        Me.Label316.Size = New System.Drawing.Size(31, 19)
+        Me.Label316.TabIndex = 6
+        Me.Label316.Text = "16"
+        '
+        'Label317
+        '
+        Me.Label317.AutoSize = True
+        Me.Label317.Location = New System.Drawing.Point(152, 26)
+        Me.Label317.Name = "Label317"
+        Me.Label317.Size = New System.Drawing.Size(31, 19)
+        Me.Label317.TabIndex = 5
+        Me.Label317.Text = "20"
+        '
+        'Label318
+        '
+        Me.Label318.AutoSize = True
+        Me.Label318.Location = New System.Drawing.Point(94, 26)
+        Me.Label318.Name = "Label318"
+        Me.Label318.Size = New System.Drawing.Size(31, 19)
+        Me.Label318.TabIndex = 4
+        Me.Label318.Text = "50"
+        '
+        'Label320
+        '
+        Me.Label320.AutoSize = True
+        Me.Label320.Location = New System.Drawing.Point(6, 90)
+        Me.Label320.Name = "Label320"
+        Me.Label320.Size = New System.Drawing.Size(51, 19)
+        Me.Label320.TabIndex = 2
+        Me.Label320.Text = "買價"
+        '
+        'Label321
+        '
+        Me.Label321.AutoSize = True
+        Me.Label321.Location = New System.Drawing.Point(6, 54)
+        Me.Label321.Name = "Label321"
+        Me.Label321.Size = New System.Drawing.Size(72, 19)
+        Me.Label321.TabIndex = 1
+        Me.Label321.Text = "收購價"
+        '
+        'Label322
+        '
+        Me.Label322.AutoSize = True
+        Me.Label322.Location = New System.Drawing.Point(6, 26)
+        Me.Label322.Name = "Label322"
+        Me.Label322.Size = New System.Drawing.Size(51, 19)
+        Me.Label322.TabIndex = 0
+        Me.Label322.Text = "公斤"
+        '
+        'dgvSB
+        '
+        Me.dgvSB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvSB.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgvSB.Location = New System.Drawing.Point(3, 224)
+        Me.dgvSB.Name = "dgvSB"
+        Me.dgvSB.ReadOnly = True
+        Me.dgvSB.RowTemplate.Height = 24
+        Me.dgvSB.Size = New System.Drawing.Size(771, 710)
+        Me.dgvSB.TabIndex = 480
+        '
+        'btnCreate_sb
+        '
+        Me.btnCreate_sb.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCreate_sb.Location = New System.Drawing.Point(6, 161)
+        Me.btnCreate_sb.Name = "btnCreate_sb"
+        Me.btnCreate_sb.Size = New System.Drawing.Size(140, 44)
+        Me.btnCreate_sb.TabIndex = 474
+        Me.btnCreate_sb.Tag = ""
+        Me.btnCreate_sb.Text = "新  增"
+        Me.btnCreate_sb.UseVisualStyleBackColor = False
+        '
+        'btnPrint_sb
+        '
+        Me.btnPrint_sb.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnPrint_sb.Location = New System.Drawing.Point(630, 161)
+        Me.btnPrint_sb.Name = "btnPrint_sb"
+        Me.btnPrint_sb.Size = New System.Drawing.Size(140, 44)
+        Me.btnPrint_sb.TabIndex = 479
+        Me.btnPrint_sb.Text = "列   印"
+        Me.btnPrint_sb.UseVisualStyleBackColor = False
+        '
+        'BtnEdit_sb
+        '
+        Me.BtnEdit_sb.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.BtnEdit_sb.Location = New System.Drawing.Point(162, 161)
+        Me.BtnEdit_sb.Name = "BtnEdit_sb"
+        Me.BtnEdit_sb.Size = New System.Drawing.Size(140, 44)
+        Me.BtnEdit_sb.TabIndex = 475
+        Me.BtnEdit_sb.Text = "修  改"
+        Me.BtnEdit_sb.UseVisualStyleBackColor = False
+        '
+        'btnDelete_sb
+        '
+        Me.btnDelete_sb.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnDelete_sb.Location = New System.Drawing.Point(318, 161)
+        Me.btnDelete_sb.Name = "btnDelete_sb"
+        Me.btnDelete_sb.Size = New System.Drawing.Size(140, 44)
+        Me.btnDelete_sb.TabIndex = 476
+        Me.btnDelete_sb.Text = "刪  除"
+        Me.btnDelete_sb.UseVisualStyleBackColor = False
+        '
+        'btnCancel_sb
+        '
+        Me.btnCancel_sb.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancel_sb.Location = New System.Drawing.Point(474, 161)
+        Me.btnCancel_sb.Name = "btnCancel_sb"
+        Me.btnCancel_sb.Size = New System.Drawing.Size(140, 44)
+        Me.btnCancel_sb.TabIndex = 477
+        Me.btnCancel_sb.Text = "取  消"
+        Me.btnCancel_sb.UseVisualStyleBackColor = False
         '
         'tpAccountingManage
         '
@@ -11419,6 +12772,16 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
+        'txtSBId
+        '
+        Me.txtSBId.Location = New System.Drawing.Point(570, 121)
+        Me.txtSBId.Name = "txtSBId"
+        Me.txtSBId.ReadOnly = True
+        Me.txtSBId.Size = New System.Drawing.Size(165, 30)
+        Me.txtSBId.TabIndex = 482
+        Me.txtSBId.Tag = "cus_code"
+        Me.txtSBId.Visible = False
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -11428,7 +12791,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.14.12"
+        Me.Text = "豐原瓦斯會計系統 v0.15.0"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -11507,6 +12870,11 @@ Partial Class frmMain
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout
         CType(Me.dgvPayment, System.ComponentModel.ISupportInitialize).EndInit
+        Me.tpInspection.ResumeLayout(False)
+        Me.tpInspection.PerformLayout
+        CType(Me.dgvIns, System.ComponentModel.ISupportInitialize).EndInit
+        Me.grpIns.ResumeLayout(False)
+        Me.grpIns.PerformLayout
         Me.tpOrder.ResumeLayout(False)
         Me.tpOrder.PerformLayout
         Me.tcInOut.ResumeLayout(False)
@@ -11524,6 +12892,17 @@ Partial Class frmMain
         Me.tpCollection.ResumeLayout(False)
         Me.tpCollection.PerformLayout
         CType(Me.dgvCollection, System.ComponentModel.ISupportInitialize).EndInit
+        Me.tpSB.ResumeLayout(False)
+        Me.grpSBD.ResumeLayout(False)
+        Me.grpSBD.PerformLayout
+        CType(Me.dgvSBD, System.ComponentModel.ISupportInitialize).EndInit
+        Me.grpPrice_sbd.ResumeLayout(False)
+        Me.grpPrice_sbd.PerformLayout
+        Me.grpSB.ResumeLayout(False)
+        Me.grpSB.PerformLayout
+        Me.grpPrice_sb.ResumeLayout(False)
+        Me.grpPrice_sb.PerformLayout
+        CType(Me.dgvSB, System.ComponentModel.ISupportInitialize).EndInit
         Me.tpAccountingManage.ResumeLayout(False)
         Me.TabControl6.ResumeLayout(False)
         Me.tpCheque.ResumeLayout(False)
@@ -12570,4 +13949,132 @@ Partial Class frmMain
     Friend WithEvents Label65 As Label
     Friend WithEvents dtpDate_DSS As DateTimePicker
     Friend WithEvents btnDSS As Button
+    Friend WithEvents tpInspection As TabPage
+    Friend WithEvents dtpIns As DateTimePicker
+    Friend WithEvents Label94 As Label
+    Friend WithEvents grpIns As GroupBox
+    Friend WithEvents Label161 As Label
+    Friend WithEvents txtCusCode_ins As TextBox
+    Friend WithEvents txtCusName_ins As TextBox
+    Friend WithEvents btnCus_ins As Button
+    Friend WithEvents Label102 As Label
+    Friend WithEvents Label116 As Label
+    Friend WithEvents Label262 As Label
+    Friend WithEvents Label261 As Label
+    Friend WithEvents Label260 As Label
+    Friend WithEvents Label259 As Label
+    Friend WithEvents Label258 As Label
+    Friend WithEvents Label257 As Label
+    Friend WithEvents Label256 As Label
+    Friend WithEvents Label255 As Label
+    Friend WithEvents Label252 As Label
+    Friend WithEvents Label249 As Label
+    Friend WithEvents Label162 As Label
+    Friend WithEvents Label263 As Label
+    Friend WithEvents txtAmountSpraying As TextBox
+    Friend WithEvents txtAmountRustProof As TextBox
+    Friend WithEvents txtAmountFreight As TextBox
+    Friend WithEvents txtAmountSwitch As TextBox
+    Friend WithEvents txtAmount4 As TextBox
+    Friend WithEvents txtAmount10 As TextBox
+    Friend WithEvents txtAmount16 As TextBox
+    Friend WithEvents txtQtyTotal As TextBox
+    Friend WithEvents txtPriceFreight As TextBox
+    Friend WithEvents txtPrice10 As TextBox
+    Friend WithEvents txtPrice16 As TextBox
+    Friend WithEvents txtQtyFreight As TextBox
+    Friend WithEvents txtQtySwitch As TextBox
+    Friend WithEvents txtQty4 As TextBox
+    Friend WithEvents txtQty10 As TextBox
+    Friend WithEvents txtQty16 As TextBox
+    Friend WithEvents txtPriceSwitch As TextBox
+    Friend WithEvents txtPrice4 As TextBox
+    Friend WithEvents txtPrice20 As TextBox
+    Friend WithEvents txtPrice50 As TextBox
+    Friend WithEvents txtQtySpraying As TextBox
+    Friend WithEvents txtQtyRustProof As TextBox
+    Friend WithEvents txtQty20 As TextBox
+    Friend WithEvents txtQty50 As TextBox
+    Friend WithEvents dgvIns As DataGridView
+    Friend WithEvents btnPrint_ins As Button
+    Friend WithEvents btnSearch_ins As Button
+    Friend WithEvents btnCancel_ins As Button
+    Friend WithEvents btnDelete_ins As Button
+    Friend WithEvents btnEdit_ins As Button
+    Friend WithEvents btnCreate_ins As Button
+    Friend WithEvents txtAmount20 As TextBox
+    Friend WithEvents txtAmount50 As TextBox
+    Friend WithEvents txtPriceTotal As TextBox
+    Friend WithEvents Label265 As Label
+    Friend WithEvents txtAmountTotal As TextBox
+    Friend WithEvents txtPriceSpraying As TextBox
+    Friend WithEvents txtPriceRustProof As TextBox
+    Friend WithEvents txtCusId_ins As TextBox
+    Friend WithEvents tpSB As TabPage
+    Friend WithEvents txtCusId_sbd As TextBox
+    Friend WithEvents dgvSB As DataGridView
+    Friend WithEvents btnPrint_sb As Button
+    Friend WithEvents btnCancel_sb As Button
+    Friend WithEvents btnDelete_sb As Button
+    Friend WithEvents BtnEdit_sb As Button
+    Friend WithEvents btnCreate_sb As Button
+    Friend WithEvents grpPrice_sb As GroupBox
+    Friend WithEvents txtBuy10 As TextBox
+    Friend WithEvents txtBuy16 As TextBox
+    Friend WithEvents txtAcquisitions4 As TextBox
+    Friend WithEvents txtAcquisitions10 As TextBox
+    Friend WithEvents txtAcquisitions16 As TextBox
+    Friend WithEvents txtBuy4 As TextBox
+    Friend WithEvents txtBuy20 As TextBox
+    Friend WithEvents txtBuy50 As TextBox
+    Friend WithEvents txtAcquisitions20 As TextBox
+    Friend WithEvents txtAcquisitions50 As TextBox
+    Friend WithEvents Label303 As Label
+    Friend WithEvents Label315 As Label
+    Friend WithEvents Label316 As Label
+    Friend WithEvents Label317 As Label
+    Friend WithEvents Label318 As Label
+    Friend WithEvents Label320 As Label
+    Friend WithEvents Label321 As Label
+    Friend WithEvents Label322 As Label
+    Friend WithEvents txtCusCode_sbd As TextBox
+    Friend WithEvents txtCusName_sbd As TextBox
+    Friend WithEvents btnSearchCus_sbd As Button
+    Friend WithEvents Label323 As Label
+    Friend WithEvents Label324 As Label
+    Friend WithEvents dtpSC As DateTimePicker
+    Friend WithEvents Label325 As Label
+    Friend WithEvents grpSB As GroupBox
+    Friend WithEvents grpSBD As GroupBox
+    Friend WithEvents grpPrice_sbd As GroupBox
+    Friend WithEvents txtAcquisitions10_sbd As TextBox
+    Friend WithEvents txtAcquisitions16_sbd As TextBox
+    Friend WithEvents txtAcquisitions4_sbd As TextBox
+    Friend WithEvents txtAcquisitions20_sbd As TextBox
+    Friend WithEvents txtAcquisitions50_sbd As TextBox
+    Friend WithEvents Label328 As Label
+    Friend WithEvents txtBuy10_sbd As TextBox
+    Friend WithEvents txtBuy16_sbd As TextBox
+    Friend WithEvents txtQty4_sbd As TextBox
+    Friend WithEvents txtQty10_sbd As TextBox
+    Friend WithEvents txtQty16_sbd As TextBox
+    Friend WithEvents txtBuy4_sbd As TextBox
+    Friend WithEvents txtBuy20_sbd As TextBox
+    Friend WithEvents txtBuy50_sbd As TextBox
+    Friend WithEvents txtQty20_sbd As TextBox
+    Friend WithEvents txtQty50_sbd As TextBox
+    Friend WithEvents Label275 As Label
+    Friend WithEvents Label276 As Label
+    Friend WithEvents Label279 As Label
+    Friend WithEvents Label301 As Label
+    Friend WithEvents Label302 As Label
+    Friend WithEvents Label319 As Label
+    Friend WithEvents Label326 As Label
+    Friend WithEvents Label327 As Label
+    Friend WithEvents dgvSBD As DataGridView
+    Friend WithEvents btnCreate_sbd As Button
+    Friend WithEvents btnEdit_sbd As Button
+    Friend WithEvents btnDelete_sbd As Button
+    Friend WithEvents btnCancel_sbd As Button
+    Friend WithEvents txtSBId As TextBox
 End Class
