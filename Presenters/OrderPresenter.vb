@@ -1,5 +1,6 @@
 ﻿Imports System.Drawing.Printing
 Imports System.IO
+Imports ClosedXML.Excel
 Imports iText.Html2pdf
 Imports iText.Html2pdf.Resolver.Font
 Imports iText.Kernel.Geom
@@ -10,7 +11,7 @@ Imports Path = System.IO.Path
 ''' 銷售管理
 ''' </summary>
 Public Class OrderPresenter
-    Private ReadOnly _view As IOrderView
+    Private _view As IOrderView
     Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _carRep As ICarRep
     Private ReadOnly _gbRep As IGasBarrelRep
@@ -21,6 +22,7 @@ Public Class OrderPresenter
     Private ReadOnly _printerSer As IPrinterService
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
     Private ReadOnly _maService As IMonthlyAccountService
+    Private ReadOnly _reportRep As IReportRep
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -29,7 +31,8 @@ Public Class OrderPresenter
     Public CurrentCarOut As car
 
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
-                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService)
+                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService,
+                   reportRep As IReportRep)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
@@ -41,6 +44,27 @@ Public Class OrderPresenter
         _printerSer = printerSer
         _ocmSer = ocmSer
         _maService = New MonthlyAccountService(_ordRep.Context)
+        _reportRep = reportRep
+    End Sub
+
+    Public Sub New(cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
+                   priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService,
+                   reportRep As IReportRep)
+        _cusRep = cusRep
+        _carRep = carRep
+        _ordRep = ordRep
+        _gbRep = gbRep
+        _service = barMBService
+        _priceCalSer = priceCalSer
+        _aeSer = aeSer
+        _printerSer = printerSer
+        _ocmSer = ocmSer
+        _maService = New MonthlyAccountService(_ordRep.Context)
+        _reportRep = reportRep
+    End Sub
+
+    Public Sub SetView(view As IOrderView)
+        _view = view
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -310,6 +334,15 @@ Public Class OrderPresenter
                 ' 同步更新月度帳單資料
                 _maService.SyncOrderToMonthlyAccount(order.o_id, True, False)
 
+                ' 客戶存氣
+                Dim gas = orderInput.o_return
+                Dim gasC = orderInput.o_return_c
+                Dim cus = _cusRep.GetByIdAsync(orderInput.o_cus_Id).Result
+                Dim gasStock = cus.cus_GasStock
+                Dim gasCStock = cus.cus_GasCStock
+                cus.cus_GasStock = gasStock + gas
+                cus.cus_GasCStock = gasCStock + gasC
+
                 Await _cusRep.SaveChangesAsync
 
                 transaction.Commit()
@@ -360,7 +393,9 @@ Public Class OrderPresenter
                     Throw New Exception("沒有選擇要刪除的訂單")
                 End If
 
-                ' 更新客戶庫存
+                If MessageBox.Show("確定要刪除這筆訂單嗎？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then Return
+
+                ' 更新客戶庫存、存氣
                 UpdateCustomerStock(currentOrder, currentCustomer)
 
                 ' 更新車輛庫存
@@ -426,8 +461,8 @@ Public Class OrderPresenter
             UpdateStockDynamic(order, customer, "o_empty_", "cus_gas_", 1)
         End If
 
-        customer.cus_GasStock += order.o_return
-        customer.cus_GasCStock += order.o_return_c
+        customer.cus_GasStock -= order.o_return
+        customer.cus_GasCStock -= order.o_return_c
     End Sub
 
     Private Sub UpdateCarStock(order As order, car As car, isIn As Boolean)
@@ -508,6 +543,11 @@ Public Class OrderPresenter
             Try
                 Dim orderInput = _view.GetUserInput()
                 Validate(orderInput)
+
+                ' 客戶存氣
+                Dim cus = _cusRep.GetByIdAsync(orderInput.o_cus_Id).Result
+                cus.cus_GasStock = cus.cus_GasStock + orderInput.o_return - currentOrder.o_return
+                cus.cus_GasCStock = cus.cus_GasCStock + orderInput.o_return_c - currentOrder.o_return_c
                 Await _ordRep.UpdateAsync(currentOrder, orderInput)
 
                 _view.GetCusStkInput(currentCustomer)
@@ -524,6 +564,9 @@ Public Class OrderPresenter
 
                 ' 同步更新月度帳單資料
                 _maService.SyncOrderToMonthlyAccount(orderInput.o_id, False, False)
+
+
+
 
                 Await _cusRep.SaveChangesAsync
                 transaction.Commit()
@@ -612,6 +655,207 @@ Public Class OrderPresenter
         End Try
     End Sub
 
+    Public Sub GenerateCustomersGasDetailByDay(d As Date, isMonth As Boolean)
+        Try
+            '蒐集資料
+            Dim datas = _reportRep.CustomersGasDetailByDay(d, isMonth)
+
+            '套版
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "氣量氣款收付明細表範本檔.xlsx")
+
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    If isMonth Then
+                        .WriteToCell(2, 1, $"{d:yyyy年MM月 氣量氣款收付明細表}")
+                    Else
+                        .WriteToCell(2, 1, $"{d:yyyy年MM月dd日 氣量氣款收付明細表}")
+                    End If
+
+                    .WriteToCell(3, 7, $"列印日期: {Now:yyyy/MM/dd}")
+
+                    Dim rowIndex As Integer
+
+                    Dim dataStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = XLAlignmentHorizontalValues.Center
+                    }
+
+                    For i As Integer = 0 To datas.Count - 1
+                        rowIndex = 5 + i
+
+                        .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
+                        .WriteToCell(rowIndex, 2, If(datas(i).存氣 <> Nothing, datas(i).存氣.ToString("#,##"), 0), dataStyle)
+                        .WriteToCell(rowIndex, 3, If(datas(i).本日提量 <> Nothing, datas(i).本日提量.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 4, If(datas(i).當月累計提量 <> Nothing, datas(i).當月累計提量.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 5, If(datas(i).本日氣款 <> Nothing, datas(i).本日氣款.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 6, If(datas(i).本日收款 <> Nothing, datas(i).本日收款.ToString("#,##"), "0"), dataStyle)
+                        .WriteToCell(rowIndex, 7, If(datas(i).結欠 <> Nothing, datas(i).結欠.ToString("#,##"), "0"), dataStyle)
+                    Next
+
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 7, bottomStyle:=XLBorderStyleValues.Thin)
+
+                    rowIndex += 1
+
+                    .WriteToCell(rowIndex, 1, "合計:", dataStyle)
+                    .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.存氣).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.本日提量).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.當月累計提量).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.本日氣款).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.本日收款).ToString("#,##"), dataStyle)
+                    .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"), dataStyle)
+
+                    '存檔
+                    If isMonth Then
+                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMM}")
+                    Else
+                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMMdd}")
+                    End If
+
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox("產生氣量氣款收付明細表出現錯誤:" + ex.Message)
+        End Try
+    End Sub
+
+    Public Sub GenerateCustomersGetGasList(d As Date, isMonth As Boolean)
+        Try
+            '蒐集資料
+            Dim datas = _reportRep.CustomersGetGasList(d, isMonth)
+
+            '套版
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣清冊範本檔.xlsx")
+
+            Using xml As New CloseXML_Excel(filePath)
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    ' 設定表頭
+                    Dim ws = .Worksheet
+
+                    ws.PageSetup.PrintAreas.Clear()
+                    ws.PageSetup.SetRowsToRepeatAtTop(1, 5)
+
+                    ws.PageSetup.PaperSize = XLPaperSize.A4Paper
+                    ws.PageSetup.Margins.Top = 0.1
+                    ws.PageSetup.Margins.Bottom = 0.5
+                    ws.PageSetup.Margins.Left = 0.1
+                    ws.PageSetup.Margins.Right = 0.1
+
+                    Dim titleStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .FontSize = 14,
+                        .IsBold = True,
+                        .Horizontal = XLAlignmentHorizontalValues.Center
+                    }
+
+                    .MergeCells(1, 1, 1, 25)
+                    .WriteToCell(1, 1, "豐原液化煤氣分裝場", titleStyle)
+
+                    .MergeCells(2, 1, 2, 25)
+                    .WriteToCell(2, 1, "客戶提氣量清單", titleStyle)
+
+                    Dim dateStyle = New CloseXML_Excel.CellFormatOptions With {
+                            .Horizontal = XLAlignmentHorizontalValues.Left
+                        }
+                    If isMonth Then
+                        .WriteToCell(3, 1, $"提氣日期: {d:yyyy/MM}", dateStyle)
+                    Else
+                        .WriteToCell(3, 1, $"提氣日期: {d:yyyy/MM/dd}", dateStyle)
+                    End If
+
+                    Dim printDateStyle = New CloseXML_Excel.CellFormatOptions With {
+                            .Horizontal = XLAlignmentHorizontalValues.Right
+                        }
+
+                    .WriteToCell(3, 25, $"列印日期: {Now:yyyy/MM/dd}", printDateStyle)
+
+                    ws.PageSetup.Footer.Center.AddText("第 &P 頁/共 &N 頁")
+
+                    Dim rowIndex As Integer
+
+                    For i As Integer = 0 To datas.Count - 1
+                        rowIndex = 6 + i
+
+                        .SetRowHeight(rowIndex, 0.78)
+                        .InsertRow(rowIndex)
+
+                        .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
+                        .WriteToCell(rowIndex, 2, If(datas(i).普氣50Kg <> Nothing, datas(i).普氣50Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 3, If(datas(i).丙氣50Kg <> Nothing, datas(i).丙氣50Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 4, If(datas(i).普氣20Kg <> Nothing, datas(i).普氣20Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 5, If(datas(i).丙氣20Kg <> Nothing, datas(i).丙氣20Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 6, If(datas(i).普氣16Kg <> Nothing, datas(i).普氣16Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 7, If(datas(i).丙氣16Kg <> Nothing, datas(i).丙氣16Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 8, If(datas(i).普氣10Kg <> Nothing, datas(i).普氣10Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 9, If(datas(i).丙氣10Kg <> Nothing, datas(i).丙氣10Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 10, If(datas(i).普氣4Kg <> Nothing, datas(i).普氣4Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 11, If(datas(i).丙氣4Kg <> Nothing, datas(i).丙氣4Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 12, If(datas(i).普氣18Kg <> Nothing, datas(i).普氣18Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 13, If(datas(i).丙氣18Kg <> Nothing, datas(i).丙氣18Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 14, If(datas(i).普氣14Kg <> Nothing, datas(i).普氣14Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 15, If(datas(i).丙氣14Kg <> Nothing, datas(i).丙氣14Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 16, If(datas(i).普氣5Kg <> Nothing, datas(i).普氣5Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 17, If(datas(i).丙氣5Kg <> Nothing, datas(i).丙氣5Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 18, If(datas(i).普氣2Kg <> Nothing, datas(i).普氣2Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 19, If(datas(i).丙氣2Kg <> Nothing, datas(i).丙氣2Kg.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 20, If(datas(i).普氣殘氣 <> Nothing, datas(i).普氣殘氣.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 21, If(datas(i).丙氣殘氣 <> Nothing, datas(i).丙氣殘氣.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 22, If(datas(i).普氣提量 <> Nothing, datas(i).普氣提量.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 23, If(datas(i).丙氣提量 <> Nothing, datas(i).丙氣提量.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 24, If(datas(i).普氣實提量 <> Nothing, datas(i).普氣實提量.ToString("#,##"), ""))
+                        .WriteToCell(rowIndex, 25, If(datas(i).丙氣實提量 <> Nothing, datas(i).丙氣實提量.ToString("#,##"), ""))
+                    Next
+
+                    '合計
+                    rowIndex += 1
+
+                    Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .IsBold = True
+                    }
+
+                    .SetRowHeight(rowIndex, 0.78)
+
+                    .WriteToCell(rowIndex, 1, "合計", totalStyle)
+                    .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.普氣50Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.丙氣50Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.普氣20Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.丙氣20Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.普氣16Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.丙氣16Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 8, datas.Sum(Function(x) x.普氣10Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 9, datas.Sum(Function(x) x.丙氣10Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 10, datas.Sum(Function(x) x.普氣4Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 11, datas.Sum(Function(x) x.丙氣4Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 12, datas.Sum(Function(x) x.普氣18Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 13, datas.Sum(Function(x) x.丙氣18Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 14, datas.Sum(Function(x) x.普氣14Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 15, datas.Sum(Function(x) x.丙氣14Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 16, datas.Sum(Function(x) x.普氣5Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 17, datas.Sum(Function(x) x.丙氣5Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 18, datas.Sum(Function(x) x.普氣2Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 19, datas.Sum(Function(x) x.丙氣2Kg).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 20, datas.Sum(Function(x) x.普氣殘氣).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 21, datas.Sum(Function(x) x.丙氣殘氣).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 22, datas.Sum(Function(x) x.普氣提量).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 23, datas.Sum(Function(x) x.丙氣提量).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 24, datas.Sum(Function(x) x.普氣實提量).ToString("#,##"), totalStyle)
+                    .WriteToCell(rowIndex, 25, datas.Sum(Function(x) x.丙氣實提量).ToString("#,##"), totalStyle)
+
+                    '存檔
+                    If isMonth Then
+                        .SaveExcel($"客戶提氣清冊_{d:yyyyMM}")
+                    Else
+                        .SaveExcel($"客戶提氣清冊_{d:yyyyMMdd}")
+                    End If
+
+                End With
+            End Using
+        Catch ex As Exception
+            MsgBox("列印失敗:" + ex.Message)
+        End Try
+    End Sub
+
     Private Sub GetYesterdayStk(ByRef customers As List(Of customer))
         Try
             For Each cus In customers
@@ -639,7 +883,7 @@ Public Class OrderPresenter
     ''' <param name="group"></param>
     ''' <param name="isIn"></param>
     ''' <returns></returns>
-    Private Function GetOrderValue(ord As order, group As String, isIn As Boolean) As Integer
+    Private Function GetOrderValue(ord As OrderUserControl, group As String, isIn As Boolean) As Integer
         If isIn Then
             Return ord.GetType.GetProperties.
                 Where(Function(p) (p.Name.StartsWith("o_in_") Or p.Name.StartsWith("o_new_in_") Or p.Name.StartsWith("o_inspect_")) And p.Name.EndsWith(group)).
@@ -658,7 +902,7 @@ Public Class OrderPresenter
     ''' <param name="group"></param>
     ''' <param name="isIn"></param>
     ''' <returns></returns>
-    Private Function GetDepositValue(ord As order, group As String, isIn As Boolean) As Integer
+    Private Function GetDepositValue(ord As OrderUserControl, group As String, isIn As Boolean) As Integer
         If isIn Then
             Return ord.GetType.GetProperties.
                 Where(Function(p) p.Name.StartsWith("o_deposit_in_") And p.Name.EndsWith(group)).

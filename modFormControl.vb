@@ -152,10 +152,7 @@ Module modFormControl
         End With
     End Sub
 
-    ''' <summary>
-    ''' 讀取並設定欄寬,要輸入資料後才能讀取
-    ''' </summary>
-    ''' <param name="dgvs"></param>
+    <Obsolete("功能放到userControl後,請使用 ReadDataGridWidth(dgv As DataGridView) 方法")>
     Sub ReadDataGridWidth(dgvs As List(Of DataGridView))
         Dim dgvName As String = ""
         Try
@@ -170,6 +167,28 @@ Module modFormControl
                     Next
                 End If
             Next
+        Catch ex As Exception
+            Console.WriteLine(dgvName)
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 讀取並設定欄寬,要輸入資料後才能讀取
+    ''' </summary>
+    ''' <param name="dgv"></param>
+    Sub ReadDataGridWidth(dgv As DataGridView)
+        Dim dgvName As String = ""
+        Try
+            Dim lines = File.ReadAllLines(Application.StartupPath + "\DGVWidth.set").ToList
+            dgvName = dgv.Name
+            Dim line = lines.FirstOrDefault(Function(l) l.StartsWith(dgv.Name))
+            If line IsNot Nothing AndAlso dgv.Columns.Count > 0 Then
+                Dim widths = line.Split(":")(1).Split(",")
+                For i As Integer = 0 To widths.Length - 1
+                    dgv.Columns(i).Width = Integer.Parse(widths(i))
+                Next
+            End If
         Catch ex As Exception
             Console.WriteLine(dgvName)
             MsgBox(ex.Message)

@@ -111,6 +111,7 @@ Partial Public Class order
     Public Property o_barrel_unit_price_14 As Nullable(Of Integer)
     Public Property o_barrel_unit_price_5 As Nullable(Of Integer)
     Public Property o_barrel_unit_price_2 As Nullable(Of Integer)
+    Public Property o_UnpaidAmount As Integer
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car

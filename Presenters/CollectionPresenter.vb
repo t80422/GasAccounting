@@ -1,8 +1,4 @@
-﻿Imports System.IO
-Imports ClosedXML.Excel
-Imports iText.Signatures.Validation.V1
-
-Public Class CollectionPresenter
+﻿Public Class CollectionPresenter
     Private _view As ICollectionView
     Private ReadOnly _subjectRep As ISubjectRep
     Private ReadOnly _colRep As ICollectionRep
@@ -13,12 +9,12 @@ Public Class CollectionPresenter
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _compRep As ICompanyRep
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
-    Private ReadOnly _report As ReportService = New ReportService
+    Private ReadOnly _reportSer As IReportService
     Private _currentData As collection
 
-    Public Sub New(view As ICollectionView, subjectRep As ISubjectRep, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
-                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, compRep As ICompanyRep, ocmSer As IOrderCollectionMappingService)
-        _view = view
+    Public Sub New(subjectRep As ISubjectRep, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
+                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, compRep As ICompanyRep, ocmSer As IOrderCollectionMappingService,
+                   reportSer As IReportService)
         _subjectRep = subjectRep
         _colRep = colRep
         _bankRep = bankRep
@@ -28,6 +24,11 @@ Public Class CollectionPresenter
         _aeSer = aeSer
         _compRep = compRep
         _ocmSer = ocmSer
+        _reportSer = reportSer
+    End Sub
+
+    Public Sub SetView(view As ICollectionView)
+        _view = view
     End Sub
 
     Public Sub Initialize()
@@ -246,19 +247,14 @@ Public Class CollectionPresenter
     ''' <param name="type">傳票類型:現金、轉帳</param>
     Public Sub Print(selectDate As Date, type As String)
         Try
-            ' 取得資料
-            Dim data As New List(Of SubpoenaDTO)
-
             Select Case type
                 Case "現金"
-                    data = _colRep.GetSubpoenaData(selectDate, True)
+                    _reportSer.GeneratorCashSubpoena(selectDate, _colRep.GetCashSubpoenaData(selectDate), True)
                 Case "轉帳"
-                    data = _colRep.GetSubpoenaData(selectDate, False)
+                    _reportSer.GeneratorTransferSubpoena(selectDate, _colRep.GetTarnsferSubpoenaData(selectDate), True)
                 Case Else
                     Throw New Exception("type 傳票類型 錯誤")
             End Select
-
-            _report.GeneratorSubpoena(selectDate, data, type = "現金", True)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try

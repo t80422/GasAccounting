@@ -1,7 +1,7 @@
 ﻿''' <summary>
-''' 傳票
+''' 現金傳票
 ''' </summary>
-Public Class SubpoenaDTO
+Public Class CashSubpoenaDTO
     ''' <summary>
     ''' 科目名稱
     ''' </summary>

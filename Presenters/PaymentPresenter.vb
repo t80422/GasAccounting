@@ -1,7 +1,9 @@
-﻿Imports NLog.Time
+﻿Imports System.IO
+Imports ClosedXML.Excel
+Imports NLog.Time
 
 Public Class PaymentPresenter
-    Private ReadOnly _view As IPaymentView
+    Private _view As IPaymentView
     Private ReadOnly _manufaturerRep As IManufacturerRep
     Private ReadOnly _subjectRep As ISubjectRep
     Private ReadOnly _companyRep As ICompanyRep
@@ -9,12 +11,11 @@ Public Class PaymentPresenter
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _chequeRep As IChequeRep
     Private ReadOnly _aeSer As IAccountingEntryService
-    Private ReadOnly _report As New ReportService
+    Private ReadOnly _reportSer As IReportService
     Private selectData As payment
 
-    Public Sub New(view As IPaymentView, manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
-                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService)
-        _view = view
+    Public Sub New(manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
+                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, reportSer As IReportService)
         _manufaturerRep = manufaturerRep
         _subjectRep = subjectRep
         _companyRep = companyRep
@@ -22,6 +23,11 @@ Public Class PaymentPresenter
         _bmbService = bmbService
         _chequeRep = chequeRep
         _aeSer = aeSer
+        _reportSer = reportSer
+    End Sub
+
+    Public Sub SetView(view As IPaymentView)
+        _view = view
     End Sub
 
     Public Async Function InitializeAsync() As Task
@@ -73,7 +79,7 @@ Public Class PaymentPresenter
                         .che_ReceivedDate = payment.p_Date,
                         .che_Number = payment.p_Cheque,
                         .che_Amount = payment.p_Amount,
-                        .che_AccountNumber = payment.manufacturer.manu_account,
+                        .che_AccountNumber = payment.manufacturer?.manu_account,
                         .chu_State = "未兌現"
                     }
 
@@ -172,7 +178,7 @@ Public Class PaymentPresenter
             .Payment = selectData
             }
 
-            _view.Show(data)
+            _view.ShowDetail(data)
             ShowVendorAccountAsync(data.Payment.p_m_Id)
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -181,18 +187,14 @@ Public Class PaymentPresenter
 
     Public Sub Print(selectDate As Date, type As String)
         Try
-            Dim data As New List(Of SubpoenaDTO)
-
             Select Case type
                 Case "現金"
-                    data = _paymentRep.GetSubpoenaData(selectDate, True)
+                    _reportSer.GeneratorCashSubpoena(selectDate, _paymentRep.GetCashSubpoenaData(selectDate), False)
                 Case "轉帳"
-                    data = _paymentRep.GetSubpoenaData(selectDate, False)
+                    _reportSer.GeneratorTransferSubpoena(selectDate, _paymentRep.GetTransferSubpoenaData(selectDate), False)
                 Case Else
                     Throw New Exception("類型錯誤")
             End Select
-
-            _report.GeneratorSubpoena(selectDate, data, type = "現金", False)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try

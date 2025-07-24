@@ -14,4 +14,5 @@
     Public Property NewBerralAccountsReceivable As Integer
     Public Property NewBerralTypesCount As String
     Public Property IsInsurance As Boolean
+    Public Property ScrapBarrel As Integer
 End Class

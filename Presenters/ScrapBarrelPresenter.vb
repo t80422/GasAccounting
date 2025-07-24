@@ -5,9 +5,12 @@ Public Class ScrapBarrelPresenter
     Private _scrapBarrelRep As IScrapBarrelRep
     Private _currentData As scrap_barrel
 
-    Public Sub New(view As IScrapBarrelView, scrapBarrelRep As IScrapBarrelRep)
-        _view = view
+    Public Sub New(scrapBarrelRep As IScrapBarrelRep)
         _scrapBarrelRep = scrapBarrelRep
+    End Sub
+
+    Public Sub SetView(view As IScrapBarrelView)
+        _view = view
     End Sub
 
     Public Sub Reset()

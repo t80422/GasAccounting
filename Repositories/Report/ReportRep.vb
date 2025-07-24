@@ -824,6 +824,25 @@ Public Class ReportRep
             '新桶
             result.NewBerralAccountsReceivable = orderByCusAndMonth.Sum(Function(x) x.o_BarrelPrice)
 
+            ' 報廢桶
+            result.ScrapBarrel = _context.scrap_barrel.
+                Join(_context.scrap_barrel_detail,
+                    Function(sb) sb.sb_Id,
+                    Function(sbd) sbd.sbd_sb_Id,
+                    Function(sb, sbd) New With {sb, sbd}).
+                Where(Function(x) x.sbd.sbd_cus_Id = cus.cus_id AndAlso
+                                  x.sb.sb_Month.Value.Year = month.Year AndAlso
+                                  x.sb.sb_Month.Value.Month = month.Month AndAlso
+                                  x.sbd.sbd_isMonthlyStatement).
+                Select(Function(x) x.sbd.sbd_Qty50 * x.sb.sb_Buy50 +
+                                   x.sbd.sbd_Qty20 * x.sb.sb_Buy20 +
+                                   x.sbd.sbd_Qty16 * x.sb.sb_Buy16 +
+                                   x.sbd.sbd_Qty10 * x.sb.sb_Buy10 +
+                                   x.sbd.sbd_Qty4 * x.sb.sb_Buy4).
+                DefaultIfEmpty(0).
+                Sum()
+
+
             '註新桶
             Dim newBarrelCounts = New Dictionary(Of String, Integer) From {{"50", 0}, {"20", 0}, {"16", 0}, {"10", 0}, {"4", 0}, {"18", 0}, {"14", 0}, {"5", 0}, {"2", 0}}
 

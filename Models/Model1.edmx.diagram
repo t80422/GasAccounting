@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f3026bfe868e4a868cd9929ee7884524" Name="Diagram1" ShowGrid="true">
+      <Diagram DiagramId="f3026bfe868e4a868cd9929ee7884524" Name="Diagram1" ShowGrid="true" ZoomLevel="74">
         <EntityTypeShape EntityType="gas_accounting_systemModel.accounting_entry" Width="1.5" PointX="8.25" PointY="16.5" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.bank" Width="1.5" PointX="6" PointY="32.625" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.bank_monthly_balances" Width="1.5" PointX="8.25" PointY="35.75" />

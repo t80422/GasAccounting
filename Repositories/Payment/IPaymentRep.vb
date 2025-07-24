@@ -4,5 +4,6 @@
     Function SearchPaymentAsync(criteria As PaymentSearchCriteria) As Task(Of IEnumerable(Of payment))
     Function GetVendorAmountDue(vendorId As Integer) As List(Of AmountDueVM)
     Function GetByBankAndMonthAsync(bankId As Integer, month As Date) As Task(Of IEnumerable(Of payment))
-    Function GetSubpoenaData(selectDate As Date, isIncome As Boolean) As List(Of SubpoenaDTO)
+    Function GetCashSubpoenaData(selectDate As Date) As List(Of CashSubpoenaDTO)
+    Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO)
 End Interface

@@ -78,16 +78,33 @@ Public Class PaymentRep
         End Try
     End Function
 
-    Public Function GetSubpoenaData(selectDate As Date, isIncome As Boolean) As List(Of SubpoenaDTO) Implements IPaymentRep.GetSubpoenaData
+    Public Function GetCashSubpoenaData(selectDate As Date) As List(Of CashSubpoenaDTO) Implements IPaymentRep.GetCashSubpoenaData
         Try
             Dim query = _dbSet.Where(Function(x) x.p_Date = selectDate)
 
-            Return If(isIncome, query.Where(Function(x) x.p_Type = "現金"), query.Where(Function(x) x.p_Type = "銀行" Or x.p_Type = "支票")).
-                Select(Function(x) New SubpoenaDTO With {
+            Return query.Where(Function(x) x.p_Type = "現金").
+                Select(Function(x) New CashSubpoenaDTO With {
                     .SubjectName = x.subject.s_name,
                     .Amount = x.p_Amount,
                     .Summary = x.p_Memo,
                     .Code = x.manufacturer.manu_code
+                }).ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO) Implements IPaymentRep.GetTransferSubpoenaData
+        Try
+            Dim query = _dbSet.Where(Function(x) x.p_Date = day)
+
+            Return query.Where(Function(x) x.p_Type = "銀行" Or x.p_Type = "支票").
+                Select(Function(x) New TransferSubpoenaDTO With {
+                    .CreditAmount = x.p_Amount,
+                    .CreditSubjectName = x.p_Type,
+                    .DebitAmount = x.p_Amount,
+                    .DebitSubjectName = x.subject.s_name,
+                    .DebitSummary = x.p_Memo
                 }).ToList
         Catch ex As Exception
             Throw

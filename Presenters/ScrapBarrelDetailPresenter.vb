@@ -6,10 +6,13 @@ Public Class ScrapBarrelDetailPresenter
     Private _cusRep As ICustomerRep
     Private _currentData As scrap_barrel_detail
 
-    Public Sub New(view As IScrapBarrelDetailView, sbdRep As IScrapBarrelDetailRep, cusRep As ICustomerRep)
-        _view = view
+    Public Sub New(sbdRep As IScrapBarrelDetailRep, cusRep As ICustomerRep)
         _sbdRep = sbdRep
         _cusRep = cusRep
+    End Sub
+
+    Public Sub SetView(view As IScrapBarrelDetailView)
+        _view = view
     End Sub
 
     Public Sub Reset()

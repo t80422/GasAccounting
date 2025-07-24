@@ -42,7 +42,6 @@
     End Sub
 
     Private Sub ucClosingEntry_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _presenter = DependencyContainer.Resolve(Of ClosingEntryPresenter)()
         _presenter.SetView(Me)
         btnCancel.PerformClick()
     End Sub

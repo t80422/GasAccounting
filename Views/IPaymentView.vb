@@ -31,7 +31,7 @@
 
     Function GetInput() As PaymentVM
 
-    Sub Show(data As PaymentVM)
+    Sub ShowDetail(data As PaymentVM)
 
     ''' <summary>
     ''' 顯示廠商帳號

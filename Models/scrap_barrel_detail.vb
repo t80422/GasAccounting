@@ -19,6 +19,7 @@ Partial Public Class scrap_barrel_detail
     Public Property sbd_Qty10 As Nullable(Of Integer)
     Public Property sbd_Qty4 As Nullable(Of Integer)
     Public Property sbd_sb_Id As Nullable(Of Integer)
+    Public Property sbd_isMonthlyStatement As Nullable(Of Boolean)
 
     Public Overridable Property customer As customer
     Public Overridable Property scrap_barrel As scrap_barrel

@@ -361,6 +361,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyContainer.vb" />
+    <Compile Include="Forms\CollectionUserControl.Designer.vb">
+      <DependentUpon>CollectionUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CollectionUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\frmDatePicker.Designer.vb">
       <DependentUpon>frmDatePicker.vb</DependentUpon>
     </Compile>
@@ -373,10 +379,28 @@
     <Compile Include="Forms\frmInitializeMonthlyAccounts.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSearch_Collection.Designer.vb">
+    <Compile Include="Forms\OrderUserControl.Designer.vb">
+      <DependentUpon>OrderUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OrderUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\PaymentUserControl.Designer.vb">
+      <DependentUpon>PaymentUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PaymentUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ScrapBarrelUserControl.Designer.vb">
+      <DependentUpon>ScrapBarrelUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ScrapBarrelUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Search\frmSearch_Collection.Designer.vb">
       <DependentUpon>frmSearch_Collection.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmSearch_Collection.vb">
+    <Compile Include="Forms\Search\frmSearch_Collection.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmWriteOff.Designer.vb">
@@ -391,22 +415,22 @@
     <Compile Include="Forms\Print_Subpoena.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Search_Cheque.Designer.vb">
+    <Compile Include="Forms\Search\Search_Cheque.Designer.vb">
       <DependentUpon>Search_Cheque.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Search_Cheque.vb">
+    <Compile Include="Forms\Search\Search_Cheque.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Search_ClosingEntry.Designer.vb">
+    <Compile Include="Forms\Search\Search_ClosingEntry.Designer.vb">
       <DependentUpon>Search_ClosingEntry.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Search_ClosingEntry.vb">
+    <Compile Include="Forms\Search\Search_ClosingEntry.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Search_Inspection.Designer.vb">
+    <Compile Include="Forms\Search\Search_Inspection.Designer.vb">
       <DependentUpon>Search_Inspection.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Search_Inspection.vb">
+    <Compile Include="Forms\Search\Search_Inspection.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ucClosingEntry.Designer.vb">
@@ -454,6 +478,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Report\BillsReceivable.vb" />
+    <Compile Include="Models\Report\TransferSubpoenaDTO.vb" />
     <Compile Include="Models\Report\DailySubjectSummary.vb" />
     <Compile Include="Models\Report\EnergyBureau.vb" />
     <Compile Include="Models\Report\SplitCompanyInvoice.vb" />
@@ -467,9 +492,8 @@
     <Compile Include="Models\Report\NewBarrelDetails.vb" />
     <Compile Include="Models\Report\PayableCheck.vb" />
     <Compile Include="Models\Report\Tax.vb" />
-    <Compile Include="Models\Report\SubpoenaDTO.vb" />
+    <Compile Include="Models\Report\CashSubpoenaDTO.vb" />
     <Compile Include="Models\Report\TransactionItem.vb" />
-    <Compile Include="Models\Report\Subpoena.vb" />
     <Compile Include="Models\scrap_barrel.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -513,6 +537,12 @@
     <Compile Include="Presenters\InspectionPresenter.vb" />
     <Compile Include="Presenters\ScrapBarrelDetailPresenter.vb" />
     <Compile Include="Presenters\ScrapBarrelPresenter.vb" />
+    <Compile Include="Forms\Report.Designer.vb">
+      <DependentUpon>Report.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Report.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Repositories\ClosingEntry\ClosingEntryRep.vb" />
     <Compile Include="Repositories\ClosingEntry\IClosingEntryRep.vb" />
     <Compile Include="Repositories\Inspection\IInspectionRep.vb" />
@@ -592,7 +622,8 @@
     <Compile Include="Services\PriceCalculation\IPriceCalculationService.vb" />
     <Compile Include="Services\PriceCalculation\PriceCalculationService.vb" />
     <Compile Include="Services\Printer\PrinterService.vb" />
-    <Compile Include="Services\ReportService.vb" />
+    <Compile Include="Services\Report\IReportService.vb" />
+    <Compile Include="Services\Report\ReportService.vb" />
     <Compile Include="Views\IBaseView.vb" />
     <Compile Include="Views\IBasicPriceView.vb" />
     <Compile Include="Views\ICarView.vb" />
@@ -660,10 +691,10 @@
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmQueryCustomer.Designer.vb">
+    <Compile Include="Forms\Search\frmQueryCustomer.Designer.vb">
       <DependentUpon>frmQueryCustomer.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmQueryCustomer.vb">
+    <Compile Include="Forms\Search\frmQueryCustomer.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\ICompanyView.vb" />
@@ -780,6 +811,9 @@
     <Compile Include="Models\ViewModels\UnitPriceHistoryVM.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\CollectionUserControl.resx">
+      <DependentUpon>CollectionUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmDatePicker.resx">
       <DependentUpon>frmDatePicker.vb</DependentUpon>
     </EmbeddedResource>
@@ -789,10 +823,19 @@
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmQueryCustomer.resx">
+    <EmbeddedResource Include="Forms\OrderUserControl.resx">
+      <DependentUpon>OrderUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PaymentUserControl.resx">
+      <DependentUpon>PaymentUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ScrapBarrelUserControl.resx">
+      <DependentUpon>ScrapBarrelUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Search\frmQueryCustomer.resx">
       <DependentUpon>frmQueryCustomer.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSearch_Collection.resx">
+    <EmbeddedResource Include="Forms\Search\frmSearch_Collection.resx">
       <DependentUpon>frmSearch_Collection.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmWriteOff.resx">
@@ -801,13 +844,13 @@
     <EmbeddedResource Include="Forms\Print_Subpoena.resx">
       <DependentUpon>Print_Subpoena.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Search_Cheque.resx">
+    <EmbeddedResource Include="Forms\Search\Search_Cheque.resx">
       <DependentUpon>Search_Cheque.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Search_ClosingEntry.resx">
+    <EmbeddedResource Include="Forms\Search\Search_ClosingEntry.resx">
       <DependentUpon>Search_ClosingEntry.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Search_Inspection.resx">
+    <EmbeddedResource Include="Forms\Search\Search_Inspection.resx">
       <DependentUpon>Search_Inspection.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ucClosingEntry.resx">
@@ -818,6 +861,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Report.resx">
+      <DependentUpon>Report.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
