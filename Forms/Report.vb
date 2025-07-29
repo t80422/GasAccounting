@@ -143,4 +143,9 @@
     Private Sub btnGenerate_RI_Click(sender As Object, e As EventArgs) Handles btnGenerate_RI.Click
         _presenter.GenerateInvoice(dtpMonth_RI.Value)
     End Sub
+
+    ' 科目平衡表
+    Private Sub btnAccountBalance_Click(sender As Object, e As EventArgs) Handles btnAccountBalance.Click
+        _presenter.GenerateAccountBalance(dtpAccountBalance.Value.Date)
+    End Sub
 End Class

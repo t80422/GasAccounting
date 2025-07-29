@@ -43,6 +43,7 @@ Public Class DependencyContainer
             .RegisterType(Of IPrinterService, PrinterService)()
             .RegisterType(Of IOrderCollectionMappingService, OrderCollectionMappingService)()
             .RegisterType(Of IReportService, ReportService)()
+            .RegisterType(Of IManufacturerService, ManufacturerService)
 
             ' 註冊 Presenter
             .RegisterType(Of ClosingEntryPresenter)()

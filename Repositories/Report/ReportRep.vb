@@ -788,6 +788,7 @@ Public Class ReportRep
             Dim cus = orderByCusAndMonth.FirstOrDefault.customer
             result.CusCode = cus.cus_code
             result.CompanyName = cus.company?.comp_name
+            result.CusName = cus.cus_name
 
             Dim firstDate = New Date(month.Year, month.Month, 1)
             Dim orderByFirstDate = orderByCusAndMonth.Where(Function(x) x.o_date.Value.Date = firstDate)
@@ -857,9 +858,6 @@ Public Class ReportRep
                 newBarrelCounts("5") += order.o_new_in_5
                 newBarrelCounts("2") += order.o_new_in_2
             Next
-
-            result.NewBerralTypesCount = String.Join(", ",
-                newBarrelCounts.Where(Function(kvp) kvp.Value > 0).Select(Function(kvp) $"{kvp.Key}Kg:{kvp.Value}"))
 
             result.IsInsurance = cus.cus_IsInsurance
 
@@ -1165,6 +1163,120 @@ Public Class ReportRep
             Next
 
             Return subjectSummary.Values.ToList()
+
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetAccountBalance(month As Date) As AccountBalanceDTO Implements IReportRep.GetAccountBalance
+        Try
+            Dim result As New AccountBalanceDTO With {
+                .DebitDatas = New List(Of Dictionary(Of String, List(Of SubjectTransaction))),
+                .CreditDatas = New List(Of Dictionary(Of String, List(Of SubjectTransaction)))
+            }
+
+            ' 設定查詢時間範圍
+            Dim startDate = New Date(month.Year, month.Month, 1)
+            Dim endDate = startDate.AddMonths(1)
+
+            ' 取得 collection 資料 (收款表)
+            Dim collectionData = _context.collections.AsNoTracking().
+                Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate).
+                Include(Function(x) x.subject).
+                ToList()
+
+            ' 取得 payment 資料 (付款表)
+            Dim paymentData = _context.payments.AsNoTracking().
+                Where(Function(x) x.p_Date >= startDate AndAlso x.p_Date < endDate).
+                Include(Function(x) x.subject).
+                ToList()
+
+            ' 建立借方科目字典
+            Dim debitSubjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
+            Dim creditSubjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
+
+            ' 處理 collection 資料
+            ' collection: 借方=col_Type, 貸方=col_s_Id (科目)
+            For Each item In collectionData
+                ' 處理借方科目 (col_Type)
+                If Not String.IsNullOrEmpty(item.col_Type) Then
+                    If Not debitSubjectDict.ContainsKey(item.col_Type) Then
+                        debitSubjectDict(item.col_Type) = New List(Of SubjectTransaction)
+                    End If
+
+                    Dim transaction As New SubjectTransaction With {
+                        .Day = item.col_Date,
+                        .Amount = item.col_Amount
+                    }
+
+                    debitSubjectDict(item.col_Type).Add(transaction)
+                End If
+
+                ' 處理貸方科目 (col_s_Id 關聯的科目)
+                If item.col_s_Id.HasValue AndAlso item.subject IsNot Nothing Then
+                    Dim subjectName = item.subject.s_name
+                    If Not creditSubjectDict.ContainsKey(subjectName) Then
+                        creditSubjectDict(subjectName) = New List(Of SubjectTransaction)
+                    End If
+
+                    Dim transaction As New SubjectTransaction With {
+                        .Day = item.col_Date,
+                        .Amount = item.col_Amount
+                    }
+
+                    creditSubjectDict(subjectName).Add(transaction)
+                End If
+            Next
+
+            ' 處理 payment 資料
+            ' payment: 借方=p_s_Id (科目), 貸方=p_Type
+            For Each item In paymentData
+                ' 處理借方科目 (p_s_Id 關聯的科目)
+                If item.p_s_Id.HasValue AndAlso item.subject IsNot Nothing Then
+                    Dim subjectName = item.subject.s_name
+                    If Not debitSubjectDict.ContainsKey(subjectName) Then
+                        debitSubjectDict(subjectName) = New List(Of SubjectTransaction)
+                    End If
+
+                    Dim transaction As New SubjectTransaction With {
+                        .Day = item.p_Date,
+                        .Amount = item.p_Amount
+                    }
+
+                    debitSubjectDict(subjectName).Add(transaction)
+                End If
+
+                ' 處理貸方科目 (p_Type)
+                If Not String.IsNullOrEmpty(item.p_Type) Then
+                    If Not creditSubjectDict.ContainsKey(item.p_Type) Then
+                        creditSubjectDict(item.p_Type) = New List(Of SubjectTransaction)
+                    End If
+
+                    Dim transaction As New SubjectTransaction With {
+                        .Day = item.p_Date,
+                        .Amount = item.p_Amount
+                    }
+
+                    creditSubjectDict(item.p_Type).Add(transaction)
+                End If
+            Next
+
+            ' 將借方科目資料加入結果
+            For Each subject In debitSubjectDict
+                Dim subjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
+                subjectDict.Add(subject.Key, subject.Value)
+                result.DebitDatas.Add(subjectDict)
+            Next
+
+            ' 將貸方科目資料加入結果
+            For Each subject In creditSubjectDict
+                Dim subjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
+                subjectDict.Add(subject.Key, subject.Value)
+                result.CreditDatas.Add(subjectDict)
+            Next
+
+            Return result
 
         Catch ex As Exception
             Throw

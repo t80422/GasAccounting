@@ -119,6 +119,10 @@ Partial Class Report
         Me.btnGasPayableDetail = New System.Windows.Forms.Button()
         Me.cmbManu = New System.Windows.Forms.ComboBox()
         Me.Label132 = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.btnAccountBalance = New System.Windows.Forms.Button()
+        Me.dtpAccountBalance = New System.Windows.Forms.DateTimePicker()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox26.SuspendLayout()
@@ -138,6 +142,7 @@ Partial Class Report
         Me.GroupBox4.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox2
@@ -744,7 +749,6 @@ Partial Class Report
         Me.GroupBox12.TabIndex = 484
         Me.GroupBox12.TabStop = False
         Me.GroupBox12.Text = "發票"
-        Me.GroupBox12.Visible = False
         '
         'btnGenerate_RI
         '
@@ -1068,7 +1072,7 @@ Partial Class Report
         'btnGasPayableDetail
         '
         Me.btnGasPayableDetail.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnGasPayableDetail.Location = New System.Drawing.Point(387, 26)
+        Me.btnGasPayableDetail.Location = New System.Drawing.Point(388, 27)
         Me.btnGasPayableDetail.Name = "btnGasPayableDetail"
         Me.btnGasPayableDetail.Size = New System.Drawing.Size(73, 30)
         Me.btnGasPayableDetail.TabIndex = 4
@@ -1092,10 +1096,51 @@ Partial Class Report
         Me.Label132.TabIndex = 4
         Me.Label132.Text = "廠商"
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.btnAccountBalance)
+        Me.GroupBox1.Controls.Add(Me.dtpAccountBalance)
+        Me.GroupBox1.Controls.Add(Me.Label1)
+        Me.GroupBox1.Location = New System.Drawing.Point(480, 716)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(505, 68)
+        Me.GroupBox1.TabIndex = 485
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "科目平衡表"
+        '
+        'btnAccountBalance
+        '
+        Me.btnAccountBalance.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnAccountBalance.Location = New System.Drawing.Point(196, 29)
+        Me.btnAccountBalance.Name = "btnAccountBalance"
+        Me.btnAccountBalance.Size = New System.Drawing.Size(72, 30)
+        Me.btnAccountBalance.TabIndex = 24
+        Me.btnAccountBalance.Text = "產生"
+        Me.btnAccountBalance.UseVisualStyleBackColor = False
+        '
+        'dtpAccountBalance
+        '
+        Me.dtpAccountBalance.CustomFormat = "yyyy年MM月"
+        Me.dtpAccountBalance.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpAccountBalance.Location = New System.Drawing.Point(63, 29)
+        Me.dtpAccountBalance.Name = "dtpAccountBalance"
+        Me.dtpAccountBalance.Size = New System.Drawing.Size(127, 30)
+        Me.dtpAccountBalance.TabIndex = 23
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(6, 35)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(51, 19)
+        Me.Label1.TabIndex = 22
+        Me.Label1.Text = "月份"
+        '
         'Report
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox7)
         Me.Controls.Add(Me.GroupBox26)
@@ -1156,6 +1201,8 @@ Partial Class Report
         Me.GroupBox3.PerformLayout()
         Me.GroupBox6.ResumeLayout(False)
         Me.GroupBox6.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1258,4 +1305,8 @@ Partial Class Report
     Friend WithEvents btnGasPayableDetail As Button
     Friend WithEvents cmbManu As ComboBox
     Friend WithEvents Label132 As Label
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents btnAccountBalance As Button
+    Friend WithEvents dtpAccountBalance As DateTimePicker
+    Friend WithEvents Label1 As Label
 End Class

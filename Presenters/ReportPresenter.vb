@@ -5,31 +5,45 @@ Imports ClosedXML.Excel
 Public Class ReportPresenter
     Property _view As IReportView
     Private ReadOnly _rep As IReportRep
-    Private ReadOnly _manuRep As IManufacturerService = New ManufacturerService
+    Private ReadOnly _manuSer As IManufacturerService
     Private ReadOnly _bankRep As IBankRep
     Private ReadOnly _compRep As ICompanyRep
     Private ReadOnly _colRep As ICollectionRep
     Private ReadOnly _printerSer As IPrinterService
 
-    'Public Sub New(view As IReportView, reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService, colRep As ICollectionRep)
-    '    _view = view
-    '    _rep = reportRep
-    '    _bankRep = bankRep
-    '    _compRep = compRep
-    '    _printerSer = printerSer
-    '    _colRep = colRep
-    'End Sub
-
-    Public Sub New(reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService, colRep As ICollectionRep)
+    Public Sub New(reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService, colRep As ICollectionRep, manuSer As IManufacturerService)
         _rep = reportRep
         _bankRep = bankRep
         _compRep = compRep
         _printerSer = printerSer
         _colRep = colRep
+        _manuSer = manuSer
     End Sub
 
     Public Sub SetView(view As IReportView)
         _view = view
+    End Sub
+
+    Public Async Sub LoadBankAccount()
+        Try
+            Dim items = Await _bankRep.GetBankDropdownAsync
+            _view.SetBankAccountCmb(items)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Async Sub LoadCompany()
+        Try
+            Dim items = Await _compRep.GetCompanyDropdownAsync
+            _view.SetCompanyCmb(items)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub GetManuCmb()
+        _view.SetGasVendorCmb(_manuSer.GetGasVendorCmbItems())
     End Sub
 
     ''' <summary>
@@ -239,10 +253,6 @@ Public Class ReportPresenter
         Catch ex As Exception
             MsgBox("列印失敗:" + ex.Message)
         End Try
-    End Sub
-
-    Public Sub GetManuCmb()
-        _view.SetGasVendorCmb(_manuRep.GetGasVendorCmbItems())
     End Sub
 
     ''' <summary>
@@ -1251,7 +1261,8 @@ Public Class ReportPresenter
                     .SelectWorksheet("Sheet1")
 
                     '標題
-                    .WriteToCell("A1", data.CompanyName + $" {month.Year}年{month.Month}月對帳單:")
+                    .WriteToCell("A1", $" {month.Year}年{month.Month}月對帳單:")
+                    .WriteToCell("B1", data.CusName)
                     .WriteToCell("D1", data.CusCode)
 
                     '家用瓦斯(變動前)
@@ -1303,8 +1314,6 @@ Public Class ReportPresenter
                     .WriteToCell("B11", data.ScrapBarrel.ToString)
                     ' 本月欠款
                     .WriteToCell("B12", (gasAccountsRecievable + data.NewBerralAccountsReceivable - data.GasAccountsReceived).ToString)
-                    ' 註新桶
-                    .WriteToCell("B13", data.NewBerralTypesCount)
 
                     '存檔
                     .SaveExcel($"月對帳單_{data.CusCode}_{month:yyyyMM}")
@@ -1642,21 +1651,198 @@ Public Class ReportPresenter
         End Try
     End Sub
 
-    Public Async Sub LoadBankAccount()
+    ''' <summary>
+    ''' 產生科目平衡表 - 橫向多科目並列格式
+    ''' </summary>
+    ''' <param name="month">查詢月份</param>
+    Public Sub GenerateAccountBalance(month As Date)
         Try
-            Dim items = Await _bankRep.GetBankDropdownAsync
-            _view.SetBankAccountCmb(items)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
+            '取得資料
+            Dim data As AccountBalanceDTO = _rep.GetAccountBalance(month)
 
-    Public Async Sub LoadCompany()
-        Try
-            Dim items = Await _compRep.GetCompanyDropdownAsync
-            _view.SetCompanyCmb(items)
+            '套版
+            Using xml As New CloseXML_Excel()
+                With xml
+                    .SelectWorksheet("Sheet1")
+
+                    '設定標題
+                    Dim titleStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .FontSize = 14,
+                        .IsBold = True,
+                        .Horizontal = XLAlignmentHorizontalValues.Center
+                    }
+
+                    .WriteToCell(1, 1, $"{month:yyyy年MM月} 科目平衡表", titleStyle)
+
+                    '設定表頭樣式
+                    Dim headerStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .IsBold = True,
+                        .Horizontal = XLAlignmentHorizontalValues.Center
+                    }
+
+                    '設定資料樣式
+                    Dim dataStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = XLAlignmentHorizontalValues.Center
+                    }
+
+                    '設定金額樣式
+                    Dim amountStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = XLAlignmentHorizontalValues.Right
+                    }
+
+                    '設定總計樣式
+                    Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .IsBold = True,
+                        .Horizontal = XLAlignmentHorizontalValues.Right
+                    }
+
+                    '取得所有科目名稱
+                    Dim allDebitSubjects = data.DebitDatas.SelectMany(Function(x) x.Keys).Distinct().ToList()
+                    Dim allCreditSubjects = data.CreditDatas.SelectMany(Function(x) x.Keys).Distinct().ToList()
+                    Dim allSubjects = allDebitSubjects.Union(allCreditSubjects).OrderBy(Function(x) x).ToList()
+
+                    '取得所有交易日期
+                    Dim allDates = data.DebitDatas.SelectMany(Function(x) x.Values.SelectMany(Function(t) t.Select(Function(d) d.Day))).
+                    Union(data.CreditDatas.SelectMany(Function(x) x.Values.SelectMany(Function(t) t.Select(Function(d) d.Day)))).
+                    Distinct().OrderBy(Function(x) x).ToList()
+
+                    '寫入表頭
+                    Dim colIndex As Integer = 1
+                    For Each subjectName In allSubjects
+                        '科目名稱
+                        .WriteToCell(3, colIndex, subjectName, headerStyle)
+                        .WriteToCell(3, colIndex + 1, "借方", headerStyle)
+                        .WriteToCell(3, colIndex + 2, "貸方", headerStyle)
+                        .WriteToCell(3, colIndex + 3, "日期", headerStyle)
+
+                        '合併科目名稱欄位
+                        .MergeCells(3, colIndex, 3, colIndex + 3)
+
+                        colIndex += 4
+                    Next
+
+                    '寫入交易資料 - 按科目分別處理借方和貸方
+                    Dim rowIndex As Integer = 4
+                    Dim maxRows As Integer = 0
+
+                    '先計算每個科目的最大行數
+                    For Each subjectName In allSubjects
+                        Dim debitTransactions = data.DebitDatas.Where(Function(x) x.ContainsKey(subjectName)).
+                        SelectMany(Function(x) x(subjectName)).ToList()
+
+                        Dim creditTransactions = data.CreditDatas.Where(Function(x) x.ContainsKey(subjectName)).
+                        SelectMany(Function(x) x(subjectName)).ToList()
+
+                        Dim subjectRows = debitTransactions.Count + creditTransactions.Count
+                        If subjectRows > maxRows Then
+                            maxRows = subjectRows
+                        End If
+                    Next
+
+                    '如果沒有交易，至少有一行
+                    If maxRows = 0 Then maxRows = 1
+
+                    '按行寫入資料
+                    For row As Integer = 0 To maxRows - 1
+                        colIndex = 1
+
+                        For Each subjectName In allSubjects
+                            '取得該科目的所有交易
+                            Dim debitTransactions = data.DebitDatas.Where(Function(x) x.ContainsKey(subjectName)).
+                            SelectMany(Function(x) x(subjectName)).
+                            OrderBy(Function(t) t.Day).ToList()
+
+                            Dim creditTransactions = data.CreditDatas.Where(Function(x) x.ContainsKey(subjectName)).
+                            SelectMany(Function(x) x(subjectName)).
+                            OrderBy(Function(t) t.Day).ToList()
+
+                            '合併借貸方交易，按日期排序
+                            Dim allTransactions = New List(Of (Date, Double, String)) ' (日期, 金額, 類型)
+
+                            For Each transaction In debitTransactions
+                                allTransactions.Add((transaction.Day, transaction.Amount, "Debit"))
+                            Next
+
+                            For Each transaction In creditTransactions
+                                allTransactions.Add((transaction.Day, transaction.Amount, "Credit"))
+                            Next
+
+                            allTransactions = allTransactions.OrderBy(Function(t) t.Item1).ToList()
+
+                            '寫入該行該科目的資料
+                            If row < allTransactions.Count Then
+                                Dim transaction = allTransactions(row)
+                                .WriteToCell(rowIndex + row, colIndex, transaction.Item1.ToString("MM/dd"), dataStyle)
+
+                                If transaction.Item3 = "Debit" Then
+                                    .WriteToCell(rowIndex + row, colIndex + 1, transaction.Item2.ToString("#,##0"), amountStyle)
+                                    .WriteToCell(rowIndex + row, colIndex + 2, "", amountStyle)
+                                Else
+                                    .WriteToCell(rowIndex + row, colIndex + 1, "", amountStyle)
+                                    .WriteToCell(rowIndex + row, colIndex + 2, transaction.Item2.ToString("#,##0"), amountStyle)
+                                End If
+
+                                .WriteToCell(rowIndex + row, colIndex + 3, transaction.Item1.ToString("MM/dd"), dataStyle)
+                            Else
+                                '該行沒有交易，留空
+                                .WriteToCell(rowIndex + row, colIndex, "", dataStyle)
+                                .WriteToCell(rowIndex + row, colIndex + 1, "", amountStyle)
+                                .WriteToCell(rowIndex + row, colIndex + 2, "", amountStyle)
+                                .WriteToCell(rowIndex + row, colIndex + 3, "", dataStyle)
+                            End If
+
+                            colIndex += 4
+                        Next
+                    Next
+
+                    rowIndex = 4 + maxRows
+
+                    '寫入總計行
+                    colIndex = 1
+                    For Each subjectName In allSubjects
+                        '計算該科目的總計
+                        Dim totalDebit = data.DebitDatas.Where(Function(x) x.ContainsKey(subjectName)).
+                        SelectMany(Function(x) x(subjectName)).
+                        Sum(Function(t) t.Amount)
+
+                        Dim totalCredit = data.CreditDatas.Where(Function(x) x.ContainsKey(subjectName)).
+                        SelectMany(Function(x) x(subjectName)).
+                        Sum(Function(t) t.Amount)
+
+                        .WriteToCell(rowIndex, colIndex, "總計", totalStyle)
+                        .WriteToCell(rowIndex, colIndex + 1, totalDebit.ToString("#,##0"), totalStyle)
+                        .WriteToCell(rowIndex, colIndex + 2, totalCredit.ToString("#,##0"), totalStyle)
+                        .WriteToCell(rowIndex, colIndex + 3, "", totalStyle)
+
+                        '設定總計行邊框
+                        .SetCustomBorders(rowIndex, colIndex, rowIndex, colIndex + 3,
+                                        topStyle:=XLBorderStyleValues.Thin,
+                                        bottomStyle:=XLBorderStyleValues.Thin)
+
+                        colIndex += 4
+                    Next
+
+                    '設定欄寬
+                    colIndex = 1
+                    For Each subjectName In allSubjects
+                        .SetColumnWidth(colIndex, 8)      '日期欄
+                        .SetColumnWidth(colIndex + 1, 12) '借方欄
+                        .SetColumnWidth(colIndex + 2, 12) '貸方欄
+                        .SetColumnWidth(colIndex + 3, 8)  '日期欄
+                        colIndex += 4
+                    Next
+
+                    '設定表格邊框
+                    .SetCustomBorders(3, 1, rowIndex, colIndex - 1,
+                                    XLBorderStyleValues.Thin, XLBorderStyleValues.Thin,
+                                    XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
+
+                    '存檔
+                    .SaveExcel($"科目平衡表_{month:yyyyMM}")
+                End With
+            End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MsgBox("產生科目平衡表失敗:" + ex.Message)
         End Try
     End Sub
 End Class

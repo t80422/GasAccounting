@@ -477,6 +477,7 @@
     <Compile Include="Models\order_collection_mapping.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Report\AccountBalanceDTO.vb" />
     <Compile Include="Models\Report\BillsReceivable.vb" />
     <Compile Include="Models\Report\TransferSubpoenaDTO.vb" />
     <Compile Include="Models\Report\DailySubjectSummary.vb" />
@@ -493,7 +494,6 @@
     <Compile Include="Models\Report\PayableCheck.vb" />
     <Compile Include="Models\Report\Tax.vb" />
     <Compile Include="Models\Report\CashSubpoenaDTO.vb" />
-    <Compile Include="Models\Report\TransactionItem.vb" />
     <Compile Include="Models\scrap_barrel.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

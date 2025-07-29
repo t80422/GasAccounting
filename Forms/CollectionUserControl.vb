@@ -59,18 +59,22 @@
 
     ' 取消
     Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
-        _presenter.Initialize()
-        SetButtonState(btnCancel_col, True)
+        Try
+            _presenter.Initialize()
+            SetButtonState(btnCancel_col, True)
 
-        ' 公司預設 "豐合"
-        Dim index As Integer = cmbCompany_col.FindString("豐合")
-        If index >= 0 Then cmbCompany_col.SelectedIndex = index
+            ' 公司預設 "豐合"
+            Dim index As Integer = cmbCompany_col.FindString("豐合")
+            If index >= 0 Then cmbCompany_col.SelectedIndex = index
 
-        ' 解鎖"收款類型"
-        cmbType_col.Enabled = True
+            ' 解鎖"收款類型"
+            cmbType_col.Enabled = True
 
-        dtpDate_col.Value = Now.Date
-        DateTimePicker14.Value = Now.Date
+            dtpDate_col.Value = Now.Date
+            DateTimePicker14.Value = Now.Date
+        Catch ex As Exception
+            MsgBox(ex.StackTrace)
+        End Try
     End Sub
 
     ' 客戶代號

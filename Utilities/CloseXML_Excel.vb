@@ -12,9 +12,15 @@ Public Class CloseXML_Excel
     ''' 初始化範本檔,要先選擇sheet
     ''' </summary>
     ''' <param name="filePath">範本檔路徑</param>
-    Public Sub New(filePath As String)
+    Public Sub New(Optional filePath As String = Nothing)
         Try
-            workbook = New XLWorkbook(filePath)
+            If filePath IsNot Nothing Then
+                workbook = New XLWorkbook(filePath)
+            Else
+                workbook = New XLWorkbook()
+                Worksheet = workbook.Worksheets.Add("Sheet1")
+            End If
+
             Worksheet = workbook.Worksheets.First()
         Catch ex As Exception
             Console.WriteLine(ex.Message)

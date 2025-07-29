@@ -121,7 +121,7 @@
     ''' <summary>
     ''' 取得月對帳單
     ''' </summary>
-    ''' <param name="compId"></param>
+    ''' <param name="cusCode"></param>
     ''' <param name="month"></param>
     ''' <returns></returns>
     Function GetMonthlyStatement(cusCode As String, month As Date) As MonthlyStatement
@@ -165,4 +165,11 @@
     ''' <param name="day"></param>
     ''' <returns></returns>
     Function GetDailySubjectSummary(day As Date) As List(Of DailySubjectSummary)
+
+    ''' <summary>
+    ''' 取得科目平衡表 - 橫向多科目並列格式
+    ''' </summary>
+    ''' <param name="month">查詢月份</param>
+    ''' <returns></returns>
+    Function GetAccountBalance(month As Date) As AccountBalanceDTO
 End Interface

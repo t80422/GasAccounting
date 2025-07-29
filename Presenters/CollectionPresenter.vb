@@ -54,7 +54,7 @@
             Dim datas = _colRep.GetList(criteria)
             _view.DisplayList(datas)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MsgBox(ex.StackTrace)
         End Try
     End Sub
 
