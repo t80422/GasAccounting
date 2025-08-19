@@ -8,6 +8,20 @@ Public Class ChequeRep
         MyBase.New(context)
     End Sub
 
+    Public Sub UpdateRedeemedStatus(chequeIds As List(Of Integer), redeemedDate As Date) Implements IChequeRep.UpdateRedeemedStatus
+        Try
+            Dim cheques = _dbSet.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = "已代收").ToList()
+            For Each cheque In cheques
+                cheque.chu_State = "已兌現"
+                cheque.che_CashingDate = redeemedDate
+            Next
+
+            _context.SaveChanges()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
+
     Public Function GetState(cheNum As String) As String Implements IChequeRep.GetState
         Try
             Using db As New gas_accounting_systemEntities
@@ -50,7 +64,7 @@ Public Class ChequeRep
 
     Public Async Function UpdateCollectionStatusAsync(chequeIds As List(Of Integer), collectionDate As Date) As Task Implements IChequeRep.UpdateCollectionStatusAsync
         Try
-            Dim cheques = Await _dbSet.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = "未兌現").ToListAsync
+            Dim cheques = Await _dbSet.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = Nothing).ToListAsync
 
             For Each cheque In cheques
                 cheque.chu_State = "已代收"

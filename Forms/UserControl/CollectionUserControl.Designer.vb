@@ -679,7 +679,7 @@ Partial Class CollectionUserControl
         Me.Controls.Add(Me.Label110)
         Me.Controls.Add(Me.Label112)
         Me.Controls.Add(Me.Label109)
-        Me.Font = New System.Drawing.Font("標楷體", 14.25!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Name = "CollectionUserControl"
         Me.Size = New System.Drawing.Size(1882, 949)

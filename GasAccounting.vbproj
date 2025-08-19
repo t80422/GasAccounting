@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.props" Condition="Exists('packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.props')" />
+  <Import Project="packages\Microsoft.Testing.Extensions.Telemetry.1.8.2\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props" Condition="Exists('packages\Microsoft.Testing.Extensions.Telemetry.1.8.2\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" />
+  <Import Project="packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.props" Condition="Exists('packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.props')" />
+  <Import Project="packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.props" Condition="Exists('packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.props')" />
   <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="packages\NUnit.4.2.2\build\NUnit.props" Condition="Exists('packages\NUnit.4.2.2\build\NUnit.props')" />
   <Import Project="packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props" Condition="Exists('packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\build\PdfiumViewer.Native.x86_64.v8-xfa.props')" />
@@ -82,7 +86,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>gasAcc.ico</ApplicationIcon>
@@ -163,6 +167,9 @@
     <Reference Include="itext.svg, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>packages\itext.8.0.4\lib\net461\itext.svg.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.23.0.29, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ApplicationInsights.2.23.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.9.0.5\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -213,6 +220,39 @@
       <HintPath>packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Testing.Extensions.MSBuild, Version=1.8.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Testing.Platform.MSBuild.1.8.2\lib\netstandard2.0\Microsoft.Testing.Extensions.MSBuild.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Testing.Extensions.Telemetry, Version=1.8.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Testing.Extensions.Telemetry.1.8.2\lib\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Testing.Extensions.TrxReport.Abstractions, Version=1.8.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Testing.Extensions.TrxReport.Abstractions.1.8.2\lib\netstandard2.0\Microsoft.Testing.Extensions.TrxReport.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Testing.Extensions.VSTestBridge, Version=1.8.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Testing.Extensions.VSTestBridge.1.8.2\lib\netstandard2.0\Microsoft.Testing.Extensions.VSTestBridge.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Testing.Platform, Version=1.8.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Testing.Platform.1.8.2\lib\netstandard2.0\Microsoft.Testing.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TestPlatform.AdapterUtilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.TestPlatform.AdapterUtilities.17.13.0\lib\net462\Microsoft.TestPlatform.AdapterUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TestPlatform.CoreUtilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.TestPlatform.ObjectModel.17.13.0\lib\net462\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TestPlatform.PlatformAbstractions, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.TestPlatform.ObjectModel.17.13.0\lib\net462\Microsoft.TestPlatform.PlatformAbstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.TestPlatform.ObjectModel.17.13.0\lib\net462\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\MSTest.TestFramework.3.10.2\lib\net462\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\MSTest.TestFramework.3.10.2\lib\net462\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.20.72.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>packages\Moq.4.20.72\lib\net462\Moq.dll</HintPath>
     </Reference>
@@ -247,6 +287,9 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -280,6 +323,9 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata, Version=1.4.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reflection.Metadata.1.6.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
@@ -361,10 +407,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyContainer.vb" />
-    <Compile Include="Forms\CollectionUserControl.Designer.vb">
+    <Compile Include="Forms\frmStartEndDatePicker.Designer.vb">
+      <DependentUpon>frmStartEndDatePicker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmStartEndDatePicker.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControl\ChequePayUserControl.Designer.vb">
+      <DependentUpon>ChequePayUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\ChequePayUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControl\Cheque_colUserControl.Designer.vb">
+      <DependentUpon>Cheque_colUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\Cheque_colUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControl\CollectionUserControl.Designer.vb">
       <DependentUpon>CollectionUserControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CollectionUserControl.vb">
+    <Compile Include="Forms\UserControl\CollectionUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\frmDatePicker.Designer.vb">
@@ -379,22 +443,28 @@
     <Compile Include="Forms\frmInitializeMonthlyAccounts.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OrderUserControl.Designer.vb">
+    <Compile Include="Forms\UserControl\CompanyUserControl.Designer.vb">
+      <DependentUpon>CompanyUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\CompanyUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControl\OrderUserControl.Designer.vb">
       <DependentUpon>OrderUserControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OrderUserControl.vb">
+    <Compile Include="Forms\UserControl\OrderUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\PaymentUserControl.Designer.vb">
+    <Compile Include="Forms\UserControl\PaymentUserControl.Designer.vb">
       <DependentUpon>PaymentUserControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PaymentUserControl.vb">
+    <Compile Include="Forms\UserControl\PaymentUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ScrapBarrelUserControl.Designer.vb">
+    <Compile Include="Forms\UserControl\ScrapBarrelUserControl.Designer.vb">
       <DependentUpon>ScrapBarrelUserControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ScrapBarrelUserControl.vb">
+    <Compile Include="Forms\UserControl\ScrapBarrelUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\Search\frmSearch_Collection.Designer.vb">
@@ -433,10 +503,10 @@
     <Compile Include="Forms\Search\Search_Inspection.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ucClosingEntry.Designer.vb">
+    <Compile Include="Forms\UserControl\ucClosingEntry.Designer.vb">
       <DependentUpon>ucClosingEntry.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ucClosingEntry.vb">
+    <Compile Include="Forms\UserControl\ucClosingEntry.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Models\accounting_entry.vb">
@@ -449,6 +519,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\barrel_monthly_balances.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\chque_pay.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\closing_entry.vb">
@@ -514,6 +587,7 @@
     <Compile Include="Models\RolesAndPermissionsResult.vb" />
     <Compile Include="Models\SearchCriteria\PaymentSearchCriteria.vb" />
     <Compile Include="Models\SearchCriteria\PurBarrelSC.vb" />
+    <Compile Include="Models\ViewModels\ChequePayVM.vb" />
     <Compile Include="Models\ViewModels\ClosingEntryVM.vb" />
     <Compile Include="Models\ViewModels\GasBarrelVM.vb" />
     <Compile Include="Models\ViewModels\InspectionVM.vb" />
@@ -531,18 +605,21 @@
     </Compile>
     <Compile Include="Presenters\BasicPricePresenter.vb" />
     <Compile Include="Presenters\CarPresenter.vb" />
+    <Compile Include="Presenters\ChequePayPresenter.vb" />
     <Compile Include="Presenters\ClosingEntryPresenter.vb" />
     <Compile Include="Presenters\GasBarrelPresenter.vb" />
     <Compile Include="Presenters\GasCheckoutPresenter.vb" />
     <Compile Include="Presenters\InspectionPresenter.vb" />
     <Compile Include="Presenters\ScrapBarrelDetailPresenter.vb" />
     <Compile Include="Presenters\ScrapBarrelPresenter.vb" />
-    <Compile Include="Forms\Report.Designer.vb">
+    <Compile Include="Forms\UserControl\Report.Designer.vb">
       <DependentUpon>Report.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Report.vb">
+    <Compile Include="Forms\UserControl\Report.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Repositories\ChequePay\ChequePayRep.vb" />
+    <Compile Include="Repositories\ChequePay\IChequePayRep.vb" />
     <Compile Include="Repositories\ClosingEntry\ClosingEntryRep.vb" />
     <Compile Include="Repositories\ClosingEntry\IClosingEntryRep.vb" />
     <Compile Include="Repositories\Inspection\IInspectionRep.vb" />
@@ -627,6 +704,7 @@
     <Compile Include="Views\IBaseView.vb" />
     <Compile Include="Views\IBasicPriceView.vb" />
     <Compile Include="Views\ICarView.vb" />
+    <Compile Include="Views\IChequePayView.vb" />
     <Compile Include="Views\IClosingEntryView.vb" />
     <Compile Include="Views\IGasBarrelView.vb" />
     <Compile Include="Views\IGasCheckoutView.vb" />
@@ -811,7 +889,16 @@
     <Compile Include="Models\ViewModels\UnitPriceHistoryVM.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\CollectionUserControl.resx">
+    <EmbeddedResource Include="Forms\frmStartEndDatePicker.resx">
+      <DependentUpon>frmStartEndDatePicker.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\ChequePayUserControl.resx">
+      <DependentUpon>ChequePayUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\Cheque_colUserControl.resx">
+      <DependentUpon>Cheque_colUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\CollectionUserControl.resx">
       <DependentUpon>CollectionUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmDatePicker.resx">
@@ -823,13 +910,16 @@
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OrderUserControl.resx">
+    <EmbeddedResource Include="Forms\UserControl\CompanyUserControl.resx">
+      <DependentUpon>CompanyUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\OrderUserControl.resx">
       <DependentUpon>OrderUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PaymentUserControl.resx">
+    <EmbeddedResource Include="Forms\UserControl\PaymentUserControl.resx">
       <DependentUpon>PaymentUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ScrapBarrelUserControl.resx">
+    <EmbeddedResource Include="Forms\UserControl\ScrapBarrelUserControl.resx">
       <DependentUpon>ScrapBarrelUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Search\frmQueryCustomer.resx">
@@ -853,7 +943,7 @@
     <EmbeddedResource Include="Forms\Search\Search_Inspection.resx">
       <DependentUpon>Search_Inspection.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ucClosingEntry.resx">
+    <EmbeddedResource Include="Forms\UserControl\ucClosingEntry.resx">
       <DependentUpon>ucClosingEntry.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -862,7 +952,7 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Report.resx">
+    <EmbeddedResource Include="Forms\UserControl\Report.resx">
       <DependentUpon>Report.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -920,6 +1010,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Analyzer Include="packages\MSTest.Analyzers.3.10.2\analyzers\dotnet\vb\MSTest.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -930,6 +1023,18 @@
     <Error Condition="!Exists('packages\NUnit.4.2.2\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NUnit.4.2.2\build\NUnit.props'))" />
     <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
     <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Testing.Extensions.Telemetry.1.8.2\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Testing.Extensions.Telemetry.1.8.2\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props'))" />
+    <Error Condition="!Exists('packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.props'))" />
+    <Error Condition="!Exists('packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.targets'))" />
+    <Error Condition="!Exists('packages\MSTest.TestFramework.3.10.2\build\net462\MSTest.TestFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\MSTest.TestFramework.3.10.2\build\net462\MSTest.TestFramework.targets'))" />
   </Target>
   <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <Import Project="packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.targets" Condition="Exists('packages\Microsoft.Testing.Platform.1.8.2\build\netstandard2.0\Microsoft.Testing.Platform.targets')" />
+  <Import Project="packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.targets" Condition="Exists('packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.targets')" />
+  <Import Project="packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.targets" Condition="Exists('packages\MSTest.TestAdapter.3.10.2\build\net462\MSTest.TestAdapter.targets')" />
+  <Import Project="packages\MSTest.TestFramework.3.10.2\build\net462\MSTest.TestFramework.targets" Condition="Exists('packages\MSTest.TestFramework.3.10.2\build\net462\MSTest.TestFramework.targets')" />
 </Project>

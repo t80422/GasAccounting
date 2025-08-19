@@ -1,40 +1,92 @@
 ﻿Public Class CompanyPresenter
-    Inherits BasePresenter(Of company, CompanyVM, ICompanyView)
-    Implements IPresenter(Of company, CompanyVM)
+    Private _view As ICompanyView
+    Private _companyRep As ICompanyRep
+    Private currentData As company
 
-    Public Sub New(view As ICompanyView)
-        MyBase.New(view)
-        _presenter = Me
+    Public Sub New(companyRep As ICompanyRep)
+        _companyRep = companyRep
     End Sub
 
-    Public Overrides Sub Edit(id As Integer)
-        MyBase.Edit(id)
+    Public Sub SetView(view As ICompanyView)
+        _view = view
+        AddHandler _view.Loaded, AddressOf OnLoaded
+        AddHandler _view.AddClicked, AddressOf OnAddClicked
+        AddHandler _view.EditClicked, AddressOf OnEditClicked
+        AddHandler _view.DeleteClicked, AddressOf OnDeleteClicked
+        AddHandler _view.RowSelected, AddressOf OnRowSelected
+        AddHandler _view.CancelClicked, AddressOf OnCancelClicked
+    End Sub
 
+    Private Sub OnLoaded(sender As Object, e As EventArgs)
+        LoadList()
+    End Sub
+
+    Private Async Sub OnAddClicked(sender As Object, e As EventArgs)
         Try
-            Using db As New gas_accounting_systemEntities
-
-            End Using
+            Dim data = _view.GetInput
+            Await _companyRep.AddAsync(data)
+            OnCancelClicked(sender, e)
+            MsgBox("新增成功")
         Catch ex As Exception
-
+            MsgBox(ex.Message)
         End Try
     End Sub
 
-    Public Overrides Sub Delete(id As Integer)
-        MyBase.Delete(id)
+    Private Async Sub OnEditClicked(sender As Object, e As EventArgs)
+        Try
+            Dim input = _view.GetInput
+
+            If currentData Is Nothing Then
+                MsgBox("請先選擇要編輯的公司")
+                Return
+            End If
+
+            Await _companyRep.UpdateAsync(currentData, input)
+            OnCancelClicked(sender, e)
+            MsgBox("編輯成功")
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
-    Public Function SetSearchConditions(query As IQueryable(Of company), conditions As Object) As IQueryable(Of company) Implements IPresenter(Of company, CompanyVM).SetSearchConditions
-        Return Nothing
-    End Function
+    Private Async Sub OnDeleteClicked(sender As Object, e As EventArgs)
+        Try
+            Await _companyRep.DeleteAsync(currentData)
+            OnCancelClicked(sender, e)
+            MsgBox("刪除成功")
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
 
-    Private Function SetListViewModel(query As IQueryable(Of company)) As List(Of CompanyVM) Implements IPresenter(Of company, CompanyVM).SetListViewModel
-        Return query.Select(Function(x) New CompanyVM With {
-            .編號 = x.comp_id,
-            .名稱 = x.comp_name,
-            .簡稱 = x.comp_short,
-            .統編 = x.comp_tax_id,
-            .瓦斯初始存量 = x.comp_GasStock,
-            .備註 = x.comp_memo
-        }).ToList
-    End Function
+    Private Sub OnRowSelected(sender As Object, id As Integer)
+        Try
+            Dim data = _companyRep.GetByIdAsync(id).Result
+
+            If data IsNot Nothing Then
+                currentData = data
+                _view.ClearInput()
+                _view.DisplayDetail(data)
+            Else
+                MsgBox("找不到該公司資料")
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub OnCancelClicked(sender As Object, e As EventArgs)
+        _view.ClearInput()
+        LoadList()
+        currentData = Nothing
+    End Sub
+
+    Private Sub LoadList()
+        Try
+            Dim query = _companyRep.GetAllAsync.Result
+            _view.DisplayList(query.Select(Function(x) New CompanyVM(x)).ToList())
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
 End Class

@@ -34,6 +34,7 @@ Public Class DependencyContainer
             .RegisterType(Of IScrapBarrelRep, ScrapBarrelRep)()
             .RegisterType(Of IScrapBarrelDetailRep, ScrapBarrelDetailRep)()
             .RegisterType(Of ISubjectRep, SubjectRep)()
+            .RegisterType(Of IChequePayRep, ChequePayRep)()
 
             ' 註冊 Service
             .RegisterType(Of IAccountingEntryService, AccountingEntryService)()
@@ -53,6 +54,7 @@ Public Class DependencyContainer
             .RegisterType(Of CollectionPresenter)()
             .RegisterType(Of ScrapBarrelPresenter)
             .RegisterType(Of ScrapBarrelDetailPresenter)
+            .RegisterType(Of ChequePresenter)()
         End With
     End Sub
 

@@ -78,19 +78,28 @@
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
 
                         ' 支票兌現
-                        chequeNo = InputBox("若不須沖銷支票則取消", "請輸入支票號碼")
+                        Dim subject = _subjectRep.GetByIdAsync(col.col_s_Id).Result
 
-                        If Not String.IsNullOrEmpty(chequeNo) Then
-                            Dim cheque = Await _chequeRep.GetByNumberAsync(chequeNo)
+                        If subject.s_name = "應收票據" Then
+                            chequeNo = InputBox("請輸入支票號碼")
 
-                            If cheque Is Nothing Then
-                                Throw New Exception("找不到此支票")
-                            Else
-                                cheque.chu_State = "已兌現"
-                                cheque.che_CashingDate = col.col_Date
-                                col.col_Cheque = chequeNo
+                            If Not String.IsNullOrEmpty(chequeNo) Then
+                                Dim cheque = Await _chequeRep.GetByNumberAsync(chequeNo)
+
+                                If cheque Is Nothing Then
+                                    Throw New Exception("找不到此支票")
+                                ElseIf cheque.chu_State = "已兌現" Then
+                                    Throw New Exception("此支票已兌現")
+                                ElseIf cheque.chu_State = Nothing Then
+                                    Throw New Exception("此支票未代收")
+                                Else
+                                    cheque.chu_State = "已兌現"
+                                    cheque.che_CashingDate = col.col_Date
+                                    col.col_Cheque = chequeNo
+                                End If
                             End If
                         End If
+
                 End Select
 
                 Dim entries = CreatePaymentEntries(input)

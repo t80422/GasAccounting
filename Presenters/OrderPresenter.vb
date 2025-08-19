@@ -338,10 +338,6 @@ Public Class OrderPresenter
                 Dim gas = orderInput.o_return
                 Dim gasC = orderInput.o_return_c
                 Dim cus = _cusRep.GetByIdAsync(orderInput.o_cus_Id).Result
-                Dim gasStock = cus.cus_GasStock
-                Dim gasCStock = cus.cus_GasCStock
-                cus.cus_GasStock = gasStock + gas
-                cus.cus_GasCStock = gasCStock + gasC
 
                 Await _cusRep.SaveChangesAsync
 
@@ -460,9 +456,6 @@ Public Class OrderPresenter
             UpdateStockDynamic(order, customer, "o_gas_c_", "cus_gas_", 1)
             UpdateStockDynamic(order, customer, "o_empty_", "cus_gas_", 1)
         End If
-
-        customer.cus_GasStock -= order.o_return
-        customer.cus_GasCStock -= order.o_return_c
     End Sub
 
     Private Sub UpdateCarStock(order As order, car As car, isIn As Boolean)
@@ -546,8 +539,6 @@ Public Class OrderPresenter
 
                 ' 客戶存氣
                 Dim cus = _cusRep.GetByIdAsync(orderInput.o_cus_Id).Result
-                cus.cus_GasStock = cus.cus_GasStock + orderInput.o_return - currentOrder.o_return
-                cus.cus_GasCStock = cus.cus_GasCStock + orderInput.o_return_c - currentOrder.o_return_c
                 Await _ordRep.UpdateAsync(currentOrder, orderInput)
 
                 _view.GetCusStkInput(currentCustomer)
@@ -655,6 +646,11 @@ Public Class OrderPresenter
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 產生氣量氣款收付明細表
+    ''' </summary>
+    ''' <param name="d"></param>
+    ''' <param name="isMonth"></param>
     Public Sub GenerateCustomersGasDetailByDay(d As Date, isMonth As Boolean)
         Try
             '蒐集資料

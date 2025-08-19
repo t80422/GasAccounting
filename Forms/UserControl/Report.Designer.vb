@@ -35,6 +35,12 @@ Partial Class Report
         Me.cmbMonth_InOut = New System.Windows.Forms.ComboBox()
         Me.dtpYear_InOut = New System.Windows.Forms.DateTimePicker()
         Me.GroupBox24 = New System.Windows.Forms.GroupBox()
+        Me.txtCusId_ca = New System.Windows.Forms.TextBox()
+        Me.txtCusCode_ca = New System.Windows.Forms.TextBox()
+        Me.txtCusName_ca = New System.Windows.Forms.TextBox()
+        Me.btnSearch_ca = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.dtpEnd_ca = New System.Windows.Forms.DateTimePicker()
         Me.dtpStart_ca = New System.Windows.Forms.DateTimePicker()
         Me.btnCashAccount = New System.Windows.Forms.Button()
@@ -69,10 +75,6 @@ Partial Class Report
         Me.btnTax = New System.Windows.Forms.Button()
         Me.dtpMonth_tax = New System.Windows.Forms.DateTimePicker()
         Me.Label234 = New System.Windows.Forms.Label()
-        Me.GroupBox15 = New System.Windows.Forms.GroupBox()
-        Me.btnPayableCheck = New System.Windows.Forms.Button()
-        Me.dtpMonth_PayableCheck = New System.Windows.Forms.DateTimePicker()
-        Me.Label61 = New System.Windows.Forms.Label()
         Me.GroupBox14 = New System.Windows.Forms.GroupBox()
         Me.btnITD = New System.Windows.Forms.Button()
         Me.dtpYear_ITD = New System.Windows.Forms.DateTimePicker()
@@ -87,14 +89,6 @@ Partial Class Report
         Me.btnGenerate_RI = New System.Windows.Forms.Button()
         Me.dtpMonth_RI = New System.Windows.Forms.DateTimePicker()
         Me.Label101 = New System.Windows.Forms.Label()
-        Me.GroupBox10 = New System.Windows.Forms.GroupBox()
-        Me.btnGenerate_br = New System.Windows.Forms.Button()
-        Me.dtpMonth_br = New System.Windows.Forms.DateTimePicker()
-        Me.Label182 = New System.Windows.Forms.Label()
-        Me.cmbBankAccount_br = New System.Windows.Forms.ComboBox()
-        Me.Label181 = New System.Windows.Forms.Label()
-        Me.cmbCompany_br = New System.Windows.Forms.ComboBox()
-        Me.Label180 = New System.Windows.Forms.Label()
         Me.GroupBox9 = New System.Windows.Forms.GroupBox()
         Me.btnNewBarrel = New System.Windows.Forms.Button()
         Me.Label106 = New System.Windows.Forms.Label()
@@ -109,10 +103,9 @@ Partial Class Report
         Me.btnCGCI = New System.Windows.Forms.Button()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.dtpEnd_BankAccount = New System.Windows.Forms.DateTimePicker()
         Me.Label143 = New System.Windows.Forms.Label()
         Me.btnBankAccount = New System.Windows.Forms.Button()
-        Me.dtpStart_BankAccount = New System.Windows.Forms.DateTimePicker()
+        Me.dtpMonth_BankAccount = New System.Windows.Forms.DateTimePicker()
         Me.cmbBankAccount_BankAccount = New System.Windows.Forms.ComboBox()
         Me.Label120 = New System.Windows.Forms.Label()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
@@ -133,11 +126,9 @@ Partial Class Report
         Me.GroupBox18.SuspendLayout()
         Me.GroupBox17.SuspendLayout()
         Me.GroupBox16.SuspendLayout()
-        Me.GroupBox15.SuspendLayout()
         Me.GroupBox14.SuspendLayout()
         Me.GroupBox13.SuspendLayout()
         Me.GroupBox12.SuspendLayout()
-        Me.GroupBox10.SuspendLayout()
         Me.GroupBox9.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -150,7 +141,7 @@ Partial Class Report
         Me.GroupBox2.Controls.Add(Me.btnDSS)
         Me.GroupBox2.Controls.Add(Me.Label65)
         Me.GroupBox2.Controls.Add(Me.dtpDate_DSS)
-        Me.GroupBox2.Location = New System.Drawing.Point(8, 818)
+        Me.GroupBox2.Location = New System.Drawing.Point(8, 871)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(466, 70)
         Me.GroupBox2.TabIndex = 497
@@ -265,15 +256,78 @@ Partial Class Report
         '
         'GroupBox24
         '
+        Me.GroupBox24.Controls.Add(Me.txtCusId_ca)
+        Me.GroupBox24.Controls.Add(Me.txtCusCode_ca)
+        Me.GroupBox24.Controls.Add(Me.txtCusName_ca)
+        Me.GroupBox24.Controls.Add(Me.btnSearch_ca)
+        Me.GroupBox24.Controls.Add(Me.Label2)
+        Me.GroupBox24.Controls.Add(Me.Label3)
         Me.GroupBox24.Controls.Add(Me.dtpEnd_ca)
         Me.GroupBox24.Controls.Add(Me.dtpStart_ca)
         Me.GroupBox24.Controls.Add(Me.btnCashAccount)
         Me.GroupBox24.Location = New System.Drawing.Point(8, 427)
         Me.GroupBox24.Name = "GroupBox24"
-        Me.GroupBox24.Size = New System.Drawing.Size(466, 70)
+        Me.GroupBox24.Size = New System.Drawing.Size(466, 135)
         Me.GroupBox24.TabIndex = 494
         Me.GroupBox24.TabStop = False
         Me.GroupBox24.Text = "現金帳"
+        '
+        'txtCusId_ca
+        '
+        Me.txtCusId_ca.Location = New System.Drawing.Point(299, 66)
+        Me.txtCusId_ca.Name = "txtCusId_ca"
+        Me.txtCusId_ca.ReadOnly = True
+        Me.txtCusId_ca.Size = New System.Drawing.Size(79, 30)
+        Me.txtCusId_ca.TabIndex = 457
+        Me.txtCusId_ca.Tag = "col_cus_Id"
+        Me.txtCusId_ca.Visible = False
+        '
+        'txtCusCode_ca
+        '
+        Me.txtCusCode_ca.Location = New System.Drawing.Point(105, 66)
+        Me.txtCusCode_ca.Name = "txtCusCode_ca"
+        Me.txtCusCode_ca.Size = New System.Drawing.Size(100, 30)
+        Me.txtCusCode_ca.TabIndex = 456
+        Me.txtCusCode_ca.Tag = "cus_code"
+        '
+        'txtCusName_ca
+        '
+        Me.txtCusName_ca.Location = New System.Drawing.Point(104, 102)
+        Me.txtCusName_ca.Name = "txtCusName_ca"
+        Me.txtCusName_ca.ReadOnly = True
+        Me.txtCusName_ca.Size = New System.Drawing.Size(351, 30)
+        Me.txtCusName_ca.TabIndex = 454
+        Me.txtCusName_ca.Tag = "cus_name"
+        '
+        'btnSearch_ca
+        '
+        Me.btnSearch_ca.AutoSize = True
+        Me.btnSearch_ca.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnSearch_ca.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.btnSearch_ca.Location = New System.Drawing.Point(211, 68)
+        Me.btnSearch_ca.Name = "btnSearch_ca"
+        Me.btnSearch_ca.Size = New System.Drawing.Size(82, 26)
+        Me.btnSearch_ca.TabIndex = 455
+        Me.btnSearch_ca.Text = "搜尋客戶"
+        Me.btnSearch_ca.UseVisualStyleBackColor = False
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(6, 105)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(93, 19)
+        Me.Label2.TabIndex = 453
+        Me.Label2.Text = "客戶名稱"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(6, 72)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(93, 19)
+        Me.Label3.TabIndex = 452
+        Me.Label3.Text = "客戶代號"
         '
         'dtpEnd_ca
         '
@@ -599,46 +653,6 @@ Partial Class Report
         Me.Label234.TabIndex = 22
         Me.Label234.Text = "月份"
         '
-        'GroupBox15
-        '
-        Me.GroupBox15.Controls.Add(Me.btnPayableCheck)
-        Me.GroupBox15.Controls.Add(Me.dtpMonth_PayableCheck)
-        Me.GroupBox15.Controls.Add(Me.Label61)
-        Me.GroupBox15.Location = New System.Drawing.Point(480, 80)
-        Me.GroupBox15.Name = "GroupBox15"
-        Me.GroupBox15.Size = New System.Drawing.Size(279, 68)
-        Me.GroupBox15.TabIndex = 487
-        Me.GroupBox15.TabStop = False
-        Me.GroupBox15.Text = "應付票據"
-        '
-        'btnPayableCheck
-        '
-        Me.btnPayableCheck.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnPayableCheck.Location = New System.Drawing.Point(196, 29)
-        Me.btnPayableCheck.Name = "btnPayableCheck"
-        Me.btnPayableCheck.Size = New System.Drawing.Size(72, 30)
-        Me.btnPayableCheck.TabIndex = 24
-        Me.btnPayableCheck.Text = "產生"
-        Me.btnPayableCheck.UseVisualStyleBackColor = False
-        '
-        'dtpMonth_PayableCheck
-        '
-        Me.dtpMonth_PayableCheck.CustomFormat = "yyyy年MM月"
-        Me.dtpMonth_PayableCheck.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpMonth_PayableCheck.Location = New System.Drawing.Point(63, 29)
-        Me.dtpMonth_PayableCheck.Name = "dtpMonth_PayableCheck"
-        Me.dtpMonth_PayableCheck.Size = New System.Drawing.Size(127, 30)
-        Me.dtpMonth_PayableCheck.TabIndex = 23
-        '
-        'Label61
-        '
-        Me.Label61.AutoSize = True
-        Me.Label61.Location = New System.Drawing.Point(6, 35)
-        Me.Label61.Name = "Label61"
-        Me.Label61.Size = New System.Drawing.Size(51, 19)
-        Me.Label61.TabIndex = 22
-        Me.Label61.Text = "月份"
-        '
         'GroupBox14
         '
         Me.GroupBox14.Controls.Add(Me.btnITD)
@@ -778,92 +792,14 @@ Partial Class Report
         Me.Label101.TabIndex = 22
         Me.Label101.Text = "月份"
         '
-        'GroupBox10
-        '
-        Me.GroupBox10.Controls.Add(Me.btnGenerate_br)
-        Me.GroupBox10.Controls.Add(Me.dtpMonth_br)
-        Me.GroupBox10.Controls.Add(Me.Label182)
-        Me.GroupBox10.Controls.Add(Me.cmbBankAccount_br)
-        Me.GroupBox10.Controls.Add(Me.Label181)
-        Me.GroupBox10.Controls.Add(Me.cmbCompany_br)
-        Me.GroupBox10.Controls.Add(Me.Label180)
-        Me.GroupBox10.Location = New System.Drawing.Point(8, 712)
-        Me.GroupBox10.Name = "GroupBox10"
-        Me.GroupBox10.Size = New System.Drawing.Size(466, 100)
-        Me.GroupBox10.TabIndex = 483
-        Me.GroupBox10.TabStop = False
-        Me.GroupBox10.Text = "應收票據"
-        '
-        'btnGenerate_br
-        '
-        Me.btnGenerate_br.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnGenerate_br.Location = New System.Drawing.Point(384, 61)
-        Me.btnGenerate_br.Name = "btnGenerate_br"
-        Me.btnGenerate_br.Size = New System.Drawing.Size(72, 30)
-        Me.btnGenerate_br.TabIndex = 24
-        Me.btnGenerate_br.Text = "產生"
-        Me.btnGenerate_br.UseVisualStyleBackColor = False
-        '
-        'dtpMonth_br
-        '
-        Me.dtpMonth_br.CustomFormat = "yyyy年MM月"
-        Me.dtpMonth_br.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpMonth_br.Location = New System.Drawing.Point(63, 64)
-        Me.dtpMonth_br.Name = "dtpMonth_br"
-        Me.dtpMonth_br.Size = New System.Drawing.Size(127, 30)
-        Me.dtpMonth_br.TabIndex = 23
-        '
-        'Label182
-        '
-        Me.Label182.AutoSize = True
-        Me.Label182.Location = New System.Drawing.Point(6, 67)
-        Me.Label182.Name = "Label182"
-        Me.Label182.Size = New System.Drawing.Size(51, 19)
-        Me.Label182.TabIndex = 22
-        Me.Label182.Text = "月份"
-        '
-        'cmbBankAccount_br
-        '
-        Me.cmbBankAccount_br.FormattingEnabled = True
-        Me.cmbBankAccount_br.Location = New System.Drawing.Point(289, 29)
-        Me.cmbBankAccount_br.Name = "cmbBankAccount_br"
-        Me.cmbBankAccount_br.Size = New System.Drawing.Size(121, 27)
-        Me.cmbBankAccount_br.TabIndex = 21
-        '
-        'Label181
-        '
-        Me.Label181.AutoSize = True
-        Me.Label181.Location = New System.Drawing.Point(190, 32)
-        Me.Label181.Name = "Label181"
-        Me.Label181.Size = New System.Drawing.Size(93, 19)
-        Me.Label181.TabIndex = 20
-        Me.Label181.Text = "銀行帳號"
-        '
-        'cmbCompany_br
-        '
-        Me.cmbCompany_br.FormattingEnabled = True
-        Me.cmbCompany_br.Location = New System.Drawing.Point(63, 29)
-        Me.cmbCompany_br.Name = "cmbCompany_br"
-        Me.cmbCompany_br.Size = New System.Drawing.Size(127, 27)
-        Me.cmbCompany_br.TabIndex = 19
-        '
-        'Label180
-        '
-        Me.Label180.AutoSize = True
-        Me.Label180.Location = New System.Drawing.Point(6, 32)
-        Me.Label180.Name = "Label180"
-        Me.Label180.Size = New System.Drawing.Size(51, 19)
-        Me.Label180.TabIndex = 18
-        Me.Label180.Text = "公司"
-        '
         'GroupBox9
         '
         Me.GroupBox9.Controls.Add(Me.btnNewBarrel)
         Me.GroupBox9.Controls.Add(Me.Label106)
         Me.GroupBox9.Controls.Add(Me.dtpMonth_newBarrel)
-        Me.GroupBox9.Location = New System.Drawing.Point(8, 623)
+        Me.GroupBox9.Location = New System.Drawing.Point(8, 688)
         Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(466, 83)
+        Me.GroupBox9.Size = New System.Drawing.Size(466, 71)
         Me.GroupBox9.TabIndex = 482
         Me.GroupBox9.TabStop = False
         Me.GroupBox9.Text = "新桶明細"
@@ -905,7 +841,7 @@ Partial Class Report
         Me.GroupBox4.Controls.Add(Me.Label60)
         Me.GroupBox4.Controls.Add(Me.Label95)
         Me.GroupBox4.Controls.Add(Me.btnCGCI)
-        Me.GroupBox4.Location = New System.Drawing.Point(8, 503)
+        Me.GroupBox4.Location = New System.Drawing.Point(8, 568)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(466, 114)
         Me.GroupBox4.TabIndex = 481
@@ -992,10 +928,9 @@ Partial Class Report
         '
         'GroupBox3
         '
-        Me.GroupBox3.Controls.Add(Me.dtpEnd_BankAccount)
         Me.GroupBox3.Controls.Add(Me.Label143)
         Me.GroupBox3.Controls.Add(Me.btnBankAccount)
-        Me.GroupBox3.Controls.Add(Me.dtpStart_BankAccount)
+        Me.GroupBox3.Controls.Add(Me.dtpMonth_BankAccount)
         Me.GroupBox3.Controls.Add(Me.cmbBankAccount_BankAccount)
         Me.GroupBox3.Controls.Add(Me.Label120)
         Me.GroupBox3.Location = New System.Drawing.Point(8, 163)
@@ -1004,14 +939,6 @@ Partial Class Report
         Me.GroupBox3.TabIndex = 479
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "銀行帳"
-        '
-        'dtpEnd_BankAccount
-        '
-        Me.dtpEnd_BankAccount.CustomFormat = ""
-        Me.dtpEnd_BankAccount.Location = New System.Drawing.Point(287, 29)
-        Me.dtpEnd_BankAccount.Name = "dtpEnd_BankAccount"
-        Me.dtpEnd_BankAccount.Size = New System.Drawing.Size(176, 30)
-        Me.dtpEnd_BankAccount.TabIndex = 15
         '
         'Label143
         '
@@ -1032,13 +959,14 @@ Partial Class Report
         Me.btnBankAccount.Text = "產生"
         Me.btnBankAccount.UseVisualStyleBackColor = False
         '
-        'dtpStart_BankAccount
+        'dtpMonth_BankAccount
         '
-        Me.dtpStart_BankAccount.CustomFormat = ""
-        Me.dtpStart_BankAccount.Location = New System.Drawing.Point(105, 29)
-        Me.dtpStart_BankAccount.Name = "dtpStart_BankAccount"
-        Me.dtpStart_BankAccount.Size = New System.Drawing.Size(176, 30)
-        Me.dtpStart_BankAccount.TabIndex = 13
+        Me.dtpMonth_BankAccount.CustomFormat = "yyyy年MM月"
+        Me.dtpMonth_BankAccount.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpMonth_BankAccount.Location = New System.Drawing.Point(105, 29)
+        Me.dtpMonth_BankAccount.Name = "dtpMonth_BankAccount"
+        Me.dtpMonth_BankAccount.Size = New System.Drawing.Size(176, 30)
+        Me.dtpMonth_BankAccount.TabIndex = 13
         '
         'cmbBankAccount_BankAccount
         '
@@ -1151,11 +1079,9 @@ Partial Class Report
         Me.Controls.Add(Me.GroupBox18)
         Me.Controls.Add(Me.GroupBox17)
         Me.Controls.Add(Me.GroupBox16)
-        Me.Controls.Add(Me.GroupBox15)
         Me.Controls.Add(Me.GroupBox14)
         Me.Controls.Add(Me.GroupBox13)
         Me.Controls.Add(Me.GroupBox12)
-        Me.Controls.Add(Me.GroupBox10)
         Me.Controls.Add(Me.GroupBox9)
         Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.btnRefresh)
@@ -1172,6 +1098,7 @@ Partial Class Report
         Me.GroupBox7.PerformLayout()
         Me.GroupBox26.ResumeLayout(False)
         Me.GroupBox24.ResumeLayout(False)
+        Me.GroupBox24.PerformLayout()
         Me.GroupBox23.ResumeLayout(False)
         Me.GroupBox20.ResumeLayout(False)
         Me.GroupBox20.PerformLayout()
@@ -1183,16 +1110,12 @@ Partial Class Report
         Me.GroupBox17.PerformLayout()
         Me.GroupBox16.ResumeLayout(False)
         Me.GroupBox16.PerformLayout()
-        Me.GroupBox15.ResumeLayout(False)
-        Me.GroupBox15.PerformLayout()
         Me.GroupBox14.ResumeLayout(False)
         Me.GroupBox14.PerformLayout()
         Me.GroupBox13.ResumeLayout(False)
         Me.GroupBox13.PerformLayout()
         Me.GroupBox12.ResumeLayout(False)
         Me.GroupBox12.PerformLayout()
-        Me.GroupBox10.ResumeLayout(False)
-        Me.GroupBox10.PerformLayout()
         Me.GroupBox9.ResumeLayout(False)
         Me.GroupBox9.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
@@ -1255,10 +1178,6 @@ Partial Class Report
     Friend WithEvents btnTax As Button
     Friend WithEvents dtpMonth_tax As DateTimePicker
     Friend WithEvents Label234 As Label
-    Friend WithEvents GroupBox15 As GroupBox
-    Friend WithEvents btnPayableCheck As Button
-    Friend WithEvents dtpMonth_PayableCheck As DateTimePicker
-    Friend WithEvents Label61 As Label
     Friend WithEvents GroupBox14 As GroupBox
     Friend WithEvents btnITD As Button
     Friend WithEvents dtpYear_ITD As DateTimePicker
@@ -1273,14 +1192,6 @@ Partial Class Report
     Friend WithEvents btnGenerate_RI As Button
     Friend WithEvents dtpMonth_RI As DateTimePicker
     Friend WithEvents Label101 As Label
-    Friend WithEvents GroupBox10 As GroupBox
-    Friend WithEvents btnGenerate_br As Button
-    Friend WithEvents dtpMonth_br As DateTimePicker
-    Friend WithEvents Label182 As Label
-    Friend WithEvents cmbBankAccount_br As ComboBox
-    Friend WithEvents Label181 As Label
-    Friend WithEvents cmbCompany_br As ComboBox
-    Friend WithEvents Label180 As Label
     Friend WithEvents GroupBox9 As GroupBox
     Friend WithEvents btnNewBarrel As Button
     Friend WithEvents Label106 As Label
@@ -1295,10 +1206,9 @@ Partial Class Report
     Friend WithEvents btnCGCI As Button
     Friend WithEvents btnRefresh As Button
     Friend WithEvents GroupBox3 As GroupBox
-    Friend WithEvents dtpEnd_BankAccount As DateTimePicker
     Friend WithEvents Label143 As Label
     Friend WithEvents btnBankAccount As Button
-    Friend WithEvents dtpStart_BankAccount As DateTimePicker
+    Friend WithEvents dtpMonth_BankAccount As DateTimePicker
     Friend WithEvents cmbBankAccount_BankAccount As ComboBox
     Friend WithEvents Label120 As Label
     Friend WithEvents GroupBox6 As GroupBox
@@ -1309,4 +1219,10 @@ Partial Class Report
     Friend WithEvents btnAccountBalance As Button
     Friend WithEvents dtpAccountBalance As DateTimePicker
     Friend WithEvents Label1 As Label
+    Friend WithEvents txtCusId_ca As TextBox
+    Friend WithEvents txtCusCode_ca As TextBox
+    Friend WithEvents txtCusName_ca As TextBox
+    Friend WithEvents btnSearch_ca As Button
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label3 As Label
 End Class

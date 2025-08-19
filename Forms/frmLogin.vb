@@ -3,12 +3,12 @@ Imports System.Configuration
 Public Class frmLogin
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         If String.IsNullOrEmpty(UsernameTextBox.Text) Then
-            MsgBox("½Ğ¿é¤J±b¸¹")
+            MsgBox("è«‹è¼¸å…¥å¸³è™Ÿ")
             Return
         End If
 
         If String.IsNullOrEmpty(PasswordTextBox.Text) Then
-            MsgBox("½Ğ¿é¤J±K½X")
+            MsgBox("è«‹è¼¸å…¥å¯†ç¢¼")
             Return
         End If
 
@@ -20,15 +20,19 @@ Public Class frmLogin
                     If user.emp_psw = PasswordTextBox.Text Then
                         OpenMain(user)
                     Else
-                        MsgBox("±K½X¿ù»~")
+                        MsgBox("å¯†ç¢¼éŒ¯èª¤")
                         Return
                     End If
                 Else
-                    MsgBox("¤£¦s¦bªº±b¸¹")
+                    MsgBox("ä¸å­˜åœ¨çš„å¸³è™Ÿ")
                     Return
                 End If
             End Using
-
+        Catch entityEx As Entity.Core.EntityException
+            Dim mysqlEx As MySql.Data.MySqlClient.MySqlException = TryCast(entityEx.InnerException, MySql.Data.MySqlClient.MySqlException)
+            If mysqlEx IsNot Nothing Then
+                MsgBox("ç„¡æ³•é€£ç·šåˆ°è³‡æ–™åº«")
+            End If
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try

@@ -47,7 +47,6 @@
         data.che_ReceivedDate = dtpDate_col.Value.Date
         data.che_col_Id = If(String.IsNullOrEmpty(txtColId.Text), Nothing, txtColId.Text)
         data.che_Number = txtCheque_col.Text
-        data.chu_State = "未兌現"
         Return data
     End Function
 

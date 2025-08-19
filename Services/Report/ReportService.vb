@@ -15,7 +15,7 @@ Public Class ReportService
                     Dim title = "現金" + If(isCollection, "收入傳票", "支出傳票")
 
                     .WriteToCell("A1", title)
-                    .WriteToCell("B2", $"日期: {day.ToShortDateString}")
+                    .WriteToCell("B2", $"日期: {day:yyyy年MM月dd日}")
                     .WriteToCell("A3", If(isCollection, "貸方科目", "借方科目"))
 
                     For i As Integer = 0 To datas.Count - 1
@@ -56,7 +56,7 @@ Public Class ReportService
                     Dim title = "轉帳" + If(isCollection, "收入傳票", "支出傳票")
 
                     .WriteToCell("A1", title)
-                    .WriteToCell("A2", $"日期: {day.ToShortDateString}")
+                    .WriteToCell("A2", $"日期: {day:yyyy年MM月dd日}")
 
                     For i As Integer = 0 To datas.Count - 1
                         .WriteToCell("A", i + 4, datas(i).DebitSubjectName)

@@ -9,45 +9,40 @@ Public Class ReportRep
         _context = context
     End Sub
 
-    Public Function CustomersGasDetailByDay(d As Date, isMonth As Boolean) As List(Of CustomersGasDetailByDay) Implements IReportRep.CustomersGasDetailByDay
+    Public Function CustomersGasDetailByDay(selectDate As Date, isMonth As Boolean) As List(Of CustomersGasDetailByDay) Implements IReportRep.CustomersGasDetailByDay
         Dim result As New List(Of CustomersGasDetailByDay)
 
         Try
             Using db As New gas_accounting_systemEntities
-                '獲取所有客戶資料
+                ' 獲取所有客戶資料
                 Dim customers = db.customers.OrderBy(Function(x) x.cus_code).ToList
 
-                '遍歷每個客戶並蒐集相關資料
+                ' 遍歷每個客戶並蒐集相關資料
+                Dim firstDate = New Date(selectDate.Year, selectDate.Month, 1)
+                Dim lastDate = If(isMonth, New Date(selectDate.Year, selectDate.Month, Date.DaysInMonth(selectDate.Year, selectDate.Month)), selectDate.AddDays(1))
+
                 For Each cus In customers
                     Dim detail As New CustomersGasDetailByDay With {
-                        .客戶名稱 = cus.cus_name,
-                        .存氣 = cus.cus_GasStock + cus.cus_GasCStock
+                        .客戶名稱 = cus.cus_name
                     }
-                    Dim startDay As Date
-                    Dim endDay As Date
+                    Dim ordersByCus = db.orders.Where(Function(x) x.o_cus_Id = cus.cus_id)
+                    Dim ordersByRange = ordersByCus.Where(Function(x) x.o_date.Value >= firstDate AndAlso x.o_date < lastDate).ToList()
 
-                    If isMonth Then
-                        startDay = New Date(d.Year, d.Month, 1)
-                        endDay = startDay.AddMonths(1)
-                    Else
-                        startDay = d.Date
-                        endDay = d.Date.AddDays(1)
-                    End If
+                    detail.存氣 = ordersByRange.Sum(Function(x) x.o_return + x.o_return_c)
 
-                    Dim ordersToday = db.orders.Where(Function(x) x.car.c_cus_id = cus.cus_id And x.o_date.Value >= startDay And x.o_date.Value < endDay).ToList
+                    Dim ordersToday = ordersByCus.ToList.Where(Function(x) x.o_date.Value.Date = selectDate)
                     detail.本日提量 = ordersToday.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
                     detail.本日氣款 = ordersToday.Sum(Function(x) x.o_total_amount)
 
-                    Dim startMonth = New Date(d.Year, d.Month, 1)
-                    Dim ordersByMonth = db.orders.Where(Function(x) x.car.c_cus_id = cus.cus_id And x.o_date >= startMonth And x.o_date.Value < endDay).ToList
-                    detail.當月累計提量 = ordersByMonth.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
+                    detail.當月累計提量 = ordersByRange.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
 
-                    Dim collectToday = db.collections.Where(Function(x) x.col_cus_Id = cus.cus_id And x.col_Date >= startDay And x.col_Date < endDay).ToList
+                    Dim collectsByCus = db.collections.Where(Function(x) x.col_cus_Id = cus.cus_id)
+                    Dim collectToday = collectsByCus.ToList.Where(Function(x) x.col_Date.Date = lastDate)
                     detail.本日收款 = collectToday.Sum(Function(x) x.col_Amount)
 
-                    Dim collectByMonth = db.collections.Where(Function(x) x.col_cus_Id = cus.cus_id And x.col_Date >= startMonth And x.col_Date <= endDay).ToList()
-                    Dim totalCollectAmountByMonth = collectByMonth.Sum(Function(x) x.col_Amount)
-                    Dim totalOrderAmountByMonth = ordersByMonth.Sum(Function(x) x.o_total_amount)
+                    Dim collectByRange = collectsByCus.Where(Function(x) x.col_Date >= firstDate And x.col_Date < lastDate).ToList()
+                    Dim totalCollectAmountByMonth = collectByRange.Sum(Function(x) x.col_Amount)
+                    Dim totalOrderAmountByMonth = ordersByRange.Sum(Function(x) x.o_total_amount)
                     detail.結欠 = totalOrderAmountByMonth - totalCollectAmountByMonth
 
                     result.Add(detail)
@@ -308,35 +303,38 @@ Public Class ReportRep
         Return result
     End Function
 
-    Public Function GetCashAccount(startDate As Date, endDate As Date) As List(Of CashAccount) Implements IReportRep.GetCashAccount
+    Public Function GetCashAccount(startDate As Date, endDate As Date, Optional cusId As Integer = 0) As List(Of CashAccount) Implements IReportRep.GetCashAccount
         Dim result = New List(Of CashAccount)
 
         Try
             Using db As New gas_accounting_systemEntities
                 '獲取收入數據
-                Dim collections = db.collections.Where(Function(x) x.col_Date >= startDate AndAlso
-                                                                 x.col_Date <= endDate AndAlso
-                                                                 x.col_Type = "現金").
-                                             Select(Function(x) New With {
-                                                .Date = x.col_Date,
-                                                .Subject = x.subject.s_name,
-                                                .Memo = x.col_Memo,
-                                                .Amount = x.col_Amount,
-                                                .IsIncome = True
-                                             })
+                Dim collections = db.collections.AsNoTracking.
+                    Where(Function(x) x.col_Date >= startDate AndAlso
+                                      x.col_Date <= endDate AndAlso
+                                      x.col_Type = "現金")
+                If cusId > 0 Then collections = collections.Where(Function(x) x.col_cus_Id = cusId)
+
+                Dim formatCollections = collections.Select(Function(x) New With {
+                                                                .Date = x.col_Date,
+                                                                .Subject = x.subject.s_name,
+                                                                .Memo = x.col_Memo,
+                                                                .Amount = x.col_Amount,
+                                                                .IsIncome = True
+                                                            })
                 '獲取支出數據
                 Dim payments = db.payments.Where(Function(x) x.p_Date >= startDate AndAlso
-                                                           x.p_Date <= endDate AndAlso
-                                                           x.p_Type = "現金").
-                                       Select(Function(x) New With {
-                                            .Date = x.p_Date,
-                                            .Subject = x.subject.s_name,
-                                            .Memo = x.p_Memo,
-                                            .Amount = x.p_Amount,
-                                            .IsIncome = False
-                                       })
+                                                             x.p_Date <= endDate AndAlso
+                                                             x.p_Type = "現金").
+                                           Select(Function(x) New With {
+                                                        .Date = x.p_Date,
+                                                        .Subject = x.subject.s_name,
+                                                        .Memo = x.p_Memo,
+                                                        .Amount = x.p_Amount,
+                                                        .IsIncome = False
+                                            })
                 '合併並排列數據
-                Dim allTransactions = collections.Union(payments) _
+                Dim allTransactions = formatCollections.Union(payments) _
                                                  .OrderBy(Function(x) x.Date) _
                                                  .ThenBy(Function(x) x.IsIncome)
 
@@ -361,15 +359,15 @@ Public Class ReportRep
         Return result
     End Function
 
-    Public Function GetBankAccount(startDate As Date, endDate As Date, bankId As Integer) As BankAccount Implements IReportRep.GetBankAccount
+    Public Function GetBankAccount(month As Date, bankId As Integer) As BankAccount Implements IReportRep.GetBankAccount
         Dim result As New BankAccount
 
         Try
-            result.日期 = $"{startDate:yyyy/MM/dd} ~ {endDate:yyyy/MM/dd}"
+            result.日期 = $"{month:yyyy年MM月}"
 
             '獲取收入數據
-            Dim collections = _context.collections.Where(Function(x) x.col_Date >= startDate AndAlso
-                                                                   x.col_Date < endDate AndAlso
+            Dim collections = _context.collections.Where(Function(x) x.col_Date.Year = month.Year AndAlso
+                                                                   x.col_Date.Month = month.Month AndAlso
                                                                    x.col_Type = "銀行" AndAlso
                                                                    x.col_bank_Id = bankId).
                                              Select(Function(x) New With {
@@ -381,8 +379,8 @@ Public Class ReportRep
                                                 .Target = x.customer.cus_code
                                              })
             '獲取支出數據
-            Dim payments = _context.payments.Where(Function(x) x.p_Date >= startDate AndAlso
-                                                             x.p_Date < endDate AndAlso
+            Dim payments = _context.payments.Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                             x.p_Date.Month = month.Month AndAlso
                                                              x.p_Type = "銀行" AndAlso
                                                              x.p_bank_Id = bankId).
                                        Select(Function(x) New With {
@@ -400,7 +398,7 @@ Public Class ReportRep
 
             '取得上期餘額
             '1. 先取得上期月結餘額
-            Dim startMonth = New Date(startDate.Year, startDate.Month, 1)
+            Dim startMonth = New Date(month.Year, month.Month, 1)
             Dim lastMonthlyBalance = _context.bank_monthly_balances.Where(Function(x) x.bm_Month < startMonth) _
                                                                   .OrderByDescending(Function(x) x.bm_Month) _
                                                                   .FirstOrDefault()
@@ -416,11 +414,11 @@ Public Class ReportRep
                                               Date.DaysInMonth(lastMonthlyBalance.bm_Month.Year, lastMonthlyBalance.bm_Month.Month))
 
                 Dim collectionsQuery = _context.collections.Where(Function(x) x.col_Date > lastMonthEndDate AndAlso
-                                                                             x.col_Date < startDate AndAlso
+                                                                             x.col_Date < startMonth AndAlso
                                                                              x.col_Type = "銀行" AndAlso
                                                                              x.col_bank_Id = bankId)
                 Dim paymentsQuery = _context.payments.Where(Function(x) x.p_Date > lastMonthEndDate AndAlso
-                                                                       x.p_Date < startDate AndAlso
+                                                                       x.p_Date < startMonth AndAlso
                                                                        x.p_Type = "銀行" AndAlso
                                                                        x.p_bank_Id = bankId)
 
@@ -580,33 +578,6 @@ Public Class ReportRep
         End Try
     End Function
 
-    Public Function GetBillsReceivable(companyId As Integer, bankId As Integer, month As Date) As BillsReceivable Implements IReportRep.GetBillsReceivable
-        Try
-            Dim result As New BillsReceivable
-            result.CompanyName = _context.companies.Find(companyId).comp_name
-            result.BankAccount = _context.banks.Find(bankId).bank_Account
-            result.List = _context.cheques.Where(Function(x) x.che_ReceivedDate.Value.Year = month.Year _
-                                                     AndAlso x.che_ReceivedDate.Value.Month = month.Month _
-                                                     AndAlso x.collection.col_comp_Id = companyId _
-                                                     AndAlso x.collection.col_bank_Id = bankId).
-                                           Select(Function(x) New BillsReceivableList With {
-                                                .Amount = x.che_Amount,
-                                                .AvailableDate = x.che_AbleCashingDate,
-                                                .ChequeNumber = x.che_Number,
-                                                .CollectDate = x.che_CollectionDate,
-                                                .CusCode = x.collection.customer.cus_code,
-                                                .IssuerName = x.che_IssuerName,
-                                                .Memo = x.che_Memo,
-                                                .PayBankName = x.che_PayBankName,
-                                                .ReceiveDate = x.che_ReceivedDate
-                                           }).ToList
-
-            Return result
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
     Public Function GetInvoice(month As Date) As List(Of Report_Invoice) Implements IReportRep.GetInvoice
         Try
             Dim query = (From o In _context.orders
@@ -720,22 +691,6 @@ Public Class ReportRep
             Next
 
             Return result
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
-    Public Function GetPayableCheck(month As Date) As List(Of PayableCheck) Implements IReportRep.GetPayableCheck
-        Try
-            Return _context.payments.Where(Function(x) x.p_Date.Year = month.Year AndAlso x.p_Date.Month = month.Month AndAlso x.p_Type = "支票").AsEnumerable.
-                                     Select(Function(x) New PayableCheck With {
-                                        .Amount = x.p_Amount,
-                                        .CashingDate = x.p_CashingDate.Value.ToString("yyyy/MM/dd"),
-                                        .ChequeNumber = x.p_Cheque,
-                                        .Day = x.p_Date.ToString("yyyy/MM/dd"),
-                                        .IsCashing = If(x.p_IsCashing, "是", "否"),
-                                        .Memo = x.p_Memo
-                                     }).ToList
         Catch ex As Exception
             Throw
         End Try
@@ -1111,9 +1066,10 @@ Public Class ReportRep
     Public Function GetDailySubjectSummary(day As Date) As List(Of DailySubjectSummary) Implements IReportRep.GetDailySubjectSummary
         Try
             Dim subjectSummary As New Dictionary(Of String, DailySubjectSummary)
+            Dim startDate = New Date(day.Year, day.Month, 1)
 
             ' 取得收入管理當日的科目彙總
-            Dim collectionDatas = _context.collections.Where(Function(x) x.col_Date = day.Date).AsNoTracking().ToList()
+            Dim collectionDatas = _context.collections.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date <= day.Date).AsNoTracking().ToList()
 
             ' 收入管理 - 借方 (科目名稱)
             For Each group In collectionDatas.GroupBy(Function(x) x.subject.s_name)
@@ -1138,7 +1094,7 @@ Public Class ReportRep
             Next
 
             ' 取得支出管理當日的科目彙總
-            Dim paymentDatas = _context.payments.Where(Function(x) x.p_Date = day.Date).AsNoTracking().ToList()
+            Dim paymentDatas = _context.payments.Where(Function(x) x.p_Date >= startDate AndAlso x.p_Date <= day.Date).AsNoTracking().ToList()
 
             ' 支出管理 - 貸方 (科目名稱)
             For Each group In paymentDatas.GroupBy(Function(x) x.subject.s_name)

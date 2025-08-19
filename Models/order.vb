@@ -115,8 +115,8 @@ Partial Public Class order
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car
-    Public Overridable Property customer As customer
     Public Overridable Property employee As employee
     Public Overridable Property order_collection_mapping As ICollection(Of order_collection_mapping) = New HashSet(Of order_collection_mapping)
+    Public Overridable Property customer As customer
 
 End Class

@@ -13,5 +13,7 @@
     ''' <returns></returns>
     Function UpdateCollectionStatusAsync(chequeIds As List(Of Integer), collectionDate As Date) As Task
 
+    Sub UpdateRedeemedStatus(chequeIds As List(Of Integer), redeemedDate As Date)
+
     Function GetByNumberAsync(chequeNum As String) As Task(Of cheque)
 End Interface

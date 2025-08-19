@@ -22,8 +22,6 @@
     Public Property 瓦斯桶14Kg As Integer
     Public Property 瓦斯桶5Kg As Integer
     Public Property 瓦斯桶2Kg As Integer
-    Public Property 普氣存氣 As Integer
-    Public Property 丙氣存氣 As Integer
 
     Public Sub New(data As customer)
         編號 = data.cus_id
@@ -48,8 +46,6 @@
         瓦斯桶14Kg =data.cus_gas_14
         瓦斯桶5Kg = data.cus_gas_5
         瓦斯桶2Kg = data.cus_gas_2
-        普氣存氣 = data.cus_GasStock
-        丙氣存氣 = data.cus_GasCStock
         所屬公司 = data.company?.comp_name
     End Sub
 End Class

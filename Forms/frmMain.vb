@@ -1,5 +1,5 @@
 ﻿Public Class frmMain
-    Implements ISubjectsView, ICompanyView, IManufacturerView, IPurchaseView, ICustomerView, IPricePlanView, IEmployeeView, IBankView, IUnitPriceHistoryView, ICheque,
+    Implements ISubjectsView, IManufacturerView, IPurchaseView, ICustomerView, IPricePlanView, IEmployeeView, IBankView, IUnitPriceHistoryView,
         IGasCheckoutView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, IPurchaseBarrelView, ICarView, IInvoiceSplitView, IInspectionView
 
     Public Structure UserData
@@ -14,7 +14,6 @@
 
     Private _basicPrice As BasicPricePresenter
     Private _car As CarPresenter
-    Private _cheque As ChequePresenter
     Private _customer As CustomerPresenter
     Private _gasBarrel As GasBarrelPresenter
     Private _invoice As InvoicePresenter
@@ -22,7 +21,6 @@
     Private _permission As PermissionPresenter
     Private _purchaseBarrel As PurBarrelPresenter
     Private _subjects As SubjectsPresenter
-    Private _company As New CompanyPresenter(Me)
     Private _manufacturer As New ManufacturerPresenter(Me)
     Private _purchase As PurchasePresenter
     Private _pricePlan As New PricePlanPresenter(Me)
@@ -117,7 +115,6 @@
         _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
         _purchaseBarrel = New PurBarrelPresenter(Me, pbRep, manuRep, barMBSer, compRep, aeSer)
         _subjects = New SubjectsPresenter(Me, subjectRep)
-        _cheque = New ChequePresenter(Me, cheRep, printerSer)
         _permission = New PermissionPresenter(Me, permissionRep)
         _purchase = New PurchasePresenter(Me, purRep, compRep, manuRep, subjectRep, gmbSer, aeSer, printerSer)
         _gasCheckout = New GasCheckoutPresenter(Me, purRep, manuRep)
@@ -138,7 +135,10 @@
                 {tpOrder, DependencyContainer.Resolve(Of OrderUserControl)},
                 {tpPayment, DependencyContainer.Resolve(Of PaymentUserControl)()},
                 {tpCollection, DependencyContainer.Resolve(Of CollectionUserControl)},
-                {tpScrapBarrel, DependencyContainer.Resolve(Of ScrapBarrelUserControl)}
+                {tpScrapBarrel, DependencyContainer.Resolve(Of ScrapBarrelUserControl)},
+                {tpCheque_col, DependencyContainer.Resolve(Of Cheque_colUserControl)},
+                {tpChequePay, DependencyContainer.Resolve(Of ChequePayUserControl)},
+                {tpCompany, DependencyContainer.Resolve(Of CompanyUserControl)}
             }
 
             ' 使用迴圈設定每個 UserControl
@@ -214,13 +214,11 @@
         btnCancel_bank_Click(btnCancel_bank, EventArgs.Empty)
         btnCancel_car_Click(btnCancel_car, EventArgs.Empty)
         btnCancel_subjects_Click(btnCancel_subjects, EventArgs.Empty)
-        btnCancel_comp_Click(btnCancel_comp, EventArgs.Empty)
         btnCancel_manu_Click(btnCancel_manu, EventArgs.Empty)
         btnCancel_pur_Click(btnCancel_pur, EventArgs.Empty)
         btnCancel_pp_Click(btnCancel_pp, EventArgs.Empty)
         btnCancel_roles_Click(btnCancel_roles, EventArgs.Empty)
         btnCancel_uph_Click(btnCancel_uph, EventArgs.Empty)
-        btnCancel_Che_Click(btnCancel_Che, EventArgs.Empty)
         btnCancel_gc_Click(btnCancel_gc, EventArgs.Empty)
         btnCancel_invoice_Click(btnCancel_invoice, EventArgs.Empty)
         btnCancel_gb_Click(btnCancel_gb, EventArgs.Empty)
@@ -309,7 +307,7 @@
     ''' 設定TextBox只能輸入正浮點數
     ''' </summary>
     Private Sub PositiveFloatOnly()
-        Dim txts = New List(Of TextBox) From {txtUnitPrice_pur, txtDeliUnitPrice, txtInitGasStock, txtUnitPrice_invoice}
+        Dim txts = New List(Of TextBox) From {txtUnitPrice_pur, txtDeliUnitPrice, txtUnitPrice_invoice}
 
         txts.ForEach(Sub(x) AddHandler x.KeyPress, AddressOf PositiveFloatOnly_TextBox)
     End Sub
@@ -372,7 +370,6 @@
     Public Sub DisplayDetail(data As customer) Implements IBaseView(Of customer, CustomerVM).DisplayDetail
         AutoMapEntityToControls(data, tpCustomer)
         AutoMapEntityToControls(data, grpStock)
-        AutoMapEntityToControls(data, grpCusStk)
         AutoMapEntityToControls(data, grpPricePlan)
         AutoMapEntityToControls(data, grpInsurance)
     End Sub
@@ -381,7 +378,6 @@
         Dim data As New customer
         AutoMapControlsToEntity(data, tpCustomer)
         AutoMapControlsToEntity(data, grpStock)
-        AutoMapControlsToEntity(data, grpCusStk)
         AutoMapControlsToEntity(data, grpPricePlan)
         AutoMapControlsToEntity(data, grpInsurance)
         Return data
@@ -991,63 +987,6 @@
         txtAmount_pb.Text = amount
     End Sub
 
-    Public Sub ShowList(data As List(Of CompanyVM)) Implements ICommonView_old(Of company, CompanyVM).ShowList
-        dgvCompany.DataSource = data
-        SetColumnHeaders("company", dgvCompany)
-    End Sub
-
-    Public Sub SetDataToControl(data As company) Implements ICompanyView.SetDataToControl
-        AutoMapEntityToControls(data, tpCompany)
-    End Sub
-
-    Public Sub ClearInput() Implements ICompanyView.ClearInput
-        ClearControls(tpCompany)
-    End Sub
-
-    Private Function GetUserInput_Company() As company Implements ICompanyView.GetUserInput
-        Dim data As New company
-        AutoMapControlsToEntity(data, tpCompany)
-        Return data
-    End Function
-
-    Public Function SetRequired() As List(Of Control) Implements ICommonView_old(Of company, CompanyVM).SetRequired
-        Return New List(Of Control) From {txtName_comp, txtShortName, txtTaxID, txtInitGasStock}
-    End Function
-
-    '基本資料-公司管理-取消
-    Private Sub btnCancel_comp_Click(sender As Object, e As EventArgs) Handles btnCancel_comp.Click
-        ClearInput()
-        SetButtonState(sender, True)
-        _company.LoadList()
-    End Sub
-
-    '基本資料-公司管理-新增
-    Private Sub btnAdd_comp_Click(sender As Object, e As EventArgs) Handles btnAdd_comp.Click
-        _company.Add()
-    End Sub
-
-    '基本資料-公司管理-dgv
-    Private Sub dgvCompany_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCompany.SelectionChanged, dgvCompany.CellMouseClick
-        Dim ctrl As DataGridView = sender
-        If Not ctrl.Focused Then Return
-        ClearControls(ctrl.Parent)
-        SetButtonState(ctrl, False)
-        Dim id As Integer = ctrl.SelectedRows(0).Cells(0).Value
-        _company.SelectRow(id)
-    End Sub
-
-    '基本資料-公司管理-修改
-    Private Sub btnEdit_comp_Click(sender As Object, e As EventArgs) Handles btnEdit_comp.Click
-        Dim id As Integer = txtID_comp.Text
-        _company.Edit(id)
-    End Sub
-
-    '基本資料-公司管理-刪除
-    Private Sub btnDelete_comp_Click(sender As Object, e As EventArgs) Handles btnDelete_comp.Click
-        Dim id As Integer = txtID_comp.Text
-        _company.Delete(id)
-    End Sub
-
     Public Sub ShowList(data As List(Of ManufacturerVM)) Implements ICommonView_old(Of manufacturer, ManufacturerVM).ShowList
         dgvManufacturer.DataSource = data
     End Sub
@@ -1423,124 +1362,6 @@
         Dim id = txtId_bank.Text
         _bank.Delete(id)
     End Sub
-
-    Public Sub ShowList(data As List(Of ChequeVM)) Implements ICommonView_old(Of cheque, ChequeVM).ShowList
-        '檢查是否有chk
-        Dim chkColName = "ChkCol"
-
-        If Not dgvCheque.Columns.Cast(Of DataGridViewColumn).Any(Function(x) x.Name = chkColName) Then
-            Dim chkCol As New DataGridViewCheckBoxColumn With {
-                .HeaderText = "選擇",
-                .Name = chkColName,
-                .Width = 50
-            }
-
-            dgvCheque.Columns.Insert(0, chkCol)
-        End If
-
-        dgvCheque.DataSource = data
-
-        ' 設置列的唯讀屬性
-        For Each column As DataGridViewColumn In dgvCheque.Columns
-            If column.Name = chkColName Then
-                column.ReadOnly = False
-            Else
-                column.ReadOnly = True
-            End If
-        Next
-
-    End Sub
-
-    Public Sub SetDataToControl(data As cheque) Implements ICommonView_old(Of cheque, ChequeVM).SetDataToControl
-        AutoMapEntityToControls(data, tpCheque)
-    End Sub
-
-    Public Function GetUserInput() As cheque Implements ICommonView_old(Of cheque, ChequeVM).GetUserInput
-        Dim data As New cheque
-        AutoMapControlsToEntity(data, tpCheque)
-        Return data
-    End Function
-
-    Private Sub ClearInput_Cheque() Implements ICommonView_old(Of cheque, ChequeVM).ClearInput
-        ClearControls(tpCheque)
-    End Sub
-
-    Private Function SetRequired_Cheque() As List(Of Control) Implements ICommonView_old(Of cheque, ChequeVM).SetRequired
-        Return Nothing
-    End Function
-
-    '會計管理-支票管理-取消
-    Private Sub btnCancel_Che_Click(sender As Object, e As EventArgs) Handles btnCancel_Che.Click
-        ClearControls(tpCheque)
-        _cheque.LoadList()
-    End Sub
-
-    '會計管理-支票管理-dgv
-    Private Sub dgvCheque_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCheque.SelectionChanged, dgvCheque.CellMouseClick
-        Dim ctrl As DataGridView = sender
-        If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
-
-        SetButtonState(ctrl, False)
-
-        Dim id = ctrl.SelectedRows(0).Cells(1).Value
-        _cheque.SelectRow(id)
-    End Sub
-
-    '會計管理-支票管理-狀態
-    Private Sub cmbState_Che_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbState_Che.SelectedIndexChanged
-        Dim cmb As ComboBox = sender
-        Dim ctrls As Control() = {lblCashingDate, dtpCashingDate}
-        ctrls.ToList.ForEach(Sub(x) x.Visible = False)
-
-        Select Case cmb.Text
-            Case "已兌現"
-                lblCashingDate.Visible = True
-                dtpCashingDate.Visible = True
-        End Select
-    End Sub
-
-    '會計管理-支票管理-查詢
-    Private Sub btnQuery_che_Click(sender As Object, e As EventArgs) Handles btnQuery_che.Click
-        Using frm As New Search_Cheque
-            If frm.ShowDialog = DialogResult.OK Then
-                _cheque.LoadList(frm.Criteria)
-            End If
-        End Using
-    End Sub
-
-    '會計管理-支票管理-全選
-    Private Sub btnSelectAll_Click(sender As Object, e As EventArgs) Handles btnSelectAll.Click
-        For Each row As DataGridViewRow In dgvCheque.Rows
-            If Not row.IsNewRow Then
-                row.Cells("ChkCol").Value = True
-            End If
-        Next
-    End Sub
-
-    '會計管理-支票管理-轉為已代收
-    Private Sub btnChange_Click(sender As Object, e As EventArgs) Handles btnChange.Click
-        Dim selectedIds = GetSelectedChequeIds()
-        If selectedIds.Count = 0 Then
-            MsgBox("請至少選擇一個對象")
-            Return
-        End If
-        _cheque.SetBatchCollection(selectedIds, dtpCollectionDate.Value.Date)
-    End Sub
-
-    '會計管理-支票管理-列印
-    Private Sub btnPrint_cheque_Click(sender As Object, e As EventArgs) Handles btnPrint_cheque.Click
-        _cheque.Print(dgvCheque.DataSource)
-    End Sub
-
-    ''' <summary>
-    ''' 取得勾選的Id
-    ''' </summary>
-    ''' <returns></returns>
-    Private Function GetSelectedChequeIds() As List(Of Integer)
-        Return dgvCheque.Rows.Cast(Of DataGridViewRow).
-                Where(Function(x) Convert.ToBoolean(x.Cells("ChkCol").Value)).
-                Select(Function(x) CInt(x.Cells("編號").Value)).ToList
-    End Function
 
     Private Function IGasCheckoutView_GetUserInput() As PurchaseCondition Implements IGasCheckoutView.GetUserInput
         Return New PurchaseCondition With {

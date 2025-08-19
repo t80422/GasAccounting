@@ -15,11 +15,9 @@
 
     Public Sub SetBankAccountCmb(items As List(Of SelectListItem)) Implements IReportView.SetBankAccountCmb
         SetComboBox(cmbBankAccount_BankAccount, items)
-        SetComboBox(cmbBankAccount_br, items)
     End Sub
 
     Public Sub SetCompanyCmb(items As List(Of SelectListItem)) Implements IReportView.SetCompanyCmb
-        SetComboBox(cmbCompany_br, items)
         SetComboBox(cmbCompany_ITD, items)
         SetComboBox(cmbCompany_insurance, items)
         SetComboBox(cmbCompany_IS, items)
@@ -50,7 +48,7 @@
 
     ' 銀行帳
     Private Sub btnBankAccount_Click(sender As Object, e As EventArgs) Handles btnBankAccount.Click
-        _presenter.GenerateBankAccount(dtpStart_BankAccount.Value.Date, dtpEnd_BankAccount.Value.Date, cmbBankAccount_BankAccount.SelectedItem.Value)
+        _presenter.GenerateBankAccount(dtpMonth_BankAccount.Value.Date, cmbBankAccount_BankAccount.SelectedItem.Value)
     End Sub
 
     ' 單一客戶每月的應收帳明細表
@@ -65,7 +63,27 @@
 
     ' 現金帳
     Private Sub btnCashAccount_Click(sender As Object, e As EventArgs) Handles btnCashAccount.Click
-        _presenter.GenerateCashAccount(dtpStart_ca.Value.Date, dtpEnd_ca.Value.Date)
+        _presenter.GenerateCashAccount(dtpStart_ca.Value.Date, dtpEnd_ca.Value.Date, txtCusId_ca.Text)
+    End Sub
+
+    ' 現金帳-搜尋客戶
+    Private Sub btnSearch_ca_Click(sender As Object, e As EventArgs) Handles btnSearch_ca.Click
+        Using searchForm As New frmQueryCustomer
+            If searchForm.ShowDialog = DialogResult.OK Then
+                txtCusId_ca.Text = searchForm.CusId
+                txtCusName_ca.Text = searchForm.CusName
+                txtCusCode_ca.Text = searchForm.CusCode
+            End If
+        End Using
+    End Sub
+
+    ' 現金帳-客戶代碼輸入
+    Private Sub txtCusCode_ca_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCusCode_ca.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            Dim cus = _presenter.GetCusInfo(txtCusCode_ca.Text)
+            txtCusId_ca.Text = cus.cus_id
+            txtCusName_ca.Text = cus.cus_name
+        End If
     End Sub
 
     ' 客戶寄桶結存瓶
@@ -89,11 +107,6 @@
         _presenter.GenerateNewBarrelDetails(dtpMonth_newBarrel.Value)
     End Sub
 
-    ' 應收票據
-    Private Sub btnGenerate_br_Click(sender As Object, e As EventArgs) Handles btnGenerate_br.Click
-        _presenter.GenerateBillsReceivable(cmbCompany_br.SelectedItem.Value, cmbBankAccount_br.SelectedItem.Value, dtpMonth_br.Value)
-    End Sub
-
     ' 每日科目彙總表
     Private Sub btnDSS_Click(sender As Object, e As EventArgs) Handles btnDSS.Click
         _presenter.GenerateDailySubjectSummary(dtpDate_DSS.Value)
@@ -102,11 +115,6 @@
     ' 進銷存明細
     Private Sub btnITD_Click(sender As Object, e As EventArgs) Handles btnITD.Click
         _presenter.GenerateInventoryTransactionDetail(dtpYear_ITD.Value, cmbCompany_ITD.SelectedItem.Value, Nothing)
-    End Sub
-
-    ' 應付票據
-    Private Sub btnPayableCheck_Click(sender As Object, e As EventArgs) Handles btnPayableCheck.Click
-        _presenter.GeneratePayableCheck(dtpMonth_PayableCheck.Value)
     End Sub
 
     ' 財稅

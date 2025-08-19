@@ -22,7 +22,7 @@ Partial Public Class monthly_account
     Public Property ma_last_updated As Date
     Public Property ma_discount As Nullable(Of Integer)
 
-    Public Overridable Property customer As customer
     Public Overridable Property write_off As ICollection(Of write_off) = New HashSet(Of write_off)
+    Public Overridable Property customer As customer
 
 End Class

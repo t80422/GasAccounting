@@ -31,7 +31,6 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property cheques() As DbSet(Of cheque)
     Public Overridable Property collections() As DbSet(Of collection)
     Public Overridable Property companies() As DbSet(Of company)
-    Public Overridable Property customers() As DbSet(Of customer)
     Public Overridable Property employees() As DbSet(Of employee)
     Public Overridable Property gas_monthly_balances() As DbSet(Of gas_monthly_balances)
     Public Overridable Property invoices() As DbSet(Of invoice)
@@ -55,5 +54,7 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property scrap_barrel() As DbSet(Of scrap_barrel)
     Public Overridable Property scrap_barrel_detail() As DbSet(Of scrap_barrel_detail)
     Public Overridable Property closing_entry() As DbSet(Of closing_entry)
+    Public Overridable Property customers() As DbSet(Of customer)
+    Public Overridable Property chque_pay() As DbSet(Of chque_pay)
 
 End Class

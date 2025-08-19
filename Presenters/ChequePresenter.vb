@@ -1,14 +1,18 @@
 ﻿Imports System.IO
+Imports ClosedXML.Excel
 
 Public Class ChequePresenter
-    Private ReadOnly _view As ICheque
+    Private _view As ICheque
     Private ReadOnly _cheRep As IChequeRep
     Private ReadOnly _printerSer As IPrinterService
 
-    Public Sub New(view As ICheque, cheRep As IChequeRep, printerSer As IPrinterService)
-        _view = view
+    Public Sub New(cheRep As IChequeRep, printerSer As IPrinterService)
         _cheRep = cheRep
         _printerSer = printerSer
+    End Sub
+
+    Public Sub SetView(view As ICheque)
+        _view = view
     End Sub
 
     ''' <summary>
@@ -34,13 +38,19 @@ Public Class ChequePresenter
     End Sub
 
     ''' <summary>
-    ''' 批次代收
+    ''' 批次設定狀態
     ''' </summary>
     ''' <param name="chequeIds"></param>
     ''' <param name="d"></param>
-    Public Async Sub SetBatchCollection(chequeIds As List(Of Integer), d As Date)
+    ''' <param name="isCollect">true:已代收 false:已兌現</param>
+    Public Async Sub SetBatchStatus(chequeIds As List(Of Integer), d As Date, isCollect As Boolean)
         Try
-            Await _cheRep.UpdateCollectionStatusAsync(chequeIds, d)
+            If isCollect Then
+                Await _cheRep.UpdateCollectionStatusAsync(chequeIds, d)
+            Else
+                _cheRep.UpdateRedeemedStatus(chequeIds, d)
+            End If
+
             LoadList()
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -114,6 +124,9 @@ Public Class ChequePresenter
 
                         rowIndex += 1
                     Next
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 8, XLBorderStyleValues.Thin)
+                    .WriteToCell(rowIndex, 4, "合計")
+                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.金額).ToString("N0"))
 
                     .SaveExcel("支票管理")
                 End With

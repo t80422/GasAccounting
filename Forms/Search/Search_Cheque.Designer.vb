@@ -88,7 +88,7 @@ Partial Class Search_Cheque
         'cmbStatus
         '
         Me.cmbStatus.FormattingEnabled = True
-        Me.cmbStatus.Items.AddRange(New Object() {"未兌現", "已代收", "已兌現"})
+        Me.cmbStatus.Items.AddRange(New Object() {"已代收", "已兌現"})
         Me.cmbStatus.Location = New System.Drawing.Point(75, 55)
         Me.cmbStatus.Name = "cmbStatus"
         Me.cmbStatus.Size = New System.Drawing.Size(150, 24)
@@ -118,7 +118,7 @@ Partial Class Search_Cheque
         Me.Controls.Add(Me.dtpStart)
         Me.Controls.Add(Me.Label1)
         Me.Font = New System.Drawing.Font("新細明體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False
         Me.Name = "Search_Cheque"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

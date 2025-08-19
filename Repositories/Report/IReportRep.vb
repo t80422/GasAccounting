@@ -4,7 +4,7 @@
     ''' </summary>
     ''' <param name="d"></param>
     ''' <returns></returns>
-    Function CustomersGasDetailByDay(d As Date, isMonth As Boolean) As List(Of CustomersGasDetailByDay)
+    Function CustomersGasDetailByDay(selectDate As Date, isMonth As Boolean) As List(Of CustomersGasDetailByDay)
 
     ''' <summary>
     ''' 客戶提氣清冊
@@ -41,16 +41,15 @@
     ''' <param name="startDate"></param>
     ''' <param name="endDate"></param>
     ''' <returns></returns>
-    Function GetCashAccount(startDate As Date, endDate As Date) As List(Of CashAccount)
+    Function GetCashAccount(startDate As Date, endDate As Date, Optional cusId As Integer = 0) As List(Of CashAccount)
 
     ''' <summary>
     ''' 取得銀行帳
     ''' </summary>
-    ''' <param name="startDate"></param>
-    ''' <param name="endDate"></param>
+    ''' <param name="month"></param>
     ''' <param name="bankId"></param>
     ''' <returns></returns>
-    Function GetBankAccount(startDate As Date, endDate As Date, bankId As Integer) As BankAccount
+    Function GetBankAccount(month As Date, bankId As Integer) As BankAccount
 
     ''' <summary>
     ''' 取得客戶寄桶結存瓶
@@ -65,15 +64,6 @@
     ''' <param name="month"></param>
     ''' <returns></returns>
     Function GetNewBarrelDetails(month As Date) As NewBarrelDetails
-
-    ''' <summary>
-    ''' 取得應收票據
-    ''' </summary>
-    ''' <param name="companyId"></param>
-    ''' <param name="bankId"></param>
-    ''' <param name="month"></param>
-    ''' <returns></returns>
-    Function GetBillsReceivable(companyId As Integer, bankId As Integer, month As Date) As BillsReceivable
 
     ''' <summary>
     ''' 取得發票
@@ -96,13 +86,6 @@
     ''' <param name="compId"></param>
     ''' <returns></returns>
     Function GetInventoryTransactionDetail(year As Date, compId As Integer, empId As Integer) As InventoryTransactionDetail
-
-    ''' <summary>
-    ''' 取得應付票據
-    ''' </summary>
-    ''' <param name="month"></param>
-    ''' <returns></returns>
-    Function GetPayableCheck(month As Date) As List(Of PayableCheck)
 
     ''' <summary>
     ''' 取得財稅

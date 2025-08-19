@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports ClosedXML.Excel
 Imports NLog.Time
+Imports SixLabors.Fonts.Tables.General
 
 Public Class PaymentPresenter
     Private _view As IPaymentView
@@ -9,21 +10,21 @@ Public Class PaymentPresenter
     Private ReadOnly _companyRep As ICompanyRep
     Private ReadOnly _paymentRep As IPaymentRep
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
-    Private ReadOnly _chequeRep As IChequeRep
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _reportSer As IReportService
+    Private ReadOnly _cpRep As IChequePayRep
     Private selectData As payment
 
     Public Sub New(manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
-                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, reportSer As IReportService)
+                   bmbService As IBankMonthlyBalanceService, aeSer As IAccountingEntryService, reportSer As IReportService, cpRep As IChequePayRep)
         _manufaturerRep = manufaturerRep
         _subjectRep = subjectRep
         _companyRep = companyRep
         _paymentRep = paymentRep
         _bmbService = bmbService
-        _chequeRep = chequeRep
         _aeSer = aeSer
         _reportSer = reportSer
+        _cpRep = cpRep
     End Sub
 
     Public Sub SetView(view As IPaymentView)
@@ -75,15 +76,34 @@ Public Class PaymentPresenter
                 Await _paymentRep.AddAsync(payment)
 
                 If payment.p_Type = "支票" Then
-                    Dim cheque = New cheque With {
-                        .che_ReceivedDate = payment.p_Date,
-                        .che_Number = payment.p_Cheque,
-                        .che_Amount = payment.p_Amount,
-                        .che_AccountNumber = payment.manufacturer?.manu_account,
-                        .chu_State = "未兌現"
+                    Dim cheque = New chque_pay With {
+                        .cp_Date = payment.p_Date,
+                        .cp_Number = payment.p_Cheque,
+                        .cp_Amount = payment.p_Amount,
+                        .cp_AccountNumber = payment.manufacturer?.manu_account
                     }
 
-                    Await _chequeRep.AddAsync(cheque)
+                    Await _cpRep.AddAsync(cheque)
+                ElseIf payment.p_Type = "銀行" Then
+                    ' 支票兌現
+                    Dim subject = _subjectRep.GetByIdAsync(payment.p_s_Id).Result
+
+                    If subject.s_name = "應付票據" Then
+                        Dim chequeNo = InputBox("請輸入支票號碼")
+
+                        If Not String.IsNullOrEmpty(chequeNo) Then
+                            Dim cheque = _cpRep.GetByChequeNumber(chequeNo)
+
+                            If cheque Is Nothing Then
+                                Throw New Exception("找不到此支票")
+                            ElseIf cheque.cp_IsCashing Then
+                                Throw New Exception("此支票已兌現")
+                            Else
+                                cheque.cp_IsCashing = True
+                                cheque.cp_CashingDate = payment.p_Date
+                            End If
+                        End If
+                    End If
                 End If
 
                 Dim entries = CreatePaymentEntries(payment)
@@ -109,15 +129,23 @@ Public Class PaymentPresenter
                 Await _paymentRep.UpdateAsync(selectData, payment)
 
                 If payment.p_Type = "支票" Then
-                    Dim cheque = New cheque With {
-                        .che_ReceivedDate = payment.p_Date,
-                        .che_Number = payment.p_Cheque,
-                        .che_Amount = payment.p_Amount,
-                        .che_AccountNumber = payment.manufacturer.manu_account,
-                        .chu_State = "未兌現"
-                    }
+                    Dim cheque = _cpRep.GetByChequeNumber(payment.p_Cheque)
 
-                    Await _chequeRep.AddAsync(cheque)
+                    If cheque IsNot Nothing Then
+                        cheque.cp_Date = payment.p_Date
+                        cheque.cp_Number = payment.p_Cheque
+                        cheque.cp_Amount = payment.p_Amount
+                        cheque.cp_AccountNumber = payment.manufacturer?.manu_account
+                    Else
+                        '如果支票不存在，則新增一個新的支票記錄
+                        cheque = New chque_pay With {
+                            .cp_Date = payment.p_Date,
+                            .cp_Number = payment.p_Cheque,
+                            .cp_Amount = payment.p_Amount,
+                            .cp_AccountNumber = payment.manufacturer?.manu_account
+                        }
+                        Await _cpRep.AddAsync(cheque)
+                    End If
                 End If
 
                 '更新會計分錄
@@ -144,9 +172,11 @@ Public Class PaymentPresenter
                 Dim bankId = payment.p_bank_Id
 
                 '刪除支票
-                If Not String.IsNullOrEmpty(payment.p_Cheque) Then
-                    Dim che = Await _chequeRep.GetByNumberAsync(payment.p_Cheque)
-                    Await _chequeRep.DeleteAsync(che.che_Id)
+                If payment.p_Type = "支票" Then
+                    Dim cheque = _cpRep.GetByChequeNumber(payment.p_Cheque)
+                    If cheque IsNot Nothing Then
+                        Await _cpRep.DeleteAsync(cheque.cp_Id)
+                    End If
                 End If
 
                 '刪除付款

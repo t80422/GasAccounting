@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Security.AccessControl
 Imports System.Windows.Interop
 Imports ClosedXML.Excel
 
@@ -10,14 +11,17 @@ Public Class ReportPresenter
     Private ReadOnly _compRep As ICompanyRep
     Private ReadOnly _colRep As ICollectionRep
     Private ReadOnly _printerSer As IPrinterService
+    Private ReadOnly _cusRep As ICustomerRep
 
-    Public Sub New(reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService, colRep As ICollectionRep, manuSer As IManufacturerService)
+    Public Sub New(reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService, colRep As ICollectionRep,
+                   manuSer As IManufacturerService, cusRep As ICustomerRep)
         _rep = reportRep
         _bankRep = bankRep
         _compRep = compRep
         _printerSer = printerSer
         _colRep = colRep
         _manuSer = manuSer
+        _cusRep = cusRep
     End Sub
 
     Public Sub SetView(view As IReportView)
@@ -470,10 +474,11 @@ Public Class ReportPresenter
     ''' </summary>
     ''' <param name="startDate"></param>
     ''' <param name="endDate"></param>
-    Public Sub GenerateCashAccount(startDate As Date, endDate As Date)
+    ''' <param name="cusId"></param>
+    Public Sub GenerateCashAccount(startDate As Date, endDate As Date, Optional cusId As Integer = 0)
         Try
             '取得資料
-            Dim data = _rep.GetCashAccount(startDate, endDate)
+            Dim data = _rep.GetCashAccount(startDate, endDate, cusId)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "現金帳範本檔.xlsx")
@@ -506,13 +511,12 @@ Public Class ReportPresenter
     ''' <summary>
     ''' 產生銀行帳
     ''' </summary>
-    ''' <param name="startDate"></param>
-    ''' <param name="endDate"></param>
+    ''' <param name="month"></param>
     ''' <param name="bankId"></param>
-    Public Sub GenerateBankAccount(startDate As Date, endDate As Date, bankId As Integer)
+    Public Sub GenerateBankAccount(month As Date, bankId As Integer)
         Try
             '取得資料
-            Dim data = _rep.GetBankAccount(startDate, endDate, bankId)
+            Dim data = _rep.GetBankAccount(month, bankId)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "銀行帳範本檔.xlsx")
@@ -543,13 +547,8 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 5, totalCredit.ToString)
 
                     '存檔
-                    Dim exportFilePath = .SaveExcel($"銀行帳_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}")
+                    .SaveExcel($"銀行帳_{month:yyyy年MM月}")
 
-                    ''列印
-                    'If exportFilePath IsNot Nothing Then
-                    '    Dim printerName = _printerSer.GetOrSelectPrinter
-                    '    .Print(exportFilePath, printerName)
-                    'End If
                 End With
             End Using
         Catch ex As Exception
@@ -817,61 +816,6 @@ Public Class ReportPresenter
     End Sub
 
     ''' <summary>
-    ''' 產生應收票據
-    ''' </summary>
-    ''' <param name="companyId"></param>
-    ''' <param name="month"></param>
-    Public Sub GenerateBillsReceivable(companyId As Integer, bankId As Integer, month As Date)
-        Try
-            Dim formatDate = New Date(month.Year, month.Month, 1)
-
-            '取得資料
-            Dim data = _rep.GetBillsReceivable(companyId, bankId, formatDate)
-
-            '取得範本檔
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "應收票據範本檔.xlsx")
-
-            '套版
-            Using xml As New CloseXML_Excel(filePath)
-                With xml
-                    .SelectWorksheet("Sheet1")
-
-                    .WriteToCell(1, 1, data.CompanyName)
-                    .WriteToCell(2, 2, data.BankAccount)
-
-                    Dim rowIndex = 4
-
-                    For Each item In data.List
-
-                        .WriteToCell(rowIndex, 1, (rowIndex - 3).ToString)
-                        .WriteToCell(rowIndex, 2, item.ReceiveDate.ToString("yyyy/MM/dd"))
-                        .WriteToCell(rowIndex, 3, item.CusCode)
-                        .WriteToCell(rowIndex, 4, item.ChequeNumber)
-                        .WriteToCell(rowIndex, 5, item.IssuerName)
-                        .WriteToCell(rowIndex, 6, item.PayBankName)
-                        .WriteToCell(rowIndex, 7, item.AvailableDate.ToString("yyyy/MM/dd"))
-                        .WriteToCell(rowIndex, 8, item.Amount.ToString)
-                        .WriteToCell(rowIndex, 9, If(item.CollectDate.HasValue, item.CollectDate.ToString("yyyy/MM/dd"), ""))
-                        .WriteToCell(rowIndex, 11, item.Memo)
-
-                        .InsertRow(rowIndex)
-                        rowIndex += 1
-                    Next
-
-                    Dim total = data.List.Sum(Function(x) x.Amount)
-                    .WriteToCell(rowIndex, 7, "總計")
-                    .WriteToCell(rowIndex, 8, total.ToString)
-
-                    '存檔
-                    .SaveExcel($"應收票據_{data.CompanyName}_{data.BankAccount}_{month:yyyyMM}")
-                End With
-            End Using
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    ''' <summary>
     ''' 產生發票
     ''' </summary>
     ''' <param name="month"></param>
@@ -1048,41 +992,6 @@ Public Class ReportPresenter
 
                     '存檔
                     .SaveExcel($"進銷存明細表_{data.Company}_{year:yyyy}")
-                End With
-            End Using
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    ''' <summary>
-    ''' 產生應付票據
-    ''' </summary>
-    ''' <param name="month"></param>
-    Public Sub GeneratePayableCheck(month As Date)
-        Try
-            '取得資料
-            Dim data = _rep.GetPayableCheck(month)
-
-            '取得範本檔
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "應付票據範本檔.xlsx")
-
-            '套版
-            Using xml As New CloseXML_Excel(filePath)
-                With xml
-                    .SelectWorksheet("Sheet1")
-
-                    For i As Integer = 0 To data.Count - 1
-                        .WriteToCell(i + 3, 1, data(i).Day)
-                        .WriteToCell(i + 3, 2, data(i).ChequeNumber)
-                        .WriteToCell(i + 3, 3, data(i).Amount.ToString)
-                        .WriteToCell(i + 3, 4, data(i).CashingDate)
-                        .WriteToCell(i + 3, 5, data(i).Memo)
-                        .WriteToCell(i + 3, 6, data(i).IsCashing)
-                    Next
-
-                    '存檔
-                    .SaveExcel($"應付票據_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1772,7 +1681,7 @@ Public Class ReportPresenter
                             '寫入該行該科目的資料
                             If row < allTransactions.Count Then
                                 Dim transaction = allTransactions(row)
-                                .WriteToCell(rowIndex + row, colIndex, transaction.Item1.ToString("MM/dd"), dataStyle)
+                                .WriteToCell(rowIndex + row, colIndex, transaction.Item1.ToString("MM月dd日"), dataStyle)
 
                                 If transaction.Item3 = "Debit" Then
                                     .WriteToCell(rowIndex + row, colIndex + 1, transaction.Item2.ToString("#,##0"), amountStyle)
@@ -1782,7 +1691,7 @@ Public Class ReportPresenter
                                     .WriteToCell(rowIndex + row, colIndex + 2, transaction.Item2.ToString("#,##0"), amountStyle)
                                 End If
 
-                                .WriteToCell(rowIndex + row, colIndex + 3, transaction.Item1.ToString("MM/dd"), dataStyle)
+                                .WriteToCell(rowIndex + row, colIndex + 3, transaction.Item1.ToString("MM月dd日"), dataStyle)
                             Else
                                 '該行沒有交易，留空
                                 .WriteToCell(rowIndex + row, colIndex, "", dataStyle)
@@ -1845,4 +1754,13 @@ Public Class ReportPresenter
             MsgBox("產生科目平衡表失敗:" + ex.Message)
         End Try
     End Sub
+
+    Public Function GetCusInfo(cusCode As String) As customer
+        Try
+            Return _cusRep.GetByCusCode(cusCode)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            Return Nothing
+        End Try
+    End Function
 End Class

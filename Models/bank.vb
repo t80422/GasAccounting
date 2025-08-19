@@ -23,5 +23,6 @@ Partial Public Class bank
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property company As company
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property chque_pay As ICollection(Of chque_pay) = New HashSet(Of chque_pay)
 
 End Class
