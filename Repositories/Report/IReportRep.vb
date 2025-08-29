@@ -41,7 +41,7 @@
     ''' <param name="startDate"></param>
     ''' <param name="endDate"></param>
     ''' <returns></returns>
-    Function GetCashAccount(startDate As Date, endDate As Date, Optional cusId As Integer = 0) As List(Of CashAccount)
+    Function GetCashAccount(startDate As Date, endDate As Date) As List(Of CashAccount)
 
     ''' <summary>
     ''' 取得銀行帳
@@ -143,7 +143,7 @@
     Function GetSplitCompany(year As Integer, months As String) As SplitCompanyInvoice
 
     ''' <summary>
-    ''' 取得每日科目彙總表
+    ''' 取得期初到選擇日期的科目匯總表
     ''' </summary>
     ''' <param name="day"></param>
     ''' <returns></returns>
@@ -154,5 +154,5 @@
     ''' </summary>
     ''' <param name="month">查詢月份</param>
     ''' <returns></returns>
-    Function GetAccountBalance(month As Date) As AccountBalanceDTO
+    Function GetAccountBalance(month As Date) As List(Of AccountBalanceDTO)
 End Interface

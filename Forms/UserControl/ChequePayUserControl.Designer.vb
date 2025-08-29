@@ -36,6 +36,7 @@ Partial Class ChequePayUserControl
         Me.Label146 = New System.Windows.Forms.Label()
         Me.dgvCheque = New System.Windows.Forms.DataGridView()
         Me.chkIsCashing = New System.Windows.Forms.CheckBox()
+        Me.btnPrint = New System.Windows.Forms.Button()
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -171,10 +172,21 @@ Partial Class ChequePayUserControl
         Me.chkIsCashing.Text = "已兌現"
         Me.chkIsCashing.UseVisualStyleBackColor = True
         '
+        'btnPrint
+        '
+        Me.btnPrint.BackColor = System.Drawing.Color.Cyan
+        Me.btnPrint.Location = New System.Drawing.Point(315, 39)
+        Me.btnPrint.Name = "btnPrint"
+        Me.btnPrint.Size = New System.Drawing.Size(140, 44)
+        Me.btnPrint.TabIndex = 495
+        Me.btnPrint.Text = "列  印"
+        Me.btnPrint.UseVisualStyleBackColor = False
+        '
         'ChequePayUserControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.btnPrint)
         Me.Controls.Add(Me.chkIsCashing)
         Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.txtCheId)
@@ -212,4 +224,5 @@ Partial Class ChequePayUserControl
     Friend WithEvents Label146 As Label
     Friend WithEvents dgvCheque As DataGridView
     Friend WithEvents chkIsCashing As CheckBox
+    Friend WithEvents btnPrint As Button
 End Class

@@ -13,6 +13,8 @@ Public Class ReportPresenter
     Private ReadOnly _printerSer As IPrinterService
     Private ReadOnly _cusRep As ICustomerRep
 
+    Private tempDate As String ' 暫存日期,報表出現單一日期用
+
     Public Sub New(reportRep As IReportRep, bankRep As IBankRep, compRep As ICompanyRep, printerSer As IPrinterService, colRep As ICollectionRep,
                    manuSer As IManufacturerService, cusRep As ICustomerRep)
         _rep = reportRep
@@ -48,74 +50,6 @@ Public Class ReportPresenter
 
     Public Sub GetManuCmb()
         _view.SetGasVendorCmb(_manuSer.GetGasVendorCmbItems())
-    End Sub
-
-    ''' <summary>
-    ''' 產生氣量氣款收付明細表
-    ''' </summary>
-    ''' <param name="d"></param>
-    Public Sub GenerateCustomersGasDetailByDay(d As Date, isMonth As Boolean)
-        Try
-            '蒐集資料
-            Dim datas = _rep.CustomersGasDetailByDay(d, isMonth)
-
-            '套版
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "氣量氣款收付明細表範本檔.xlsx")
-
-            Using xml As New CloseXML_Excel(filePath)
-                With xml
-                    .SelectWorksheet("Sheet1")
-
-                    If isMonth Then
-                        .WriteToCell(2, 1, $"{d:yyyy年MM月 氣量氣款收付明細表}")
-                    Else
-                        .WriteToCell(2, 1, $"{d:yyyy年MM月dd日 氣量氣款收付明細表}")
-                    End If
-
-                    .WriteToCell(3, 7, $"列印日期: {Now:yyyy/MM/dd}")
-
-                    Dim rowIndex As Integer
-
-                    Dim dataStyle = New CloseXML_Excel.CellFormatOptions With {
-                        .Horizontal = XLAlignmentHorizontalValues.Center
-                    }
-
-                    For i As Integer = 0 To datas.Count - 1
-                        rowIndex = 5 + i
-
-                        .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
-                        .WriteToCell(rowIndex, 2, If(datas(i).存氣 <> Nothing, datas(i).存氣.ToString("#,##"), 0), dataStyle)
-                        .WriteToCell(rowIndex, 3, If(datas(i).本日提量 <> Nothing, datas(i).本日提量.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 4, If(datas(i).當月累計提量 <> Nothing, datas(i).當月累計提量.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 5, If(datas(i).本日氣款 <> Nothing, datas(i).本日氣款.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 6, If(datas(i).本日收款 <> Nothing, datas(i).本日收款.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 7, If(datas(i).結欠 <> Nothing, datas(i).結欠.ToString("#,##"), "0"), dataStyle)
-                    Next
-
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 7, bottomStyle:=XLBorderStyleValues.Thin)
-
-                    rowIndex += 1
-
-                    .WriteToCell(rowIndex, 1, "合計:", dataStyle)
-                    .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.存氣).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.本日提量).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.當月累計提量).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.本日氣款).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.本日收款).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"), dataStyle)
-
-                    '存檔
-                    If isMonth Then
-                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMM}")
-                    Else
-                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMMdd}")
-                    End If
-
-                End With
-            End Using
-        Catch ex As Exception
-            MsgBox("產生氣量氣款收付明細表出現錯誤:" + ex.Message)
-        End Try
     End Sub
 
     ''' <summary>
@@ -430,13 +364,13 @@ Public Class ReportPresenter
             Dim datas = _rep.GasUsageAndCylinderCount(month)
 
             '套版
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "提量支數統計範本檔.xlsx")
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "提氣支數統計範本檔.xlsx")
 
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
 
-                    .WriteToCell(2, 1, $"{month:yyyy}年")
+                    .WriteToCell("A1", $"{month:yyyy}年")
 
                     Dim rowIndex As Integer
 
@@ -444,24 +378,18 @@ Public Class ReportPresenter
                         '資料開始列
                         rowIndex = 3 + i
 
-                        .WriteToCell(rowIndex, 1, datas(i).日期)
-                        .WriteToCell(rowIndex, 2, datas(i).退氣.ToString)
-                        .WriteToCell(rowIndex, 3, datas(i).退氣累計量.ToString)
-                        .WriteToCell(rowIndex, 4, datas(i).提氣量.ToString)
-                        .WriteToCell(rowIndex, 5, datas(i).提氣累計量.ToString)
-                        .WriteToCell(rowIndex, 6, datas(i).總支數.ToString)
-                        .WriteToCell(rowIndex, 7, datas(i).瓦斯瓶50Kg.ToString)
-                        .WriteToCell(rowIndex, 8, datas(i).瓦斯瓶20Kg.ToString)
-                        .WriteToCell(rowIndex, 9, datas(i).瓦斯瓶16Kg.ToString)
-                        .WriteToCell(rowIndex, 10, datas(i).瓦斯瓶4Kg.ToString)
-                        .WriteToCell(rowIndex, 11, datas(i).瓦斯瓶18Kg.ToString)
-                        .WriteToCell(rowIndex, 12, datas(i).瓦斯瓶14Kg.ToString)
-                        .WriteToCell(rowIndex, 13, datas(i).瓦斯瓶5Kg.ToString)
-                        .WriteToCell(rowIndex, 14, datas(i).瓦斯瓶2Kg.ToString)
+                        .WriteToCell($"A{rowIndex}", datas(i).日期)
+                        .WriteToCell($"B{rowIndex}", datas(i).退氣.ToString)
+                        .WriteToCell($"D{rowIndex}", datas(i).提氣量.ToString)
+                        .WriteToCell($"H{rowIndex}", datas(i).瓦斯瓶50Kg.ToString)
+                        .WriteToCell($"I{rowIndex}", datas(i).瓦斯瓶20Kg.ToString)
+                        .WriteToCell($"J{rowIndex}", datas(i).瓦斯瓶16Kg.ToString)
+                        .WriteToCell($"K{rowIndex}", datas(i).瓦斯瓶10Kg.ToString)
+                        .WriteToCell($"L{rowIndex}", datas(i).瓦斯瓶4Kg.ToString)
                     Next
 
                     '存檔
-                    .SaveExcel($"提量支數統計_{month:yyyy}")
+                    .SaveExcel($"提氣支數統計_{month:yyyy年MM月}")
                 End With
             End Using
         Catch ex As Exception
@@ -474,11 +402,10 @@ Public Class ReportPresenter
     ''' </summary>
     ''' <param name="startDate"></param>
     ''' <param name="endDate"></param>
-    ''' <param name="cusId"></param>
-    Public Sub GenerateCashAccount(startDate As Date, endDate As Date, Optional cusId As Integer = 0)
+    Public Sub GenerateCashAccount(startDate As Date, endDate As Date)
         Try
             '取得資料
-            Dim data = _rep.GetCashAccount(startDate, endDate, cusId)
+            Dim data = _rep.GetCashAccount(startDate, endDate)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "現金帳範本檔.xlsx")
@@ -491,7 +418,7 @@ Public Class ReportPresenter
                     Dim rowIndex = 3
 
                     For i As Integer = 0 To data.Count - 1
-                        .WriteToCell(rowIndex + i, 1, data(i).日期.ToString("MM/dd"))
+                        .WriteToCell(rowIndex + i, 1, data(i).日期)
                         .WriteToCell(rowIndex + i, 2, data(i).科目)
                         .WriteToCell(rowIndex + i, 3, data(i).摘要)
                         .WriteToCell(rowIndex + i, 4, data(i).收入金額.ToString)
@@ -825,7 +752,7 @@ Public Class ReportPresenter
             Dim data = _rep.GetInvoice(month)
 
             '取得範本檔
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "發票範本檔.xlsx")
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "客戶發票明細範本檔.xlsx")
 
             '套版
             Using xml As New CloseXML_Excel(filePath)
@@ -838,25 +765,25 @@ Public Class ReportPresenter
                     For Each item In data
 
                         .WriteToCell(rowIndex, 1, item.CusCode)
-                        .WriteToCell(rowIndex, 2, item.CusName)
-                        .WriteToCell(rowIndex, 3, item.TaxId)
-                        .WriteToCell(rowIndex, 4, item.Amount.ToString)
-                        .WriteToCell(rowIndex, 5, item.IsInvoice.ToString)
+                        .WriteToCell(rowIndex, 2, item.TaxId)
+                        .WriteToCell(rowIndex, 3, item.Amount.ToString)
+                        .WriteToCell(rowIndex, 4, item.IsInvoice.ToString)
                         Dim notInvoice = item.Amount - item.IsInvoice
-                        .WriteToCell(rowIndex, 6, (item.Amount - item.IsInvoice).ToString)
+                        .WriteToCell(rowIndex, 5, (item.Amount - item.IsInvoice).ToString)
+                        .WriteToCell(rowIndex, 6, item.CusName)
 
                         totalNotInoice += notInvoice
                         .InsertRow(rowIndex)
                         rowIndex += 1
                     Next
 
-                    .WriteToCell(rowIndex, 3, "總計")
-                    .WriteToCell(rowIndex, 4, data.Sum(Function(x) x.Amount).ToString)
-                    .WriteToCell(rowIndex, 5, data.Sum(Function(x) x.IsInvoice).ToString)
-                    .WriteToCell(rowIndex, 6, totalNotInoice.ToString)
+                    .WriteToCell(rowIndex, 2, "總計")
+                    .WriteToCell(rowIndex, 3, data.Sum(Function(x) x.Amount).ToString)
+                    .WriteToCell(rowIndex, 4, data.Sum(Function(x) x.IsInvoice).ToString)
+                    .WriteToCell(rowIndex, 5, totalNotInoice.ToString)
 
                     '存檔
-                    .SaveExcel($"發票_{month:yyyyMM}")
+                    .SaveExcel($"客戶發票明細_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1009,13 +936,13 @@ Public Class ReportPresenter
             Dim data As Tax = _rep.GetTax(month)
 
             '取得範本檔
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "財稅範本檔.xlsx")
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "發票明細範本檔.xlsx")
 
             '套版
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
-                    .WriteToCell(1, 1, data.Month.ToString("yyyy年MM月") + " 財稅")
+                    .WriteToCell(1, 1, data.Month.ToString("yyyy年MM月") + " 發票明細")
 
                     Dim rowIndex = 3
 
@@ -1039,7 +966,7 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 7, data.List.Sum(Function(x) x.Amount).ToString)
 
                     '存檔
-                    .SaveExcel($"財稅_{month:yyyyMM}")
+                    .SaveExcel($"發票明細_{month:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
@@ -1122,11 +1049,13 @@ Public Class ReportPresenter
             End Using
         Catch ex As Exception
             MsgBox(ex.Message)
+        Finally
+            tempDate = String.Empty
         End Try
     End Sub
 
     Private Sub AddHeaderRow(xml As CloseXML_Excel, rowIndex As Integer, colStart As Integer)
-        Dim headers() As String = {"日期", "發票號碼", "統一編號", "數量"}
+        Dim headers() As String = {"日期", "發票號碼", "統一編號", "KG"}
         For i As Integer = 0 To headers.Length - 1
             xml.WriteToCell(rowIndex, colStart + i, headers(i))
         Next
@@ -1136,7 +1065,11 @@ Public Class ReportPresenter
 
     Private Sub WriteItemToSheet(xml As CloseXML_Excel, rowIndex As Integer, startCol As Integer, item As EnergyBureau)
         With xml
-            .WriteToCell(rowIndex, startCol, item.Day.ToString("MM/dd"))
+            If item.Day.ToString("MM/dd") <> tempDate Then
+                .WriteToCell(rowIndex, startCol, item.Day.ToString("MM/dd"))
+                tempDate = item.Day.ToString("MM/dd")
+            End If
+
             .WriteToCell(rowIndex, startCol + 1, item.InvoiceNum)
             .WriteToCell(rowIndex, startCol + 2, item.TaxId)
             .WriteToCell(rowIndex, startCol + 3, item.Quantity.ToString)
@@ -1546,6 +1479,7 @@ Public Class ReportPresenter
                         rowIndex += 1
                     Next
 
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 5, XLBorderStyleValues.Thin)
                     .WriteToCell("A", rowIndex, "合計")
                     .WriteToCell("C", rowIndex, data.Sum(Function(x) x.Debit).ToString)
                     .WriteToCell("D", rowIndex, data.Sum(Function(x) x.Credit).ToString)
@@ -1567,7 +1501,7 @@ Public Class ReportPresenter
     Public Sub GenerateAccountBalance(month As Date)
         Try
             '取得資料
-            Dim data As AccountBalanceDTO = _rep.GetAccountBalance(month)
+            Dim data = _rep.GetAccountBalance(month)
 
             '套版
             Using xml As New CloseXML_Excel()
@@ -1578,7 +1512,7 @@ Public Class ReportPresenter
                     Dim titleStyle = New CloseXML_Excel.CellFormatOptions With {
                         .FontSize = 14,
                         .IsBold = True,
-                        .Horizontal = XLAlignmentHorizontalValues.Center
+                        .Horizontal = XLAlignmentHorizontalValues.Left
                     }
 
                     .WriteToCell(1, 1, $"{month:yyyy年MM月} 科目平衡表", titleStyle)
@@ -1589,11 +1523,6 @@ Public Class ReportPresenter
                         .Horizontal = XLAlignmentHorizontalValues.Center
                     }
 
-                    '設定資料樣式
-                    Dim dataStyle = New CloseXML_Excel.CellFormatOptions With {
-                        .Horizontal = XLAlignmentHorizontalValues.Center
-                    }
-
                     '設定金額樣式
                     Dim amountStyle = New CloseXML_Excel.CellFormatOptions With {
                         .Horizontal = XLAlignmentHorizontalValues.Right
@@ -1601,150 +1530,54 @@ Public Class ReportPresenter
 
                     '設定總計樣式
                     Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
-                        .IsBold = True,
-                        .Horizontal = XLAlignmentHorizontalValues.Right
+                        .IsBold = True
                     }
 
-                    '取得所有科目名稱
-                    Dim allDebitSubjects = data.DebitDatas.SelectMany(Function(x) x.Keys).Distinct().ToList()
-                    Dim allCreditSubjects = data.CreditDatas.SelectMany(Function(x) x.Keys).Distinct().ToList()
-                    Dim allSubjects = allDebitSubjects.Union(allCreditSubjects).OrderBy(Function(x) x).ToList()
+                    ' 取得最高列
+                    Dim maxRow = data.Max(Function(x) Math.Max(x.DebitList.Count, x.CreditList.Count))
 
-                    '取得所有交易日期
-                    Dim allDates = data.DebitDatas.SelectMany(Function(x) x.Values.SelectMany(Function(t) t.Select(Function(d) d.Day))).
-                    Union(data.CreditDatas.SelectMany(Function(x) x.Values.SelectMany(Function(t) t.Select(Function(d) d.Day)))).
-                    Distinct().OrderBy(Function(x) x).ToList()
-
-                    '寫入表頭
+                    ' 寫入資料
                     Dim colIndex As Integer = 1
-                    For Each subjectName In allSubjects
-                        '科目名稱
-                        .WriteToCell(3, colIndex, subjectName, headerStyle)
-                        .WriteToCell(3, colIndex + 1, "借方", headerStyle)
-                        .WriteToCell(3, colIndex + 2, "貸方", headerStyle)
-                        .WriteToCell(3, colIndex + 3, "日期", headerStyle)
+                    For Each subject In data
+
+                        ' 畫格子
+                        .SetCustomBorders(2, colIndex, maxRow + 3, colIndex + 3,
+                                          XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
+
+                        ' 寫入表頭
+                        .WriteToCell(2, colIndex, subject.SubjectName, headerStyle)
 
                         '合併科目名稱欄位
-                        .MergeCells(3, colIndex, 3, colIndex + 3)
+                        .MergeCells(2, colIndex, 2, colIndex + 3)
 
-                        colIndex += 4
-                    Next
-
-                    '寫入交易資料 - 按科目分別處理借方和貸方
-                    Dim rowIndex As Integer = 4
-                    Dim maxRows As Integer = 0
-
-                    '先計算每個科目的最大行數
-                    For Each subjectName In allSubjects
-                        Dim debitTransactions = data.DebitDatas.Where(Function(x) x.ContainsKey(subjectName)).
-                        SelectMany(Function(x) x(subjectName)).ToList()
-
-                        Dim creditTransactions = data.CreditDatas.Where(Function(x) x.ContainsKey(subjectName)).
-                        SelectMany(Function(x) x(subjectName)).ToList()
-
-                        Dim subjectRows = debitTransactions.Count + creditTransactions.Count
-                        If subjectRows > maxRows Then
-                            maxRows = subjectRows
-                        End If
-                    Next
-
-                    '如果沒有交易，至少有一行
-                    If maxRows = 0 Then maxRows = 1
-
-                    '按行寫入資料
-                    For row As Integer = 0 To maxRows - 1
-                        colIndex = 1
-
-                        For Each subjectName In allSubjects
-                            '取得該科目的所有交易
-                            Dim debitTransactions = data.DebitDatas.Where(Function(x) x.ContainsKey(subjectName)).
-                            SelectMany(Function(x) x(subjectName)).
-                            OrderBy(Function(t) t.Day).ToList()
-
-                            Dim creditTransactions = data.CreditDatas.Where(Function(x) x.ContainsKey(subjectName)).
-                            SelectMany(Function(x) x(subjectName)).
-                            OrderBy(Function(t) t.Day).ToList()
-
-                            '合併借貸方交易，按日期排序
-                            Dim allTransactions = New List(Of (Date, Double, String)) ' (日期, 金額, 類型)
-
-                            For Each transaction In debitTransactions
-                                allTransactions.Add((transaction.Day, transaction.Amount, "Debit"))
-                            Next
-
-                            For Each transaction In creditTransactions
-                                allTransactions.Add((transaction.Day, transaction.Amount, "Credit"))
-                            Next
-
-                            allTransactions = allTransactions.OrderBy(Function(t) t.Item1).ToList()
-
-                            '寫入該行該科目的資料
-                            If row < allTransactions.Count Then
-                                Dim transaction = allTransactions(row)
-                                .WriteToCell(rowIndex + row, colIndex, transaction.Item1.ToString("MM月dd日"), dataStyle)
-
-                                If transaction.Item3 = "Debit" Then
-                                    .WriteToCell(rowIndex + row, colIndex + 1, transaction.Item2.ToString("#,##0"), amountStyle)
-                                    .WriteToCell(rowIndex + row, colIndex + 2, "", amountStyle)
-                                Else
-                                    .WriteToCell(rowIndex + row, colIndex + 1, "", amountStyle)
-                                    .WriteToCell(rowIndex + row, colIndex + 2, transaction.Item2.ToString("#,##0"), amountStyle)
-                                End If
-
-                                .WriteToCell(rowIndex + row, colIndex + 3, transaction.Item1.ToString("MM月dd日"), dataStyle)
-                            Else
-                                '該行沒有交易，留空
-                                .WriteToCell(rowIndex + row, colIndex, "", dataStyle)
-                                .WriteToCell(rowIndex + row, colIndex + 1, "", amountStyle)
-                                .WriteToCell(rowIndex + row, colIndex + 2, "", amountStyle)
-                                .WriteToCell(rowIndex + row, colIndex + 3, "", dataStyle)
-                            End If
-
-                            colIndex += 4
+                        ' 寫入明細
+                        ' 借方明細
+                        Dim debitRowIndex As Integer = 3
+                        For Each item In subject.DebitList
+                            .WriteToCell(debitRowIndex, colIndex, item.Day.ToString("MM月dd日"))
+                            .WriteToCell(debitRowIndex, colIndex + 1, item.Amount.ToString("#,##0"), amountStyle)
+                            debitRowIndex += 1
                         Next
-                    Next
 
-                    rowIndex = 4 + maxRows
+                        ' 貸方明細
+                        Dim creditRowIndex As Integer = 3
+                        For Each item In subject.CreditList
+                            .WriteToCell(creditRowIndex, colIndex + 2, item.Amount.ToString("#,##0"), amountStyle)
+                            .WriteToCell(creditRowIndex, colIndex + 3, item.Day.ToString("MM月dd日"))
 
-                    '寫入總計行
-                    colIndex = 1
-                    For Each subjectName In allSubjects
-                        '計算該科目的總計
-                        Dim totalDebit = data.DebitDatas.Where(Function(x) x.ContainsKey(subjectName)).
-                        SelectMany(Function(x) x(subjectName)).
-                        Sum(Function(t) t.Amount)
+                            creditRowIndex += 1
+                        Next
 
-                        Dim totalCredit = data.CreditDatas.Where(Function(x) x.ContainsKey(subjectName)).
-                        SelectMany(Function(x) x(subjectName)).
-                        Sum(Function(t) t.Amount)
+                        ' 劃科目隔線
+                        .SetCustomBorders(2, colIndex + 3, maxRow + 3, colIndex + 3, rightStyle:=XLBorderStyleValues.Medium)
 
-                        .WriteToCell(rowIndex, colIndex, "總計", totalStyle)
-                        .WriteToCell(rowIndex, colIndex + 1, totalDebit.ToString("#,##0"), totalStyle)
-                        .WriteToCell(rowIndex, colIndex + 2, totalCredit.ToString("#,##0"), totalStyle)
-                        .WriteToCell(rowIndex, colIndex + 3, "", totalStyle)
-
-                        '設定總計行邊框
-                        .SetCustomBorders(rowIndex, colIndex, rowIndex, colIndex + 3,
-                                        topStyle:=XLBorderStyleValues.Thin,
-                                        bottomStyle:=XLBorderStyleValues.Thin)
+                        ' 總計
+                        .WriteToCell(maxRow + 3, colIndex, "總計", totalStyle)
+                        .WriteToCell(maxRow + 3, colIndex + 1, subject.DebitList.Sum(Function(x) x.Amount).ToString("#,##0"), amountStyle)
+                        .WriteToCell(maxRow + 3, colIndex + 2, subject.CreditList.Sum(Function(x) x.Amount).ToString("#,##0"), amountStyle)
 
                         colIndex += 4
                     Next
-
-                    '設定欄寬
-                    colIndex = 1
-                    For Each subjectName In allSubjects
-                        .SetColumnWidth(colIndex, 8)      '日期欄
-                        .SetColumnWidth(colIndex + 1, 12) '借方欄
-                        .SetColumnWidth(colIndex + 2, 12) '貸方欄
-                        .SetColumnWidth(colIndex + 3, 8)  '日期欄
-                        colIndex += 4
-                    Next
-
-                    '設定表格邊框
-                    .SetCustomBorders(3, 1, rowIndex, colIndex - 1,
-                                    XLBorderStyleValues.Thin, XLBorderStyleValues.Thin,
-                                    XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
 
                     '存檔
                     .SaveExcel($"科目平衡表_{month:yyyyMM}")

@@ -25,8 +25,8 @@ Public Class ChequePresenter
                 Dim query = db.cheques.AsQueryable
 
                 If conditions IsNot Nothing Then
-                    If conditions.IsDate Then query = query.Where(Function(x) x.che_ReceivedDate > conditions.StartDate AndAlso x.che_ReceivedDate < conditions.EndDate)
-                    If Not String.IsNullOrEmpty(conditions.Status) Then query = query.Where(Function(x) x.chu_State = conditions.Status)
+                    If conditions.IsDate Then query = query.Where(Function(x) x.che_ReceivedDate >= conditions.StartDate AndAlso x.che_ReceivedDate < conditions.EndDate)
+                    If conditions.IsStatus Then query = query.Where(Function(x) x.chu_State = conditions.Status)
                 Else
                     query = query.Where(Function(x) x.chu_State <> "已兌現")
                 End If
@@ -104,11 +104,12 @@ Public Class ChequePresenter
     Public Sub Print(datas As List(Of ChequeVM))
         Try
             '取得範本檔
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "支票管理範本檔.xlsx")
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "應收支票管理範本檔.xlsx")
 
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
+                    .WriteToCell("A1", "應收支票管理")
 
                     Dim rowIndex = 3
 
@@ -124,11 +125,12 @@ Public Class ChequePresenter
 
                         rowIndex += 1
                     Next
+
                     .SetCustomBorders(rowIndex, 1, rowIndex, 8, XLBorderStyleValues.Thin)
                     .WriteToCell(rowIndex, 4, "合計")
                     .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.金額).ToString("N0"))
 
-                    .SaveExcel("支票管理")
+                    .SaveExcel("應收支票管理")
                 End With
             End Using
         Catch ex As Exception

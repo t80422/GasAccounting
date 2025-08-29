@@ -1,4 +1,5 @@
-﻿Public Class ucClosingEntry
+﻿' 結轉
+Public Class ucClosingEntry
     Inherits UserControl
     Implements IClosingEntryView
 

@@ -258,7 +258,7 @@ Partial Class PaymentUserControl
         Me.lblBank_payment.Name = "lblBank_payment"
         Me.lblBank_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblBank_payment.TabIndex = 481
-        Me.lblBank_payment.Text = "銀行帳號"
+        Me.lblBank_payment.Text = "廠商帳號"
         '
         'cmbManu_payment
         '

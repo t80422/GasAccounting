@@ -503,6 +503,12 @@
     <Compile Include="Forms\Search\Search_Inspection.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\UserControl\SurplusGasUserControl.Designer.vb">
+      <DependentUpon>SurplusGasUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\SurplusGasUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\UserControl\ucClosingEntry.Designer.vb">
       <DependentUpon>ucClosingEntry.vb</DependentUpon>
     </Compile>
@@ -600,6 +606,7 @@
     </Compile>
     <Compile Include="Models\ViewModels\ScrapBarrelDetailVM.vb" />
     <Compile Include="Models\ViewModels\ScrapBarrelVM.vb" />
+    <Compile Include="Models\ViewModels\SurplusGasListVM.vb" />
     <Compile Include="Models\write_off.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -618,6 +625,7 @@
     <Compile Include="Forms\UserControl\Report.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Presenters\SurplusGasPresenter.vb" />
     <Compile Include="Repositories\ChequePay\ChequePayRep.vb" />
     <Compile Include="Repositories\ChequePay\IChequePayRep.vb" />
     <Compile Include="Repositories\ClosingEntry\ClosingEntryRep.vb" />
@@ -822,6 +830,7 @@
     </Compile>
     <Compile Include="Views\IScrapBarrelDetailView.vb" />
     <Compile Include="Views\IScrapBarrelView.vb" />
+    <Compile Include="Views\ISurplusGasView.vb" />
     <Compile Include="Views\IUnitPriceHistoryView.vb" />
     <Compile Include="Presenters\UintPriceHistoryPresenter.vb" />
     <Compile Include="Models\ViewModels\AmountDueVM.vb" />
@@ -942,6 +951,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Search\Search_Inspection.resx">
       <DependentUpon>Search_Inspection.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\SurplusGasUserControl.resx">
+      <DependentUpon>SurplusGasUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\ucClosingEntry.resx">
       <DependentUpon>ucClosingEntry.vb</DependentUpon>

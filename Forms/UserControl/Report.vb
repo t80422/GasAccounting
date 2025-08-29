@@ -56,34 +56,14 @@
         _presenter.GenerateMonthlyCustomerReceivable(Now.Date, txtCusCode_dcr.Text)
     End Sub
 
-    ' 提量支數統計
+    ' 提氣支數統計
     Private Sub btnGasUsageCylinderCount_Click(sender As Object, e As EventArgs) Handles btnGasUsageCylinderCount.Click
         _presenter.GenerateGasUsageAndCylinderCount(dtpDate_gucc.Value.Date)
     End Sub
 
     ' 現金帳
     Private Sub btnCashAccount_Click(sender As Object, e As EventArgs) Handles btnCashAccount.Click
-        _presenter.GenerateCashAccount(dtpStart_ca.Value.Date, dtpEnd_ca.Value.Date, txtCusId_ca.Text)
-    End Sub
-
-    ' 現金帳-搜尋客戶
-    Private Sub btnSearch_ca_Click(sender As Object, e As EventArgs) Handles btnSearch_ca.Click
-        Using searchForm As New frmQueryCustomer
-            If searchForm.ShowDialog = DialogResult.OK Then
-                txtCusId_ca.Text = searchForm.CusId
-                txtCusName_ca.Text = searchForm.CusName
-                txtCusCode_ca.Text = searchForm.CusCode
-            End If
-        End Using
-    End Sub
-
-    ' 現金帳-客戶代碼輸入
-    Private Sub txtCusCode_ca_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCusCode_ca.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            Dim cus = _presenter.GetCusInfo(txtCusCode_ca.Text)
-            txtCusId_ca.Text = cus.cus_id
-            txtCusName_ca.Text = cus.cus_name
-        End If
+        _presenter.GenerateCashAccount(dtpStart_ca.Value.Date, dtpEnd_ca.Value.Date)
     End Sub
 
     ' 客戶寄桶結存瓶
@@ -117,7 +97,7 @@
         _presenter.GenerateInventoryTransactionDetail(dtpYear_ITD.Value, cmbCompany_ITD.SelectedItem.Value, Nothing)
     End Sub
 
-    ' 財稅
+    ' 發票明細
     Private Sub btnTax_Click(sender As Object, e As EventArgs) Handles btnTax.Click
         _presenter.GenerateTax(dtpMonth_tax.Value)
     End Sub
@@ -147,7 +127,7 @@
         _presenter.GenerateMonthlyAccountsReceivable(dtpMonth_MAR.Value)
     End Sub
 
-    ' 發票
+    ' 客戶發票明細
     Private Sub btnGenerate_RI_Click(sender As Object, e As EventArgs) Handles btnGenerate_RI.Click
         _presenter.GenerateInvoice(dtpMonth_RI.Value)
     End Sub

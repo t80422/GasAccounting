@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GasAccounting", "GasAccounting.vbproj", "{0A60F2D3-83DE-4576-A8EF-56CBD4B390D8}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GasAccounting.Tests", "..\GasAccounting.Tests\GasAccounting.Tests.vbproj", "{9DD3D2A6-CE94-4E6C-A86A-A0219347BF55}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GasAccountingTests", "..\GasAccountingTests\GasAccountingTests.vbproj", "{E5E720A6-3D31-4177-8F0F-F958A321B976}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{0A60F2D3-83DE-4576-A8EF-56CBD4B390D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A60F2D3-83DE-4576-A8EF-56CBD4B390D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A60F2D3-83DE-4576-A8EF-56CBD4B390D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DD3D2A6-CE94-4E6C-A86A-A0219347BF55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DD3D2A6-CE94-4E6C-A86A-A0219347BF55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DD3D2A6-CE94-4E6C-A86A-A0219347BF55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DD3D2A6-CE94-4E6C-A86A-A0219347BF55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5E720A6-3D31-4177-8F0F-F958A321B976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5E720A6-3D31-4177-8F0F-F958A321B976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5E720A6-3D31-4177-8F0F-F958A321B976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5E720A6-3D31-4177-8F0F-F958A321B976}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

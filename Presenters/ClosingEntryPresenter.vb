@@ -1,5 +1,5 @@
 ﻿Public Class ClosingEntryPresenter
-    Property _view As IClosingEntryView
+    Private _view As IClosingEntryView
     Private _ceRep As IClosingEntryRep
     Private _subjectRep As ISubjectRep
     Private _currentData As closing_entry

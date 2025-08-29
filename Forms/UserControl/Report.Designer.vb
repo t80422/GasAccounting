@@ -35,12 +35,6 @@ Partial Class Report
         Me.cmbMonth_InOut = New System.Windows.Forms.ComboBox()
         Me.dtpYear_InOut = New System.Windows.Forms.DateTimePicker()
         Me.GroupBox24 = New System.Windows.Forms.GroupBox()
-        Me.txtCusId_ca = New System.Windows.Forms.TextBox()
-        Me.txtCusCode_ca = New System.Windows.Forms.TextBox()
-        Me.txtCusName_ca = New System.Windows.Forms.TextBox()
-        Me.btnSearch_ca = New System.Windows.Forms.Button()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.dtpEnd_ca = New System.Windows.Forms.DateTimePicker()
         Me.dtpStart_ca = New System.Windows.Forms.DateTimePicker()
         Me.btnCashAccount = New System.Windows.Forms.Button()
@@ -256,78 +250,15 @@ Partial Class Report
         '
         'GroupBox24
         '
-        Me.GroupBox24.Controls.Add(Me.txtCusId_ca)
-        Me.GroupBox24.Controls.Add(Me.txtCusCode_ca)
-        Me.GroupBox24.Controls.Add(Me.txtCusName_ca)
-        Me.GroupBox24.Controls.Add(Me.btnSearch_ca)
-        Me.GroupBox24.Controls.Add(Me.Label2)
-        Me.GroupBox24.Controls.Add(Me.Label3)
         Me.GroupBox24.Controls.Add(Me.dtpEnd_ca)
         Me.GroupBox24.Controls.Add(Me.dtpStart_ca)
         Me.GroupBox24.Controls.Add(Me.btnCashAccount)
         Me.GroupBox24.Location = New System.Drawing.Point(8, 427)
         Me.GroupBox24.Name = "GroupBox24"
-        Me.GroupBox24.Size = New System.Drawing.Size(466, 135)
+        Me.GroupBox24.Size = New System.Drawing.Size(466, 73)
         Me.GroupBox24.TabIndex = 494
         Me.GroupBox24.TabStop = False
         Me.GroupBox24.Text = "現金帳"
-        '
-        'txtCusId_ca
-        '
-        Me.txtCusId_ca.Location = New System.Drawing.Point(299, 66)
-        Me.txtCusId_ca.Name = "txtCusId_ca"
-        Me.txtCusId_ca.ReadOnly = True
-        Me.txtCusId_ca.Size = New System.Drawing.Size(79, 30)
-        Me.txtCusId_ca.TabIndex = 457
-        Me.txtCusId_ca.Tag = "col_cus_Id"
-        Me.txtCusId_ca.Visible = False
-        '
-        'txtCusCode_ca
-        '
-        Me.txtCusCode_ca.Location = New System.Drawing.Point(105, 66)
-        Me.txtCusCode_ca.Name = "txtCusCode_ca"
-        Me.txtCusCode_ca.Size = New System.Drawing.Size(100, 30)
-        Me.txtCusCode_ca.TabIndex = 456
-        Me.txtCusCode_ca.Tag = "cus_code"
-        '
-        'txtCusName_ca
-        '
-        Me.txtCusName_ca.Location = New System.Drawing.Point(104, 102)
-        Me.txtCusName_ca.Name = "txtCusName_ca"
-        Me.txtCusName_ca.ReadOnly = True
-        Me.txtCusName_ca.Size = New System.Drawing.Size(351, 30)
-        Me.txtCusName_ca.TabIndex = 454
-        Me.txtCusName_ca.Tag = "cus_name"
-        '
-        'btnSearch_ca
-        '
-        Me.btnSearch_ca.AutoSize = True
-        Me.btnSearch_ca.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnSearch_ca.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnSearch_ca.Location = New System.Drawing.Point(211, 68)
-        Me.btnSearch_ca.Name = "btnSearch_ca"
-        Me.btnSearch_ca.Size = New System.Drawing.Size(82, 26)
-        Me.btnSearch_ca.TabIndex = 455
-        Me.btnSearch_ca.Text = "搜尋客戶"
-        Me.btnSearch_ca.UseVisualStyleBackColor = False
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(6, 105)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(93, 19)
-        Me.Label2.TabIndex = 453
-        Me.Label2.Text = "客戶名稱"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(6, 72)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(93, 19)
-        Me.Label3.TabIndex = 452
-        Me.Label3.Text = "客戶代號"
         '
         'dtpEnd_ca
         '
@@ -362,10 +293,12 @@ Partial Class Report
         Me.GroupBox23.Size = New System.Drawing.Size(466, 70)
         Me.GroupBox23.TabIndex = 493
         Me.GroupBox23.TabStop = False
-        Me.GroupBox23.Text = "提量支數統計"
+        Me.GroupBox23.Text = "提氣支數統計"
         '
         'dtpDate_gucc
         '
+        Me.dtpDate_gucc.CustomFormat = "yyyy年MM月"
+        Me.dtpDate_gucc.Format = System.Windows.Forms.DateTimePickerFormat.Custom
         Me.dtpDate_gucc.Location = New System.Drawing.Point(6, 29)
         Me.dtpDate_gucc.Name = "dtpDate_gucc"
         Me.dtpDate_gucc.Size = New System.Drawing.Size(200, 30)
@@ -623,7 +556,7 @@ Partial Class Report
         Me.GroupBox16.Size = New System.Drawing.Size(279, 68)
         Me.GroupBox16.TabIndex = 488
         Me.GroupBox16.TabStop = False
-        Me.GroupBox16.Text = "財稅"
+        Me.GroupBox16.Text = "發票明細"
         '
         'btnTax
         '
@@ -762,7 +695,7 @@ Partial Class Report
         Me.GroupBox12.Size = New System.Drawing.Size(505, 68)
         Me.GroupBox12.TabIndex = 484
         Me.GroupBox12.TabStop = False
-        Me.GroupBox12.Text = "發票"
+        Me.GroupBox12.Text = "客戶發票明細"
         '
         'btnGenerate_RI
         '
@@ -1098,7 +1031,6 @@ Partial Class Report
         Me.GroupBox7.PerformLayout()
         Me.GroupBox26.ResumeLayout(False)
         Me.GroupBox24.ResumeLayout(False)
-        Me.GroupBox24.PerformLayout()
         Me.GroupBox23.ResumeLayout(False)
         Me.GroupBox20.ResumeLayout(False)
         Me.GroupBox20.PerformLayout()
@@ -1219,10 +1151,4 @@ Partial Class Report
     Friend WithEvents btnAccountBalance As Button
     Friend WithEvents dtpAccountBalance As DateTimePicker
     Friend WithEvents Label1 As Label
-    Friend WithEvents txtCusId_ca As TextBox
-    Friend WithEvents txtCusCode_ca As TextBox
-    Friend WithEvents txtCusName_ca As TextBox
-    Friend WithEvents btnSearch_ca As Button
-    Friend WithEvents Label2 As Label
-    Friend WithEvents Label3 As Label
 End Class

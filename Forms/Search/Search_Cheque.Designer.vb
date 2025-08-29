@@ -30,6 +30,7 @@ Partial Class Search_Cheque
         Me.Label3 = New System.Windows.Forms.Label()
         Me.cmbStatus = New System.Windows.Forms.ComboBox()
         Me.btnOK = New System.Windows.Forms.Button()
+        Me.chkStatus = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -104,11 +105,22 @@ Partial Class Search_Cheque
         Me.btnOK.Text = "OK"
         Me.btnOK.UseVisualStyleBackColor = False
         '
+        'chkStatus
+        '
+        Me.chkStatus.AutoSize = True
+        Me.chkStatus.Location = New System.Drawing.Point(231, 57)
+        Me.chkStatus.Name = "chkStatus"
+        Me.chkStatus.Size = New System.Drawing.Size(122, 20)
+        Me.chkStatus.TabIndex = 8
+        Me.chkStatus.Text = "使用狀態查詢"
+        Me.chkStatus.UseVisualStyleBackColor = True
+        '
         'Search_Cheque
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(582, 92)
+        Me.Controls.Add(Me.chkStatus)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.cmbStatus)
         Me.Controls.Add(Me.Label3)
@@ -137,4 +149,5 @@ Partial Class Search_Cheque
     Friend WithEvents Label3 As Label
     Friend WithEvents cmbStatus As ComboBox
     Friend WithEvents btnOK As Button
+    Friend WithEvents chkStatus As CheckBox
 End Class

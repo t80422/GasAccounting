@@ -1,5 +1,5 @@
 ﻿Public Class CashAccount
-    Public Property 日期 As Date
+    Public Property 日期 As String
     Public Property 科目 As String
     Public Property 摘要 As String
     Public Property 收入金額 As Integer

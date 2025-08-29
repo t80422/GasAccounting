@@ -9,7 +9,7 @@
 
     Public User As UserData
 
-    Private _compService As ICompanyService = New CompanyService
+    'Private _compService As ICompanyService = New CompanyService
     Private _manuService As IManufacturerService = New ManufacturerService
 
     Private _basicPrice As BasicPricePresenter
@@ -30,19 +30,19 @@
     Private _gasCheckout As GasCheckoutPresenter
     Private _inspection As InspectionPresenter
 
-    Private inputTxts As String(,) = {
-        {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_18", "txto_in_14", "txto_in_5", "txto_in_2"},
-        {"txto_new_in_50", "txto_new_in_20", "txto_new_in_16", "txto_new_in_10", "txto_new_in_4", "txto_new_in_18", "txto_new_in_14", "txto_new_in_5", "txto_new_in_2"},
-        {"txtBarralUnitPrice_50", "txtBarralUnitPrice_20", "txtBarralUnitPrice_16", "txtBarralUnitPrice_10", "txtBarralUnitPrice_4", "txtBarralUnitPrice_18", "txtBarralUnitPrice_14", "txtBarralUnitPrice_5", "txtBarralUnitPrice_2"},
-        {"txto_inspect_50", "txto_inspect_20", "txto_inspect_16", "txto_inspect_10", "txto_inspect_4", "txto_inspect_18", "txto_inspect_14", "txto_inspect_5", "txto_inspect_2"},
-        {"txtDepositIn_50", "txtDepositIn_20", "txtDepositIn_16", "txtDepositIn_10", "txtDepositIn_4", "txtDepositIn_18", "txtDepositIn_14", "txtDepositIn_5", "txtDepositIn_2"}
-    }
-    Private outputTxts As String(,) = {
-        {"txtGas_c_50", "txtGas_c_20", "txtGas_c_16", "txtGas_c_10", "txtGas_c_4", "txtGas_c_18", "txtGas_c_14", "txtGas_c_5", "txtGas_c_2"},
-        {"txtGas_50", "txtGas_20", "txtGas_16", "txtGas_10", "txtGas_4", "txtGas_18", "txtGas_14", "txtGas_5", "txtGas_2"},
-        {"txtEmpty_50", "txtEmpty_20", "txtEmpty_16", "txtEmpty_10", "txtEmpty_4", "txtEmpty_18", "txtEmpty_14", "txtEmpty_5", "txtEmpty_2"},
-        {"txtDepositOut_50", "txtDepositOut_20", "txtDepositOut_16", "txtDepositOut_10", "txtDepositOut_4", "txtDepositOut_18", "txtDepositOut_14", "txtDepositOut_5", "txtDepositOut_2"}
-    }
+    'Private inputTxts As String(,) = {
+    '    {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_18", "txto_in_14", "txto_in_5", "txto_in_2"},
+    '    {"txto_new_in_50", "txto_new_in_20", "txto_new_in_16", "txto_new_in_10", "txto_new_in_4", "txto_new_in_18", "txto_new_in_14", "txto_new_in_5", "txto_new_in_2"},
+    '    {"txtBarralUnitPrice_50", "txtBarralUnitPrice_20", "txtBarralUnitPrice_16", "txtBarralUnitPrice_10", "txtBarralUnitPrice_4", "txtBarralUnitPrice_18", "txtBarralUnitPrice_14", "txtBarralUnitPrice_5", "txtBarralUnitPrice_2"},
+    '    {"txto_inspect_50", "txto_inspect_20", "txto_inspect_16", "txto_inspect_10", "txto_inspect_4", "txto_inspect_18", "txto_inspect_14", "txto_inspect_5", "txto_inspect_2"},
+    '    {"txtDepositIn_50", "txtDepositIn_20", "txtDepositIn_16", "txtDepositIn_10", "txtDepositIn_4", "txtDepositIn_18", "txtDepositIn_14", "txtDepositIn_5", "txtDepositIn_2"}
+    '}
+    'Private outputTxts As String(,) = {
+    '    {"txtGas_c_50", "txtGas_c_20", "txtGas_c_16", "txtGas_c_10", "txtGas_c_4", "txtGas_c_18", "txtGas_c_14", "txtGas_c_5", "txtGas_c_2"},
+    '    {"txtGas_50", "txtGas_20", "txtGas_16", "txtGas_10", "txtGas_4", "txtGas_18", "txtGas_14", "txtGas_5", "txtGas_2"},
+    '    {"txtEmpty_50", "txtEmpty_20", "txtEmpty_16", "txtEmpty_10", "txtEmpty_4", "txtEmpty_18", "txtEmpty_14", "txtEmpty_5", "txtEmpty_2"},
+    '    {"txtDepositOut_50", "txtDepositOut_20", "txtDepositOut_16", "txtDepositOut_10", "txtDepositOut_4", "txtDepositOut_18", "txtDepositOut_14", "txtDepositOut_5", "txtDepositOut_2"}
+    '}
 
     Private _currentPurchase As purchase
 
@@ -138,7 +138,8 @@
                 {tpScrapBarrel, DependencyContainer.Resolve(Of ScrapBarrelUserControl)},
                 {tpCheque_col, DependencyContainer.Resolve(Of Cheque_colUserControl)},
                 {tpChequePay, DependencyContainer.Resolve(Of ChequePayUserControl)},
-                {tpCompany, DependencyContainer.Resolve(Of CompanyUserControl)}
+                {tpCompany, DependencyContainer.Resolve(Of CompanyUserControl)},
+                {tpSurplusGas, DependencyContainer.Resolve(Of SurplusGasUserControl)}
             }
 
             ' 使用迴圈設定每個 UserControl

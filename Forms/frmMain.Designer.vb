@@ -334,6 +334,7 @@ Partial Class frmMain
         Me.txtName_gb = New System.Windows.Forms.TextBox()
         Me.txtId_gb = New System.Windows.Forms.TextBox()
         Me.Label75 = New System.Windows.Forms.Label()
+        Me.tpCompany = New System.Windows.Forms.TabPage()
         Me.tpGasPuchase = New System.Windows.Forms.TabPage()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.tpPurchase = New System.Windows.Forms.TabPage()
@@ -608,7 +609,7 @@ Partial Class frmMain
         Me.tpChequePay = New System.Windows.Forms.TabPage()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.tpCompany = New System.Windows.Forms.TabPage()
+        Me.tpSurplusGas = New System.Windows.Forms.TabPage()
         Me.TabControl1.SuspendLayout()
         Me.tpBasic.SuspendLayout()
         Me.tcBasicInfo.SuspendLayout()
@@ -4029,6 +4030,16 @@ Partial Class frmMain
         Me.Label75.TabIndex = 0
         Me.Label75.Text = "名    稱"
         '
+        'tpCompany
+        '
+        Me.tpCompany.Location = New System.Drawing.Point(4, 29)
+        Me.tpCompany.Name = "tpCompany"
+        Me.tpCompany.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpCompany.Size = New System.Drawing.Size(1882, 949)
+        Me.tpCompany.TabIndex = 40
+        Me.tpCompany.Text = "公司管理"
+        Me.tpCompany.UseVisualStyleBackColor = True
+        '
         'tpGasPuchase
         '
         Me.tpGasPuchase.Controls.Add(Me.TabControl2)
@@ -4046,6 +4057,7 @@ Partial Class frmMain
         Me.TabControl2.Controls.Add(Me.tpUPH)
         Me.TabControl2.Controls.Add(Me.tpGasCheckout)
         Me.TabControl2.Controls.Add(Me.tpPurchaseBarrel)
+        Me.TabControl2.Controls.Add(Me.tpSurplusGas)
         Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl2.Location = New System.Drawing.Point(3, 3)
         Me.TabControl2.Name = "TabControl2"
@@ -6776,15 +6788,15 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'tpCompany
+        'tpSurplusGas
         '
-        Me.tpCompany.Location = New System.Drawing.Point(4, 29)
-        Me.tpCompany.Name = "tpCompany"
-        Me.tpCompany.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpCompany.Size = New System.Drawing.Size(1882, 949)
-        Me.tpCompany.TabIndex = 40
-        Me.tpCompany.Text = "公司管理"
-        Me.tpCompany.UseVisualStyleBackColor = True
+        Me.tpSurplusGas.Location = New System.Drawing.Point(4, 29)
+        Me.tpSurplusGas.Name = "tpSurplusGas"
+        Me.tpSurplusGas.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpSurplusGas.Size = New System.Drawing.Size(1882, 949)
+        Me.tpSurplusGas.TabIndex = 34
+        Me.tpSurplusGas.Text = "結餘氣"
+        Me.tpSurplusGas.UseVisualStyleBackColor = True
         '
         'frmMain
         '
@@ -6795,7 +6807,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.16.3"
+        Me.Text = "豐原瓦斯會計系統 v0.17.0"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -7470,4 +7482,5 @@ Partial Class frmMain
     Friend WithEvents tpCheque_col As TabPage
     Friend WithEvents tpChequePay As TabPage
     Friend WithEvents tpCompany As TabPage
+    Friend WithEvents tpSurplusGas As TabPage
 End Class

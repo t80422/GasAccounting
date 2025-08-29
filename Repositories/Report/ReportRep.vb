@@ -1,4 +1,5 @@
 ﻿Imports System.Data.Entity
+Imports DocumentFormat.OpenXml.Office2016.Drawing.Charts
 
 Public Class ReportRep
     Implements IReportRep
@@ -13,41 +14,40 @@ Public Class ReportRep
         Dim result As New List(Of CustomersGasDetailByDay)
 
         Try
-            Using db As New gas_accounting_systemEntities
-                ' 獲取所有客戶資料
-                Dim customers = db.customers.OrderBy(Function(x) x.cus_code).ToList
+            ' 獲取所有客戶資料
+            Dim customers = _context.customers.OrderBy(Function(x) x.cus_code).ToList
 
-                ' 遍歷每個客戶並蒐集相關資料
-                Dim firstDate = New Date(selectDate.Year, selectDate.Month, 1)
-                Dim lastDate = If(isMonth, New Date(selectDate.Year, selectDate.Month, Date.DaysInMonth(selectDate.Year, selectDate.Month)), selectDate.AddDays(1))
+            ' 遍歷每個客戶並蒐集相關資料
+            Dim firstDate = New Date(selectDate.Year, selectDate.Month, 1)
+            Dim lastDate = New Date(selectDate.Year, selectDate.Month, Date.DaysInMonth(selectDate.Year, selectDate.Month))
 
-                For Each cus In customers
-                    Dim detail As New CustomersGasDetailByDay With {
-                        .客戶名稱 = cus.cus_name
-                    }
-                    Dim ordersByCus = db.orders.Where(Function(x) x.o_cus_Id = cus.cus_id)
-                    Dim ordersByRange = ordersByCus.Where(Function(x) x.o_date.Value >= firstDate AndAlso x.o_date < lastDate).ToList()
+            For Each cus In customers
+                Dim detail As New CustomersGasDetailByDay With {.客戶名稱 = cus.cus_name}
+                Dim ordersByCus = _context.orders.Where(Function(x) x.o_cus_Id = cus.cus_id).ToList
+                Dim ordersBySelectDate = ordersByCus.Where(Function(x) x.o_date.Value.Date >= firstDate AndAlso x.o_date.Value.Date <= selectDate).ToList()
+                Dim ordersByLastDate = ordersByCus.Where(Function(x) x.o_date.Value.Date >= firstDate AndAlso x.o_date.Value.Date <= lastDate).ToList
 
-                    detail.存氣 = ordersByRange.Sum(Function(x) x.o_return + x.o_return_c)
+                detail.存氣 = If(isMonth, ordersByLastDate.Sum(Function(x) x.o_return + x.o_return_c), ordersBySelectDate.Sum(Function(x) x.o_return + x.o_return_c))
 
-                    Dim ordersToday = ordersByCus.ToList.Where(Function(x) x.o_date.Value.Date = selectDate)
-                    detail.本日提量 = ordersToday.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
-                    detail.本日氣款 = ordersToday.Sum(Function(x) x.o_total_amount)
+                detail.本日提量 = If(isMonth, ordersByLastDate.Sum(Function(x) x.o_gas_total + x.o_gas_c_total),
+                                              ordersBySelectDate.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)) - detail.存氣
+                detail.本日氣款 = If(isMonth, ordersByLastDate.Sum(Function(x) x.o_total_amount), ordersBySelectDate.Sum(Function(x) x.o_total_amount))
 
-                    detail.當月累計提量 = ordersByRange.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
+                detail.當月累計提量 = ordersByLastDate.Sum(Function(x) x.o_gas_total + x.o_gas_c_total) - ordersByLastDate.Sum(Function(x) x.o_return + x.o_return_c)
 
-                    Dim collectsByCus = db.collections.Where(Function(x) x.col_cus_Id = cus.cus_id)
-                    Dim collectToday = collectsByCus.ToList.Where(Function(x) x.col_Date.Date = lastDate)
-                    detail.本日收款 = collectToday.Sum(Function(x) x.col_Amount)
+                Dim collectsByCus = _context.collections.Where(Function(x) x.col_cus_Id = cus.cus_id AndAlso x.col_Date >= firstDate)
+                Dim collectBySelectDate = collectsByCus.Where(Function(x) x.col_Date <= selectDate).ToList
+                Dim collectByLastDate = collectsByCus.Where(Function(x) x.col_Date <= lastDate).ToList
 
-                    Dim collectByRange = collectsByCus.Where(Function(x) x.col_Date >= firstDate And x.col_Date < lastDate).ToList()
-                    Dim totalCollectAmountByMonth = collectByRange.Sum(Function(x) x.col_Amount)
-                    Dim totalOrderAmountByMonth = ordersByRange.Sum(Function(x) x.o_total_amount)
-                    detail.結欠 = totalOrderAmountByMonth - totalCollectAmountByMonth
+                detail.本日收款 = If(isMonth, collectByLastDate.Sum(Function(x) x.col_Amount), collectBySelectDate.Sum(Function(x) x.col_Amount))
 
-                    result.Add(detail)
-                Next
-            End Using
+                Dim collectByRange = collectsByCus.Where(Function(x) x.col_Date >= firstDate And x.col_Date < lastDate).ToList()
+                Dim totalCollect = If(isMonth, collectByLastDate, collectBySelectDate).Sum(Function(x) x.col_Amount)
+                Dim totalOrder = If(isMonth, ordersByLastDate, ordersBySelectDate).Sum(Function(x) x.o_total_amount)
+                detail.結欠 = totalCollect - totalOrder
+
+                result.Add(detail)
+            Next
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             Throw
@@ -254,47 +254,30 @@ Public Class ReportRep
         Dim result As New List(Of GasUsageAndCylinderCount)
 
         Try
-            Using db As New gas_accounting_systemEntities
-                '取得日期區間
-                Dim startMonth = New Date(month.Year, month.Month, 1)
-                Dim endDay = startMonth.AddMonths(1)
+            '取得日期區間
+            Dim startMonth = New Date(month.Year, month.Month, 1)
+            Dim endDay = startMonth.AddMonths(1)
 
-                '遍歷每天的訂單資料
-                Dim returnGrandTotal As Integer = 0 '退氣累計
-                Dim gasGrandTotal As Integer = 0 '提氣累計
-                Dim currentDate = startMonth
+            '遍歷每天的訂單資料
+            Dim currentDate = startMonth
 
-                While currentDate < endDay
-                    Dim data As New GasUsageAndCylinderCount With {
-                                            .日期 = currentDate.ToString("MM月dd日")
-                                        }
+            While currentDate < endDay
+                Dim data As New GasUsageAndCylinderCount With {.日期 = currentDate.ToString("MM月dd日")}
 
-                    '取得該日訂單
-                    Dim currentDateEnd = currentDate.AddDays(1)
-                    Dim ordersToday = db.orders.Where(Function(x) x.o_date.Value >= currentDate And x.o_date < currentDateEnd).ToList
+                '取得該日訂單
+                Dim currentDateEnd = currentDate.AddDays(1)
+                Dim ordersToday = _context.orders.Where(Function(x) x.o_date.Value >= currentDate And x.o_date < currentDateEnd).ToList
+                data.退氣 = ordersToday.Sum(Function(x) x.o_return + x.o_return_c)
+                data.提氣量 = ordersToday.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
+                data.瓦斯瓶50Kg = ordersToday.Sum(Function(x) x.o_gas_50 + x.o_gas_c_50 + x.o_empty_50)
+                data.瓦斯瓶20Kg = ordersToday.Sum(Function(x) x.o_gas_20 + x.o_gas_c_20 + x.o_empty_20)
+                data.瓦斯瓶16Kg = ordersToday.Sum(Function(x) x.o_gas_16 + x.o_gas_c_16 + x.o_empty_16)
+                data.瓦斯瓶10Kg = ordersToday.Sum(Function(x) x.o_gas_10 + x.o_gas_c_10 + x.o_empty_10)
+                data.瓦斯瓶4Kg = ordersToday.Sum(Function(x) x.o_gas_4 + x.o_gas_c_4 + x.o_empty_4)
 
-                    data.退氣 = ordersToday.Sum(Function(x) x.o_return + x.o_return_c)
-                    returnGrandTotal += data.退氣
-                    data.退氣累計量 = returnGrandTotal
-                    data.提氣量 = ordersToday.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
-                    gasGrandTotal += data.提氣量
-                    data.提氣累計量 = gasGrandTotal
-
-                    data.瓦斯瓶50Kg = ordersToday.Sum(Function(x) x.o_gas_50 + x.o_gas_c_50 + x.o_empty_50)
-                    data.瓦斯瓶20Kg = ordersToday.Sum(Function(x) x.o_gas_20 + x.o_gas_c_20 + x.o_empty_20)
-                    data.瓦斯瓶16Kg = ordersToday.Sum(Function(x) x.o_gas_16 + x.o_gas_c_16 + x.o_empty_16)
-                    data.瓦斯瓶4Kg = ordersToday.Sum(Function(x) x.o_gas_4 + x.o_gas_c_4 + x.o_empty_4)
-                    data.瓦斯瓶18Kg = ordersToday.Sum(Function(x) x.o_gas_18 + x.o_gas_c_18 + x.o_empty_18)
-                    data.瓦斯瓶14Kg = ordersToday.Sum(Function(x) x.o_gas_14 + x.o_gas_c_14 + x.o_empty_14)
-                    data.瓦斯瓶5Kg = ordersToday.Sum(Function(x) x.o_gas_5 + x.o_gas_c_5 + x.o_empty_5)
-                    data.瓦斯瓶2Kg = ordersToday.Sum(Function(x) x.o_gas_2 + x.o_gas_c_2 + x.o_empty_2)
-
-                    data.總支數 = data.瓦斯瓶50Kg + data.瓦斯瓶20Kg + data.瓦斯瓶16Kg + data.瓦斯瓶4Kg + data.瓦斯瓶18Kg + data.瓦斯瓶14Kg + data.瓦斯瓶5Kg + data.瓦斯瓶2Kg
-
-                    result.Add(data)
-                    currentDate = currentDate.AddDays(1)
-                End While
-            End Using
+                result.Add(data)
+                currentDate = currentDate.AddDays(1)
+            End While
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             Throw
@@ -303,55 +286,63 @@ Public Class ReportRep
         Return result
     End Function
 
-    Public Function GetCashAccount(startDate As Date, endDate As Date, Optional cusId As Integer = 0) As List(Of CashAccount) Implements IReportRep.GetCashAccount
+    Public Function GetCashAccount(startDate As Date, endDate As Date) As List(Of CashAccount) Implements IReportRep.GetCashAccount
         Dim result = New List(Of CashAccount)
 
         Try
-            Using db As New gas_accounting_systemEntities
-                '獲取收入數據
-                Dim collections = db.collections.AsNoTracking.
-                    Where(Function(x) x.col_Date >= startDate AndAlso
-                                      x.col_Date <= endDate AndAlso
-                                      x.col_Type = "現金")
-                If cusId > 0 Then collections = collections.Where(Function(x) x.col_cus_Id = cusId)
+            Dim formatEndDate = endDate.AddDays(1)
+            ' 取得前期餘額
+            Dim lastCollectionSum = _context.collections.Where(Function(x) x.col_Date < startDate AndAlso x.col_Type = "現金")?.
+                                                       Sum(Function(x) x.col_Amount)
+            Dim lastPaymentSum = _context.payments.Where(Function(x) x.p_Date < startDate AndAlso x.p_Type = "現金")?.
+                                             Sum(Function(x) x.p_Amount)
+            result.Add(New CashAccount With {
+                .摘要 = "前期餘額",
+                .餘額 = lastCollectionSum - lastPaymentSum
+            })
 
-                Dim formatCollections = collections.Select(Function(x) New With {
-                                                                .Date = x.col_Date,
-                                                                .Subject = x.subject.s_name,
-                                                                .Memo = x.col_Memo,
-                                                                .Amount = x.col_Amount,
-                                                                .IsIncome = True
-                                                            })
-                '獲取支出數據
-                Dim payments = db.payments.Where(Function(x) x.p_Date >= startDate AndAlso
-                                                             x.p_Date <= endDate AndAlso
-                                                             x.p_Type = "現金").
-                                           Select(Function(x) New With {
-                                                        .Date = x.p_Date,
-                                                        .Subject = x.subject.s_name,
-                                                        .Memo = x.p_Memo,
-                                                        .Amount = x.p_Amount,
-                                                        .IsIncome = False
-                                            })
-                '合併並排列數據
-                Dim allTransactions = formatCollections.Union(payments) _
-                                                 .OrderBy(Function(x) x.Date) _
-                                                 .ThenBy(Function(x) x.IsIncome)
+            '獲取收入數據
+            Dim collections = _context.collections.AsNoTracking.
+                Where(Function(x) x.col_Date >= startDate AndAlso
+                                  x.col_Date <= formatEndDate AndAlso
+                                  x.col_Type = "現金")
 
-                '計算餘額並填入模型
-                Dim balance As Integer = 0
-                For Each transaction In allTransactions
-                    balance += If(transaction.IsIncome, transaction.Amount, -transaction.Amount)
-                    result.Add(New CashAccount With {
-                        .日期 = transaction.Date,
+            Dim formatCollections = collections.Select(Function(x) New With {
+                                                            .Date = x.col_Date,
+                                                            .Subject = x.subject.s_name,
+                                                            .Memo = x.col_Memo,
+                                                            .Amount = x.col_Amount,
+                                                            .IsIncome = True
+                                                        })
+            '獲取支出數據
+            Dim payments = _context.payments.Where(Function(x) x.p_Date >= startDate AndAlso
+                                                         x.p_Date <= formatEndDate AndAlso
+                                                         x.p_Type = "現金").
+                                       Select(Function(x) New With {
+                                                    .Date = x.p_Date,
+                                                    .Subject = x.subject.s_name,
+                                                    .Memo = x.p_Memo,
+                                                    .Amount = x.p_Amount,
+                                                    .IsIncome = False
+                                        })
+            '合併並排列數據
+            Dim allTransactions = formatCollections.Union(payments) _
+                                             .OrderBy(Function(x) x.Date) _
+                                             .ThenBy(Function(x) x.IsIncome).ToList
+
+            '計算餘額並填入模型
+            Dim balance As Integer = lastCollectionSum - lastPaymentSum
+            For Each transaction In allTransactions
+                balance += If(transaction.IsIncome, transaction.Amount, -transaction.Amount)
+                result.Add(New CashAccount With {
+                        .日期 = transaction.Date.ToString("MM月dd日"),
                         .科目 = transaction.Subject,
                         .摘要 = transaction.Memo,
                         .收入金額 = If(transaction.IsIncome, transaction.Amount, 0),
                         .支出金額 = If(transaction.IsIncome, 0, transaction.Amount),
                         .餘額 = balance
                     })
-                Next
-            End Using
+            Next
         Catch ex As Exception
             Throw
         End Try
@@ -1068,7 +1059,7 @@ Public Class ReportRep
             Dim subjectSummary As New Dictionary(Of String, DailySubjectSummary)
             Dim startDate = New Date(day.Year, day.Month, 1)
 
-            ' 取得收入管理當日的科目彙總
+            ' 取得收入管理當日的科目匯總
             Dim collectionDatas = _context.collections.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date <= day.Date).AsNoTracking().ToList()
 
             ' 收入管理 - 借方 (科目名稱)
@@ -1118,6 +1109,31 @@ Public Class ReportRep
                 subjectSummary(subject).Debit += amount
             Next
 
+            ' 取得結轉
+            Dim closingEntrie = _context.closing_entry.AsNoTracking.Where(Function(x) x.ce_Date >= startDate AndAlso x.ce_Date <= day.Date)
+
+            '結轉-貸方
+            For Each group In closingEntrie.GroupBy(Function(x) x.subject.s_name)
+                Dim subject = group.Key
+                Dim amount = group.Sum(Function(x) x.ce_CreditAmount)
+
+                If Not subjectSummary.ContainsKey(subject) Then
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                End If
+                subjectSummary(subject).Credit += amount
+            Next
+
+            ' 結轉-借方
+            For Each group In closingEntrie.GroupBy(Function(x) x.subject1.s_name)
+                Dim subject = group.Key
+                Dim amount = group.Sum(Function(x) x.ce_DebitAmount)
+
+                If Not subjectSummary.ContainsKey(subject) Then
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                End If
+                subjectSummary(subject).Debit += amount
+            Next
+
             Return subjectSummary.Values.ToList()
 
         Catch ex As Exception
@@ -1125,111 +1141,146 @@ Public Class ReportRep
         End Try
     End Function
 
-    Public Function GetAccountBalance(month As Date) As AccountBalanceDTO Implements IReportRep.GetAccountBalance
+    Public Function GetAccountBalance(month As Date) As List(Of AccountBalanceDTO) Implements IReportRep.GetAccountBalance
         Try
-            Dim result As New AccountBalanceDTO With {
-                .DebitDatas = New List(Of Dictionary(Of String, List(Of SubjectTransaction))),
-                .CreditDatas = New List(Of Dictionary(Of String, List(Of SubjectTransaction)))
-            }
+            Dim result As New List(Of AccountBalanceDTO)
 
             ' 設定查詢時間範圍
             Dim startDate = New Date(month.Year, month.Month, 1)
             Dim endDate = startDate.AddMonths(1)
 
-            ' 取得 collection 資料 (收款表)
+            ' 取得 collection 資料
             Dim collectionData = _context.collections.AsNoTracking().
                 Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date < endDate).
                 Include(Function(x) x.subject).
                 ToList()
 
-            ' 取得 payment 資料 (付款表)
+            ' 取得 payment 資料
             Dim paymentData = _context.payments.AsNoTracking().
                 Where(Function(x) x.p_Date >= startDate AndAlso x.p_Date < endDate).
                 Include(Function(x) x.subject).
                 ToList()
 
-            ' 建立借方科目字典
-            Dim debitSubjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
-            Dim creditSubjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
+            ' 取得 closingEntry 資料
+            Dim closingEntryData = _context.closing_entry.AsNoTracking.Where(Function(x) x.ce_Date >= startDate AndAlso x.ce_Date < endDate).ToList
 
             ' 處理 collection 資料
             ' collection: 借方=col_Type, 貸方=col_s_Id (科目)
             For Each item In collectionData
                 ' 處理借方科目 (col_Type)
-                If Not String.IsNullOrEmpty(item.col_Type) Then
-                    If Not debitSubjectDict.ContainsKey(item.col_Type) Then
-                        debitSubjectDict(item.col_Type) = New List(Of SubjectTransaction)
-                    End If
+                Dim debitSubject = result.FirstOrDefault(Function(x) x.SubjectName = item.col_Type)
 
-                    Dim transaction As New SubjectTransaction With {
-                        .Day = item.col_Date,
-                        .Amount = item.col_Amount
+                If debitSubject Is Nothing Then
+                    debitSubject = New AccountBalanceDTO With {
+                        .SubjectName = item.col_Type,
+                        .DebitList = New List(Of SubjectTransaction),
+                        .CreditList = New List(Of SubjectTransaction)
                     }
-
-                    debitSubjectDict(item.col_Type).Add(transaction)
+                    result.Add(debitSubject)
                 End If
 
                 ' 處理貸方科目 (col_s_Id 關聯的科目)
-                If item.col_s_Id.HasValue AndAlso item.subject IsNot Nothing Then
-                    Dim subjectName = item.subject.s_name
-                    If Not creditSubjectDict.ContainsKey(subjectName) Then
-                        creditSubjectDict(subjectName) = New List(Of SubjectTransaction)
-                    End If
+                Dim creditSubject = result.FirstOrDefault(Function(x) x.SubjectName = item.subject.s_name)
 
-                    Dim transaction As New SubjectTransaction With {
-                        .Day = item.col_Date,
-                        .Amount = item.col_Amount
+                If creditSubject Is Nothing Then
+                    creditSubject = New AccountBalanceDTO With {
+                        .SubjectName = item.subject.s_name,
+                        .DebitList = New List(Of SubjectTransaction),
+                        .CreditList = New List(Of SubjectTransaction)
                     }
-
-                    creditSubjectDict(subjectName).Add(transaction)
+                    result.Add(creditSubject)
                 End If
+
+                ' 處理明細
+                Dim transaction As New SubjectTransaction With {
+                    .Day = item.col_Date,
+                    .Amount = item.col_Amount
+                }
+                debitSubject.DebitList.Add(transaction)
+                creditSubject.CreditList.Add(transaction)
             Next
 
             ' 處理 payment 資料
             ' payment: 借方=p_s_Id (科目), 貸方=p_Type
             For Each item In paymentData
                 ' 處理借方科目 (p_s_Id 關聯的科目)
-                If item.p_s_Id.HasValue AndAlso item.subject IsNot Nothing Then
-                    Dim subjectName = item.subject.s_name
-                    If Not debitSubjectDict.ContainsKey(subjectName) Then
-                        debitSubjectDict(subjectName) = New List(Of SubjectTransaction)
-                    End If
+                Dim debitSubject = result.FirstOrDefault(Function(x) x.SubjectName = item.subject.s_name)
 
-                    Dim transaction As New SubjectTransaction With {
-                        .Day = item.p_Date,
-                        .Amount = item.p_Amount
+                If debitSubject Is Nothing Then
+                    debitSubject = New AccountBalanceDTO With {
+                        .SubjectName = item.subject.s_name,
+                        .DebitList = New List(Of SubjectTransaction),
+                        .CreditList = New List(Of SubjectTransaction)
                     }
-
-                    debitSubjectDict(subjectName).Add(transaction)
+                    result.Add(debitSubject)
                 End If
 
                 ' 處理貸方科目 (p_Type)
-                If Not String.IsNullOrEmpty(item.p_Type) Then
-                    If Not creditSubjectDict.ContainsKey(item.p_Type) Then
-                        creditSubjectDict(item.p_Type) = New List(Of SubjectTransaction)
+                Dim creditSubject = result.FirstOrDefault(Function(x) x.SubjectName = item.p_Type)
+
+                If creditSubject Is Nothing Then
+                    creditSubject = New AccountBalanceDTO With {
+                        .SubjectName = item.p_Type,
+                        .DebitList = New List(Of SubjectTransaction),
+                        .CreditList = New List(Of SubjectTransaction)
+                    }
+                    result.Add(creditSubject)
+                End If
+
+                ' 處理明細
+                Dim transaction As New SubjectTransaction With {
+                    .Day = item.p_Date,
+                    .Amount = item.p_Amount
+                }
+
+                debitSubject.DebitList.Add(transaction)
+                creditSubject.CreditList.Add(transaction)
+            Next
+
+            ' 處理 closing_entry 資料  
+            ' closing_entry: 借方=subject1 (ce_Debit), 貸方=subject (ce_Credit)
+            For Each item In closingEntryData
+                ' 先檢查必要的資料是否存在
+                If item.subject1 IsNot Nothing AndAlso item.subject IsNot Nothing AndAlso
+                   item.ce_Date.HasValue AndAlso item.ce_DebitAmount.HasValue AndAlso item.ce_CreditAmount.HasValue Then
+
+                    ' 處理借方科目 (subject1)
+                    Dim debitSubject = result.FirstOrDefault(Function(x) x.SubjectName = item.subject1.s_name)
+
+                    If debitSubject Is Nothing Then
+                        debitSubject = New AccountBalanceDTO With {
+                            .SubjectName = item.subject1.s_name,
+                            .DebitList = New List(Of SubjectTransaction),
+                            .CreditList = New List(Of SubjectTransaction)
+                        }
+                        result.Add(debitSubject)
                     End If
 
-                    Dim transaction As New SubjectTransaction With {
-                        .Day = item.p_Date,
-                        .Amount = item.p_Amount
+                    ' 處理貸方科目 (subject)
+                    Dim creditSubject = result.FirstOrDefault(Function(x) x.SubjectName = item.subject.s_name)
+
+                    If creditSubject Is Nothing Then
+                        creditSubject = New AccountBalanceDTO With {
+                            .SubjectName = item.subject.s_name,
+                            .DebitList = New List(Of SubjectTransaction),
+                            .CreditList = New List(Of SubjectTransaction)
+                        }
+                        result.Add(creditSubject)
+                    End If
+
+                    ' 分別建立借方和貸方交易記錄（金額可能不同）
+                    Dim debitTransaction As New SubjectTransaction With {
+                        .Day = item.ce_Date.Value,
+                        .Amount = item.ce_DebitAmount.Value
                     }
+                    debitSubject.DebitList.Add(debitTransaction)
 
-                    creditSubjectDict(item.p_Type).Add(transaction)
+                    Dim creditTransaction As New SubjectTransaction With {
+                        .Day = item.ce_Date.Value,
+                        .Amount = item.ce_CreditAmount.Value
+                    }
+                    creditSubject.CreditList.Add(creditTransaction)
                 End If
-            Next
-
-            ' 將借方科目資料加入結果
-            For Each subject In debitSubjectDict
-                Dim subjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
-                subjectDict.Add(subject.Key, subject.Value)
-                result.DebitDatas.Add(subjectDict)
-            Next
-
-            ' 將貸方科目資料加入結果
-            For Each subject In creditSubjectDict
-                Dim subjectDict As New Dictionary(Of String, List(Of SubjectTransaction))
-                subjectDict.Add(subject.Key, subject.Value)
-                result.CreditDatas.Add(subjectDict)
             Next
 
             Return result

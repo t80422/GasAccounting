@@ -7,6 +7,7 @@
             .EndDate = dtpEnd.Value.Date.AddDays(1)
             .IsDate = chkDate.Checked
             .Status = cmbStatus.SelectedItem
+            .IsStatus = chkStatus.Checked
         End With
 
         DialogResult = DialogResult.OK

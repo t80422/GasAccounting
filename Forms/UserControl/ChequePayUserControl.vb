@@ -8,6 +8,7 @@
 	Public Event SearchClicked As EventHandler Implements IChequePayView.SearchClicked
 	Public Event CancelClicked As EventHandler Implements IChequePayView.CancelClicked
 	Public Event RowSelected As EventHandler(Of Integer) Implements IChequePayView.RowSelected
+	Public Event PrintClicked As EventHandler Implements IChequePayView.PrintClicked
 
 	' IChequePayView 方法
 	Public Sub DisplayList(data As List(Of ChequePayVM)) Implements IChequePayView.DisplayList
@@ -34,8 +35,12 @@
 		chkIsCashing.Checked = False
 	End Sub
 
-    ' UI 事件 → View 事件
-    Private Sub ChequePayUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	Public Function GetDGVData() As List(Of ChequePayVM) Implements IChequePayView.GetDGVData
+		Return dgvCheque.DataSource
+	End Function
+
+	' UI 事件 → View 事件
+	Private Sub ChequePayUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _presenter = DependencyContainer.Resolve(Of ChequePayPresenter)()
         _presenter.SetView(Me)
 		RaiseEvent Loaded(Me, EventArgs.Empty)
@@ -67,4 +72,8 @@
             End If
         End Using
 	End Function
+
+	Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
+		RaiseEvent PrintClicked(Me, EventArgs.Empty)
+	End Sub
 End Class
