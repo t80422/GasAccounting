@@ -1063,7 +1063,7 @@ Public Class ReportRep
             Dim collectionDatas = _context.collections.Where(Function(x) x.col_Date >= startDate AndAlso x.col_Date <= day.Date).AsNoTracking().ToList()
 
             ' 收入管理 - 借方 (科目名稱)
-            For Each group In collectionDatas.GroupBy(Function(x) x.subject.s_name)
+            For Each group In collectionDatas.GroupBy(Function(x) x.col_Type)
                 Dim subject = group.Key
                 Dim amount = group.Sum(Function(x) x.col_Amount)
 
@@ -1074,7 +1074,7 @@ Public Class ReportRep
             Next
 
             ' 收入管理 - 貸方 (收入類型)
-            For Each group In collectionDatas.GroupBy(Function(x) x.col_Type)
+            For Each group In collectionDatas.GroupBy(Function(x) x.subject.s_name)
                 Dim subject = group.Key
                 Dim amount = group.Sum(Function(x) x.col_Amount)
 
@@ -1088,7 +1088,7 @@ Public Class ReportRep
             Dim paymentDatas = _context.payments.Where(Function(x) x.p_Date >= startDate AndAlso x.p_Date <= day.Date).AsNoTracking().ToList()
 
             ' 支出管理 - 貸方 (科目名稱)
-            For Each group In paymentDatas.GroupBy(Function(x) x.subject.s_name)
+            For Each group In paymentDatas.GroupBy(Function(x) x.p_Type)
                 Dim subject = group.Key
                 Dim amount = group.Sum(Function(x) x.p_Amount)
 
@@ -1099,7 +1099,7 @@ Public Class ReportRep
             Next
 
             ' 支出管理 - 借方 (支出類型)
-            For Each group In paymentDatas.GroupBy(Function(x) x.p_Type)
+            For Each group In paymentDatas.GroupBy(Function(x) x.subject.s_name)
                 Dim subject = group.Key
                 Dim amount = group.Sum(Function(x) x.p_Amount)
 

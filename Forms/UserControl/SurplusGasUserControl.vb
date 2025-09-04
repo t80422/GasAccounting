@@ -8,7 +8,7 @@
     Public Event CancelClicked As EventHandler Implements ISurplusGasView.CancelClicked
 
     Public Sub DisplayList(data As List(Of SurplusGasListVM)) Implements ISurplusGasView.DisplayList
-        Throw New NotImplementedException()
+        dgvPurchaseBarrel.DataSource = data
     End Sub
 
     Public Function GetSearchCriteria() As Object Implements ISurplusGasView.GetSearchCriteria

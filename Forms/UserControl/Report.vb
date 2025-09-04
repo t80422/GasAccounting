@@ -87,7 +87,7 @@
         _presenter.GenerateNewBarrelDetails(dtpMonth_newBarrel.Value)
     End Sub
 
-    ' 每日科目彙總表
+    ' 每日科目匯總表
     Private Sub btnDSS_Click(sender As Object, e As EventArgs) Handles btnDSS.Click
         _presenter.GenerateDailySubjectSummary(dtpDate_DSS.Value)
     End Sub

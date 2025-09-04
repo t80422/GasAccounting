@@ -1,9 +1,4 @@
-﻿Imports System.IO
-Imports ClosedXML.Excel
-Imports NLog.Time
-Imports SixLabors.Fonts.Tables.General
-
-Public Class PaymentPresenter
+﻿Public Class PaymentPresenter
     Private _view As IPaymentView
     Private ReadOnly _manufaturerRep As IManufacturerRep
     Private ReadOnly _subjectRep As ISubjectRep
@@ -13,10 +8,11 @@ Public Class PaymentPresenter
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _reportSer As IReportService
     Private ReadOnly _cpRep As IChequePayRep
+    Private ReadOnly _bankRep As IBankRep
     Private selectData As payment
 
-    Public Sub New(manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
-                   bmbService As IBankMonthlyBalanceService, aeSer As IAccountingEntryService, reportSer As IReportService, cpRep As IChequePayRep)
+    Public Sub New(manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep, bmbService As IBankMonthlyBalanceService,
+                   aeSer As IAccountingEntryService, reportSer As IReportService, cpRep As IChequePayRep, bankRep As IBankRep)
         _manufaturerRep = manufaturerRep
         _subjectRep = subjectRep
         _companyRep = companyRep
@@ -25,6 +21,7 @@ Public Class PaymentPresenter
         _aeSer = aeSer
         _reportSer = reportSer
         _cpRep = cpRep
+        _bankRep = bankRep
     End Sub
 
     Public Sub SetView(view As IPaymentView)
@@ -202,14 +199,15 @@ Public Class PaymentPresenter
 
     Public Async Function LoadPaymentDetailAsync(id As Integer) As Task
         Try
+            _view.ClearInput()
             selectData = Await _paymentRep.GetByIdAsync(id)
 
             Dim data = New PaymentVM With {
             .Payment = selectData
             }
-
+            LoadBankDropdown(data.Payment.p_comp_Id)
             _view.ShowDetail(data)
-            ShowVendorAccountAsync(data.Payment.p_m_Id)
+            If data.Payment.p_m_Id.HasValue Then ShowVendorAccountAsync(data.Payment.p_m_Id)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -325,5 +323,10 @@ Public Class PaymentPresenter
     Public Async Sub ShowVendorAccountAsync(vendorId As Integer)
         Dim vendor = Await _manufaturerRep.GetByIdAsync(vendorId)
         _view.ShowVendorAccount(vendor.manu_account)
+    End Sub
+
+    Public Sub LoadBankDropdown(companyId As Integer)
+        Dim data = _bankRep.GetBankDropdownAsync(companyId).Result
+        _view.PopulateBankDropdown(data)
     End Sub
 End Class

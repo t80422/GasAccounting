@@ -99,4 +99,12 @@ Public Class ucClosingEntry
             End If
         End Using
     End Sub
+
+    Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
+        Using frm As New Print_Subpoena(True)
+            If frm.ShowDialog = DialogResult.OK Then
+                _presenter.Print(frm.SelectDate)
+            End If
+        End Using
+    End Sub
 End Class

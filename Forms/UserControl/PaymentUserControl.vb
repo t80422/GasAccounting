@@ -26,6 +26,10 @@
         SetComboBox(cmbCompany_payment, data)
     End Sub
 
+    Public Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateBankDropdown
+        SetComboBox(cmbBank, data)
+    End Sub
+
     Public Sub DisplayAmountDueList(data As IReadOnlyList(Of AmountDueVM)) Implements IPaymentView.DisplayAmountDueList
         dgvAmountDue.DataSource = data
     End Sub
@@ -35,7 +39,7 @@
     End Sub
 
     Public Sub ShowVendorAccount(data As String) Implements IPaymentView.ShowVendorAccount
-        txtAccount_payment.Text = data
+        txtVendorAccount_payment.Text = data
     End Sub
 
     Public Sub DisplayList(data As List(Of PaymentListVM)) Implements IBaseView(Of payment, PaymentListVM).DisplayList
@@ -70,7 +74,7 @@
 
         If String.IsNullOrEmpty(data.p_Type) Then
             Throw New Exception("請選擇付款類型")
-        ElseIf data.p_Type = "支票" AndAlso String.IsNullOrEmpty(data.p_Cheque) Then
+        ElseIf data.p_Type = "應付票據" AndAlso String.IsNullOrEmpty(data.p_Cheque) Then
             Throw New Exception("請選擇支票號碼")
         End If
 
@@ -78,7 +82,7 @@
 
         If data.p_Amount <= 0 Then Throw New Exception("請選擇輸入金額")
 
-        If data.p_Type <> "支票" Then data.p_CashingDate = Nothing
+        If data.p_Type <> "應付票據" Then data.p_CashingDate = Nothing
 
         Return New PaymentVM With {
             .Payment = data
@@ -93,9 +97,9 @@
 
         If String.IsNullOrEmpty(data.p_Type) Then
             Throw New Exception("請選擇付款類型")
-        ElseIf data.p_Type = "銀行" AndAlso Not data.p_bank_Id.HasValue Then
+        ElseIf data.p_Type = "銀行存款" AndAlso Not data.p_bank_Id.HasValue Then
             Throw New Exception("請選擇銀行帳號")
-        ElseIf data.p_Type = "支票" AndAlso String.IsNullOrEmpty(data.p_Cheque) Then
+        ElseIf data.p_Type = "應付票據" AndAlso String.IsNullOrEmpty(data.p_Cheque) Then
             Throw New Exception("請選擇支票號碼")
         End If
 
@@ -103,7 +107,7 @@
 
         If data.p_Amount <= 0 Then Throw New Exception("請選擇輸入金額")
 
-        If data.p_Type <> "支票" Then data.p_CashingDate = Nothing
+        If data.p_Type <> "應付票據" Then data.p_CashingDate = Nothing
 
         Return data
     End Function
@@ -112,7 +116,7 @@
     ''' 設定付款作業查詢控制項狀態
     ''' </summary>
     Private Sub SetPaymentQueryCtrlsState()
-        Dim lst As New List(Of Control) From {lblPayType_payment, lblManu_payment, lblBank_payment}
+        Dim lst As New List(Of Control) From {lblPayType_payment, lblManu_payment, lblVendorBank_payment}
         SetQueryControls(btnQuery_payment, lst)
     End Sub
 
@@ -133,7 +137,7 @@
         Dim id = DGV_SelectionChanged(sender)
         If id > 0 Then
             Await _presenter.LoadPaymentDetailAsync(id)
-            _presenter.LoadVendorAmountDue(cmbManu_payment.SelectedItem.Value)
+            If cmbManu_payment.SelectedItem IsNot Nothing Then _presenter.LoadVendorAmountDue(cmbManu_payment.SelectedItem.Value)
         End If
     End Sub
 
@@ -161,8 +165,8 @@
         Dim cmb As ComboBox = sender
         Dim paymentType As String = cmb.Text
         Dim ctrlVisibility As New Dictionary(Of String, Control()) From {
-            {"支票", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, txtAccount_payment, lblBankRequired_payment, lblBank_payment}},
-            {"銀行", {lblBankRequired_payment, lblBank_payment, txtAccount_payment}}
+            {"應付票據", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, txtVendorAccount_payment, lblVendorBankRequired_payment, lblVendorBank_payment}},
+            {"銀行存款", {lblVendorBankRequired_payment, lblVendorBank_payment, txtVendorAccount_payment, lblBankReq, lblBank, cmbBank}}
         }
 
         ' 先隱藏所有相關控制項
@@ -198,5 +202,10 @@
     ' 紀錄dgv欄寬
     Private Sub dgvPayment_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvPayment.ColumnWidthChanged
         SaveDataGridWidth(sender, e)
+    End Sub
+
+    ' 選擇公司
+    Private Sub cmbCompany_payment_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbCompany_payment.SelectionChangeCommitted
+        _presenter.LoadBankDropdown(cmbCompany_payment.SelectedValue)
     End Sub
 End Class

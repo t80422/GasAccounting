@@ -62,11 +62,13 @@ Public Class ReportService
                         .WriteToCell("A", i + 4, datas(i).DebitSubjectName)
                         .WriteToCell("B", i + 4, datas(i).DebitSummary)
                         .WriteToCell("C", i + 4, datas(i).DebitAmount.ToString)
-                        .SetCustomBorders(i + 4, 1, i + 4, 3, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double)
+                        .SetCustomBorders(i + 4, 1, i + 4, 2, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
+                        .SetCustomBorders(i + 4, 3, i + 4, 3, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double)
                         .WriteToCell("D", i + 4, datas(i).CreditSubjectName)
                         .WriteToCell("E", i + 4, datas(i).CreditSummary)
                         .WriteToCell("F", i + 4, datas(i).CreditAmount.ToString)
-                        .SetCustomBorders(i + 4, 4, i + 4, 6, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double, XLBorderStyleValues.Thin)
+                        .SetCustomBorders(i + 4, 4, i + 4, 4, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double, XLBorderStyleValues.Thin)
+                        .SetCustomBorders(i + 4, 5, i + 4, 6, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
                     Next
 
                     ' 頁尾
@@ -77,10 +79,12 @@ Public Class ReportService
                     ' 總計
                     .WriteToCell("A", rowIndex, "合計")
                     .WriteToCell("C", rowIndex, datas.Sum(Function(x) x.DebitAmount).ToString)
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 3, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 2, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
+                    .SetCustomBorders(rowIndex, 3, rowIndex, 3, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double)
                     .WriteToCell("D", rowIndex, "合計")
                     .WriteToCell("F", rowIndex, datas.Sum(Function(x) x.CreditAmount).ToString)
-                    .SetCustomBorders(rowIndex, 4, rowIndex, 6, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Double, XLBorderStyleValues.Thin)
+                    .SetCustomBorders(rowIndex, 4, rowIndex, 4, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Double, XLBorderStyleValues.Thin)
+                    .SetCustomBorders(rowIndex, 5, rowIndex, 6, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
 
                     .SaveExcel($"{title}_{day:yyyyMMdd}")
                 End With

@@ -22,7 +22,7 @@
     End Sub
 
     Private Sub LoadList(Optional criteria As Object = Nothing)
-        Dim data
+        Dim data As New List(Of SurplusGasListVM)
         _view.DisplayList(data)
     End Sub
 End Class

@@ -42,6 +42,7 @@ Partial Class ucClosingEntry
         Me.btnEdit = New System.Windows.Forms.Button()
         Me.btnAdd = New System.Windows.Forms.Button()
         Me.dgvClosingEntry = New System.Windows.Forms.DataGridView()
+        Me.btnPrint = New System.Windows.Forms.Button()
         CType(Me.dgvClosingEntry, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -229,10 +230,21 @@ Partial Class ucClosingEntry
         Me.dgvClosingEntry.Size = New System.Drawing.Size(1872, 830)
         Me.dgvClosingEntry.TabIndex = 456
         '
+        'btnPrint
+        '
+        Me.btnPrint.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnPrint.Location = New System.Drawing.Point(788, 44)
+        Me.btnPrint.Name = "btnPrint"
+        Me.btnPrint.Size = New System.Drawing.Size(140, 44)
+        Me.btnPrint.TabIndex = 480
+        Me.btnPrint.Text = "列   印"
+        Me.btnPrint.UseVisualStyleBackColor = False
+        '
         'ucClosingEntry
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.btnPrint)
         Me.Controls.Add(Me.dgvClosingEntry)
         Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.btnCancel)
@@ -284,4 +296,5 @@ Partial Class ucClosingEntry
     Friend WithEvents btnEdit As Button
     Friend WithEvents btnAdd As Button
     Friend WithEvents dgvClosingEntry As DataGridView
+    Friend WithEvents btnPrint As Button
 End Class

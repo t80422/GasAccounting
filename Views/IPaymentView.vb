@@ -18,6 +18,12 @@
     Sub PopulateCompanyDropdown(data As IReadOnlyList(Of SelectListItem))
 
     ''' <summary>
+    ''' 設定銀行下拉選單
+    ''' </summary>
+    ''' <param name="data"></param>
+    Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem))
+
+    ''' <summary>
     ''' 設定應付未付列表
     ''' </summary>
     ''' <param name="data"></param>

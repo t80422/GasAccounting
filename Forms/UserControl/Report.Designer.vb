@@ -140,7 +140,7 @@ Partial Class Report
         Me.GroupBox2.Size = New System.Drawing.Size(466, 70)
         Me.GroupBox2.TabIndex = 497
         Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "每日科目彙總表"
+        Me.GroupBox2.Text = "每日科目匯總表"
         '
         'btnDSS
         '

@@ -1,6 +1,4 @@
-﻿Imports System.Data.Entity
-
-Public Class ClosingEntryRep
+﻿Public Class ClosingEntryRep
     Inherits Repository(Of closing_entry)
     Implements IClosingEntryRep
 
@@ -19,5 +17,24 @@ Public Class ClosingEntryRep
         Dim result = query.OrderByDescending(Function(x) x.ce_Date).ToList
 
         Return result.Select(Function(x) New ClosingEntryVM(x)).ToList()
+    End Function
+
+    Public Function GetTarnsferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO) Implements IClosingEntryRep.GetTarnsferSubpoenaData
+        Try
+            Dim query = _dbSet.Where(Function(x) x.ce_Date = day).ToList
+
+            Dim result = query.
+                Select(Function(x) New TransferSubpoenaDTO With {
+                    .CreditAmount = x.ce_CreditAmount,
+                    .CreditSubjectName = x.subject.s_name,
+                    .CreditSummary = x.ce_CreditMemo,
+                    .DebitAmount = x.ce_DebitAmount,
+                    .DebitSubjectName = x.subject1.s_name,
+                    .DebitSummary = x.ce_DebitMemo
+                }).ToList
+            Return result
+        Catch ex As Exception
+            Throw
+        End Try
     End Function
 End Class

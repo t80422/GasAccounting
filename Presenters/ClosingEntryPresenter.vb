@@ -2,11 +2,13 @@
     Private _view As IClosingEntryView
     Private _ceRep As IClosingEntryRep
     Private _subjectRep As ISubjectRep
+    Private ReadOnly _reportSer As IReportService
     Private _currentData As closing_entry
 
-    Public Sub New(ceRep As IClosingEntryRep, subjectRep As ISubjectRep)
+    Public Sub New(ceRep As IClosingEntryRep, subjectRep As ISubjectRep, reportSer As IReportService)
         _ceRep = ceRep
         _subjectRep = subjectRep
+        _reportSer = reportSer
     End Sub
 
     Public Sub SetView(view As IClosingEntryView)
@@ -83,6 +85,14 @@
                 _ceRep.DeleteAsync(_currentData.ce_Id)
                 Reset()
             End If
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub Print(selectDate As Date)
+        Try
+            _reportSer.GeneratorTransferSubpoena(selectDate, _ceRep.GetTarnsferSubpoenaData(selectDate), True)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try

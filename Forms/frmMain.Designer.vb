@@ -457,6 +457,7 @@ Partial Class frmMain
         Me.cmbVendor_pb = New System.Windows.Forms.ComboBox()
         Me.txtId_pb = New System.Windows.Forms.TextBox()
         Me.lblVendor_pb = New System.Windows.Forms.Label()
+        Me.tpSurplusGas = New System.Windows.Forms.TabPage()
         Me.tpPaymentManager = New System.Windows.Forms.TabPage()
         Me.TabControl3 = New System.Windows.Forms.TabControl()
         Me.tpPayment = New System.Windows.Forms.TabPage()
@@ -609,7 +610,6 @@ Partial Class frmMain
         Me.tpChequePay = New System.Windows.Forms.TabPage()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.tpSurplusGas = New System.Windows.Forms.TabPage()
         Me.TabControl1.SuspendLayout()
         Me.tpBasic.SuspendLayout()
         Me.tcBasicInfo.SuspendLayout()
@@ -5280,6 +5280,16 @@ Partial Class frmMain
         Me.lblVendor_pb.TabIndex = 0
         Me.lblVendor_pb.Text = "廠    商"
         '
+        'tpSurplusGas
+        '
+        Me.tpSurplusGas.Location = New System.Drawing.Point(4, 29)
+        Me.tpSurplusGas.Name = "tpSurplusGas"
+        Me.tpSurplusGas.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpSurplusGas.Size = New System.Drawing.Size(1882, 949)
+        Me.tpSurplusGas.TabIndex = 34
+        Me.tpSurplusGas.Text = "結餘氣"
+        Me.tpSurplusGas.UseVisualStyleBackColor = True
+        '
         'tpPaymentManager
         '
         Me.tpPaymentManager.Controls.Add(Me.TabControl3)
@@ -6788,16 +6798,6 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'tpSurplusGas
-        '
-        Me.tpSurplusGas.Location = New System.Drawing.Point(4, 29)
-        Me.tpSurplusGas.Name = "tpSurplusGas"
-        Me.tpSurplusGas.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpSurplusGas.Size = New System.Drawing.Size(1882, 949)
-        Me.tpSurplusGas.TabIndex = 34
-        Me.tpSurplusGas.Text = "結餘氣"
-        Me.tpSurplusGas.UseVisualStyleBackColor = True
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -6807,7 +6807,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.17.0"
+        Me.Text = "豐原瓦斯會計系統 v0.18.0"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)

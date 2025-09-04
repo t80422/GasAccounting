@@ -1447,7 +1447,7 @@ Public Class ReportPresenter
     End Sub
 
     ''' <summary>
-    ''' 產生每日科目彙總表
+    ''' 產生每日科目匯總表
     ''' </summary>
     Public Sub GenerateDailySubjectSummary(day As Date)
         Try
@@ -1455,13 +1455,13 @@ Public Class ReportPresenter
             Dim data As List(Of DailySubjectSummary) = _rep.GetDailySubjectSummary(day)
 
             '取得範本檔
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "每日科目彙總表範本檔.xlsx")
+            Dim filePath = Path.Combine(Application.StartupPath, "Report", "每日科目匯總表範本檔.xlsx")
 
             '套版
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
-                    Dim title = day.ToString("yyyy年MM月dd日") + " 科目彙總表"
+                    Dim title = day.ToString("yyyy年MM月dd日") + " 科目匯總表"
 
                     .WriteToCell("A1", title)
 

@@ -9,6 +9,15 @@
 
     Public Property Type As String
 
+    Sub New(Optional transferOnly As Boolean = False)
+
+        ' 設計工具需要此呼叫。
+        InitializeComponent()
+
+        btnCash.Visible = Not transferOnly
+
+    End Sub
+
     Private Sub btnCash_Click(sender As Object, e As EventArgs) Handles btnCash.Click
         Type = "現金"
         DialogResult = DialogResult.OK

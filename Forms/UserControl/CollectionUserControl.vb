@@ -108,7 +108,7 @@
         Dim cmb As ComboBox = sender
         Dim collectionType As String = cmb.Text
         Dim ctrlVisibility As New Dictionary(Of String, Control()) From {
-            {"支票", {lblChequeReq_col, lblCheque_col, txtCheque_col, lblCashingDate_col, txtCashingDate, lblIssuerNameReq, lblIssuerName, txtIssuerName, lblChequeAccountNumberReq,
+            {"應收票據", {lblChequeReq_col, lblCheque_col, txtCheque_col, lblCashingDate_col, txtCashingDate, lblIssuerNameReq, lblIssuerName, txtIssuerName, lblChequeAccountNumberReq,
                       lblChequeAccountNumber, txtCheAcctNum, lblAbleCashingDate, dtpAbleCashingDate, lblPayBank, txtPayBank}}
         }
 

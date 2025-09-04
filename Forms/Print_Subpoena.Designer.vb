@@ -79,7 +79,7 @@ Partial Class Print_Subpoena
         Me.Controls.Add(Me.dtpDate)
         Me.Controls.Add(Me.Label1)
         Me.Font = New System.Drawing.Font("新細明體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Print_Subpoena"
