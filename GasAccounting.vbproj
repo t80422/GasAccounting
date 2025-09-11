@@ -413,6 +413,12 @@
     <Compile Include="Forms\frmStartEndDatePicker.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\UserControl\BasicSetUserControl.Designer.vb">
+      <DependentUpon>BasicSetUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\BasicSetUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\UserControl\ChequePayUserControl.Designer.vb">
       <DependentUpon>ChequePayUserControl.vb</DependentUpon>
     </Compile>
@@ -527,6 +533,9 @@
     <Compile Include="Models\barrel_monthly_balances.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\basic_set.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\chque_pay.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -558,6 +567,7 @@
     </Compile>
     <Compile Include="Models\Report\AccountBalanceDTO.vb" />
     <Compile Include="Models\Report\BillsReceivable.vb" />
+    <Compile Include="Models\Report\SurplusGasDTO.vb" />
     <Compile Include="Models\Report\TransferSubpoenaDTO.vb" />
     <Compile Include="Models\Report\DailySubjectSummary.vb" />
     <Compile Include="Models\Report\EnergyBureau.vb" />
@@ -593,6 +603,9 @@
     <Compile Include="Models\RolesAndPermissionsResult.vb" />
     <Compile Include="Models\SearchCriteria\PaymentSearchCriteria.vb" />
     <Compile Include="Models\SearchCriteria\PurBarrelSC.vb" />
+    <Compile Include="Models\surplus_gas.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ViewModels\ChequePayVM.vb" />
     <Compile Include="Models\ViewModels\ClosingEntryVM.vb" />
     <Compile Include="Models\ViewModels\GasBarrelVM.vb" />
@@ -611,6 +624,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\BasicPricePresenter.vb" />
+    <Compile Include="Presenters\BasicSetPresenter.vb" />
     <Compile Include="Presenters\CarPresenter.vb" />
     <Compile Include="Presenters\ChequePayPresenter.vb" />
     <Compile Include="Presenters\ClosingEntryPresenter.vb" />
@@ -626,6 +640,8 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Presenters\SurplusGasPresenter.vb" />
+    <Compile Include="Repositories\BasicSet\BasicSetRep.vb" />
+    <Compile Include="Repositories\BasicSet\IBasicSetRep.vb" />
     <Compile Include="Repositories\ChequePay\ChequePayRep.vb" />
     <Compile Include="Repositories\ChequePay\IChequePayRep.vb" />
     <Compile Include="Repositories\ClosingEntry\ClosingEntryRep.vb" />
@@ -638,6 +654,8 @@
     <Compile Include="Repositories\ScrapBarrelDetail\ScrapBarrelDetailRep.vb" />
     <Compile Include="Repositories\ScrapBarrel\IScrapBarrelRep.vb" />
     <Compile Include="Repositories\ScrapBarrel\ScrapBarrelRep.vb" />
+    <Compile Include="Repositories\SurplusGas\ISurplusGasRep.vb" />
+    <Compile Include="Repositories\SurplusGas\SurplusGasRep.vb" />
     <Compile Include="Repositories\WriteOffRep.vb" />
     <Compile Include="Services\AccountingEntry\AccountingEntryService.vb" />
     <Compile Include="Services\AccountingEntry\IAccountingEntryService.vb" />
@@ -709,6 +727,7 @@
     <Compile Include="Services\Printer\PrinterService.vb" />
     <Compile Include="Services\Report\IReportService.vb" />
     <Compile Include="Services\Report\ReportService.vb" />
+    <Compile Include="Views\IBasicSetView.vb" />
     <Compile Include="Views\IBaseView.vb" />
     <Compile Include="Views\IBasicPriceView.vb" />
     <Compile Include="Views\ICarView.vb" />
@@ -900,6 +919,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\frmStartEndDatePicker.resx">
       <DependentUpon>frmStartEndDatePicker.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\BasicSetUserControl.resx">
+      <DependentUpon>BasicSetUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\ChequePayUserControl.resx">
       <DependentUpon>ChequePayUserControl.vb</DependentUpon>

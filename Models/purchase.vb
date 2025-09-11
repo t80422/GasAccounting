@@ -28,8 +28,8 @@ Partial Public Class purchase
     Public Property pur_PayType As String
     Public Property pur_Checkout As Boolean
 
-    Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
     Public Overridable Property manufacturer1 As manufacturer
+    Public Overridable Property company As company
 
 End Class

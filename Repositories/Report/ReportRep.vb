@@ -1,5 +1,7 @@
 ﻿Imports System.Data.Entity
+Imports DocumentFormat.OpenXml.Office2010.PowerPoint
 Imports DocumentFormat.OpenXml.Office2016.Drawing.Charts
+Imports Unity.Injection
 
 Public Class ReportRep
     Implements IReportRep
@@ -292,13 +294,17 @@ Public Class ReportRep
         Try
             Dim formatEndDate = endDate.AddDays(1)
             ' 取得前期餘額
-            Dim lastCollectionSum = _context.collections.Where(Function(x) x.col_Date < startDate AndAlso x.col_Type = "現金")?.
-                                                       Sum(Function(x) x.col_Amount)
-            Dim lastPaymentSum = _context.payments.Where(Function(x) x.p_Date < startDate AndAlso x.p_Type = "現金")?.
-                                             Sum(Function(x) x.p_Amount)
+            Dim initialBalance = _context.basic_set.FirstOrDefault.bs_Cash
+
+            Dim lastCollection = _context.collections.Where(Function(x) x.col_Date < startDate AndAlso x.col_Type = "現金")
+            Dim lastCollectionSum = If(lastCollection.Any(), lastCollection.Sum(Function(x) x.col_Amount), 0)
+
+            Dim lastPayment = _context.payments.Where(Function(x) x.p_Date < startDate AndAlso x.p_Type = "現金")
+            Dim lastPaymentSum = If(lastPayment.Any, lastPayment.Sum(Function(x) x.p_Amount), 0)
+
             result.Add(New CashAccount With {
                 .摘要 = "前期餘額",
-                .餘額 = lastCollectionSum - lastPaymentSum
+                .餘額 = initialBalance + lastCollectionSum - lastPaymentSum
             })
 
             '獲取收入數據
@@ -331,7 +337,7 @@ Public Class ReportRep
                                              .ThenBy(Function(x) x.IsIncome).ToList
 
             '計算餘額並填入模型
-            Dim balance As Integer = lastCollectionSum - lastPaymentSum
+            Dim balance As Integer = initialBalance + lastCollectionSum - lastPaymentSum
             For Each transaction In allTransactions
                 balance += If(transaction.IsIncome, transaction.Amount, -transaction.Amount)
                 result.Add(New CashAccount With {
@@ -1285,6 +1291,53 @@ Public Class ReportRep
 
             Return result
 
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetSurplusGasReport(data As surplus_gas) As SurplusGasDTO Implements IReportRep.GetSurplusGasReport
+        Try
+            Dim result As New SurplusGasDTO With {
+                .Month = data.sg_Moth,
+                .Platform = data.sg_Platform,
+                .Platform_C = data.sg_Platform_C,
+                .Slot = data.sg_Slot,
+                .Slot_C = data.sg_Slot_C,
+                .Car = data.sg_Car,
+                .Car_C = data.sg_Car_C,
+                .Sell = data.sg_Sell
+            }
+
+            ' 取得該月份的進貨資料，包含廠商資訊，並只篩選瓦斯廠商
+            Dim purchases = _context.purchases.AsNoTracking.
+                Where(Function(x) x.pur_date.Value.Year = data.sg_Moth.Value.Year AndAlso x.pur_date.Value.Month = data.sg_Moth.Value.Month).
+                Include(Function(p) p.manufacturer).
+                Where(Function(p) p.manufacturer.manu_GasVendor = True).ToList
+
+            ' 按廠商分組並統計普氣/丙氣數量
+            Dim purchaseDetails = purchases.GroupBy(Function(p) p.pur_manu_id).
+                Select(Function(g) New PurchaseCompanyDetail With {
+                    .CompanyName = g.First().manufacturer.manu_name,
+                    .Gas = g.Where(Function(p) p.pur_product = "普氣").
+                           Sum(Function(p) If(p.pur_quantity, 0)),
+                    .Gas_C = g.Where(Function(p) p.pur_product = "丙氣").
+                             Sum(Function(p) If(p.pur_quantity, 0))
+                }).ToList
+
+            result.PurchaseDetails = purchaseDetails
+
+            ' 取得總提氣量
+            result.TotalOrder = _context.orders.AsNoTracking.
+                Where(Function(x) x.o_date.Value >= data.sg_StartDate AndAlso x.o_date.Value <= data.sg_EndDate).
+                Sum(Function(x) x.o_gas_total + x.o_gas_c_total)
+
+            ' 取得上月結餘氣
+            Dim lastMonth = data.sg_Moth.Value.AddMonths(-1)
+            Dim lastSurplus = _context.surplus_gas.AsNoTracking.FirstOrDefault(Function(x) x.sg_Moth = lastMonth)
+            If lastSurplus IsNot Nothing Then result.LastMonthSurplus = lastSurplus.sg_Total
+
+            Return result
         Catch ex As Exception
             Throw
         End Try

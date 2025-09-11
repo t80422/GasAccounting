@@ -335,6 +335,7 @@ Partial Class frmMain
         Me.txtId_gb = New System.Windows.Forms.TextBox()
         Me.Label75 = New System.Windows.Forms.Label()
         Me.tpCompany = New System.Windows.Forms.TabPage()
+        Me.tpBasicSet = New System.Windows.Forms.TabPage()
         Me.tpGasPuchase = New System.Windows.Forms.TabPage()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.tpPurchase = New System.Windows.Forms.TabPage()
@@ -528,7 +529,7 @@ Partial Class frmMain
         Me.tpCollection = New System.Windows.Forms.TabPage()
         Me.tpScrapBarrel = New System.Windows.Forms.TabPage()
         Me.tpAccountingManage = New System.Windows.Forms.TabPage()
-        Me.TabControl6 = New System.Windows.Forms.TabControl()
+        Me.tcAccounting = New System.Windows.Forms.TabControl()
         Me.tpInvoice_Out = New System.Windows.Forms.TabPage()
         Me.chkIsInvalid = New System.Windows.Forms.CheckBox()
         Me.cmbInvoiceType = New System.Windows.Forms.ComboBox()
@@ -659,7 +660,7 @@ Partial Class frmMain
         Me.tpRevenueManage.SuspendLayout()
         Me.TabControl5.SuspendLayout()
         Me.tpAccountingManage.SuspendLayout()
-        Me.TabControl6.SuspendLayout()
+        Me.tcAccounting.SuspendLayout()
         Me.tpInvoice_Out.SuspendLayout()
         Me.GroupBox11.SuspendLayout()
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -710,6 +711,7 @@ Partial Class frmMain
         Me.tcBasicInfo.Controls.Add(Me.tpSubjects)
         Me.tcBasicInfo.Controls.Add(Me.tpGasBarrel)
         Me.tcBasicInfo.Controls.Add(Me.tpCompany)
+        Me.tcBasicInfo.Controls.Add(Me.tpBasicSet)
         Me.tcBasicInfo.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tcBasicInfo.Location = New System.Drawing.Point(3, 3)
         Me.tcBasicInfo.Name = "tcBasicInfo"
@@ -4040,6 +4042,16 @@ Partial Class frmMain
         Me.tpCompany.Text = "公司管理"
         Me.tpCompany.UseVisualStyleBackColor = True
         '
+        'tpBasicSet
+        '
+        Me.tpBasicSet.Location = New System.Drawing.Point(4, 29)
+        Me.tpBasicSet.Name = "tpBasicSet"
+        Me.tpBasicSet.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpBasicSet.Size = New System.Drawing.Size(1882, 949)
+        Me.tpBasicSet.TabIndex = 41
+        Me.tpBasicSet.Text = "基本設定"
+        Me.tpBasicSet.UseVisualStyleBackColor = True
+        '
         'tpGasPuchase
         '
         Me.tpGasPuchase.Controls.Add(Me.TabControl2)
@@ -5949,7 +5961,7 @@ Partial Class frmMain
         '
         'tpAccountingManage
         '
-        Me.tpAccountingManage.Controls.Add(Me.TabControl6)
+        Me.tpAccountingManage.Controls.Add(Me.tcAccounting)
         Me.tpAccountingManage.Location = New System.Drawing.Point(4, 29)
         Me.tpAccountingManage.Name = "tpAccountingManage"
         Me.tpAccountingManage.Padding = New System.Windows.Forms.Padding(3)
@@ -5958,20 +5970,20 @@ Partial Class frmMain
         Me.tpAccountingManage.Text = "會計管理"
         Me.tpAccountingManage.UseVisualStyleBackColor = True
         '
-        'TabControl6
+        'tcAccounting
         '
-        Me.TabControl6.Controls.Add(Me.tpInvoice_Out)
-        Me.TabControl6.Controls.Add(Me.tpInvoice_In)
-        Me.TabControl6.Controls.Add(Me.tpClosingEntry)
-        Me.TabControl6.Controls.Add(Me.tpReport)
-        Me.TabControl6.Controls.Add(Me.tpCheque_col)
-        Me.TabControl6.Controls.Add(Me.tpChequePay)
-        Me.TabControl6.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl6.Location = New System.Drawing.Point(3, 3)
-        Me.TabControl6.Name = "TabControl6"
-        Me.TabControl6.SelectedIndex = 0
-        Me.TabControl6.Size = New System.Drawing.Size(1890, 982)
-        Me.TabControl6.TabIndex = 0
+        Me.tcAccounting.Controls.Add(Me.tpInvoice_Out)
+        Me.tcAccounting.Controls.Add(Me.tpInvoice_In)
+        Me.tcAccounting.Controls.Add(Me.tpClosingEntry)
+        Me.tcAccounting.Controls.Add(Me.tpReport)
+        Me.tcAccounting.Controls.Add(Me.tpCheque_col)
+        Me.tcAccounting.Controls.Add(Me.tpChequePay)
+        Me.tcAccounting.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tcAccounting.Location = New System.Drawing.Point(3, 3)
+        Me.tcAccounting.Name = "tcAccounting"
+        Me.tcAccounting.SelectedIndex = 0
+        Me.tcAccounting.Size = New System.Drawing.Size(1890, 982)
+        Me.tcAccounting.TabIndex = 0
         '
         'tpInvoice_Out
         '
@@ -6807,7 +6819,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.18.0"
+        Me.Text = "豐原瓦斯會計系統 v0.19.0"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -6882,7 +6894,7 @@ Partial Class frmMain
         Me.tpRevenueManage.ResumeLayout(False)
         Me.TabControl5.ResumeLayout(False)
         Me.tpAccountingManage.ResumeLayout(False)
-        Me.TabControl6.ResumeLayout(False)
+        Me.tcAccounting.ResumeLayout(False)
         Me.tpInvoice_Out.ResumeLayout(False)
         Me.tpInvoice_Out.PerformLayout()
         Me.GroupBox11.ResumeLayout(False)
@@ -7126,7 +7138,7 @@ Partial Class frmMain
     Friend WithEvents tpPaymentManager As TabPage
     Friend WithEvents tpRevenueManage As TabPage
     Friend WithEvents tpAccountingManage As TabPage
-    Friend WithEvents TabControl6 As TabControl
+    Friend WithEvents tcAccounting As TabControl
     Friend WithEvents tpInvoice_Out As TabPage
     Friend WithEvents btnCancel_invoice As Button
     Friend WithEvents btnDelete_invoice As Button
@@ -7483,4 +7495,5 @@ Partial Class frmMain
     Friend WithEvents tpChequePay As TabPage
     Friend WithEvents tpCompany As TabPage
     Friend WithEvents tpSurplusGas As TabPage
+    Friend WithEvents tpBasicSet As TabPage
 End Class

@@ -98,7 +98,7 @@ Public Class PaymentRep
         Try
             Dim query = _dbSet.Where(Function(x) x.p_Date = day)
 
-            Return query.Where(Function(x) x.p_Type = "銀行" Or x.p_Type = "支票").
+            Return query.Where(Function(x) x.p_Type = "銀行存款" Or x.p_Type = "應付票據").
                 Select(Function(x) New TransferSubpoenaDTO With {
                     .CreditAmount = x.p_Amount,
                     .CreditSubjectName = x.p_Type,

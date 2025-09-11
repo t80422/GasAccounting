@@ -9,7 +9,6 @@
 
     Public User As UserData
 
-    'Private _compService As ICompanyService = New CompanyService
     Private _manuService As IManufacturerService = New ManufacturerService
 
     Private _basicPrice As BasicPricePresenter
@@ -30,20 +29,6 @@
     Private _gasCheckout As GasCheckoutPresenter
     Private _inspection As InspectionPresenter
 
-    'Private inputTxts As String(,) = {
-    '    {"txto_in_50", "txto_in_20", "txto_in_16", "txto_in_10", "txto_in_4", "txto_in_18", "txto_in_14", "txto_in_5", "txto_in_2"},
-    '    {"txto_new_in_50", "txto_new_in_20", "txto_new_in_16", "txto_new_in_10", "txto_new_in_4", "txto_new_in_18", "txto_new_in_14", "txto_new_in_5", "txto_new_in_2"},
-    '    {"txtBarralUnitPrice_50", "txtBarralUnitPrice_20", "txtBarralUnitPrice_16", "txtBarralUnitPrice_10", "txtBarralUnitPrice_4", "txtBarralUnitPrice_18", "txtBarralUnitPrice_14", "txtBarralUnitPrice_5", "txtBarralUnitPrice_2"},
-    '    {"txto_inspect_50", "txto_inspect_20", "txto_inspect_16", "txto_inspect_10", "txto_inspect_4", "txto_inspect_18", "txto_inspect_14", "txto_inspect_5", "txto_inspect_2"},
-    '    {"txtDepositIn_50", "txtDepositIn_20", "txtDepositIn_16", "txtDepositIn_10", "txtDepositIn_4", "txtDepositIn_18", "txtDepositIn_14", "txtDepositIn_5", "txtDepositIn_2"}
-    '}
-    'Private outputTxts As String(,) = {
-    '    {"txtGas_c_50", "txtGas_c_20", "txtGas_c_16", "txtGas_c_10", "txtGas_c_4", "txtGas_c_18", "txtGas_c_14", "txtGas_c_5", "txtGas_c_2"},
-    '    {"txtGas_50", "txtGas_20", "txtGas_16", "txtGas_10", "txtGas_4", "txtGas_18", "txtGas_14", "txtGas_5", "txtGas_2"},
-    '    {"txtEmpty_50", "txtEmpty_20", "txtEmpty_16", "txtEmpty_10", "txtEmpty_4", "txtEmpty_18", "txtEmpty_14", "txtEmpty_5", "txtEmpty_2"},
-    '    {"txtDepositOut_50", "txtDepositOut_20", "txtDepositOut_16", "txtDepositOut_10", "txtDepositOut_4", "txtDepositOut_18", "txtDepositOut_14", "txtDepositOut_5", "txtDepositOut_2"}
-    '}
-
     Private _currentPurchase As purchase
 
     Public Property CurrentPurchase As purchase Implements IPurchaseView.CurrentPurchase
@@ -63,7 +48,7 @@
         InitializeComponent()
 
         ' 讓表單先攔截所有鍵盤事件，以便統一處理快捷鍵
-        Me.KeyPreview = True
+        KeyPreview = True
 
         Me.User = New UserData With {
             .Id = user.emp_id,
@@ -97,6 +82,7 @@
         Dim purRep As New PurchaseRep(context)
         Dim manuRep As New ManufacturerRep(context)
         Dim subjectRep As New SubjectRep(context)
+        Dim bsRep As New BasicSetRep(context)
         Dim inspectionRep As New InspectionRep(context)
 
         Dim aeSer As IAccountingEntryService = New AccountingEntryService(aeRep)
@@ -104,7 +90,7 @@
         Dim bmbService As IBankMonthlyBalanceService = New BankMonthlyBalanceService(bmbRep, bankRep, paymentRep, colRep)
         Dim ocmSer As IOrderCollectionMappingService = New OrderCollectionMappingService(ocmRep, ordRep, colRep)
         Dim priceCalSer As IPriceCalculationService = New PriceCalculationService(bpRep)
-        Dim gmbSer As IGasMonthlyBalanceService = New GasMonthlyBalanceService(gmbRep, ordRep, compRep)
+        Dim gmbSer As IGasMonthlyBalanceService = New GasMonthlyBalanceService(gmbRep, ordRep, compRep, bsRep)
         Dim printerSer As IPrinterService = New PrinterService()
 
         _basicPrice = New BasicPricePresenter(Me, bpRep)
@@ -139,7 +125,8 @@
                 {tpCheque_col, DependencyContainer.Resolve(Of Cheque_colUserControl)},
                 {tpChequePay, DependencyContainer.Resolve(Of ChequePayUserControl)},
                 {tpCompany, DependencyContainer.Resolve(Of CompanyUserControl)},
-                {tpSurplusGas, DependencyContainer.Resolve(Of SurplusGasUserControl)}
+                {tpSurplusGas, DependencyContainer.Resolve(Of SurplusGasUserControl)},
+                {tpBasicSet, DependencyContainer.Resolve(Of BasicSetUserControl)()}
             }
 
             ' 使用迴圈設定每個 UserControl
@@ -343,7 +330,7 @@
     ''' 自定義索引標籤、文字顏色
     ''' </summary>
     Private Sub SetSheetColor()
-        Dim list = New List(Of TabControl) From {TabControl1, tcBasicInfo}
+        Dim list = New List(Of TabControl) From {TabControl1, tcBasicInfo, tcAccounting}
 
         list.ForEach(Sub(x)
                          x.DrawMode = TabDrawMode.OwnerDrawFixed

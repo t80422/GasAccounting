@@ -162,26 +162,7 @@
     End Sub
 
     Private Sub cmbPayType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPayType.SelectedIndexChanged
-        Dim cmb As ComboBox = sender
-        Dim paymentType As String = cmb.Text
-        Dim ctrlVisibility As New Dictionary(Of String, Control()) From {
-            {"應付票據", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, txtVendorAccount_payment, lblVendorBankRequired_payment, lblVendorBank_payment}},
-            {"銀行存款", {lblVendorBankRequired_payment, lblVendorBank_payment, txtVendorAccount_payment, lblBankReq, lblBank, cmbBank}}
-        }
-
-        ' 先隱藏所有相關控制項
-        For Each arr In ctrlVisibility.Values
-            For Each ctrl In arr
-                ctrl.Visible = False
-            Next
-        Next
-
-        ' 再依照 paymentType 顯示對應控制項
-        If ctrlVisibility.ContainsKey(paymentType) Then
-            For Each ctrl In ctrlVisibility(paymentType)
-                ctrl.Visible = True
-            Next
-        End If
+        ControlColumns()
     End Sub
 
     ' 選擇廠商
@@ -207,5 +188,38 @@
     ' 選擇公司
     Private Sub cmbCompany_payment_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbCompany_payment.SelectionChangeCommitted
         _presenter.LoadBankDropdown(cmbCompany_payment.SelectedValue)
+    End Sub
+
+    Private Sub cmbSubjects_payment_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSubjects_payment.SelectedIndexChanged
+        ControlColumns()
+    End Sub
+
+    Private Sub ControlColumns()
+        Dim paymentType As String = cmbPayType.Text
+        Dim debitType As String = cmbSubjects_payment.Text
+        Dim ctrlVisibility As New Dictionary(Of String, Control()) From {
+            {"應付票據", {lblReq_Chuque, lblCheNo_payment, txtCheNo_payment, chkCashing, lblCashingDate_payment, dtpCashing, txtVendorAccount_payment, lblVendorBankRequired_payment, lblVendorBank_payment}},
+            {"銀行存款", {lblVendorBankRequired_payment, lblVendorBank_payment, txtVendorAccount_payment, lblBankReq, lblBank, cmbBank}}
+        }
+
+        ' 先隱藏所有相關控制項
+        For Each arr In ctrlVisibility.Values
+            For Each ctrl In arr
+                ctrl.Visible = False
+            Next
+        Next
+
+        ' 再依照 paymentType 顯示對應控制項
+        If ctrlVisibility.ContainsKey(paymentType) Then
+            For Each ctrl In ctrlVisibility(paymentType)
+                ctrl.Visible = True
+            Next
+        End If
+
+        If debitType = "銀行存款" Then
+            lblBankReq.Visible = True
+            lblBank.Visible = True
+            cmbBank.Visible = True
+        End If
     End Sub
 End Class

@@ -155,4 +155,11 @@
     ''' <param name="month">查詢月份</param>
     ''' <returns></returns>
     Function GetAccountBalance(month As Date) As List(Of AccountBalanceDTO)
+
+    ''' <summary>
+    ''' 取得結餘氣
+    ''' </summary>
+    ''' <param name="data"></param>
+    ''' <returns></returns>
+    Function GetSurplusGasReport(data As surplus_gas) As SurplusGasDTO
 End Interface

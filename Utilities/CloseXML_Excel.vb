@@ -291,7 +291,6 @@ Public Class CloseXML_Excel
         End Using
     End Function
 
-    
     Private Sub SetCellFormat(cell As IXLCell, formatOptions As CellFormatOptions)
         cell.Style.Font.FontName = formatOptions.FontName
         cell.Style.Font.FontSize = formatOptions.FontSize

@@ -4,11 +4,13 @@
     Private ReadOnly _gmbRep As IGasMonthlyBalanceRep
     Private ReadOnly _ordRep As IOrderRep
     Private ReadOnly _compRep As ICompanyRep
+    Private ReadOnly _bsRep As IBasicSetRep
 
-    Public Sub New(gmbRep As IGasMonthlyBalanceRep, ordRep As IOrderRep, compRep As ICompanyRep)
+    Public Sub New(gmbRep As IGasMonthlyBalanceRep, ordRep As IOrderRep, compRep As ICompanyRep, bsRep As IBasicSetRep)
         _gmbRep = gmbRep
         _ordRep = ordRep
         _compRep = compRep
+        _bsRep = bsRep
     End Sub
 
     Public Async Sub UpdateOrAdd(month As Date, companyId As Integer) Implements IGasMonthlyBalanceService.UpdateOrAdd
@@ -62,8 +64,9 @@
             Dim comp = Await _compRep.GetByIdAsync(compId)
             Dim formatDate = New Date(month.Year, month.Month, 1)
             Dim gmb = comp.gas_monthly_balances.Where(Function(x) x.gmb_Month < formatDate).OrderByDescending(Function(x) x.gmb_Month).FirstOrDefault
+            Dim bs = _bsRep.GetAllAsync().Result.FirstOrDefault
 
-            Return If(gmb IsNot Nothing, gmb.gmb_ClosingBalance, comp.comp_GasStock)
+            Return If(gmb IsNot Nothing, gmb.gmb_ClosingBalance, bs.bs_Gas)
         Catch ex As Exception
             Throw
         End Try

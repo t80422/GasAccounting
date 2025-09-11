@@ -27,7 +27,6 @@
         If String.IsNullOrEmpty(txtName_comp.Text) Then Throw New Exception("請填寫名稱")
         If String.IsNullOrEmpty(txtShortName.Text) Then Throw New Exception("請填寫簡稱")
         If String.IsNullOrEmpty(txtTaxID.Text) Then Throw New Exception("請填寫統編")
-        If String.IsNullOrEmpty(txtInitGasStock.Text) Then Throw New Exception("請填寫瓦斯初始存量")
 
         Dim data As New company
         AutoMapControlsToEntity(data, Me)

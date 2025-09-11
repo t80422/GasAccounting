@@ -278,7 +278,7 @@
                     .ae_Credit = payment.p_Amount
                 })
 
-            Case "銀行"
+            Case "銀行存款"
                 entries.Add(New accounting_entry With {
                     .ae_TransactionId = payment.p_Id,
                     .ae_Date = payment.p_Date,
@@ -297,7 +297,7 @@
                     .ae_Credit = payment.p_Amount
                 })
 
-            Case "支票"
+            Case "應付票據", "應收票據"
                 entries.Add(New accounting_entry With {
                     .ae_TransactionId = payment.p_Id,
                     .ae_Date = payment.p_Date,

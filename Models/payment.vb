@@ -26,8 +26,8 @@ Partial Public Class payment
     Public Property p_CashingDate As Nullable(Of Date)
 
     Public Overridable Property bank As bank
-    Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
     Public Overridable Property subject As subject
+    Public Overridable Property company As company
 
 End Class

@@ -17,6 +17,7 @@ Public Class DependencyContainer
             .RegisterType(Of IBasicPriceRep, BasicPriceRep)()
             .RegisterType(Of IBankMonthlyBalancesRep, BankMonthlyBalancesRep)()
             .RegisterType(Of IBarrelMonthlyBalancesRep, BarrelMonthlyBalancesRep)()
+            .RegisterType(Of IBasicSetRep, BasicSetRep)()
             .RegisterType(Of ICarRep, CarRep)()
             .RegisterType(Of IChequeRep, ChequeRep)()
             .RegisterType(Of IClosingEntryRep, ClosingEntryRep)()
@@ -33,6 +34,7 @@ Public Class DependencyContainer
             .RegisterType(Of IReportRep, ReportRep)()
             .RegisterType(Of IScrapBarrelRep, ScrapBarrelRep)()
             .RegisterType(Of IScrapBarrelDetailRep, ScrapBarrelDetailRep)()
+            .RegisterType(Of ISurplusGasRep, SurplusGasRep)()
             .RegisterType(Of ISubjectRep, SubjectRep)()
             .RegisterType(Of IChequePayRep, ChequePayRep)()
 
