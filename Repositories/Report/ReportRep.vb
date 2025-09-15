@@ -1,7 +1,5 @@
 ﻿Imports System.Data.Entity
-Imports DocumentFormat.OpenXml.Office2010.PowerPoint
-Imports DocumentFormat.OpenXml.Office2016.Drawing.Charts
-Imports Unity.Injection
+Imports System.Data.Entity.Core.Mapping
 
 Public Class ReportRep
     Implements IReportRep
@@ -13,49 +11,96 @@ Public Class ReportRep
     End Sub
 
     Public Function CustomersGasDetailByDay(selectDate As Date, isMonth As Boolean) As List(Of CustomersGasDetailByDay) Implements IReportRep.CustomersGasDetailByDay
-        Dim result As New List(Of CustomersGasDetailByDay)
-
         Try
-            ' 獲取所有客戶資料
-            Dim customers = _context.customers.OrderBy(Function(x) x.cus_code).ToList
+            ' 根據 isMonth 參數定義時間範圍
+            Dim monthStart = New Date(selectDate.Year, selectDate.Month, 1)
+            Dim periodStart As Date
+            Dim periodEnd As Date
 
-            ' 遍歷每個客戶並蒐集相關資料
-            Dim firstDate = New Date(selectDate.Year, selectDate.Month, 1)
-            Dim lastDate = New Date(selectDate.Year, selectDate.Month, Date.DaysInMonth(selectDate.Year, selectDate.Month))
+            If isMonth Then
+                ' 月份模式：計算整個月的資料
+                periodStart = monthStart
+                periodEnd = monthStart.AddMonths(1)
+            Else
+                ' 單日模式：計算當日的資料
+                periodStart = selectDate.Date
+                periodEnd = periodStart.AddDays(1)
+            End If
 
-            For Each cus In customers
-                Dim detail As New CustomersGasDetailByDay With {.客戶名稱 = cus.cus_name}
-                Dim ordersByCus = _context.orders.Where(Function(x) x.o_cus_Id = cus.cus_id).ToList
-                Dim ordersBySelectDate = ordersByCus.Where(Function(x) x.o_date.Value.Date >= firstDate AndAlso x.o_date.Value.Date <= selectDate).ToList()
-                Dim ordersByLastDate = ordersByCus.Where(Function(x) x.o_date.Value.Date >= firstDate AndAlso x.o_date.Value.Date <= lastDate).ToList
+            ' 一次性取得所有客戶資料
+            Dim customers = _context.customers.Select(Function(c) New With {
+                .客戶Id = c.cus_id,
+                .客戶名稱 = c.cus_name
+            }).ToList()
 
-                detail.存氣 = If(isMonth, ordersByLastDate.Sum(Function(x) x.o_return + x.o_return_c), ordersBySelectDate.Sum(Function(x) x.o_return + x.o_return_c))
+            ' 一次性取得主要期間的訂單資料（當日或當月）
+            Dim periodOrders = _context.orders.Where(Function(o) o.o_date >= periodStart AndAlso o.o_date < periodEnd).
+                Select(Function(o) New With {
+                    .客戶Id = o.o_cus_Id,
+                    .存氣 = o.o_return + o.o_return_c,
+                    .提氣量 = (o.o_gas_total + o.o_gas_c_total) - (o.o_return + o.o_return_c),
+                    .氣款 = o.o_total_amount
+                }).ToList()
 
-                detail.本日提量 = If(isMonth, ordersByLastDate.Sum(Function(x) x.o_gas_total + x.o_gas_c_total),
-                                              ordersBySelectDate.Sum(Function(x) x.o_gas_total + x.o_gas_c_total)) - detail.存氣
-                detail.本日氣款 = If(isMonth, ordersByLastDate.Sum(Function(x) x.o_total_amount), ordersBySelectDate.Sum(Function(x) x.o_total_amount))
+            ' 一次性取得當月累計訂單資料（始終計算到選定期間結束）
+            Dim monthOrders = _context.orders.Where(Function(o) o.o_date >= monthStart AndAlso o.o_date < periodEnd).
+                Select(Function(o) New With {
+                    .客戶Id = o.o_cus_Id,
+                    .提氣量 = (o.o_gas_total + o.o_gas_c_total) - (o.o_return + o.o_return_c),
+                    .氣款 = o.o_total_amount
+                }).ToList()
 
-                detail.當月累計提量 = ordersByLastDate.Sum(Function(x) x.o_gas_total + x.o_gas_c_total) - ordersByLastDate.Sum(Function(x) x.o_return + x.o_return_c)
+            ' 一次性取得主要期間的收款資料（當日或當月）
+            Dim periodCollections = _context.collections.Where(Function(c) c.col_Date >= periodStart AndAlso c.col_Date < periodEnd).
+                Select(Function(c) New With {
+                    .客戶Id = c.col_cus_Id,
+                    .收款 = c.col_Amount
+                }).ToList()
 
-                Dim collectsByCus = _context.collections.Where(Function(x) x.col_cus_Id = cus.cus_id AndAlso x.col_Date >= firstDate)
-                Dim collectBySelectDate = collectsByCus.Where(Function(x) x.col_Date <= selectDate).ToList
-                Dim collectByLastDate = collectsByCus.Where(Function(x) x.col_Date <= lastDate).ToList
+            ' 一次性取得當月收款資料（始終計算到選定期間結束）
+            Dim monthCollections = _context.collections.Where(Function(c) c.col_Date >= monthStart AndAlso c.col_Date < periodEnd).
+                Select(Function(c) New With {
+                    .客戶Id = c.col_cus_Id,
+                    .收款 = c.col_Amount
+                }).ToList()
 
-                detail.本日收款 = If(isMonth, collectByLastDate.Sum(Function(x) x.col_Amount), collectBySelectDate.Sum(Function(x) x.col_Amount))
+            ' 將資料按客戶分組
+            Dim periodOrdersByCustomer = periodOrders.GroupBy(Function(o) o.客戶Id).
+                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
 
-                Dim collectByRange = collectsByCus.Where(Function(x) x.col_Date >= firstDate And x.col_Date < lastDate).ToList()
-                Dim totalCollect = If(isMonth, collectByLastDate, collectBySelectDate).Sum(Function(x) x.col_Amount)
-                Dim totalOrder = If(isMonth, ordersByLastDate, ordersBySelectDate).Sum(Function(x) x.o_total_amount)
-                detail.結欠 = totalCollect - totalOrder
+            Dim monthOrdersByCustomer = monthOrders.GroupBy(Function(o) o.客戶Id).
+                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
 
-                result.Add(detail)
-            Next
+            Dim periodCollectionsByCustomer = periodCollections.GroupBy(Function(c) c.客戶Id).
+                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
+
+            Dim monthCollectionsByCustomer = monthCollections.GroupBy(Function(c) c.客戶Id).
+                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
+
+            ' 組合結果
+            Dim result = customers.Select(Function(cus) New CustomersGasDetailByDay With {
+                .客戶名稱 = cus.客戶名稱,
+                .存氣 = If(periodOrdersByCustomer.ContainsKey(cus.客戶Id),
+                           periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.存氣), 0),
+                .本日提量 = If(periodOrdersByCustomer.ContainsKey(cus.客戶Id),
+                              periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.提氣量), 0),
+                .本日氣款 = If(periodOrdersByCustomer.ContainsKey(cus.客戶Id),
+                              periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.氣款), 0),
+                .當月累計提量 = If(monthOrdersByCustomer.ContainsKey(cus.客戶Id),
+                                monthOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.提氣量), 0),
+                .本日收款 = If(periodCollectionsByCustomer.ContainsKey(cus.客戶Id),
+                              periodCollectionsByCustomer(cus.客戶Id).Sum(Function(c) c.收款), 0),
+                .結欠 = If(monthOrdersByCustomer.ContainsKey(cus.客戶Id),
+                          monthOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.氣款), 0) -
+                       If(monthCollectionsByCustomer.ContainsKey(cus.客戶Id),
+                          monthCollectionsByCustomer(cus.客戶Id).Sum(Function(c) c.收款), 0)
+            }).ToList()
+
+            Return result
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             Throw
         End Try
-
-        Return result
     End Function
 
     Public Function CustomersGetGasList(d As Date, isMonth As Boolean) As List(Of CusGetGas) Implements IReportRep.CustomersGetGasList

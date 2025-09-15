@@ -189,8 +189,6 @@ Public Class OrderPresenter
                     Dim ordernewInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_new_in_{barrelType}").GetValue(currentOrder)
                     newStk = currentStk + inQty - orderInQty + newInQty - ordernewInQty
 
-                    'Dim barrel = Await _gbRep.GetByIdAsync(Await _gbRep.GetIdByKgAsync(barrelType))
-                    'totalBarrelPrice += newInQty * barrel.gb_SalesPrice
                     Dim barrelUnitPrice = inputProps.FirstOrDefault(Function(x) x.Name = $"o_barrel_unit_price_{barrelType}").GetValue(inputInOut)
                     totalBarrelPrice += newInQty * barrelUnitPrice
                 Else
@@ -337,7 +335,6 @@ Public Class OrderPresenter
                 ' 客戶存氣
                 Dim gas = orderInput.o_return
                 Dim gasC = orderInput.o_return_c
-                Dim cus = _cusRep.GetByIdAsync(orderInput.o_cus_Id).Result
 
                 Await _cusRep.SaveChangesAsync
 
@@ -538,7 +535,6 @@ Public Class OrderPresenter
                 Validate(orderInput)
 
                 ' 客戶存氣
-                Dim cus = _cusRep.GetByIdAsync(orderInput.o_cus_Id).Result
                 Await _ordRep.UpdateAsync(currentOrder, orderInput)
 
                 _view.GetCusStkInput(currentCustomer)
@@ -555,9 +551,6 @@ Public Class OrderPresenter
 
                 ' 同步更新月度帳單資料
                 _maService.SyncOrderToMonthlyAccount(orderInput.o_id, False, False)
-
-
-
 
                 Await _cusRep.SaveChangesAsync
                 transaction.Commit()

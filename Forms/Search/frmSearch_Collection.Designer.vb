@@ -70,7 +70,7 @@ Partial Class frmSearch_Collection
         'cmbType
         '
         Me.cmbType.FormattingEnabled = True
-        Me.cmbType.Items.AddRange(New Object() {"現金", "銀行", "支票"})
+        Me.cmbType.Items.AddRange(New Object() {"現金", "銀行存款", "應收票據"})
         Me.cmbType.Location = New System.Drawing.Point(71, 49)
         Me.cmbType.Name = "cmbType"
         Me.cmbType.Size = New System.Drawing.Size(110, 20)
