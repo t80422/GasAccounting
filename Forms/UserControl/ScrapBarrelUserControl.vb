@@ -138,7 +138,7 @@
 
     ' 月價格設定-取消
     Private Sub btnCancel_sb_Click(sender As Object, e As EventArgs) Handles btnCancel_sb.Click
-        SetButtonState(sender, True)
+        SetButtonState_old(sender, True)
         _sbPresenter.Reset()
         _sbdPresenter.Reset()
         grpSBD.Enabled = False
@@ -156,7 +156,7 @@
 
         If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
 
-        SetButtonState(ctrl, False)
+        SetButtonState_old(ctrl, False)
 
         Dim id = ctrl.SelectedRows(0).Cells(0).Value
         _sbPresenter.LoadDetail(id)
@@ -188,7 +188,7 @@
 
     ' 客戶設定-取消
     Private Sub btnCancel_sbd_Click(sender As Object, e As EventArgs) Handles btnCancel_sbd.Click
-        SetButtonState(sender, True)
+        SetButtonState_old(sender, True)
         _sbdPresenter.Reset()
         dgvSBD.DataSource = Nothing
 
@@ -210,7 +210,7 @@
 
         If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
 
-        SetButtonState(ctrl, False)
+        SetButtonState_old(ctrl, False)
 
         Dim id = ctrl.SelectedRows(0).Cells(0).Value
         _sbdPresenter.LoadDetail(id)

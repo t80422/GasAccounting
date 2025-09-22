@@ -4,6 +4,7 @@
 ''' 大氣採購
 ''' </summary>
 Public Class PurchasePresenter
+
     Private ReadOnly _view As IPurchaseView
     Private ReadOnly _purRep As IPurchaseRep
     Private ReadOnly _compRep As ICompanyRep
@@ -12,6 +13,13 @@ Public Class PurchasePresenter
     Private ReadOnly _gmbSer As IGasMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _printerSer As IPrinterService
+    Private currentData As purchase
+
+    Public ReadOnly Property View As IPurchaseView
+        Get
+            Return _view
+        End Get
+    End Property
 
     Public Sub New(view As IPurchaseView, purRep As IPurchaseRep, compRep As ICompanyRep, manuRep As IManufacturerRep, subRep As ISubjectRep, gmbSer As IGasMonthlyBalanceService,
                    aeSer As IAccountingEntryService, printerSer As IPrinterService)
@@ -23,58 +31,57 @@ Public Class PurchasePresenter
         _gmbSer = gmbSer
         _aeSer = aeSer
         _printerSer = printerSer
+
+        AddHandler _view.AddClicked, AddressOf Add
+        AddHandler _view.EditClicked, AddressOf Edit
+        AddHandler _view.DeleteClicked, AddressOf Delete
+        AddHandler _view.CancelClicked, AddressOf Initialize
+        AddHandler _view.SerchClicked, AddressOf Search
+        AddHandler _view.PrintClicked, AddressOf Print
+        AddHandler _view.GasVenderSelected, AddressOf GetDefaultPrice
+        AddHandler _view.RowSelected, AddressOf SelectRowAsync
     End Sub
 
-    Public Async Function InitializeAsync() As Task
+    Private Sub Initialize()
         Try
-            Await Task.WhenAll(
-                SetCompanyCmbAsync,
-                SetGasVendorCmbAsync,
-                SetDriveCompanyCmbAsync
-            )
+            _view.ClearInput()
+            SetCompanyCmb()
+            SetGasVendorCmb()
+            SetDriveCompanyCmb()
+            currentData = Nothing
+            LoadList()
+            _view.SetButton(False)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 
-    Public Async Function GetDefaultPriceAsync(manuId As Integer, productName As String) As Task
+    Private Sub GetDefaultPrice(sender As Object, data As Tuple(Of Object, Object))
         Try
-            Dim result = Await _purRep.GetDefaultPricesAsync(manuId, productName)
+            Dim result = _purRep.GetDefaultPricesAsync(data.Item1, data.Item2).Result
             _view.SetDefaultPrice(result.Item1, result.Item2)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 
-    Public Async Function LoadListAsync() As Task
+    Private Sub LoadList(Optional criteria As PurchaseCondition = Nothing)
         Try
-            Dim conditions = _view.GetSearchCondition
-            Dim purchases = Await _purRep.SearchPurchasesAsync(conditions)
+            Dim purchases = _purRep.SearchPurchasesAsync(criteria).Result
             Dim datas = purchases.Select(Function(x) New PurchaseVM(x)).ToList
             _view.ShowList(datas)
         Catch ex As Exception
             MsgBox(ex.StackTrace)
         End Try
-    End Function
-
-    Private Sub Validate(data As purchase)
-        If data.pur_comp_id = 0 Then Throw New Exception("請選擇公司")
-        If String.IsNullOrEmpty(data.pur_product) Then Throw New Exception("請選擇產品")
-        If data.pur_manu_id = 0 Then Throw New Exception("請選擇大氣廠商")
-        If data.pur_quantity = 0 Then Throw New Exception("請輸入重量")
-        If data.pur_unit_price = 0 Then Throw New Exception("請輸入單價")
     End Sub
 
-    Public Async Function AddAsync() As Task
-        _view.GetUserInput()
+    Private Sub Add()
         Using transaction = _purRep.BeginTransaction
             Try
-                Dim purchase = _view.CurrentPurchase
-                Validate(purchase)
+                Dim data = _view.GetInput()
+                Dim insert = _purRep.AddAsync(data).Result
 
-                Dim insert = Await _purRep.AddAsync(purchase)
-
-                _gmbSer.UpdateOrAdd(purchase.pur_date, purchase.pur_comp_id)
+                _gmbSer.UpdateOrAdd(data.pur_date, data.pur_comp_id)
 
                 Dim entries = New List(Of accounting_entry) From {
                     New accounting_entry With {
@@ -105,106 +112,109 @@ Public Class PurchasePresenter
 
                 _aeSer.AddEntries(entries)
 
-                Await _purRep.SaveChangesAsync()
+                _purRep.SaveChangesAsync()
                 transaction.Commit()
-                _view.ClearInput()
-                Await LoadListAsync()
+                Initialize()
                 MsgBox("新增成功")
             Catch ex As Exception
                 transaction.Rollback()
                 MsgBox(ex.Message)
             End Try
         End Using
-    End Function
+    End Sub
 
-    Public Async Function EditAsync() As Task
-        _view.GetUserInput()
+    Private Sub Edit()
         Using transaction = _purRep.BeginTransaction
             Try
-                Dim purchase = _view.CurrentPurchase
-                Validate(purchase)
-
-                _gmbSer.UpdateOrAdd(purchase.pur_date, purchase.pur_comp_id)
+                Dim data = _view.GetInput()
+                _gmbSer.UpdateOrAdd(data.pur_date, data.pur_comp_id)
 
                 Dim entries = New List(Of accounting_entry) From {
                     New accounting_entry With {
-                        .ae_TransactionId = purchase.pur_id,
+                        .ae_TransactionId = data.pur_id,
                         .ae_Date = Now,
                         .ae_TransactionType = "大氣進貨",
                         .ae_s_Id = 1,
-                        .ae_Debit = purchase.pur_price,
+                        .ae_Debit = data.pur_price,
                         .ae_Credit = 0
                     },
                     New accounting_entry With {
-                        .ae_TransactionId = purchase.pur_id,
+                        .ae_TransactionId = data.pur_id,
                         .ae_Date = Now,
                         .ae_TransactionType = "大氣進貨",
                         .ae_s_Id = 2,
-                        .ae_Debit = purchase.pur_delivery_fee,
+                        .ae_Debit = data.pur_delivery_fee,
                         .ae_Credit = 0
                     },
                     New accounting_entry With {
-                        .ae_TransactionId = purchase.pur_id,
+                        .ae_TransactionId = data.pur_id,
                         .ae_Date = Now,
                         .ae_TransactionType = "大氣進貨",
                         .ae_s_Id = 3,
                         .ae_Debit = 0,
-                        .ae_Credit = purchase.pur_price + purchase.pur_delivery_fee
+                        .ae_Credit = data.pur_price + data.pur_delivery_fee
                     }
                 }
 
                 _aeSer.UpdateEntries(entries)
-                Await _purRep.SaveChangesAsync
+                _purRep.UpdateAsync(currentData, data)
+                _purRep.SaveChangesAsync()
 
                 transaction.Commit()
-                _view.ClearInput()
-                Await LoadListAsync()
+                Initialize()
                 MsgBox("修改成功")
             Catch ex As Exception
                 transaction.Rollback()
                 MsgBox(ex.Message)
             End Try
         End Using
-    End Function
+    End Sub
 
-    Public Async Function DeleteAsync(id As Integer) As Task
+    Public Sub Delete()
         Using transaction = _purRep.BeginTransaction
             Try
-                Dim purchase = Await _purRep.GetByIdAsync(id)
+                _aeSer.DeleteEntries("大氣進貨", currentData.pur_id)
 
-                _aeSer.DeleteEntries("大氣進貨", id)
+                _purRep.DeleteAsync(currentData)
 
-                Await _purRep.DeleteAsync(id)
+                _gmbSer.UpdateOrAdd(currentData.pur_date, currentData.pur_comp_id)
 
-                _gmbSer.UpdateOrAdd(purchase.pur_date, purchase.pur_comp_id)
-
-                Await _purRep.SaveChangesAsync
+                _purRep.SaveChangesAsync()
 
                 transaction.Commit()
-                _view.ClearInput()
-                Await LoadListAsync()
-                MsgBox("刪除成功")
+                Initialize()
+                MessageBox.Show("刪除成功")
             Catch ex As Exception
                 transaction.Rollback()
-                MsgBox(ex.Message)
+                MessageBox.Show(ex.Message)
             End Try
         End Using
-    End Function
+    End Sub
 
-    Public Async Function SelectRowAsync(id As Integer) As Task
+    Private Sub SelectRowAsync(sender As Object, id As Integer)
         Try
-            Dim data = Await _purRep.GetByIdAsync(id)
+            Dim data = _purRep.GetByIdAsync(id).Result
             If data IsNot Nothing Then
                 _view.ClearInput()
-                _view.CurrentPurchase = data
+                currentData = data
                 _view.SetDataToControls(data)
+                _view.SetButton(True)
             End If
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 
-    Public Sub Print(datas As List(Of PurchaseVM))
+    Private Sub Search()
+        Try
+            Dim data = _view.GetSearchCondition
+            LoadList(data)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub Print(sender As Object, datas As List(Of PurchaseVM))
         Try
             '取得範本檔
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "大氣採購範本檔.xlsx")
@@ -240,30 +250,30 @@ Public Class PurchasePresenter
         End Try
     End Sub
 
-    Private Async Function SetCompanyCmbAsync() As Task
+    Private Sub SetCompanyCmb()
         Try
-            Dim companies = Await _compRep.GetCompanyDropdownAsync
+            Dim companies = _compRep.GetCompanyDropdownAsync.Result
             _view.SetCompanyCmb(companies)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 
-    Private Async Function SetGasVendorCmbAsync() As Task
+    Private Sub SetGasVendorCmb()
         Try
-            Dim data = Await _manuRep.GetGasVendorCmbDataAsync
+            Dim data = _manuRep.GetGasVendorCmbDataAsync.Result
             _view.SetGasVendorCmb(data)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 
-    Private Async Function SetDriveCompanyCmbAsync() As Task
+    Private Sub SetDriveCompanyCmb()
         Try
-            Dim data = Await _manuRep.GetVendorCmbWithoutGasAsync
+            Dim data = _manuRep.GetVendorCmbWithoutGasAsync.Result
             _view.SetDriveVendorCmb(data)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 End Class

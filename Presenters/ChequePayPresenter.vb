@@ -3,14 +3,18 @@ Imports ClosedXML.Excel
 
 Public Class ChequePayPresenter
     Private ReadOnly _rep As IChequePayRep
-    Private _view As IChequePayView
+    Private ReadOnly _view As IChequePayView
 
-    Public Sub New(rep As IChequePayRep)
-        _rep = rep
-    End Sub
+    Public ReadOnly Property View As IChequePayView
+        Get
+            Return _view
+        End Get
+    End Property
 
-    Public Sub SetView(view As IChequePayView)
+    Public Sub New(view As IChequePayView, rep As IChequePayRep)
         _view = view
+        _rep = rep
+
         AddHandler _view.Loaded, AddressOf OnLoaded
         AddHandler _view.SearchClicked, AddressOf OnSearchClicked
         AddHandler _view.CancelClicked, AddressOf OnCancelClicked

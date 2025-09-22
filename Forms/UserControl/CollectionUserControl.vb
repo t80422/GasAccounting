@@ -32,7 +32,7 @@
 
     Public Sub DisplayDetail(data As collection) Implements IBaseView(Of collection, CollectionVM).DisplayDetail
         AutoMapEntityToControls(data, Me)
-        AutoMapEntityToControls(data.customer, Me)
+        If data.customer IsNot Nothing Then AutoMapEntityToControls(data.customer, Me)
         AutoMapEntityToControls(data.cheques, Me)
     End Sub
 
@@ -56,11 +56,15 @@
         Return data
     End Function
 
+    Public Function GetChequeNumber() As String Implements ICollectionView.GetChequeNumber
+        Return InputBox("請輸入支票號碼")
+    End Function
+
     ' 取消
     Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
         Try
             _presenter.Initialize()
-            SetButtonState(btnCancel_col, True)
+            SetButtonState_old(btnCancel_col, True)
 
             ' 公司預設 "豐合"
             Dim index As Integer = cmbCompany_col.FindString("豐合")

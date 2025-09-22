@@ -43,7 +43,7 @@
     ' 取消
     Private Sub btnCancel_comp_Click(sender As Object, e As EventArgs) Handles btnCancel_comp.Click
         RaiseEvent CancelClicked(Me, EventArgs.Empty)
-        SetButtonState(sender, True)
+        SetButtonState_old(sender, True)
     End Sub
 
     ' 新增
@@ -55,7 +55,7 @@
     Private Sub dgvCompany_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCompany.SelectionChanged, dgvCompany.CellMouseClick
         Dim ctrl As DataGridView = sender
         If Not ctrl.Focused Then Return
-        SetButtonState(ctrl, False)
+        SetButtonState_old(ctrl, False)
         Dim id As Integer = ctrl.SelectedRows(0).Cells(0).Value
         RaiseEvent RowSelected(Me, id)
     End Sub
@@ -63,12 +63,12 @@
     ' 修改
     Private Sub btnEdit_comp_Click(sender As Object, e As EventArgs) Handles btnEdit_comp.Click
         RaiseEvent EditClicked(Me, EventArgs.Empty)
-        SetButtonState(sender, True)
+        SetButtonState_old(sender, True)
     End Sub
 
     ' 刪除
     Private Sub btnDelete_comp_Click(sender As Object, e As EventArgs) Handles btnDelete_comp.Click
         RaiseEvent DeleteClicked(Me, EventArgs.Empty)
-        SetButtonState(sender, True)
+        SetButtonState_old(sender, True)
     End Sub
 End Class

@@ -1,12 +1,19 @@
 ﻿Imports System.IO
 
 Public Class PurBarrelPresenter
-    Private ReadOnly _view As IPurchaseBarrelView
+    Property _view As IPurchaseBarrelView
     Private ReadOnly _pbRep As IPurchaseBarrelRep
     Private ReadOnly _vendorRep As IManufacturerRep
     Private ReadOnly _barmbSer As IBarrelMonthlyBalanceService
     Private ReadOnly _compRep As ICompanyRep
     Private ReadOnly _aeSer As IAccountingEntryService
+
+    Public ReadOnly Property View
+        Get
+            Return _view
+        End Get
+    End Property
+
 
     Public Sub New(view As IPurchaseBarrelView, pbRep As IPurchaseBarrelRep, vendorRep As IManufacturerRep, barmbSer As IBarrelMonthlyBalanceService, compRep As ICompanyRep,
                    aeSer As IAccountingEntryService)
@@ -16,6 +23,28 @@ Public Class PurBarrelPresenter
         _barmbSer = barmbSer
         _compRep = compRep
         _aeSer = aeSer
+
+        ' 訂閱 View 的事件
+        SubscribeToViewEvents()
+    End Sub
+
+    Private Sub SubscribeToViewEvents()
+        AddHandler _view.AddRequested, AddressOf Add
+        AddHandler _view.UpdateRequested, AddressOf Update
+        AddHandler _view.DeleteRequested, AddressOf Delete
+        AddHandler _view.CancelRequested, AddressOf Reset
+        AddHandler _view.DetailRequested, AddressOf Detail
+        AddHandler _view.PrintRequested, AddressOf Print
+    End Sub
+
+    Private Sub Reset()
+        Initialize()
+        _view.SetButton(False)
+    End Sub
+
+    Private Sub Detail(sender As Object, id As Integer)
+        LoadDetail(id)
+        _view.SetButton(True)
     End Sub
 
     Public Async Sub Initialize()
@@ -152,7 +181,7 @@ Public Class PurBarrelPresenter
         End Using
     End Sub
 
-    Public Sub Print(datas As List(Of PurchaseBarrelVM))
+    Public Sub Print(sender As Object, datas As List(Of PurchaseBarrelVM))
         Try
             Dim tempPath = Path.Combine(Application.StartupPath, "Report", "新瓶採購範本檔.xlsx")
 

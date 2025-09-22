@@ -1,8 +1,6 @@
 ﻿Public Class ChequePayUserControl
 	Implements IChequePayView
 
-	Private _presenter As ChequePayPresenter
-
 	' IChequePayView 事件
 	Public Event Loaded As EventHandler Implements IChequePayView.Loaded
 	Public Event SearchClicked As EventHandler Implements IChequePayView.SearchClicked
@@ -41,8 +39,6 @@
 
 	' UI 事件 → View 事件
 	Private Sub ChequePayUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _presenter = DependencyContainer.Resolve(Of ChequePayPresenter)()
-        _presenter.SetView(Me)
 		RaiseEvent Loaded(Me, EventArgs.Empty)
 	End Sub
 

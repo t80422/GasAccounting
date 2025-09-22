@@ -12,14 +12,16 @@ Public Class PaymentRep
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
 
-            If criteria.IsSearchDate Then query = query.Where(Function(x) x.p_Date >= criteria.StartDate AndAlso x.p_Date < criteria.EndDate)
-            If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.p_comp_Id = criteria.CompanyId)
-            If criteria.BankId.HasValue Then query = query.Where(Function(x) x.p_bank_Id = criteria.BankId)
-            If Not String.IsNullOrEmpty(criteria.ChequeNo) Then query = query.Where(Function(x) x.p_Cheque = criteria.ChequeNo)
-            If criteria.SubjectId.HasValue Then query = query.Where(Function(x) x.p_s_Id = criteria.SubjectId)
-            If criteria.VendorId.HasValue Then query = query.Where(Function(x) x.p_m_Id = criteria.VendorId)
+            If criteria IsNot Nothing Then
+                If criteria.IsSearchDate Then query = query.Where(Function(x) x.p_Date >= criteria.StartDate AndAlso x.p_Date < criteria.EndDate)
+                If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.p_comp_Id = criteria.CompanyId)
+                If criteria.BankId.HasValue Then query = query.Where(Function(x) x.p_bank_Id = criteria.BankId)
+                If Not String.IsNullOrEmpty(criteria.ChequeNo) Then query = query.Where(Function(x) x.p_Cheque = criteria.ChequeNo)
+                If criteria.SubjectId.HasValue Then query = query.Where(Function(x) x.p_s_Id = criteria.SubjectId)
+                If criteria.VendorId.HasValue Then query = query.Where(Function(x) x.p_m_Id = criteria.VendorId)
+            End If
 
-            Return Await query.OrderByDescending(Function(x) x.p_Id).ToListAsync
+            Return Await query.OrderByDescending(Function(x) x.p_Date).ToListAsync
         Catch ex As Exception
             Throw
         End Try
@@ -54,13 +56,11 @@ Public Class PaymentRep
                     FirstOrDefault()
                 Dim unpaidAmount = pur.TotalPurchase - correspondingPayment
 
-                If unpaidAmount > 0 Then
-                    amountDueList.Add(New AmountDueVM With {
-                        .廠商 = (From manu In _context.manufacturers Where manu.manu_id = vendorId Select manu.manu_name).FirstOrDefault(),
-                        .年月份 = New DateTime(pur.Year, pur.Month, 1).ToString("yyyy/MM"),
-                        .未付帳款 = unpaidAmount
-                    })
-                End If
+                amountDueList.Add(New AmountDueVM With {
+                    .廠商 = (From manu In _context.manufacturers Where manu.manu_id = vendorId Select manu.manu_name).FirstOrDefault(),
+                    .年月份 = New DateTime(pur.Year, pur.Month, 1).ToString("yyyy/MM"),
+                    .未付帳款 = unpaidAmount
+                })
             Next
 
             Return amountDueList

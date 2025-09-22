@@ -413,6 +413,12 @@
     <Compile Include="Forms\frmStartEndDatePicker.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Search\Search_GasPurchase.Designer.vb">
+      <DependentUpon>Search_GasPurchase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Search\Search_GasPurchase.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\UserControl\BasicSetUserControl.Designer.vb">
       <DependentUpon>BasicSetUserControl.vb</DependentUpon>
     </Compile>
@@ -455,6 +461,18 @@
     <Compile Include="Forms\UserControl\CompanyUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Forms\UserControl\GasCheckoutUserControl.Designer.vb">
+      <DependentUpon>GasCheckoutUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\GasCheckoutUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControl\GasPurchaseUserControl.Designer.vb">
+      <DependentUpon>GasPurchaseUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\GasPurchaseUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\UserControl\OrderUserControl.Designer.vb">
       <DependentUpon>OrderUserControl.vb</DependentUpon>
     </Compile>
@@ -465,6 +483,12 @@
       <DependentUpon>PaymentUserControl.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\UserControl\PaymentUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControl\PurchaseBarrelUserControl.Designer.vb">
+      <DependentUpon>PurchaseBarrelUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\PurchaseBarrelUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\UserControl\ScrapBarrelUserControl.Designer.vb">
@@ -920,6 +944,9 @@
     <EmbeddedResource Include="Forms\frmStartEndDatePicker.resx">
       <DependentUpon>frmStartEndDatePicker.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Search\Search_GasPurchase.resx">
+      <DependentUpon>Search_GasPurchase.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\BasicSetUserControl.resx">
       <DependentUpon>BasicSetUserControl.vb</DependentUpon>
     </EmbeddedResource>
@@ -944,11 +971,20 @@
     <EmbeddedResource Include="Forms\UserControl\CompanyUserControl.resx">
       <DependentUpon>CompanyUserControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\GasCheckoutUserControl.resx">
+      <DependentUpon>GasCheckoutUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\GasPurchaseUserControl.resx">
+      <DependentUpon>GasPurchaseUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\OrderUserControl.resx">
       <DependentUpon>OrderUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\PaymentUserControl.resx">
       <DependentUpon>PaymentUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\PurchaseBarrelUserControl.resx">
+      <DependentUpon>PurchaseBarrelUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\ScrapBarrelUserControl.resx">
       <DependentUpon>ScrapBarrelUserControl.vb</DependentUpon>

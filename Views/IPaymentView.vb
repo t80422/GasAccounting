@@ -1,6 +1,16 @@
 ﻿Public Interface IPaymentView
     Inherits IBaseView(Of payment, PaymentListVM)
 
+    ' 事件
+    Event AddRequested As EventHandler
+    Event UpdateRequested As EventHandler
+    Event DeleteRequested As EventHandler
+    Event CancelRequested As EventHandler
+    Event DetailRequested As EventHandler(Of Integer)
+    Event PrintRequested As EventHandler(Of Tuple(Of Date, String))
+    Event ManufacturerSelected As EventHandler(Of Integer)
+    Event CompanySelected As EventHandler(Of Integer)
+
     ''' <summary>
     ''' 設定廠商下拉選單
     ''' </summary>
@@ -35,14 +45,12 @@
     ''' <returns></returns>
     Function GetSearchCriteria() As PaymentSearchCriteria
 
-    Function GetInput() As PaymentVM
-
-    Sub ShowDetail(data As PaymentVM)
-
     ''' <summary>
     ''' 顯示廠商帳號
     ''' </summary>
     ''' <param name="data"></param>
     ''' <returns></returns>
     Sub ShowVendorAccount(data As String)
+
+    Sub SetButton(isSelectedRow As Boolean)
 End Interface

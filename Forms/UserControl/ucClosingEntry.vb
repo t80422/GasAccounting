@@ -48,7 +48,7 @@ Public Class ucClosingEntry
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        SetButtonState(sender, True)
+        SetButtonState_old(sender, True)
         _presenter.Reset()
     End Sub
 
@@ -78,7 +78,7 @@ Public Class ucClosingEntry
     Private Sub dgvClosingEntry_CellMouseClick(sender As Object, e As EventArgs) Handles dgvClosingEntry.CellMouseClick, dgvClosingEntry.SelectionChanged
         Dim ctrl As DataGridView = sender
         If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
-        SetButtonState(ctrl, False)
+        SetButtonState_old(ctrl, False)
 
         Dim id = ctrl.SelectedRows(0).Cells(0).Value
         _presenter.Detail(id)

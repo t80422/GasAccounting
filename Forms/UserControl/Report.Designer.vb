@@ -132,10 +132,11 @@ Partial Class Report
         '
         'GroupBox2
         '
+        Me.GroupBox2.BackColor = System.Drawing.Color.White
         Me.GroupBox2.Controls.Add(Me.btnDSS)
         Me.GroupBox2.Controls.Add(Me.Label65)
         Me.GroupBox2.Controls.Add(Me.dtpDate_DSS)
-        Me.GroupBox2.Location = New System.Drawing.Point(8, 871)
+        Me.GroupBox2.Location = New System.Drawing.Point(8, 626)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(466, 70)
         Me.GroupBox2.TabIndex = 497
@@ -170,6 +171,7 @@ Partial Class Report
         '
         'GroupBox7
         '
+        Me.GroupBox7.BackColor = System.Drawing.Color.White
         Me.GroupBox7.Controls.Add(Me.txtCusCode_dcr)
         Me.GroupBox7.Controls.Add(Me.btnMonthlyCusReceivable)
         Me.GroupBox7.Controls.Add(Me.Label133)
@@ -210,6 +212,7 @@ Partial Class Report
         '
         'GroupBox26
         '
+        Me.GroupBox26.BackColor = System.Drawing.Color.White
         Me.GroupBox26.Controls.Add(Me.btnInOut)
         Me.GroupBox26.Controls.Add(Me.cmbMonth_InOut)
         Me.GroupBox26.Controls.Add(Me.dtpYear_InOut)
@@ -250,6 +253,7 @@ Partial Class Report
         '
         'GroupBox24
         '
+        Me.GroupBox24.BackColor = System.Drawing.Color.White
         Me.GroupBox24.Controls.Add(Me.dtpEnd_ca)
         Me.GroupBox24.Controls.Add(Me.dtpStart_ca)
         Me.GroupBox24.Controls.Add(Me.btnCashAccount)
@@ -286,6 +290,7 @@ Partial Class Report
         '
         'GroupBox23
         '
+        Me.GroupBox23.BackColor = System.Drawing.Color.White
         Me.GroupBox23.Controls.Add(Me.dtpDate_gucc)
         Me.GroupBox23.Controls.Add(Me.btnGasUsageCylinderCount)
         Me.GroupBox23.Location = New System.Drawing.Point(8, 351)
@@ -316,6 +321,7 @@ Partial Class Report
         '
         'GroupBox20
         '
+        Me.GroupBox20.BackColor = System.Drawing.Color.White
         Me.GroupBox20.Controls.Add(Me.cmbCompany_IS)
         Me.GroupBox20.Controls.Add(Me.Label246)
         Me.GroupBox20.Controls.Add(Me.btnIncomeStatement)
@@ -323,9 +329,9 @@ Partial Class Report
         Me.GroupBox20.Controls.Add(Me.Label245)
         Me.GroupBox20.Controls.Add(Me.dtpStart_IS)
         Me.GroupBox20.Controls.Add(Me.Label243)
-        Me.GroupBox20.Location = New System.Drawing.Point(480, 446)
+        Me.GroupBox20.Location = New System.Drawing.Point(8, 776)
         Me.GroupBox20.Name = "GroupBox20"
-        Me.GroupBox20.Size = New System.Drawing.Size(450, 116)
+        Me.GroupBox20.Size = New System.Drawing.Size(466, 116)
         Me.GroupBox20.TabIndex = 492
         Me.GroupBox20.TabStop = False
         Me.GroupBox20.Text = "損益表"
@@ -391,12 +397,13 @@ Partial Class Report
         '
         'GroupBox19
         '
+        Me.GroupBox19.BackColor = System.Drawing.Color.White
         Me.GroupBox19.Controls.Add(Me.btnInsurance)
         Me.GroupBox19.Controls.Add(Me.dtpMonth_insurance)
         Me.GroupBox19.Controls.Add(Me.Label242)
         Me.GroupBox19.Controls.Add(Me.cmbCompany_insurance)
         Me.GroupBox19.Controls.Add(Me.Label244)
-        Me.GroupBox19.Location = New System.Drawing.Point(480, 377)
+        Me.GroupBox19.Location = New System.Drawing.Point(480, 303)
         Me.GroupBox19.Name = "GroupBox19"
         Me.GroupBox19.Size = New System.Drawing.Size(468, 63)
         Me.GroupBox19.TabIndex = 491
@@ -450,12 +457,13 @@ Partial Class Report
         '
         'GroupBox18
         '
+        Me.GroupBox18.BackColor = System.Drawing.Color.White
         Me.GroupBox18.Controls.Add(Me.txtCusCode_MS)
         Me.GroupBox18.Controls.Add(Me.Label239)
         Me.GroupBox18.Controls.Add(Me.btnMonthlyStatement)
         Me.GroupBox18.Controls.Add(Me.dtpMonth_MS)
         Me.GroupBox18.Controls.Add(Me.Label237)
-        Me.GroupBox18.Location = New System.Drawing.Point(480, 302)
+        Me.GroupBox18.Location = New System.Drawing.Point(480, 228)
         Me.GroupBox18.Name = "GroupBox18"
         Me.GroupBox18.Size = New System.Drawing.Size(489, 69)
         Me.GroupBox18.TabIndex = 490
@@ -508,10 +516,11 @@ Partial Class Report
         '
         'GroupBox17
         '
+        Me.GroupBox17.BackColor = System.Drawing.Color.White
         Me.GroupBox17.Controls.Add(Me.btnEnergyBureau)
         Me.GroupBox17.Controls.Add(Me.dtpMonth_EB)
         Me.GroupBox17.Controls.Add(Me.Label236)
-        Me.GroupBox17.Location = New System.Drawing.Point(480, 228)
+        Me.GroupBox17.Location = New System.Drawing.Point(480, 154)
         Me.GroupBox17.Name = "GroupBox17"
         Me.GroupBox17.Size = New System.Drawing.Size(279, 68)
         Me.GroupBox17.TabIndex = 489
@@ -548,10 +557,11 @@ Partial Class Report
         '
         'GroupBox16
         '
+        Me.GroupBox16.BackColor = System.Drawing.Color.White
         Me.GroupBox16.Controls.Add(Me.btnTax)
         Me.GroupBox16.Controls.Add(Me.dtpMonth_tax)
         Me.GroupBox16.Controls.Add(Me.Label234)
-        Me.GroupBox16.Location = New System.Drawing.Point(480, 154)
+        Me.GroupBox16.Location = New System.Drawing.Point(480, 80)
         Me.GroupBox16.Name = "GroupBox16"
         Me.GroupBox16.Size = New System.Drawing.Size(279, 68)
         Me.GroupBox16.TabIndex = 488
@@ -588,6 +598,7 @@ Partial Class Report
         '
         'GroupBox14
         '
+        Me.GroupBox14.BackColor = System.Drawing.Color.White
         Me.GroupBox14.Controls.Add(Me.btnITD)
         Me.GroupBox14.Controls.Add(Me.dtpYear_ITD)
         Me.GroupBox14.Controls.Add(Me.Label197)
@@ -647,10 +658,11 @@ Partial Class Report
         '
         'GroupBox13
         '
+        Me.GroupBox13.BackColor = System.Drawing.Color.White
         Me.GroupBox13.Controls.Add(Me.btnMAR)
         Me.GroupBox13.Controls.Add(Me.dtpMonth_MAR)
         Me.GroupBox13.Controls.Add(Me.Label196)
-        Me.GroupBox13.Location = New System.Drawing.Point(480, 568)
+        Me.GroupBox13.Location = New System.Drawing.Point(480, 449)
         Me.GroupBox13.Name = "GroupBox13"
         Me.GroupBox13.Size = New System.Drawing.Size(505, 68)
         Me.GroupBox13.TabIndex = 486
@@ -687,10 +699,11 @@ Partial Class Report
         '
         'GroupBox12
         '
+        Me.GroupBox12.BackColor = System.Drawing.Color.White
         Me.GroupBox12.Controls.Add(Me.btnGenerate_RI)
         Me.GroupBox12.Controls.Add(Me.dtpMonth_RI)
         Me.GroupBox12.Controls.Add(Me.Label101)
-        Me.GroupBox12.Location = New System.Drawing.Point(480, 642)
+        Me.GroupBox12.Location = New System.Drawing.Point(480, 523)
         Me.GroupBox12.Name = "GroupBox12"
         Me.GroupBox12.Size = New System.Drawing.Size(505, 68)
         Me.GroupBox12.TabIndex = 484
@@ -727,10 +740,11 @@ Partial Class Report
         '
         'GroupBox9
         '
+        Me.GroupBox9.BackColor = System.Drawing.Color.White
         Me.GroupBox9.Controls.Add(Me.btnNewBarrel)
         Me.GroupBox9.Controls.Add(Me.Label106)
         Me.GroupBox9.Controls.Add(Me.dtpMonth_newBarrel)
-        Me.GroupBox9.Location = New System.Drawing.Point(8, 688)
+        Me.GroupBox9.Location = New System.Drawing.Point(480, 372)
         Me.GroupBox9.Name = "GroupBox9"
         Me.GroupBox9.Size = New System.Drawing.Size(466, 71)
         Me.GroupBox9.TabIndex = 482
@@ -767,6 +781,7 @@ Partial Class Report
         '
         'GroupBox4
         '
+        Me.GroupBox4.BackColor = System.Drawing.Color.White
         Me.GroupBox4.Controls.Add(Me.txtCusId_cgci)
         Me.GroupBox4.Controls.Add(Me.txtCusCode_cgci)
         Me.GroupBox4.Controls.Add(Me.txtCusName_cgci)
@@ -774,7 +789,7 @@ Partial Class Report
         Me.GroupBox4.Controls.Add(Me.Label60)
         Me.GroupBox4.Controls.Add(Me.Label95)
         Me.GroupBox4.Controls.Add(Me.btnCGCI)
-        Me.GroupBox4.Location = New System.Drawing.Point(8, 568)
+        Me.GroupBox4.Location = New System.Drawing.Point(8, 506)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(466, 114)
         Me.GroupBox4.TabIndex = 481
@@ -861,6 +876,7 @@ Partial Class Report
         '
         'GroupBox3
         '
+        Me.GroupBox3.BackColor = System.Drawing.Color.White
         Me.GroupBox3.Controls.Add(Me.Label143)
         Me.GroupBox3.Controls.Add(Me.btnBankAccount)
         Me.GroupBox3.Controls.Add(Me.dtpMonth_BankAccount)
@@ -920,6 +936,7 @@ Partial Class Report
         '
         'GroupBox6
         '
+        Me.GroupBox6.BackColor = System.Drawing.Color.White
         Me.GroupBox6.Controls.Add(Me.btnGasPayableDetail)
         Me.GroupBox6.Controls.Add(Me.cmbManu)
         Me.GroupBox6.Controls.Add(Me.Label132)
@@ -959,12 +976,13 @@ Partial Class Report
         '
         'GroupBox1
         '
+        Me.GroupBox1.BackColor = System.Drawing.Color.White
         Me.GroupBox1.Controls.Add(Me.btnAccountBalance)
         Me.GroupBox1.Controls.Add(Me.dtpAccountBalance)
         Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Location = New System.Drawing.Point(480, 716)
+        Me.GroupBox1.Location = New System.Drawing.Point(8, 702)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(505, 68)
+        Me.GroupBox1.Size = New System.Drawing.Size(466, 68)
         Me.GroupBox1.TabIndex = 485
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "科目平衡表"

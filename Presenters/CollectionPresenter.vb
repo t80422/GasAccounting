@@ -69,19 +69,19 @@
                 Dim chequeNo As String = ""
 
                 Select Case input.col_Type
-                    Case "支票"
+                    Case "應收票據"
                         Dim cheInput = _view.GetChequeInput
                         Validate(cheInput)
                         cheInput.che_col_Id = col.col_Id
                         Await _chequeRep.AddAsync(cheInput)
-                    Case "銀行"
+                    Case "銀行存款"
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
 
                         ' 支票兌現
                         Dim subject = _subjectRep.GetByIdAsync(col.col_s_Id).Result
 
                         If subject.s_name = "應收票據" Then
-                            chequeNo = InputBox("請輸入支票號碼")
+                            chequeNo = _view.GetChequeNumber()
 
                             If Not String.IsNullOrEmpty(chequeNo) Then
                                 Dim cheque = Await _chequeRep.GetByNumberAsync(chequeNo)
@@ -133,7 +133,7 @@
         Using transaction = _colRep.BeginTransaction
             Try
                 Dim col = _view.GetUserInput
-
+                Validate(col)
                 '未銷帳
                 Dim paid = _ocmSer.CalculateCollectionUnmatched(col.col_Id)
                 col.col_UnmatchedAmount = col.col_Amount - paid
@@ -141,13 +141,13 @@
 
                 Select Case col.col_Type
                     Case "現金"
-                        If _currentData.col_Type = "銀行" Then
+                        If _currentData.col_Type = "銀行存款" Then
                             Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
-                        ElseIf _currentData.col_Type = "支票" Then
+                        ElseIf _currentData.col_Type = "應收票據" Then
                             Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
                             Await _chequeRep.DeleteAsync(cheque.che_Id)
                         End If
-                    Case "銀行"
+                    Case "銀行存款"
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, _currentData.col_AccountMonth)
 
@@ -156,20 +156,20 @@
                             Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
                         End If
 
-                        If _currentData.col_Type = "支票" Then
+                        If _currentData.col_Type = "應收票據" Then
                             Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
                             Await _chequeRep.DeleteAsync(cheque.che_Id)
                         End If
-                    Case "支票"
+                    Case "應收票據"
                         Dim cheque = _view.GetChequeInput
 
-                        If _currentData.col_Type = "支票" Then
+                        If _currentData.col_Type = "應收票據" Then
                             Dim orgCheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
                             cheque.che_Id = orgCheque.che_Id
                             Await _chequeRep.UpdateAsync(orgCheque, cheque)
                         ElseIf _currentData.col_Type = "現金" Then
                             Await _chequeRep.AddAsync(cheque)
-                        ElseIf _currentData.col_Type = "銀行" Then
+                        ElseIf _currentData.col_Type = "銀行存款" Then
                             Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
                         End If
                 End Select
@@ -197,10 +197,10 @@
                 ' 銷帳
                 _ocmSer.DeleteCollection(_currentData.col_Id)
 
-                If payType = "支票" Then
+                If payType = "應收票據" Then
                     Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
                     Await _chequeRep.DeleteAsync(cheque.che_Id)
-                ElseIf payType = "銀行" Then
+                ElseIf payType = "銀行存款" Then
                     Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
 
                     ' 更新 支票資訊
@@ -231,13 +231,13 @@
         If data.col_Amount = 0 Then Throw New Exception("請輸入金額")
         If data.col_s_Id Is Nothing Then Throw New Exception("請選擇科目")
         If data.col_comp_Id Is Nothing Then Throw New Exception("請選擇公司")
-        If data.col_cus_Id = 0 Then Throw New Exception("請輸入客戶")
         If String.IsNullOrEmpty(data.col_Type) Then Throw New Exception("請選擇收款類型")
-        If data.col_Type = "銀行" Then
+        If data.col_Type = "銀行存款" Then
             If data.col_bank_Id Is Nothing Then Throw New Exception("請選擇銀行")
-        ElseIf data.col_Type = "支票" Then
+        ElseIf data.col_Type = "應收票據" Then
             If String.IsNullOrEmpty(data.col_Cheque) Then Throw New Exception("請輸入支票號碼")
         End If
+        If data.col_cus_Id = 0 Then data.col_cus_Id = Nothing
     End Sub
 
     Private Sub Validate(data As cheque)
@@ -292,7 +292,7 @@
                     .ae_Credit = 0
                 })
 
-            Case "銀行"
+            Case "銀行存款"
                 entries.Add(New accounting_entry With {
                     .ae_TransactionId = data.col_Id,
                     .ae_Date = data.col_Date,
@@ -311,7 +311,7 @@
                     .ae_Credit = 0
                 })
 
-            Case "支票"
+            Case "應收票據"
                 entries.Add(New accounting_entry With {
                     .ae_TransactionId = data.col_Id,
                     .ae_Date = data.col_Date,

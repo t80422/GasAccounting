@@ -64,7 +64,7 @@
         Dim ctrl As DataGridView = sender
         If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
 
-        SetButtonState(ctrl, False)
+        SetButtonState_old(ctrl, False)
 
         Dim id = ctrl.SelectedRows(0).Cells(1).Value
         _presenter.SelectRow(id)

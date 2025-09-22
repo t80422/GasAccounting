@@ -46,7 +46,6 @@ Partial Class CollectionUserControl
         Me.cmbBank_col = New System.Windows.Forms.ComboBox()
         Me.lblBankAccount_col = New System.Windows.Forms.Label()
         Me.Label104 = New System.Windows.Forms.Label()
-        Me.Label99 = New System.Windows.Forms.Label()
         Me.lblChequeReq_col = New System.Windows.Forms.Label()
         Me.Label97 = New System.Windows.Forms.Label()
         Me.Label96 = New System.Windows.Forms.Label()
@@ -324,16 +323,6 @@ Partial Class CollectionUserControl
         Me.Label104.Size = New System.Drawing.Size(20, 19)
         Me.Label104.TabIndex = 487
         Me.Label104.Text = "*"
-        '
-        'Label99
-        '
-        Me.Label99.AutoSize = True
-        Me.Label99.ForeColor = System.Drawing.Color.Red
-        Me.Label99.Location = New System.Drawing.Point(8, 57)
-        Me.Label99.Name = "Label99"
-        Me.Label99.Size = New System.Drawing.Size(20, 19)
-        Me.Label99.TabIndex = 486
-        Me.Label99.Text = "*"
         '
         'lblChequeReq_col
         '
@@ -650,7 +639,6 @@ Partial Class CollectionUserControl
         Me.Controls.Add(Me.cmbBank_col)
         Me.Controls.Add(Me.lblBankAccount_col)
         Me.Controls.Add(Me.Label104)
-        Me.Controls.Add(Me.Label99)
         Me.Controls.Add(Me.lblChequeReq_col)
         Me.Controls.Add(Me.Label97)
         Me.Controls.Add(Me.Label96)
@@ -713,7 +701,6 @@ Partial Class CollectionUserControl
     Friend WithEvents cmbBank_col As ComboBox
     Friend WithEvents lblBankAccount_col As Label
     Friend WithEvents Label104 As Label
-    Friend WithEvents Label99 As Label
     Friend WithEvents lblChequeReq_col As Label
     Friend WithEvents Label97 As Label
     Friend WithEvents Label96 As Label

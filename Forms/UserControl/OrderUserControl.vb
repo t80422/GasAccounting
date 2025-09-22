@@ -95,7 +95,7 @@ Public Class OrderUserControl
         cmbCar_ord.DataSource = Nothing
         cmbCarOut_ord.DataSource = Nothing
 
-        SetButtonState(btnCancel_order, True)
+        SetButtonState_old(btnCancel_order, True)
 
         '預設運送方式
         grpTransport.Controls.OfType(Of RadioButton).First(Function(x) x.Text = "自運").Checked = True
@@ -314,7 +314,7 @@ Public Class OrderUserControl
 
     Private Sub GetDetail(id As Integer)
         _presenter.LoadDetail(id)
-        SetButtonState(dgvOrder, False)
+        SetButtonState_old(dgvOrder, False)
         dgvOrder.Focus()
         txtCusCode_ord.ReadOnly = True
         btnQueryCus_ord.Enabled = False
@@ -338,7 +338,7 @@ Public Class OrderUserControl
 
     ' 取消
     Private Async Sub btnCancel_order_Click(sender As Object, e As EventArgs) Handles btnCancel_order.Click
-        SetButtonState(btnCancel_order, True)
+        SetButtonState_old(btnCancel_order, True)
         Await _presenter.InitializeAsync()
         dgvOrder.ClearSelection()
         ClearInput()

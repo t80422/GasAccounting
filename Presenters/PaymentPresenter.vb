@@ -1,5 +1,5 @@
 ﻿Public Class PaymentPresenter
-    Private _view As IPaymentView
+    Private ReadOnly _view As IPaymentView
     Private ReadOnly _manufaturerRep As IManufacturerRep
     Private ReadOnly _subjectRep As ISubjectRep
     Private ReadOnly _companyRep As ICompanyRep
@@ -11,8 +11,15 @@
     Private ReadOnly _bankRep As IBankRep
     Private selectData As payment
 
-    Public Sub New(manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep, bmbService As IBankMonthlyBalanceService,
-                   aeSer As IAccountingEntryService, reportSer As IReportService, cpRep As IChequePayRep, bankRep As IBankRep)
+    Public ReadOnly Property View As IPaymentView
+        Get
+            Return _view
+        End Get
+    End Property
+
+    Public Sub New(view As IPaymentView, manufaturerRep As IManufacturerRep, subjectRep As ISubjectRep, companyRep As ICompanyRep, paymentRep As IPaymentRep,
+                   bmbService As IBankMonthlyBalanceService, aeSer As IAccountingEntryService, reportSer As IReportService, cpRep As IChequePayRep, bankRep As IBankRep)
+        _view = view
         _manufaturerRep = manufaturerRep
         _subjectRep = subjectRep
         _companyRep = companyRep
@@ -22,68 +29,124 @@
         _reportSer = reportSer
         _cpRep = cpRep
         _bankRep = bankRep
+
+        SubscribeToViewEvents()
     End Sub
 
-    Public Sub SetView(view As IPaymentView)
-        _view = view
+    ''' <summary>
+    ''' 訂閱 View 的事件
+    ''' </summary>
+    Private Sub SubscribeToViewEvents()
+        AddHandler _view.AddRequested, AddressOf Add
+        AddHandler _view.UpdateRequested, AddressOf Update
+        AddHandler _view.DeleteRequested, AddressOf Delete
+        AddHandler _view.CancelRequested, AddressOf Initialize
+        AddHandler _view.DetailRequested, AddressOf LoadPaymentDetail
+        AddHandler _view.PrintRequested, AddressOf Print
+        AddHandler _view.ManufacturerSelected, AddressOf ManufacturerSelected
+        AddHandler _view.CompanySelected, AddressOf LoadBankDropdown
     End Sub
 
-    Public Async Function InitializeAsync() As Task
+    Private Sub Initialize()
         Try
             _view.ClearInput()
 
-            Await Task.WhenAll(
-                LoadVendorDropdownAsync,
-                LoadSubjectDropdownAsync,
-                LoadCompanyDropdownAsync
-            )
+            LoadVendorDropdown()
+            LoadSubjectDropdown()
+            LoadCompanyDropdown()
 
-            Await SearchPaymentsAsync()
+            LoadList()
             selectData = Nothing
+
+            _view.SetButton(False)
         Catch ex As Exception
             MsgBox("付款作業初始化發生錯誤:" + ex.Message)
-            Console.WriteLine(ex.Source)
         End Try
-    End Function
+    End Sub
 
-    Public Async Function SearchPaymentsAsync() As Task
+    Private Sub LoadList()
         Try
             Dim criteria = _view.GetSearchCriteria
-            Dim payments = Await _paymentRep.SearchPaymentAsync(criteria)
+            Dim payments = _paymentRep.SearchPaymentAsync(criteria).Result
             _view.DisplayList(payments.Select(Function(x) New PaymentListVM(x)).ToList)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 
-    Public Sub LoadVendorAmountDue(vendorId As Integer)
+    Private Sub LoadVendorDropdown()
         Try
-            Dim amountDue = _paymentRep.GetVendorAmountDue(vendorId)
-            _view.DisplayAmountDueList(amountDue)
+            Dim vendors = _manufaturerRep.GetVendorDropdownAsync.Result
+            _view.PopulateVendorDropdown(vendors)
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
+
+    Private Sub LoadSubjectDropdown()
+        Try
+            Dim subjects = _subjectRep.GetSubjectDropdownAsync.Result
+            _view.PopulateSubjectDropdown(subjects)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
 
-    Public Async Sub Add()
+    Private Sub LoadCompanyDropdown()
+        Try
+            Dim companies = _companyRep.GetCompanyDropdownAsync.Result
+            _view.PopulateCompanyDropdown(companies)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub LoadBankDropdown(sender As Object, companyId As Integer)
+        Try
+            Dim data = _bankRep.GetBankDropdownAsync(companyId).Result
+            _view.PopulateBankDropdown(data)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ManufacturerSelected(sender As Object, vendorId As Integer)
+        Try
+            Dim vendor = _manufaturerRep.GetByIdAsync(vendorId).Result
+            _view.ShowVendorAccount(vendor.manu_account)
+            LoadVendorAmountDue(vendorId)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub LoadVendorAmountDue(vendorId As Integer)
+        Try
+            Dim amountDue = _paymentRep.GetVendorAmountDue(vendorId)
+            _view.DisplayAmountDueList(amountDue)
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
+
+    Private Sub Add()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim input = _view.GetInput
-                Dim payment = input.Payment
-                Await _paymentRep.AddAsync(payment)
+                Dim input = _view.GetUserInput
+                _paymentRep.AddAsync(input)
 
-                If payment.p_Type = "支票" Then
+                If input.p_Type = "應付票據" Then
                     Dim cheque = New chque_pay With {
-                        .cp_Date = payment.p_Date,
-                        .cp_Number = payment.p_Cheque,
-                        .cp_Amount = payment.p_Amount,
-                        .cp_AccountNumber = payment.manufacturer?.manu_account
+                        .cp_Date = input.p_Date,
+                        .cp_Number = input.p_Cheque,
+                        .cp_Amount = input.p_Amount,
+                        .cp_AccountNumber = input.manufacturer?.manu_account
                     }
 
-                    Await _cpRep.AddAsync(cheque)
-                ElseIf payment.p_Type = "銀行" Then
+                    _cpRep.AddAsync(cheque)
+                ElseIf input.p_Type = "銀行存款" Then
                     ' 支票兌現
-                    Dim subject = _subjectRep.GetByIdAsync(payment.p_s_Id).Result
+                    Dim subject = _subjectRep.GetByIdAsync(input.p_s_Id).Result
 
                     If subject.s_name = "應付票據" Then
                         Dim chequeNo = InputBox("請輸入支票號碼")
@@ -97,17 +160,17 @@
                                 Throw New Exception("此支票已兌現")
                             Else
                                 cheque.cp_IsCashing = True
-                                cheque.cp_CashingDate = payment.p_Date
+                                cheque.cp_CashingDate = input.p_Date
                             End If
                         End If
                     End If
                 End If
 
-                Dim entries = CreatePaymentEntries(payment)
+                Dim entries = CreatePaymentEntries(input)
                 _aeSer.AddEntries(entries)
 
                 transaction.Commit()
-                Await InitializeAsync()
+                Initialize()
                 MsgBox("新增成功")
             Catch ex As Exception
                 transaction.Rollback()
@@ -116,43 +179,41 @@
         End Using
     End Sub
 
-    Public Async Sub Update()
+    Private Sub Update()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim input = _view.GetInput
-                Dim payment = input.Payment
+                Dim input = _view.GetUserInput
 
+                _paymentRep.UpdateAsync(selectData, input)
 
-                Await _paymentRep.UpdateAsync(selectData, payment)
-
-                If payment.p_Type = "支票" Then
-                    Dim cheque = _cpRep.GetByChequeNumber(payment.p_Cheque)
+                If input.p_Type = "應付票據" Then
+                    Dim cheque = _cpRep.GetByChequeNumber(input.p_Cheque)
 
                     If cheque IsNot Nothing Then
-                        cheque.cp_Date = payment.p_Date
-                        cheque.cp_Number = payment.p_Cheque
-                        cheque.cp_Amount = payment.p_Amount
-                        cheque.cp_AccountNumber = payment.manufacturer?.manu_account
+                        cheque.cp_Date = input.p_Date
+                        cheque.cp_Number = input.p_Cheque
+                        cheque.cp_Amount = input.p_Amount
+                        cheque.cp_AccountNumber = input.manufacturer?.manu_account
                     Else
                         '如果支票不存在，則新增一個新的支票記錄
                         cheque = New chque_pay With {
-                            .cp_Date = payment.p_Date,
-                            .cp_Number = payment.p_Cheque,
-                            .cp_Amount = payment.p_Amount,
-                            .cp_AccountNumber = payment.manufacturer?.manu_account
+                            .cp_Date = input.p_Date,
+                            .cp_Number = input.p_Cheque,
+                            .cp_Amount = input.p_Amount,
+                            .cp_AccountNumber = input.manufacturer?.manu_account
                         }
-                        Await _cpRep.AddAsync(cheque)
+                        _cpRep.AddAsync(cheque)
                     End If
                 End If
 
                 '更新會計分錄
-                Dim entries = CreatePaymentEntries(payment)
+                Dim entries = CreatePaymentEntries(input)
                 _aeSer.UpdateEntries(entries)
 
-                Await _paymentRep.SaveChangesAsync()
+                _paymentRep.SaveChangesAsync()
                 transaction.Commit()
 
-                Await InitializeAsync()
+                Initialize()
                 MsgBox("更新成功")
             Catch ex As Exception
                 transaction.Rollback()
@@ -161,65 +222,62 @@
         End Using
     End Sub
 
-    Public Async Function DeleteAsync(id As Integer) As Task
+    Private Sub Delete()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim payment = Await _paymentRep.GetByIdAsync(id)
-                Dim payType = payment.p_Type
-                Dim bankId = payment.p_bank_Id
+                Dim payType = selectData.p_Type
+                Dim bankId = selectData.p_bank_Id
 
                 '刪除支票
-                If payment.p_Type = "支票" Then
-                    Dim cheque = _cpRep.GetByChequeNumber(payment.p_Cheque)
+                If selectData.p_Type = "支票" Then
+                    Dim cheque = _cpRep.GetByChequeNumber(selectData.p_Cheque)
                     If cheque IsNot Nothing Then
-                        Await _cpRep.DeleteAsync(cheque.cp_Id)
+                        _cpRep.DeleteAsync(cheque.cp_Id)
                     End If
                 End If
 
                 '刪除付款
-                Await _paymentRep.DeleteAsync(id)
+                _paymentRep.DeleteAsync(selectData.p_Id)
 
                 '更新月結餘額
-                If payType = "銀行" Then Await _bmbService.UpdateMonthBalanceAsync(bankId, payment.p_Date)
+                If payType = "銀行" Then _bmbService.UpdateMonthBalanceAsync(bankId, selectData.p_Date)
 
-                _aeSer.DeleteEntries("付款作業", payment.p_Id)
-                Await _paymentRep.SaveChangesAsync()
+                _aeSer.DeleteEntries("付款作業", selectData.p_Id)
+                _paymentRep.SaveChangesAsync()
 
                 transaction.Commit()
 
                 _view.ClearInput()
-                Await SearchPaymentsAsync()
+                LoadList()
                 MsgBox("刪除成功")
             Catch ex As Exception
                 transaction.Rollback()
                 MsgBox(ex.Message)
             End Try
         End Using
-    End Function
+    End Sub
 
-    Public Async Function LoadPaymentDetailAsync(id As Integer) As Task
+    Private Sub LoadPaymentDetail(sender As Object, id As Integer)
         Try
             _view.ClearInput()
-            selectData = Await _paymentRep.GetByIdAsync(id)
+            selectData = _paymentRep.GetByIdAsync(id).Result
 
-            Dim data = New PaymentVM With {
-            .Payment = selectData
-            }
-            LoadBankDropdown(data.Payment.p_comp_Id)
-            _view.ShowDetail(data)
-            If data.Payment.p_m_Id.HasValue Then ShowVendorAccountAsync(data.Payment.p_m_Id)
+            LoadBankDropdown(sender, selectData.p_comp_Id)
+            _view.DisplayDetail(selectData)
+            If selectData.p_m_Id.HasValue Then ManufacturerSelected(sender, selectData.p_m_Id)
+            _view.SetButton(True)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Function
+    End Sub
 
-    Public Sub Print(selectDate As Date, type As String)
+    Private Sub Print(sender As Object, data As Tuple(Of Date, String))
         Try
-            Select Case type
+            Select Case data.Item2
                 Case "現金"
-                    _reportSer.GeneratorCashSubpoena(selectDate, _paymentRep.GetCashSubpoenaData(selectDate), False)
+                    _reportSer.GeneratorCashSubpoena(data.Item1, _paymentRep.GetCashSubpoenaData(data.Item1), False)
                 Case "轉帳"
-                    _reportSer.GeneratorTransferSubpoena(selectDate, _paymentRep.GetTransferSubpoenaData(selectDate), False)
+                    _reportSer.GeneratorTransferSubpoena(data.Item1, _paymentRep.GetTransferSubpoenaData(data.Item1), False)
                 Case Else
                     Throw New Exception("類型錯誤")
             End Select
@@ -227,33 +285,6 @@
             MsgBox(ex.Message)
         End Try
     End Sub
-
-    Private Async Function LoadVendorDropdownAsync() As Task
-        Try
-            Dim vendors = Await _manufaturerRep.GetVendorDropdownAsync
-            _view.PopulateVendorDropdown(vendors)
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
-    Private Async Function LoadSubjectDropdownAsync() As Task
-        Try
-            Dim subjects = Await _subjectRep.GetSubjectDropdownAsync
-            _view.PopulateSubjectDropdown(subjects)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Function
-
-    Private Async Function LoadCompanyDropdownAsync() As Task
-        Try
-            Dim companies = Await _companyRep.GetCompanyDropdownAsync
-            _view.PopulateCompanyDropdown(companies)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Function
 
     Private Function CreatePaymentEntries(payment As payment) As List(Of accounting_entry)
         Dim entries = New List(Of accounting_entry)
@@ -319,14 +350,4 @@
 
         Return entries
     End Function
-
-    Public Async Sub ShowVendorAccountAsync(vendorId As Integer)
-        Dim vendor = Await _manufaturerRep.GetByIdAsync(vendorId)
-        _view.ShowVendorAccount(vendor.manu_account)
-    End Sub
-
-    Public Sub LoadBankDropdown(companyId As Integer)
-        Dim data = _bankRep.GetBankDropdownAsync(companyId).Result
-        _view.PopulateBankDropdown(data)
-    End Sub
 End Class

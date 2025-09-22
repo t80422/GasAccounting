@@ -62,7 +62,7 @@
     End Sub
 
     Public Sub ButtonControl(isCreate As Boolean) Implements ISurplusGasView.ButtonControl
-        SetButtonState(btnAdd, isCreate)
+        SetButtonState_old(btnAdd, isCreate)
     End Sub
 
     Private Sub Calculate() Handles txtPlatform.KeyUp, txtPlatform_C.KeyUp, txtSlot.KeyUp, txtSlot_C.KeyUp, txtCar.KeyUp, txtCar_C.KeyUp, txtSell.KeyUp

@@ -35,10 +35,6 @@ Partial Class PaymentUserControl
         Me.cmbCompany_payment = New System.Windows.Forms.ComboBox()
         Me.Label114 = New System.Windows.Forms.Label()
         Me.lblReq_Chuque = New System.Windows.Forms.Label()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.chkIsSearchDate_payment = New System.Windows.Forms.CheckBox()
-        Me.dtpEnd_payment = New System.Windows.Forms.DateTimePicker()
-        Me.dtpStart_payment = New System.Windows.Forms.DateTimePicker()
         Me.Label81 = New System.Windows.Forms.Label()
         Me.lblVendorBank_payment = New System.Windows.Forms.Label()
         Me.cmbManu_payment = New System.Windows.Forms.ComboBox()
@@ -68,7 +64,6 @@ Partial Class PaymentUserControl
         Me.cmbBank = New System.Windows.Forms.ComboBox()
         Me.grpAmountDue.SuspendLayout()
         CType(Me.dgvAmountDue, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox1.SuspendLayout()
         CType(Me.dgvPayment, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -203,45 +198,6 @@ Partial Class PaymentUserControl
         Me.lblReq_Chuque.TabIndex = 484
         Me.lblReq_Chuque.Text = "*"
         Me.lblReq_Chuque.Visible = False
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.chkIsSearchDate_payment)
-        Me.GroupBox1.Controls.Add(Me.dtpEnd_payment)
-        Me.GroupBox1.Controls.Add(Me.dtpStart_payment)
-        Me.GroupBox1.Location = New System.Drawing.Point(933, 85)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(5)
-        Me.GroupBox1.Size = New System.Drawing.Size(306, 141)
-        Me.GroupBox1.TabIndex = 483
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "查詢日期起迄"
-        '
-        'chkIsSearchDate_payment
-        '
-        Me.chkIsSearchDate_payment.AutoSize = True
-        Me.chkIsSearchDate_payment.Location = New System.Drawing.Point(8, 103)
-        Me.chkIsSearchDate_payment.Name = "chkIsSearchDate_payment"
-        Me.chkIsSearchDate_payment.Size = New System.Drawing.Size(154, 23)
-        Me.chkIsSearchDate_payment.TabIndex = 412
-        Me.chkIsSearchDate_payment.Text = "使用日期查詢"
-        Me.chkIsSearchDate_payment.UseVisualStyleBackColor = True
-        '
-        'dtpEnd_payment
-        '
-        Me.dtpEnd_payment.Location = New System.Drawing.Point(8, 67)
-        Me.dtpEnd_payment.Name = "dtpEnd_payment"
-        Me.dtpEnd_payment.Size = New System.Drawing.Size(180, 30)
-        Me.dtpEnd_payment.TabIndex = 410
-        Me.dtpEnd_payment.Tag = "p_Date"
-        '
-        'dtpStart_payment
-        '
-        Me.dtpStart_payment.Location = New System.Drawing.Point(8, 31)
-        Me.dtpStart_payment.Name = "dtpStart_payment"
-        Me.dtpStart_payment.Size = New System.Drawing.Size(180, 30)
-        Me.dtpStart_payment.TabIndex = 409
-        Me.dtpStart_payment.Tag = "p_Date"
         '
         'Label81
         '
@@ -532,7 +488,6 @@ Partial Class PaymentUserControl
         Me.Controls.Add(Me.cmbCompany_payment)
         Me.Controls.Add(Me.Label114)
         Me.Controls.Add(Me.lblReq_Chuque)
-        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.Label81)
         Me.Controls.Add(Me.lblVendorBank_payment)
         Me.Controls.Add(Me.cmbManu_payment)
@@ -563,8 +518,6 @@ Partial Class PaymentUserControl
         Me.Size = New System.Drawing.Size(1882, 949)
         Me.grpAmountDue.ResumeLayout(False)
         CType(Me.dgvAmountDue, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
         CType(Me.dgvPayment, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -584,10 +537,6 @@ Partial Class PaymentUserControl
     Friend WithEvents cmbCompany_payment As ComboBox
     Friend WithEvents Label114 As Label
     Friend WithEvents lblReq_Chuque As Label
-    Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents chkIsSearchDate_payment As CheckBox
-    Friend WithEvents dtpEnd_payment As DateTimePicker
-    Friend WithEvents dtpStart_payment As DateTimePicker
     Friend WithEvents Label81 As Label
     Friend WithEvents lblVendorBank_payment As Label
     Friend WithEvents cmbManu_payment As ComboBox

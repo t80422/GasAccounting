@@ -355,29 +355,29 @@ Public Class ReportRep
             '獲取收入數據
             Dim collections = _context.collections.AsNoTracking.
                 Where(Function(x) x.col_Date >= startDate AndAlso
-                                  x.col_Date <= formatEndDate AndAlso
-                                  x.col_Type = "現金")
+                                  x.col_Date < formatEndDate AndAlso
+                                  x.col_Type = "現金").
+                Select(Function(x) New With {
+                    .Date = x.col_Date,
+                    .Subject = x.subject.s_name,
+                    .Memo = x.col_Memo,
+                    .Amount = x.col_Amount,
+                    .IsIncome = True
+                }).ToList
 
-            Dim formatCollections = collections.Select(Function(x) New With {
-                                                            .Date = x.col_Date,
-                                                            .Subject = x.subject.s_name,
-                                                            .Memo = x.col_Memo,
-                                                            .Amount = x.col_Amount,
-                                                            .IsIncome = True
-                                                        })
             '獲取支出數據
             Dim payments = _context.payments.Where(Function(x) x.p_Date >= startDate AndAlso
-                                                         x.p_Date <= formatEndDate AndAlso
+                                                         x.p_Date < formatEndDate AndAlso
                                                          x.p_Type = "現金").
-                                       Select(Function(x) New With {
-                                                    .Date = x.p_Date,
-                                                    .Subject = x.subject.s_name,
-                                                    .Memo = x.p_Memo,
-                                                    .Amount = x.p_Amount,
-                                                    .IsIncome = False
-                                        })
+                                            Select(Function(x) New With {
+                                                        .Date = x.p_Date,
+                                                        .Subject = x.subject.s_name,
+                                                        .Memo = x.p_Memo,
+                                                        .Amount = x.p_Amount,
+                                                        .IsIncome = False
+                                            }).ToList
             '合併並排列數據
-            Dim allTransactions = formatCollections.Union(payments) _
+            Dim allTransactions = collections.Union(payments) _
                                              .OrderBy(Function(x) x.Date) _
                                              .ThenBy(Function(x) x.IsIncome).ToList
 
@@ -410,7 +410,7 @@ Public Class ReportRep
             '獲取收入數據
             Dim collections = _context.collections.Where(Function(x) x.col_Date.Year = month.Year AndAlso
                                                                    x.col_Date.Month = month.Month AndAlso
-                                                                   x.col_Type = "銀行" AndAlso
+                                                                   x.col_Type = "銀行存款" AndAlso
                                                                    x.col_bank_Id = bankId).
                                              Select(Function(x) New With {
                                                 .Date = x.col_Date,
@@ -423,7 +423,7 @@ Public Class ReportRep
             '獲取支出數據
             Dim payments = _context.payments.Where(Function(x) x.p_Date.Year = month.Year AndAlso
                                                              x.p_Date.Month = month.Month AndAlso
-                                                             x.p_Type = "銀行" AndAlso
+                                                             x.p_Type = "銀行存款" AndAlso
                                                              x.p_bank_Id = bankId).
                                        Select(Function(x) New With {
                                             .Date = x.p_Date,

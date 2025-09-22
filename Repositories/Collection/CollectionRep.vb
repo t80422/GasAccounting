@@ -72,7 +72,7 @@ Public Class CollectionRep
         Try
             Dim query = _dbSet.Where(Function(x) x.col_Date = day)
 
-            Dim result = query.Where(Function(x) x.col_Type = "銀行" OrElse x.col_Type = "支票").
+            Dim result = query.Where(Function(x) x.col_Type = "銀行存款" OrElse x.col_Type = "應收票據").
                 Select(Function(x) New TransferSubpoenaDTO With {
                     .CreditAmount = x.col_Amount,
                     .CreditSubjectName = x.subject.s_name,

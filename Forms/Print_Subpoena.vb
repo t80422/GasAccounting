@@ -1,7 +1,5 @@
 ﻿Public Class Print_Subpoena
-    Private _SelectDate As Object
-
-    Public ReadOnly Property SelectDate
+    Public ReadOnly Property SelectDate As Date
         Get
             Return dtpDate.Value.Date
         End Get

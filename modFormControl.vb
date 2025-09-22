@@ -258,18 +258,33 @@ Module modFormControl
         End If
     End Sub
 
+
     ''' <summary>
     ''' 設置按鈕的啟用狀態
     ''' </summary>
     ''' <param name="sender">觸發事件的控件</param>
     ''' <param name="enableCreate">是否啟用新增按鈕</param>
-    Public Sub SetButtonState(sender As Control, enableCreate As Boolean)
+    <Obsolete("功能放到userControl後,請使用 SetButtonState(container As Control, enableCreate As Boolean) 方法")>
+    Public Sub SetButtonState_old(sender As Control, enableCreate As Boolean)
         Dim parent = sender.Parent
         Dim btns = parent.Controls.OfType(Of Button)
         Dim btnCreate = btns.FirstOrDefault(Function(x) x.Text.Contains("新"))
 
         If btnCreate IsNot Nothing Then btnCreate.Enabled = enableCreate
         btns.Where(Function(x) x.Text.Contains("修") Or x.Text.Contains("刪")).ToList.ForEach(Sub(y) y.Enabled = Not enableCreate)
+    End Sub
+
+    ''' <summary>
+    ''' 設置按鈕的啟用狀態
+    ''' </summary>
+    ''' <param name="container">容器</param>
+    ''' <param name="isSelectedRow">是否選擇資料,表示編輯中</param>
+    Public Sub SetButtonState(container As Control, isSelectedRow As Boolean)
+        Dim btns = container.Controls.OfType(Of Button)
+        Dim btnCreate = btns.FirstOrDefault(Function(x) x.Text.Contains("新"))
+
+        If btnCreate IsNot Nothing Then btnCreate.Enabled = Not isSelectedRow
+        btns.Where(Function(x) x.Text.Contains("修") Or x.Text.Contains("刪")).ToList.ForEach(Sub(y) y.Enabled = isSelectedRow)
     End Sub
 
     Public Function PositiveIntegerOnly_TextBox(sender As Object, e As KeyPressEventArgs) As Boolean
@@ -379,7 +394,7 @@ Module modFormControl
         Dim ctrl As DataGridView = sender
         If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return 0
 
-        SetButtonState(ctrl, False)
+        SetButtonState_old(ctrl, False)
 
         Return ctrl.SelectedRows(0).Cells(0).Value
     End Function

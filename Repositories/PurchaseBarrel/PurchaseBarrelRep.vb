@@ -12,11 +12,13 @@ Public Class PurchaseBarrelRep
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
 
-            If criteria.VendorId.HasValue Then query = query.Where(Function(x) x.pb_manu_Id = criteria.VendorId)
-            If criteria.IsDate Then
-                Dim endDate = criteria.EndDate.AddDays(1)
-                query = query.Where(Function(x) x.pb_Date >= criteria.StartDate)
-                query = query.Where(Function(x) x.pb_Date < endDate)
+            If criteria IsNot Nothing Then
+                If criteria.VendorId.HasValue Then query = query.Where(Function(x) x.pb_manu_Id = criteria.VendorId)
+                If criteria.IsDate Then
+                    Dim endDate = criteria.EndDate.AddDays(1)
+                    query = query.Where(Function(x) x.pb_Date >= criteria.StartDate)
+                    query = query.Where(Function(x) x.pb_Date < endDate)
+                End If
             End If
 
             Return Await query.OrderByDescending(Function(x) x.pb_Date).ToListAsync
