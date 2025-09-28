@@ -1,4 +1,4 @@
-﻿Public Class OrderVM
+﻿Public Class OrderListVM
     Public Property 編號 As Integer
     Public Property 時間 As Date
     Public Property 客戶名稱 As String
@@ -173,7 +173,6 @@
             操作人員 = data.employee?.emp_name
             保險金額 = data.o_Insurance
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
             Throw
         End Try
     End Sub

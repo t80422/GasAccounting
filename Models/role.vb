@@ -16,5 +16,6 @@ Partial Public Class role
 
     Public Overridable Property employees As ICollection(Of employee) = New HashSet(Of employee)
     Public Overridable Property rolepermissions As ICollection(Of rolepermission) = New HashSet(Of rolepermission)
+    Public Overridable Property rolepermissions1 As ICollection(Of rolepermission) = New HashSet(Of rolepermission)
 
 End Class

@@ -23,21 +23,21 @@ Module modFormControl
             End If
 
             ' 清除特定類型控件的內容
-            If TypeOf ctrl Is TextBox Then
-                Dim txt As TextBox = ctrl
-                txt.Text = String.Empty
+            Select Case True
+                Case TypeOf ctrl Is TextBox
+                    Dim txt As TextBox = ctrl
+                    txt.Text = String.Empty
+                    If txt.ReadOnly Then txt.BackColor = SystemColors.Control
 
-                If txt.ReadOnly Then
-                    txt.BackColor = SystemColors.Control
-                End If
+                Case TypeOf ctrl Is CheckBox
+                    CType(ctrl, CheckBox).Checked = False
 
-            ElseIf TypeOf ctrl Is CheckBox Then
-                CType(ctrl, CheckBox).Checked = False
-            ElseIf TypeOf ctrl Is RadioButton Then
-                CType(ctrl, RadioButton).Checked = False
-            ElseIf TypeOf ctrl Is ComboBox Then
-                CType(ctrl, ComboBox).SelectedIndex = -1
-            End If
+                Case TypeOf ctrl Is ComboBox
+                    CType(ctrl, ComboBox).SelectedIndex = -1
+
+                Case TypeOf ctrl Is DateTimePicker
+                    CType(ctrl, DateTimePicker).Value = Now
+            End Select
         Next
     End Sub
 

@@ -1,4 +1,5 @@
-﻿Public Interface IBaseView(Of TEntity, TViewModel)
+﻿<Obsolete("IFormView 來取代")>
+Public Interface IBaseView(Of TEntity, TViewModel)
     ''' <summary>
     ''' 顯示列表
     ''' </summary>

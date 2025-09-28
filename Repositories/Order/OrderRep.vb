@@ -88,4 +88,16 @@ Public Class OrderRep
             Throw
         End Try
     End Function
+
+    Public Function GetLastOrder(cusId As Integer) As order Implements IOrderRep.GetLastOrder
+        Try
+            Return _dbSet.AsNoTracking.
+                Where(Function(x) x.o_cus_Id = cusId).
+                OrderByDescending(Function(x) x.o_date).
+                ThenByDescending(Function(x) x.o_id).
+                FirstOrDefault()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

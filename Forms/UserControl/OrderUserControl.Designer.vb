@@ -33,10 +33,10 @@ Partial Class OrderUserControl
         Me.Label240 = New System.Windows.Forms.Label()
         Me.txtBarrelAmount = New System.Windows.Forms.TextBox()
         Me.Label238 = New System.Windows.Forms.Label()
-        Me.btnEdit_ord = New System.Windows.Forms.Button()
+        Me.btnEdit = New System.Windows.Forms.Button()
         Me.txtInsurance = New System.Windows.Forms.TextBox()
         Me.Label153 = New System.Windows.Forms.Label()
-        Me.txtCusCode_ord = New System.Windows.Forms.TextBox()
+        Me.txtCusCode = New System.Windows.Forms.TextBox()
         Me.txtOperator = New System.Windows.Forms.TextBox()
         Me.Label107 = New System.Windows.Forms.Label()
         Me.tcInOut = New System.Windows.Forms.TabControl()
@@ -51,16 +51,6 @@ Partial Class OrderUserControl
         Me.txtBarralUnitPrice_20 = New System.Windows.Forms.TextBox()
         Me.txtBarralUnitPrice_50 = New System.Windows.Forms.TextBox()
         Me.Label100 = New System.Windows.Forms.Label()
-        Me.txtInspect2 = New System.Windows.Forms.TextBox()
-        Me.txtInspect4 = New System.Windows.Forms.TextBox()
-        Me.txtInspect5 = New System.Windows.Forms.TextBox()
-        Me.txtInspect10 = New System.Windows.Forms.TextBox()
-        Me.txtInspect14 = New System.Windows.Forms.TextBox()
-        Me.txtInspect18 = New System.Windows.Forms.TextBox()
-        Me.txtInspect16 = New System.Windows.Forms.TextBox()
-        Me.txtInspect20 = New System.Windows.Forms.TextBox()
-        Me.txtInspect50 = New System.Windows.Forms.TextBox()
-        Me.Label142 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.TextBox16 = New System.Windows.Forms.TextBox()
         Me.TextBox17 = New System.Windows.Forms.TextBox()
@@ -143,7 +133,7 @@ Partial Class OrderUserControl
         Me.txtCarDeposit_50 = New System.Windows.Forms.TextBox()
         Me.Label277 = New System.Windows.Forms.Label()
         Me.Label274 = New System.Windows.Forms.Label()
-        Me.cmbCarOut_ord = New System.Windows.Forms.ComboBox()
+        Me.cmbCarOut = New System.Windows.Forms.ComboBox()
         Me.txtCusGas_2 = New System.Windows.Forms.TextBox()
         Me.txtCusGas_5 = New System.Windows.Forms.TextBox()
         Me.txtCusGas_14 = New System.Windows.Forms.TextBox()
@@ -214,48 +204,41 @@ Partial Class OrderUserControl
         Me.txto_return = New System.Windows.Forms.TextBox()
         Me.txto_memo = New System.Windows.Forms.TextBox()
         Me.txtCusName = New System.Windows.Forms.TextBox()
-        Me.txtAmount_ord = New System.Windows.Forms.TextBox()
-        Me.txtCusID_order = New System.Windows.Forms.TextBox()
+        Me.txtTotalAmount = New System.Windows.Forms.TextBox()
+        Me.txtCusID = New System.Windows.Forms.TextBox()
         Me.txto_id = New System.Windows.Forms.TextBox()
         Me.Label204 = New System.Windows.Forms.Label()
         Me.Label203 = New System.Windows.Forms.Label()
         Me.Label202 = New System.Windows.Forms.Label()
-        Me.btnQueryCus_ord = New System.Windows.Forms.Button()
+        Me.btnSearchCus = New System.Windows.Forms.Button()
         Me.btnPrint = New System.Windows.Forms.Button()
-        Me.grpSearch_ord = New System.Windows.Forms.GroupBox()
-        Me.chkOut = New System.Windows.Forms.CheckBox()
-        Me.chkIn = New System.Windows.Forms.CheckBox()
-        Me.chkIsDate_ord = New System.Windows.Forms.CheckBox()
-        Me.Label165 = New System.Windows.Forms.Label()
-        Me.btnQuery_order = New System.Windows.Forms.Button()
-        Me.dtpEnd_order = New System.Windows.Forms.DateTimePicker()
-        Me.Label166 = New System.Windows.Forms.Label()
-        Me.dtpStart_order = New System.Windows.Forms.DateTimePicker()
         Me.Label77 = New System.Windows.Forms.Label()
         Me.Label64 = New System.Windows.Forms.Label()
         Me.Label63 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.cmbCar_ord = New System.Windows.Forms.ComboBox()
+        Me.cmbCar = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dgvOrder = New System.Windows.Forms.DataGridView()
-        Me.btnCancel_order = New System.Windows.Forms.Button()
-        Me.btnDelete_order = New System.Windows.Forms.Button()
-        Me.btnCreate_ord = New System.Windows.Forms.Button()
+        Me.btnCancel = New System.Windows.Forms.Button()
+        Me.btnDelete = New System.Windows.Forms.Button()
+        Me.btnCreate = New System.Windows.Forms.Button()
         Me.lblCusCode = New System.Windows.Forms.Label()
         Me.lblCarNo = New System.Windows.Forms.Label()
         Me.dtpOrder = New System.Windows.Forms.DateTimePicker()
         Me.Label151 = New System.Windows.Forms.Label()
+        Me.txtInsuranceUnitPrice = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.btnSearch = New System.Windows.Forms.Button()
         Me.tcInOut.SuspendLayout()
         Me.tpIn.SuspendLayout()
         Me.tpOut.SuspendLayout()
         Me.grpTransport.SuspendLayout()
-        Me.grpSearch_ord.SuspendLayout()
         CType(Me.dgvOrder, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'txtUnpaid
         '
-        Me.txtUnpaid.Location = New System.Drawing.Point(540, 222)
+        Me.txtUnpaid.Location = New System.Drawing.Point(738, 240)
         Me.txtUnpaid.Name = "txtUnpaid"
         Me.txtUnpaid.ReadOnly = True
         Me.txtUnpaid.Size = New System.Drawing.Size(100, 30)
@@ -265,17 +248,17 @@ Partial Class OrderUserControl
         'Label137
         '
         Me.Label137.AutoSize = True
-        Me.Label137.Location = New System.Drawing.Point(420, 225)
+        Me.Label137.Location = New System.Drawing.Point(637, 246)
         Me.Label137.Name = "Label137"
-        Me.Label137.Size = New System.Drawing.Size(114, 19)
+        Me.Label137.Size = New System.Drawing.Size(93, 19)
         Me.Label137.TabIndex = 525
-        Me.Label137.Text = "未收款金額"
+        Me.Label137.Text = "未收金額"
         '
         'btnCusGetGasList
         '
         Me.btnCusGetGasList.AutoSize = True
         Me.btnCusGetGasList.BackColor = System.Drawing.Color.Lime
-        Me.btnCusGetGasList.Location = New System.Drawing.Point(1300, 448)
+        Me.btnCusGetGasList.Location = New System.Drawing.Point(528, 372)
         Me.btnCusGetGasList.Name = "btnCusGetGasList"
         Me.btnCusGetGasList.Size = New System.Drawing.Size(189, 44)
         Me.btnCusGetGasList.TabIndex = 524
@@ -286,7 +269,7 @@ Partial Class OrderUserControl
         '
         Me.btnCusGasPayCollect.AutoSize = True
         Me.btnCusGasPayCollect.BackColor = System.Drawing.Color.Lime
-        Me.btnCusGasPayCollect.Location = New System.Drawing.Point(1032, 448)
+        Me.btnCusGasPayCollect.Location = New System.Drawing.Point(260, 372)
         Me.btnCusGasPayCollect.Name = "btnCusGasPayCollect"
         Me.btnCusGasPayCollect.Size = New System.Drawing.Size(252, 44)
         Me.btnCusGasPayCollect.TabIndex = 523
@@ -297,7 +280,7 @@ Partial Class OrderUserControl
         '
         Me.btnPrintCusStk.AutoSize = True
         Me.btnPrintCusStk.BackColor = System.Drawing.Color.Lime
-        Me.btnPrintCusStk.Location = New System.Drawing.Point(785, 448)
+        Me.btnPrintCusStk.Location = New System.Drawing.Point(13, 372)
         Me.btnPrintCusStk.Name = "btnPrintCusStk"
         Me.btnPrintCusStk.Size = New System.Drawing.Size(231, 44)
         Me.btnPrintCusStk.TabIndex = 522
@@ -306,7 +289,7 @@ Partial Class OrderUserControl
         '
         'txtGasCUnitPrice
         '
-        Me.txtGasCUnitPrice.Location = New System.Drawing.Point(519, 176)
+        Me.txtGasCUnitPrice.Location = New System.Drawing.Point(531, 194)
         Me.txtGasCUnitPrice.Name = "txtGasCUnitPrice"
         Me.txtGasCUnitPrice.ReadOnly = True
         Me.txtGasCUnitPrice.Size = New System.Drawing.Size(100, 30)
@@ -316,7 +299,7 @@ Partial Class OrderUserControl
         'Label241
         '
         Me.Label241.AutoSize = True
-        Me.Label241.Location = New System.Drawing.Point(420, 182)
+        Me.Label241.Location = New System.Drawing.Point(430, 200)
         Me.Label241.Name = "Label241"
         Me.Label241.Size = New System.Drawing.Size(93, 19)
         Me.Label241.TabIndex = 520
@@ -324,7 +307,7 @@ Partial Class OrderUserControl
         '
         'txtGasUnitPrice
         '
-        Me.txtGasUnitPrice.Location = New System.Drawing.Point(519, 133)
+        Me.txtGasUnitPrice.Location = New System.Drawing.Point(531, 148)
         Me.txtGasUnitPrice.Name = "txtGasUnitPrice"
         Me.txtGasUnitPrice.ReadOnly = True
         Me.txtGasUnitPrice.Size = New System.Drawing.Size(100, 30)
@@ -334,7 +317,7 @@ Partial Class OrderUserControl
         'Label240
         '
         Me.Label240.AutoSize = True
-        Me.Label240.Location = New System.Drawing.Point(420, 139)
+        Me.Label240.Location = New System.Drawing.Point(430, 154)
         Me.Label240.Name = "Label240"
         Me.Label240.Size = New System.Drawing.Size(93, 19)
         Me.Label240.TabIndex = 518
@@ -342,7 +325,7 @@ Partial Class OrderUserControl
         '
         'txtBarrelAmount
         '
-        Me.txtBarrelAmount.Location = New System.Drawing.Point(108, 219)
+        Me.txtBarrelAmount.Location = New System.Drawing.Point(318, 240)
         Me.txtBarrelAmount.Name = "txtBarrelAmount"
         Me.txtBarrelAmount.ReadOnly = True
         Me.txtBarrelAmount.Size = New System.Drawing.Size(100, 30)
@@ -352,25 +335,25 @@ Partial Class OrderUserControl
         'Label238
         '
         Me.Label238.AutoSize = True
-        Me.Label238.Location = New System.Drawing.Point(8, 225)
+        Me.Label238.Location = New System.Drawing.Point(219, 246)
         Me.Label238.Name = "Label238"
         Me.Label238.Size = New System.Drawing.Size(94, 19)
         Me.Label238.TabIndex = 516
         Me.Label238.Text = "桶 金 額"
         '
-        'btnEdit_ord
+        'btnEdit
         '
-        Me.btnEdit_ord.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit_ord.Location = New System.Drawing.Point(161, 448)
-        Me.btnEdit_ord.Name = "btnEdit_ord"
-        Me.btnEdit_ord.Size = New System.Drawing.Size(140, 44)
-        Me.btnEdit_ord.TabIndex = 515
-        Me.btnEdit_ord.Text = "修改 (F2)"
-        Me.btnEdit_ord.UseVisualStyleBackColor = False
+        Me.btnEdit.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnEdit.Location = New System.Drawing.Point(169, 322)
+        Me.btnEdit.Name = "btnEdit"
+        Me.btnEdit.Size = New System.Drawing.Size(140, 44)
+        Me.btnEdit.TabIndex = 515
+        Me.btnEdit.Text = "修改 (F2)"
+        Me.btnEdit.UseVisualStyleBackColor = False
         '
         'txtInsurance
         '
-        Me.txtInsurance.Location = New System.Drawing.Point(726, 176)
+        Me.txtInsurance.Location = New System.Drawing.Point(738, 194)
         Me.txtInsurance.Name = "txtInsurance"
         Me.txtInsurance.ReadOnly = True
         Me.txtInsurance.Size = New System.Drawing.Size(100, 30)
@@ -380,23 +363,23 @@ Partial Class OrderUserControl
         'Label153
         '
         Me.Label153.AutoSize = True
-        Me.Label153.Location = New System.Drawing.Point(625, 182)
+        Me.Label153.Location = New System.Drawing.Point(637, 200)
         Me.Label153.Name = "Label153"
         Me.Label153.Size = New System.Drawing.Size(93, 19)
         Me.Label153.TabIndex = 513
         Me.Label153.Text = "保險金額"
         '
-        'txtCusCode_ord
+        'txtCusCode
         '
-        Me.txtCusCode_ord.Location = New System.Drawing.Point(109, 4)
-        Me.txtCusCode_ord.Name = "txtCusCode_ord"
-        Me.txtCusCode_ord.Size = New System.Drawing.Size(100, 30)
-        Me.txtCusCode_ord.TabIndex = 512
-        Me.txtCusCode_ord.Tag = "cus_code"
+        Me.txtCusCode.Location = New System.Drawing.Point(112, 13)
+        Me.txtCusCode.Name = "txtCusCode"
+        Me.txtCusCode.Size = New System.Drawing.Size(100, 30)
+        Me.txtCusCode.TabIndex = 512
+        Me.txtCusCode.Tag = "cus_code"
         '
         'txtOperator
         '
-        Me.txtOperator.Location = New System.Drawing.Point(585, 359)
+        Me.txtOperator.Location = New System.Drawing.Point(112, 286)
         Me.txtOperator.Name = "txtOperator"
         Me.txtOperator.ReadOnly = True
         Me.txtOperator.Size = New System.Drawing.Size(100, 30)
@@ -406,7 +389,7 @@ Partial Class OrderUserControl
         'Label107
         '
         Me.Label107.AutoSize = True
-        Me.Label107.Location = New System.Drawing.Point(486, 365)
+        Me.Label107.Location = New System.Drawing.Point(13, 292)
         Me.Label107.Name = "Label107"
         Me.Label107.Size = New System.Drawing.Size(93, 19)
         Me.Label107.TabIndex = 510
@@ -416,10 +399,10 @@ Partial Class OrderUserControl
         '
         Me.tcInOut.Controls.Add(Me.tpIn)
         Me.tcInOut.Controls.Add(Me.tpOut)
-        Me.tcInOut.Location = New System.Drawing.Point(832, 4)
+        Me.tcInOut.Location = New System.Drawing.Point(844, 13)
         Me.tcInOut.Name = "tcInOut"
         Me.tcInOut.SelectedIndex = 0
-        Me.tcInOut.Size = New System.Drawing.Size(1017, 438)
+        Me.tcInOut.Size = New System.Drawing.Size(1039, 392)
         Me.tcInOut.TabIndex = 509
         Me.tcInOut.Tag = "o_in_out"
         '
@@ -436,16 +419,6 @@ Partial Class OrderUserControl
         Me.tpIn.Controls.Add(Me.txtBarralUnitPrice_20)
         Me.tpIn.Controls.Add(Me.txtBarralUnitPrice_50)
         Me.tpIn.Controls.Add(Me.Label100)
-        Me.tpIn.Controls.Add(Me.txtInspect2)
-        Me.tpIn.Controls.Add(Me.txtInspect4)
-        Me.tpIn.Controls.Add(Me.txtInspect5)
-        Me.tpIn.Controls.Add(Me.txtInspect10)
-        Me.tpIn.Controls.Add(Me.txtInspect14)
-        Me.tpIn.Controls.Add(Me.txtInspect18)
-        Me.tpIn.Controls.Add(Me.txtInspect16)
-        Me.tpIn.Controls.Add(Me.txtInspect20)
-        Me.tpIn.Controls.Add(Me.txtInspect50)
-        Me.tpIn.Controls.Add(Me.Label142)
         Me.tpIn.Controls.Add(Me.TextBox1)
         Me.tpIn.Controls.Add(Me.TextBox16)
         Me.tpIn.Controls.Add(Me.TextBox17)
@@ -519,7 +492,7 @@ Partial Class OrderUserControl
         Me.tpIn.Location = New System.Drawing.Point(4, 29)
         Me.tpIn.Name = "tpIn"
         Me.tpIn.Padding = New System.Windows.Forms.Padding(5)
-        Me.tpIn.Size = New System.Drawing.Size(1009, 405)
+        Me.tpIn.Size = New System.Drawing.Size(1031, 359)
         Me.tpIn.TabIndex = 0
         Me.tpIn.Text = "進場單"
         '
@@ -607,102 +580,9 @@ Partial Class OrderUserControl
         Me.Label100.TabIndex = 530
         Me.Label100.Text = "瓦斯桶單價"
         '
-        'txtInspect2
-        '
-        Me.txtInspect2.BackColor = System.Drawing.SystemColors.Control
-        Me.txtInspect2.Location = New System.Drawing.Point(762, 226)
-        Me.txtInspect2.Name = "txtInspect2"
-        Me.txtInspect2.ReadOnly = True
-        Me.txtInspect2.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect2.TabIndex = 519
-        Me.txtInspect2.Tag = "cus_inspect_2"
-        '
-        'txtInspect4
-        '
-        Me.txtInspect4.Location = New System.Drawing.Point(454, 226)
-        Me.txtInspect4.Name = "txtInspect4"
-        Me.txtInspect4.ReadOnly = True
-        Me.txtInspect4.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect4.TabIndex = 518
-        Me.txtInspect4.Tag = "cus_inspect_4"
-        '
-        'txtInspect5
-        '
-        Me.txtInspect5.BackColor = System.Drawing.SystemColors.Control
-        Me.txtInspect5.Location = New System.Drawing.Point(685, 226)
-        Me.txtInspect5.Name = "txtInspect5"
-        Me.txtInspect5.ReadOnly = True
-        Me.txtInspect5.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect5.TabIndex = 517
-        Me.txtInspect5.Tag = "cus_inspect_5"
-        '
-        'txtInspect10
-        '
-        Me.txtInspect10.Location = New System.Drawing.Point(377, 226)
-        Me.txtInspect10.Name = "txtInspect10"
-        Me.txtInspect10.ReadOnly = True
-        Me.txtInspect10.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect10.TabIndex = 516
-        Me.txtInspect10.Tag = "cus_inspect_10"
-        '
-        'txtInspect14
-        '
-        Me.txtInspect14.BackColor = System.Drawing.SystemColors.Control
-        Me.txtInspect14.Location = New System.Drawing.Point(608, 226)
-        Me.txtInspect14.Name = "txtInspect14"
-        Me.txtInspect14.ReadOnly = True
-        Me.txtInspect14.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect14.TabIndex = 515
-        Me.txtInspect14.Tag = "cus_inspect_14"
-        '
-        'txtInspect18
-        '
-        Me.txtInspect18.BackColor = System.Drawing.SystemColors.Control
-        Me.txtInspect18.Location = New System.Drawing.Point(531, 226)
-        Me.txtInspect18.Name = "txtInspect18"
-        Me.txtInspect18.ReadOnly = True
-        Me.txtInspect18.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect18.TabIndex = 514
-        Me.txtInspect18.Tag = "cus_inspect_18"
-        '
-        'txtInspect16
-        '
-        Me.txtInspect16.Location = New System.Drawing.Point(300, 226)
-        Me.txtInspect16.Name = "txtInspect16"
-        Me.txtInspect16.ReadOnly = True
-        Me.txtInspect16.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect16.TabIndex = 513
-        Me.txtInspect16.Tag = "cus_inspect_16"
-        '
-        'txtInspect20
-        '
-        Me.txtInspect20.Location = New System.Drawing.Point(223, 226)
-        Me.txtInspect20.Name = "txtInspect20"
-        Me.txtInspect20.ReadOnly = True
-        Me.txtInspect20.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect20.TabIndex = 512
-        Me.txtInspect20.Tag = "cus_inspect_20"
-        '
-        'txtInspect50
-        '
-        Me.txtInspect50.Location = New System.Drawing.Point(146, 226)
-        Me.txtInspect50.Name = "txtInspect50"
-        Me.txtInspect50.ReadOnly = True
-        Me.txtInspect50.Size = New System.Drawing.Size(53, 30)
-        Me.txtInspect50.TabIndex = 511
-        Me.txtInspect50.Tag = "cus_inspect_50"
-        '
-        'Label142
-        '
-        Me.Label142.Location = New System.Drawing.Point(8, 232)
-        Me.Label142.Name = "Label142"
-        Me.Label142.Size = New System.Drawing.Size(114, 19)
-        Me.Label142.TabIndex = 520
-        Me.Label142.Text = "檢驗結存瓶"
-        '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(762, 364)
+        Me.TextBox1.Location = New System.Drawing.Point(762, 318)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.Size = New System.Drawing.Size(53, 30)
@@ -711,7 +591,7 @@ Partial Class OrderUserControl
         '
         'TextBox16
         '
-        Me.TextBox16.Location = New System.Drawing.Point(685, 364)
+        Me.TextBox16.Location = New System.Drawing.Point(685, 318)
         Me.TextBox16.Name = "TextBox16"
         Me.TextBox16.ReadOnly = True
         Me.TextBox16.Size = New System.Drawing.Size(53, 30)
@@ -720,7 +600,7 @@ Partial Class OrderUserControl
         '
         'TextBox17
         '
-        Me.TextBox17.Location = New System.Drawing.Point(608, 364)
+        Me.TextBox17.Location = New System.Drawing.Point(608, 318)
         Me.TextBox17.Name = "TextBox17"
         Me.TextBox17.ReadOnly = True
         Me.TextBox17.Size = New System.Drawing.Size(53, 30)
@@ -729,7 +609,7 @@ Partial Class OrderUserControl
         '
         'TextBox18
         '
-        Me.TextBox18.Location = New System.Drawing.Point(531, 364)
+        Me.TextBox18.Location = New System.Drawing.Point(531, 318)
         Me.TextBox18.Name = "TextBox18"
         Me.TextBox18.ReadOnly = True
         Me.TextBox18.Size = New System.Drawing.Size(53, 30)
@@ -738,7 +618,7 @@ Partial Class OrderUserControl
         '
         'TextBox19
         '
-        Me.TextBox19.Location = New System.Drawing.Point(454, 364)
+        Me.TextBox19.Location = New System.Drawing.Point(454, 318)
         Me.TextBox19.Name = "TextBox19"
         Me.TextBox19.ReadOnly = True
         Me.TextBox19.Size = New System.Drawing.Size(53, 30)
@@ -747,7 +627,7 @@ Partial Class OrderUserControl
         '
         'TextBox20
         '
-        Me.TextBox20.Location = New System.Drawing.Point(377, 364)
+        Me.TextBox20.Location = New System.Drawing.Point(377, 318)
         Me.TextBox20.Name = "TextBox20"
         Me.TextBox20.ReadOnly = True
         Me.TextBox20.Size = New System.Drawing.Size(53, 30)
@@ -756,7 +636,7 @@ Partial Class OrderUserControl
         '
         'TextBox73
         '
-        Me.TextBox73.Location = New System.Drawing.Point(300, 364)
+        Me.TextBox73.Location = New System.Drawing.Point(300, 318)
         Me.TextBox73.Name = "TextBox73"
         Me.TextBox73.ReadOnly = True
         Me.TextBox73.Size = New System.Drawing.Size(53, 30)
@@ -765,7 +645,7 @@ Partial Class OrderUserControl
         '
         'TextBox74
         '
-        Me.TextBox74.Location = New System.Drawing.Point(223, 364)
+        Me.TextBox74.Location = New System.Drawing.Point(223, 318)
         Me.TextBox74.Name = "TextBox74"
         Me.TextBox74.ReadOnly = True
         Me.TextBox74.Size = New System.Drawing.Size(53, 30)
@@ -774,7 +654,7 @@ Partial Class OrderUserControl
         '
         'TextBox78
         '
-        Me.TextBox78.Location = New System.Drawing.Point(146, 364)
+        Me.TextBox78.Location = New System.Drawing.Point(146, 318)
         Me.TextBox78.Name = "TextBox78"
         Me.TextBox78.ReadOnly = True
         Me.TextBox78.Size = New System.Drawing.Size(53, 30)
@@ -783,7 +663,7 @@ Partial Class OrderUserControl
         '
         'Label206
         '
-        Me.Label206.Location = New System.Drawing.Point(8, 370)
+        Me.Label206.Location = New System.Drawing.Point(8, 324)
         Me.Label206.Name = "Label206"
         Me.Label206.Size = New System.Drawing.Size(114, 19)
         Me.Label206.TabIndex = 501
@@ -792,7 +672,7 @@ Partial Class OrderUserControl
         'txtBarrelIn_2
         '
         Me.txtBarrelIn_2.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_2.Location = New System.Drawing.Point(762, 272)
+        Me.txtBarrelIn_2.Location = New System.Drawing.Point(762, 226)
         Me.txtBarrelIn_2.Name = "txtBarrelIn_2"
         Me.txtBarrelIn_2.ReadOnly = True
         Me.txtBarrelIn_2.Size = New System.Drawing.Size(53, 30)
@@ -801,7 +681,7 @@ Partial Class OrderUserControl
         '
         'txtBarrelIn_4
         '
-        Me.txtBarrelIn_4.Location = New System.Drawing.Point(454, 272)
+        Me.txtBarrelIn_4.Location = New System.Drawing.Point(454, 226)
         Me.txtBarrelIn_4.Name = "txtBarrelIn_4"
         Me.txtBarrelIn_4.ReadOnly = True
         Me.txtBarrelIn_4.Size = New System.Drawing.Size(53, 30)
@@ -811,7 +691,7 @@ Partial Class OrderUserControl
         'txtBarrelIn_5
         '
         Me.txtBarrelIn_5.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_5.Location = New System.Drawing.Point(685, 272)
+        Me.txtBarrelIn_5.Location = New System.Drawing.Point(685, 226)
         Me.txtBarrelIn_5.Name = "txtBarrelIn_5"
         Me.txtBarrelIn_5.ReadOnly = True
         Me.txtBarrelIn_5.Size = New System.Drawing.Size(53, 30)
@@ -820,7 +700,7 @@ Partial Class OrderUserControl
         '
         'txtBarrelIn_10
         '
-        Me.txtBarrelIn_10.Location = New System.Drawing.Point(377, 272)
+        Me.txtBarrelIn_10.Location = New System.Drawing.Point(377, 226)
         Me.txtBarrelIn_10.Name = "txtBarrelIn_10"
         Me.txtBarrelIn_10.ReadOnly = True
         Me.txtBarrelIn_10.Size = New System.Drawing.Size(53, 30)
@@ -830,7 +710,7 @@ Partial Class OrderUserControl
         'txtBarrelIn_14
         '
         Me.txtBarrelIn_14.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_14.Location = New System.Drawing.Point(608, 272)
+        Me.txtBarrelIn_14.Location = New System.Drawing.Point(608, 226)
         Me.txtBarrelIn_14.Name = "txtBarrelIn_14"
         Me.txtBarrelIn_14.ReadOnly = True
         Me.txtBarrelIn_14.Size = New System.Drawing.Size(53, 30)
@@ -840,7 +720,7 @@ Partial Class OrderUserControl
         'txtBarrelIn_18
         '
         Me.txtBarrelIn_18.BackColor = System.Drawing.SystemColors.Control
-        Me.txtBarrelIn_18.Location = New System.Drawing.Point(531, 272)
+        Me.txtBarrelIn_18.Location = New System.Drawing.Point(531, 226)
         Me.txtBarrelIn_18.Name = "txtBarrelIn_18"
         Me.txtBarrelIn_18.ReadOnly = True
         Me.txtBarrelIn_18.Size = New System.Drawing.Size(53, 30)
@@ -849,7 +729,7 @@ Partial Class OrderUserControl
         '
         'txtBarrelIn_16
         '
-        Me.txtBarrelIn_16.Location = New System.Drawing.Point(300, 272)
+        Me.txtBarrelIn_16.Location = New System.Drawing.Point(300, 226)
         Me.txtBarrelIn_16.Name = "txtBarrelIn_16"
         Me.txtBarrelIn_16.ReadOnly = True
         Me.txtBarrelIn_16.Size = New System.Drawing.Size(53, 30)
@@ -858,7 +738,7 @@ Partial Class OrderUserControl
         '
         'txtBarrelIn_20
         '
-        Me.txtBarrelIn_20.Location = New System.Drawing.Point(223, 272)
+        Me.txtBarrelIn_20.Location = New System.Drawing.Point(223, 226)
         Me.txtBarrelIn_20.Name = "txtBarrelIn_20"
         Me.txtBarrelIn_20.ReadOnly = True
         Me.txtBarrelIn_20.Size = New System.Drawing.Size(53, 30)
@@ -867,7 +747,7 @@ Partial Class OrderUserControl
         '
         'txtBarrelIn_50
         '
-        Me.txtBarrelIn_50.Location = New System.Drawing.Point(146, 272)
+        Me.txtBarrelIn_50.Location = New System.Drawing.Point(146, 226)
         Me.txtBarrelIn_50.Name = "txtBarrelIn_50"
         Me.txtBarrelIn_50.ReadOnly = True
         Me.txtBarrelIn_50.Size = New System.Drawing.Size(53, 30)
@@ -876,7 +756,7 @@ Partial Class OrderUserControl
         '
         'Label205
         '
-        Me.Label205.Location = New System.Drawing.Point(8, 278)
+        Me.Label205.Location = New System.Drawing.Point(8, 232)
         Me.Label205.Name = "Label205"
         Me.Label205.Size = New System.Drawing.Size(114, 19)
         Me.Label205.TabIndex = 500
@@ -885,7 +765,7 @@ Partial Class OrderUserControl
         'txtDepositIn_2
         '
         Me.txtDepositIn_2.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_2.Location = New System.Drawing.Point(762, 318)
+        Me.txtDepositIn_2.Location = New System.Drawing.Point(762, 272)
         Me.txtDepositIn_2.Name = "txtDepositIn_2"
         Me.txtDepositIn_2.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_2.TabIndex = 476
@@ -893,7 +773,7 @@ Partial Class OrderUserControl
         '
         'txtDepositIn_4
         '
-        Me.txtDepositIn_4.Location = New System.Drawing.Point(454, 318)
+        Me.txtDepositIn_4.Location = New System.Drawing.Point(454, 272)
         Me.txtDepositIn_4.Name = "txtDepositIn_4"
         Me.txtDepositIn_4.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_4.TabIndex = 19
@@ -902,7 +782,7 @@ Partial Class OrderUserControl
         'txtDepositIn_5
         '
         Me.txtDepositIn_5.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_5.Location = New System.Drawing.Point(685, 318)
+        Me.txtDepositIn_5.Location = New System.Drawing.Point(685, 272)
         Me.txtDepositIn_5.Name = "txtDepositIn_5"
         Me.txtDepositIn_5.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_5.TabIndex = 474
@@ -910,7 +790,7 @@ Partial Class OrderUserControl
         '
         'txtDepositIn_10
         '
-        Me.txtDepositIn_10.Location = New System.Drawing.Point(377, 318)
+        Me.txtDepositIn_10.Location = New System.Drawing.Point(377, 272)
         Me.txtDepositIn_10.Name = "txtDepositIn_10"
         Me.txtDepositIn_10.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_10.TabIndex = 18
@@ -919,7 +799,7 @@ Partial Class OrderUserControl
         'txtDepositIn_14
         '
         Me.txtDepositIn_14.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_14.Location = New System.Drawing.Point(608, 318)
+        Me.txtDepositIn_14.Location = New System.Drawing.Point(608, 272)
         Me.txtDepositIn_14.Name = "txtDepositIn_14"
         Me.txtDepositIn_14.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_14.TabIndex = 472
@@ -928,7 +808,7 @@ Partial Class OrderUserControl
         'txtDepositIn_18
         '
         Me.txtDepositIn_18.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepositIn_18.Location = New System.Drawing.Point(531, 318)
+        Me.txtDepositIn_18.Location = New System.Drawing.Point(531, 272)
         Me.txtDepositIn_18.Name = "txtDepositIn_18"
         Me.txtDepositIn_18.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_18.TabIndex = 471
@@ -936,7 +816,7 @@ Partial Class OrderUserControl
         '
         'txtDepositIn_16
         '
-        Me.txtDepositIn_16.Location = New System.Drawing.Point(300, 318)
+        Me.txtDepositIn_16.Location = New System.Drawing.Point(300, 272)
         Me.txtDepositIn_16.Name = "txtDepositIn_16"
         Me.txtDepositIn_16.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_16.TabIndex = 17
@@ -944,7 +824,7 @@ Partial Class OrderUserControl
         '
         'txtDepositIn_20
         '
-        Me.txtDepositIn_20.Location = New System.Drawing.Point(223, 318)
+        Me.txtDepositIn_20.Location = New System.Drawing.Point(223, 272)
         Me.txtDepositIn_20.Name = "txtDepositIn_20"
         Me.txtDepositIn_20.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_20.TabIndex = 16
@@ -952,7 +832,7 @@ Partial Class OrderUserControl
         '
         'txtDepositIn_50
         '
-        Me.txtDepositIn_50.Location = New System.Drawing.Point(146, 318)
+        Me.txtDepositIn_50.Location = New System.Drawing.Point(146, 272)
         Me.txtDepositIn_50.Name = "txtDepositIn_50"
         Me.txtDepositIn_50.Size = New System.Drawing.Size(53, 30)
         Me.txtDepositIn_50.TabIndex = 15
@@ -960,7 +840,7 @@ Partial Class OrderUserControl
         '
         'Label272
         '
-        Me.Label272.Location = New System.Drawing.Point(8, 324)
+        Me.Label272.Location = New System.Drawing.Point(8, 278)
         Me.Label272.Name = "Label272"
         Me.Label272.Size = New System.Drawing.Size(114, 19)
         Me.Label272.TabIndex = 490
@@ -1325,7 +1205,7 @@ Partial Class OrderUserControl
         Me.tpOut.Controls.Add(Me.txtCarDeposit_50)
         Me.tpOut.Controls.Add(Me.Label277)
         Me.tpOut.Controls.Add(Me.Label274)
-        Me.tpOut.Controls.Add(Me.cmbCarOut_ord)
+        Me.tpOut.Controls.Add(Me.cmbCarOut)
         Me.tpOut.Controls.Add(Me.txtCusGas_2)
         Me.tpOut.Controls.Add(Me.txtCusGas_5)
         Me.tpOut.Controls.Add(Me.txtCusGas_14)
@@ -1389,7 +1269,7 @@ Partial Class OrderUserControl
         Me.tpOut.Location = New System.Drawing.Point(4, 29)
         Me.tpOut.Name = "tpOut"
         Me.tpOut.Padding = New System.Windows.Forms.Padding(5)
-        Me.tpOut.Size = New System.Drawing.Size(1009, 405)
+        Me.tpOut.Size = New System.Drawing.Size(1031, 359)
         Me.tpOut.TabIndex = 1
         Me.tpOut.Text = "出場單"
         '
@@ -1485,21 +1365,21 @@ Partial Class OrderUserControl
         'Label274
         '
         Me.Label274.AutoSize = True
-        Me.Label274.Location = New System.Drawing.Point(821, 263)
+        Me.Label274.Location = New System.Drawing.Point(8, 306)
         Me.Label274.Name = "Label274"
         Me.Label274.Size = New System.Drawing.Size(51, 19)
         Me.Label274.TabIndex = 493
         Me.Label274.Text = "車號"
         '
-        'cmbCarOut_ord
+        'cmbCarOut
         '
-        Me.cmbCarOut_ord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbCarOut_ord.FormattingEnabled = True
-        Me.cmbCarOut_ord.Location = New System.Drawing.Point(878, 260)
-        Me.cmbCarOut_ord.Name = "cmbCarOut_ord"
-        Me.cmbCarOut_ord.Size = New System.Drawing.Size(118, 27)
-        Me.cmbCarOut_ord.TabIndex = 492
-        Me.cmbCarOut_ord.Tag = "o_deposit_out_c_id"
+        Me.cmbCarOut.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbCarOut.FormattingEnabled = True
+        Me.cmbCarOut.Location = New System.Drawing.Point(146, 303)
+        Me.cmbCarOut.Name = "cmbCarOut"
+        Me.cmbCarOut.Size = New System.Drawing.Size(207, 27)
+        Me.cmbCarOut.TabIndex = 492
+        Me.cmbCarOut.Tag = "o_deposit_out_c_id"
         '
         'txtCusGas_2
         '
@@ -2032,9 +1912,9 @@ Partial Class OrderUserControl
         '
         Me.grpTransport.Controls.Add(Me.rdoPickUp)
         Me.grpTransport.Controls.Add(Me.rdoDelivery)
-        Me.grpTransport.Location = New System.Drawing.Point(670, 4)
+        Me.grpTransport.Location = New System.Drawing.Point(673, 13)
         Me.grpTransport.Name = "grpTransport"
-        Me.grpTransport.Size = New System.Drawing.Size(150, 60)
+        Me.grpTransport.Size = New System.Drawing.Size(165, 76)
         Me.grpTransport.TabIndex = 508
         Me.grpTransport.TabStop = False
         Me.grpTransport.Tag = "o_delivery_type"
@@ -2064,7 +1944,7 @@ Partial Class OrderUserControl
         '
         'txto_return_c
         '
-        Me.txto_return_c.Location = New System.Drawing.Point(108, 176)
+        Me.txto_return_c.Location = New System.Drawing.Point(112, 194)
         Me.txto_return_c.Name = "txto_return_c"
         Me.txto_return_c.Size = New System.Drawing.Size(100, 30)
         Me.txto_return_c.TabIndex = 507
@@ -2072,7 +1952,7 @@ Partial Class OrderUserControl
         '
         'txtTotalGas_c
         '
-        Me.txtTotalGas_c.Location = New System.Drawing.Point(314, 176)
+        Me.txtTotalGas_c.Location = New System.Drawing.Point(318, 194)
         Me.txtTotalGas_c.Name = "txtTotalGas_c"
         Me.txtTotalGas_c.ReadOnly = True
         Me.txtTotalGas_c.Size = New System.Drawing.Size(100, 30)
@@ -2081,7 +1961,7 @@ Partial Class OrderUserControl
         '
         'txtTotalGas
         '
-        Me.txtTotalGas.Location = New System.Drawing.Point(314, 133)
+        Me.txtTotalGas.Location = New System.Drawing.Point(318, 148)
         Me.txtTotalGas.Name = "txtTotalGas"
         Me.txtTotalGas.ReadOnly = True
         Me.txtTotalGas.Size = New System.Drawing.Size(100, 30)
@@ -2090,7 +1970,7 @@ Partial Class OrderUserControl
         '
         'txto_sales_allowance
         '
-        Me.txto_sales_allowance.Location = New System.Drawing.Point(726, 133)
+        Me.txto_sales_allowance.Location = New System.Drawing.Point(112, 240)
         Me.txto_sales_allowance.Name = "txto_sales_allowance"
         Me.txto_sales_allowance.Size = New System.Drawing.Size(100, 30)
         Me.txto_sales_allowance.TabIndex = 500
@@ -2098,7 +1978,7 @@ Partial Class OrderUserControl
         '
         'txto_return
         '
-        Me.txto_return.Location = New System.Drawing.Point(108, 133)
+        Me.txto_return.Location = New System.Drawing.Point(112, 148)
         Me.txto_return.Name = "txto_return"
         Me.txto_return.Size = New System.Drawing.Size(100, 30)
         Me.txto_return.TabIndex = 499
@@ -2106,43 +1986,43 @@ Partial Class OrderUserControl
         '
         'txto_memo
         '
-        Me.txto_memo.Location = New System.Drawing.Point(404, 90)
+        Me.txto_memo.Location = New System.Drawing.Point(531, 103)
         Me.txto_memo.Name = "txto_memo"
-        Me.txto_memo.Size = New System.Drawing.Size(260, 30)
+        Me.txto_memo.Size = New System.Drawing.Size(307, 30)
         Me.txto_memo.TabIndex = 496
         Me.txto_memo.Tag = "o_memo"
         '
         'txtCusName
         '
-        Me.txtCusName.Location = New System.Drawing.Point(109, 47)
+        Me.txtCusName.Location = New System.Drawing.Point(112, 59)
         Me.txtCusName.Name = "txtCusName"
         Me.txtCusName.ReadOnly = True
         Me.txtCusName.Size = New System.Drawing.Size(555, 30)
         Me.txtCusName.TabIndex = 493
         Me.txtCusName.Tag = "cus_name"
         '
-        'txtAmount_ord
+        'txtTotalAmount
         '
-        Me.txtAmount_ord.Location = New System.Drawing.Point(314, 219)
-        Me.txtAmount_ord.Name = "txtAmount_ord"
-        Me.txtAmount_ord.ReadOnly = True
-        Me.txtAmount_ord.Size = New System.Drawing.Size(100, 30)
-        Me.txtAmount_ord.TabIndex = 490
-        Me.txtAmount_ord.Tag = "o_total_amount"
+        Me.txtTotalAmount.Location = New System.Drawing.Point(531, 240)
+        Me.txtTotalAmount.Name = "txtTotalAmount"
+        Me.txtTotalAmount.ReadOnly = True
+        Me.txtTotalAmount.Size = New System.Drawing.Size(100, 30)
+        Me.txtTotalAmount.TabIndex = 490
+        Me.txtTotalAmount.Tag = "o_total_amount"
         '
-        'txtCusID_order
+        'txtCusID
         '
-        Me.txtCusID_order.Location = New System.Drawing.Point(1601, 458)
-        Me.txtCusID_order.Name = "txtCusID_order"
-        Me.txtCusID_order.ReadOnly = True
-        Me.txtCusID_order.Size = New System.Drawing.Size(100, 30)
-        Me.txtCusID_order.TabIndex = 483
-        Me.txtCusID_order.Tag = "o_cus_Id"
-        Me.txtCusID_order.Visible = False
+        Me.txtCusID.Location = New System.Drawing.Point(324, 286)
+        Me.txtCusID.Name = "txtCusID"
+        Me.txtCusID.ReadOnly = True
+        Me.txtCusID.Size = New System.Drawing.Size(100, 30)
+        Me.txtCusID.TabIndex = 483
+        Me.txtCusID.Tag = "o_cus_Id"
+        Me.txtCusID.Visible = False
         '
         'txto_id
         '
-        Me.txto_id.Location = New System.Drawing.Point(1495, 458)
+        Me.txto_id.Location = New System.Drawing.Point(218, 286)
         Me.txto_id.Name = "txto_id"
         Me.txto_id.ReadOnly = True
         Me.txto_id.Size = New System.Drawing.Size(100, 30)
@@ -2153,7 +2033,7 @@ Partial Class OrderUserControl
         'Label204
         '
         Me.Label204.AutoSize = True
-        Me.Label204.Location = New System.Drawing.Point(9, 182)
+        Me.Label204.Location = New System.Drawing.Point(13, 200)
         Me.Label204.Name = "Label204"
         Me.Label204.Size = New System.Drawing.Size(94, 19)
         Me.Label204.TabIndex = 506
@@ -2162,7 +2042,7 @@ Partial Class OrderUserControl
         'Label203
         '
         Me.Label203.AutoSize = True
-        Me.Label203.Location = New System.Drawing.Point(214, 182)
+        Me.Label203.Location = New System.Drawing.Point(218, 200)
         Me.Label203.Name = "Label203"
         Me.Label203.Size = New System.Drawing.Size(94, 19)
         Me.Label203.TabIndex = 504
@@ -2171,129 +2051,38 @@ Partial Class OrderUserControl
         'Label202
         '
         Me.Label202.AutoSize = True
-        Me.Label202.Location = New System.Drawing.Point(214, 139)
+        Me.Label202.Location = New System.Drawing.Point(218, 154)
         Me.Label202.Name = "Label202"
         Me.Label202.Size = New System.Drawing.Size(94, 19)
         Me.Label202.TabIndex = 502
         Me.Label202.Text = "總 普 氣"
         '
-        'btnQueryCus_ord
+        'btnSearchCus
         '
-        Me.btnQueryCus_ord.AutoSize = True
-        Me.btnQueryCus_ord.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnQueryCus_ord.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnQueryCus_ord.Location = New System.Drawing.Point(215, 6)
-        Me.btnQueryCus_ord.Name = "btnQueryCus_ord"
-        Me.btnQueryCus_ord.Size = New System.Drawing.Size(82, 26)
-        Me.btnQueryCus_ord.TabIndex = 501
-        Me.btnQueryCus_ord.Text = "搜尋客戶"
-        Me.btnQueryCus_ord.UseVisualStyleBackColor = False
+        Me.btnSearchCus.AutoSize = True
+        Me.btnSearchCus.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnSearchCus.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.btnSearchCus.Location = New System.Drawing.Point(218, 15)
+        Me.btnSearchCus.Name = "btnSearchCus"
+        Me.btnSearchCus.Size = New System.Drawing.Size(82, 26)
+        Me.btnSearchCus.TabIndex = 501
+        Me.btnSearchCus.Text = "搜尋客戶"
+        Me.btnSearchCus.UseVisualStyleBackColor = False
         '
         'btnPrint
         '
-        Me.btnPrint.BackColor = System.Drawing.Color.Lime
-        Me.btnPrint.Location = New System.Drawing.Point(629, 448)
+        Me.btnPrint.BackColor = System.Drawing.Color.Cyan
+        Me.btnPrint.Location = New System.Drawing.Point(637, 322)
         Me.btnPrint.Name = "btnPrint"
         Me.btnPrint.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint.TabIndex = 484
         Me.btnPrint.Text = "列印 (F5)"
         Me.btnPrint.UseVisualStyleBackColor = False
         '
-        'grpSearch_ord
-        '
-        Me.grpSearch_ord.Controls.Add(Me.chkOut)
-        Me.grpSearch_ord.Controls.Add(Me.chkIn)
-        Me.grpSearch_ord.Controls.Add(Me.chkIsDate_ord)
-        Me.grpSearch_ord.Controls.Add(Me.Label165)
-        Me.grpSearch_ord.Controls.Add(Me.btnQuery_order)
-        Me.grpSearch_ord.Controls.Add(Me.dtpEnd_order)
-        Me.grpSearch_ord.Controls.Add(Me.Label166)
-        Me.grpSearch_ord.Controls.Add(Me.dtpStart_order)
-        Me.grpSearch_ord.Location = New System.Drawing.Point(8, 259)
-        Me.grpSearch_ord.Name = "grpSearch_ord"
-        Me.grpSearch_ord.Size = New System.Drawing.Size(473, 134)
-        Me.grpSearch_ord.TabIndex = 498
-        Me.grpSearch_ord.TabStop = False
-        Me.grpSearch_ord.Text = "搜尋"
-        '
-        'chkOut
-        '
-        Me.chkOut.AutoSize = True
-        Me.chkOut.Location = New System.Drawing.Point(6, 94)
-        Me.chkOut.Name = "chkOut"
-        Me.chkOut.Size = New System.Drawing.Size(70, 23)
-        Me.chkOut.TabIndex = 348
-        Me.chkOut.Text = "出場"
-        Me.chkOut.UseVisualStyleBackColor = True
-        '
-        'chkIn
-        '
-        Me.chkIn.AutoSize = True
-        Me.chkIn.Location = New System.Drawing.Point(6, 65)
-        Me.chkIn.Name = "chkIn"
-        Me.chkIn.Size = New System.Drawing.Size(70, 23)
-        Me.chkIn.TabIndex = 347
-        Me.chkIn.Text = "進場"
-        Me.chkIn.UseVisualStyleBackColor = True
-        '
-        'chkIsDate_ord
-        '
-        Me.chkIsDate_ord.AutoSize = True
-        Me.chkIsDate_ord.Location = New System.Drawing.Point(160, 77)
-        Me.chkIsDate_ord.Name = "chkIsDate_ord"
-        Me.chkIsDate_ord.Size = New System.Drawing.Size(154, 23)
-        Me.chkIsDate_ord.TabIndex = 346
-        Me.chkIsDate_ord.Text = "使用日期搜尋"
-        Me.chkIsDate_ord.UseVisualStyleBackColor = True
-        '
-        'Label165
-        '
-        Me.Label165.AutoSize = True
-        Me.Label165.Location = New System.Drawing.Point(236, 35)
-        Me.Label165.Name = "Label165"
-        Me.Label165.Size = New System.Drawing.Size(30, 19)
-        Me.Label165.TabIndex = 342
-        Me.Label165.Text = "迄"
-        '
-        'btnQuery_order
-        '
-        Me.btnQuery_order.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_order.Location = New System.Drawing.Point(320, 65)
-        Me.btnQuery_order.Name = "btnQuery_order"
-        Me.btnQuery_order.Size = New System.Drawing.Size(140, 44)
-        Me.btnQuery_order.TabIndex = 339
-        Me.btnQuery_order.Text = "查  詢"
-        Me.btnQuery_order.UseVisualStyleBackColor = False
-        '
-        'dtpEnd_order
-        '
-        Me.dtpEnd_order.CustomFormat = "yyyy年MM月"
-        Me.dtpEnd_order.Location = New System.Drawing.Point(272, 29)
-        Me.dtpEnd_order.Name = "dtpEnd_order"
-        Me.dtpEnd_order.Size = New System.Drawing.Size(188, 30)
-        Me.dtpEnd_order.TabIndex = 343
-        '
-        'Label166
-        '
-        Me.Label166.AutoSize = True
-        Me.Label166.Location = New System.Drawing.Point(6, 35)
-        Me.Label166.Name = "Label166"
-        Me.Label166.Size = New System.Drawing.Size(30, 19)
-        Me.Label166.TabIndex = 0
-        Me.Label166.Text = "起"
-        '
-        'dtpStart_order
-        '
-        Me.dtpStart_order.CustomFormat = "yyyy年MM月"
-        Me.dtpStart_order.Location = New System.Drawing.Point(42, 29)
-        Me.dtpStart_order.Name = "dtpStart_order"
-        Me.dtpStart_order.Size = New System.Drawing.Size(188, 30)
-        Me.dtpStart_order.TabIndex = 341
-        '
         'Label77
         '
         Me.Label77.AutoSize = True
-        Me.Label77.Location = New System.Drawing.Point(625, 139)
+        Me.Label77.Location = New System.Drawing.Point(13, 246)
         Me.Label77.Name = "Label77"
         Me.Label77.Size = New System.Drawing.Size(95, 19)
         Me.Label77.TabIndex = 497
@@ -2302,7 +2091,7 @@ Partial Class OrderUserControl
         'Label64
         '
         Me.Label64.AutoSize = True
-        Me.Label64.Location = New System.Drawing.Point(303, 96)
+        Me.Label64.Location = New System.Drawing.Point(430, 109)
         Me.Label64.Name = "Label64"
         Me.Label64.Size = New System.Drawing.Size(95, 19)
         Me.Label64.TabIndex = 495
@@ -2311,7 +2100,7 @@ Partial Class OrderUserControl
         'Label63
         '
         Me.Label63.AutoSize = True
-        Me.Label63.Location = New System.Drawing.Point(8, 139)
+        Me.Label63.Location = New System.Drawing.Point(13, 154)
         Me.Label63.Name = "Label63"
         Me.Label63.Size = New System.Drawing.Size(94, 19)
         Me.Label63.TabIndex = 494
@@ -2320,27 +2109,27 @@ Partial Class OrderUserControl
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(8, 53)
+        Me.Label2.Location = New System.Drawing.Point(13, 65)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(93, 19)
         Me.Label2.TabIndex = 492
         Me.Label2.Text = "客戶名稱"
         '
-        'cmbCar_ord
+        'cmbCar
         '
-        Me.cmbCar_ord.BackColor = System.Drawing.SystemColors.Window
-        Me.cmbCar_ord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbCar_ord.FormattingEnabled = True
-        Me.cmbCar_ord.Location = New System.Drawing.Point(109, 92)
-        Me.cmbCar_ord.Name = "cmbCar_ord"
-        Me.cmbCar_ord.Size = New System.Drawing.Size(150, 27)
-        Me.cmbCar_ord.TabIndex = 491
-        Me.cmbCar_ord.Tag = "o_c_id"
+        Me.cmbCar.BackColor = System.Drawing.SystemColors.Window
+        Me.cmbCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbCar.FormattingEnabled = True
+        Me.cmbCar.Location = New System.Drawing.Point(112, 105)
+        Me.cmbCar.Name = "cmbCar"
+        Me.cmbCar.Size = New System.Drawing.Size(305, 27)
+        Me.cmbCar.TabIndex = 491
+        Me.cmbCar.Tag = "o_c_id"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(214, 225)
+        Me.Label1.Location = New System.Drawing.Point(430, 246)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(94, 19)
         Me.Label1.TabIndex = 489
@@ -2352,49 +2141,49 @@ Partial Class OrderUserControl
         Me.dgvOrder.AllowUserToDeleteRows = False
         Me.dgvOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvOrder.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvOrder.Location = New System.Drawing.Point(0, 518)
+        Me.dgvOrder.Location = New System.Drawing.Point(10, 488)
         Me.dgvOrder.Name = "dgvOrder"
         Me.dgvOrder.ReadOnly = True
         Me.dgvOrder.RowTemplate.Height = 24
-        Me.dgvOrder.Size = New System.Drawing.Size(1896, 470)
+        Me.dgvOrder.Size = New System.Drawing.Size(1876, 490)
         Me.dgvOrder.TabIndex = 488
         '
-        'btnCancel_order
+        'btnCancel
         '
-        Me.btnCancel_order.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_order.Location = New System.Drawing.Point(473, 448)
-        Me.btnCancel_order.Name = "btnCancel_order"
-        Me.btnCancel_order.Size = New System.Drawing.Size(140, 44)
-        Me.btnCancel_order.TabIndex = 487
-        Me.btnCancel_order.Text = "取消 (F4)"
-        Me.btnCancel_order.UseVisualStyleBackColor = False
+        Me.btnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancel.Location = New System.Drawing.Point(481, 322)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(140, 44)
+        Me.btnCancel.TabIndex = 487
+        Me.btnCancel.Text = "取消 (F4)"
+        Me.btnCancel.UseVisualStyleBackColor = False
         '
-        'btnDelete_order
+        'btnDelete
         '
-        Me.btnDelete_order.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete_order.Enabled = False
-        Me.btnDelete_order.Location = New System.Drawing.Point(317, 448)
-        Me.btnDelete_order.Name = "btnDelete_order"
-        Me.btnDelete_order.Size = New System.Drawing.Size(140, 44)
-        Me.btnDelete_order.TabIndex = 486
-        Me.btnDelete_order.Text = "刪除 (F3)"
-        Me.btnDelete_order.UseVisualStyleBackColor = False
+        Me.btnDelete.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnDelete.Enabled = False
+        Me.btnDelete.Location = New System.Drawing.Point(325, 322)
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(140, 44)
+        Me.btnDelete.TabIndex = 486
+        Me.btnDelete.Text = "刪除 (F3)"
+        Me.btnDelete.UseVisualStyleBackColor = False
         '
-        'btnCreate_ord
+        'btnCreate
         '
-        Me.btnCreate_ord.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCreate_ord.Location = New System.Drawing.Point(5, 448)
-        Me.btnCreate_ord.Name = "btnCreate_ord"
-        Me.btnCreate_ord.Size = New System.Drawing.Size(140, 44)
-        Me.btnCreate_ord.TabIndex = 485
-        Me.btnCreate_ord.Tag = ""
-        Me.btnCreate_ord.Text = "新增 (F1)"
-        Me.btnCreate_ord.UseVisualStyleBackColor = False
+        Me.btnCreate.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCreate.Location = New System.Drawing.Point(13, 322)
+        Me.btnCreate.Name = "btnCreate"
+        Me.btnCreate.Size = New System.Drawing.Size(140, 44)
+        Me.btnCreate.TabIndex = 485
+        Me.btnCreate.Tag = ""
+        Me.btnCreate.Text = "新增 (F1)"
+        Me.btnCreate.UseVisualStyleBackColor = False
         '
         'lblCusCode
         '
         Me.lblCusCode.AutoSize = True
-        Me.lblCusCode.Location = New System.Drawing.Point(8, 10)
+        Me.lblCusCode.Location = New System.Drawing.Point(13, 19)
         Me.lblCusCode.Name = "lblCusCode"
         Me.lblCusCode.Size = New System.Drawing.Size(93, 19)
         Me.lblCusCode.TabIndex = 482
@@ -2403,7 +2192,7 @@ Partial Class OrderUserControl
         'lblCarNo
         '
         Me.lblCarNo.AutoSize = True
-        Me.lblCarNo.Location = New System.Drawing.Point(8, 96)
+        Me.lblCarNo.Location = New System.Drawing.Point(13, 109)
         Me.lblCarNo.Name = "lblCarNo"
         Me.lblCarNo.Size = New System.Drawing.Size(95, 19)
         Me.lblCarNo.TabIndex = 481
@@ -2413,7 +2202,7 @@ Partial Class OrderUserControl
         '
         Me.dtpOrder.CustomFormat = "yyyy年MM月dd日 HH:mm"
         Me.dtpOrder.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpOrder.Location = New System.Drawing.Point(404, 4)
+        Me.dtpOrder.Location = New System.Drawing.Point(407, 13)
         Me.dtpOrder.Name = "dtpOrder"
         Me.dtpOrder.Size = New System.Drawing.Size(260, 30)
         Me.dtpOrder.TabIndex = 480
@@ -2422,16 +2211,47 @@ Partial Class OrderUserControl
         'Label151
         '
         Me.Label151.AutoSize = True
-        Me.Label151.Location = New System.Drawing.Point(303, 10)
+        Me.Label151.Location = New System.Drawing.Point(306, 19)
         Me.Label151.Name = "Label151"
         Me.Label151.Size = New System.Drawing.Size(95, 19)
         Me.Label151.TabIndex = 479
         Me.Label151.Text = "日    期"
         '
+        'txtInsuranceUnitPrice
+        '
+        Me.txtInsuranceUnitPrice.Location = New System.Drawing.Point(738, 148)
+        Me.txtInsuranceUnitPrice.Name = "txtInsuranceUnitPrice"
+        Me.txtInsuranceUnitPrice.ReadOnly = True
+        Me.txtInsuranceUnitPrice.Size = New System.Drawing.Size(100, 30)
+        Me.txtInsuranceUnitPrice.TabIndex = 528
+        Me.txtInsuranceUnitPrice.Tag = "o_insurance_unit_price"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(637, 154)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(93, 19)
+        Me.Label3.TabIndex = 527
+        Me.Label3.Text = "保險單價"
+        '
+        'btnSearch
+        '
+        Me.btnSearch.BackColor = System.Drawing.Color.Lime
+        Me.btnSearch.Location = New System.Drawing.Point(17, 422)
+        Me.btnSearch.Name = "btnSearch"
+        Me.btnSearch.Size = New System.Drawing.Size(140, 44)
+        Me.btnSearch.TabIndex = 529
+        Me.btnSearch.Text = "查詢"
+        Me.btnSearch.UseVisualStyleBackColor = False
+        '
         'OrderUserControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.btnSearch)
+        Me.Controls.Add(Me.txtInsuranceUnitPrice)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.txtUnpaid)
         Me.Controls.Add(Me.Label137)
         Me.Controls.Add(Me.btnCusGetGasList)
@@ -2443,10 +2263,10 @@ Partial Class OrderUserControl
         Me.Controls.Add(Me.Label240)
         Me.Controls.Add(Me.txtBarrelAmount)
         Me.Controls.Add(Me.Label238)
-        Me.Controls.Add(Me.btnEdit_ord)
+        Me.Controls.Add(Me.btnEdit)
         Me.Controls.Add(Me.txtInsurance)
         Me.Controls.Add(Me.Label153)
-        Me.Controls.Add(Me.txtCusCode_ord)
+        Me.Controls.Add(Me.txtCusCode)
         Me.Controls.Add(Me.txtOperator)
         Me.Controls.Add(Me.Label107)
         Me.Controls.Add(Me.tcInOut)
@@ -2458,25 +2278,24 @@ Partial Class OrderUserControl
         Me.Controls.Add(Me.txto_return)
         Me.Controls.Add(Me.txto_memo)
         Me.Controls.Add(Me.txtCusName)
-        Me.Controls.Add(Me.txtAmount_ord)
-        Me.Controls.Add(Me.txtCusID_order)
+        Me.Controls.Add(Me.txtTotalAmount)
+        Me.Controls.Add(Me.txtCusID)
         Me.Controls.Add(Me.txto_id)
         Me.Controls.Add(Me.Label204)
         Me.Controls.Add(Me.Label203)
         Me.Controls.Add(Me.Label202)
-        Me.Controls.Add(Me.btnQueryCus_ord)
+        Me.Controls.Add(Me.btnSearchCus)
         Me.Controls.Add(Me.btnPrint)
-        Me.Controls.Add(Me.grpSearch_ord)
         Me.Controls.Add(Me.Label77)
         Me.Controls.Add(Me.Label64)
         Me.Controls.Add(Me.Label63)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.cmbCar_ord)
+        Me.Controls.Add(Me.cmbCar)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.dgvOrder)
-        Me.Controls.Add(Me.btnCancel_order)
-        Me.Controls.Add(Me.btnDelete_order)
-        Me.Controls.Add(Me.btnCreate_ord)
+        Me.Controls.Add(Me.btnCancel)
+        Me.Controls.Add(Me.btnDelete)
+        Me.Controls.Add(Me.btnCreate)
         Me.Controls.Add(Me.lblCusCode)
         Me.Controls.Add(Me.lblCarNo)
         Me.Controls.Add(Me.dtpOrder)
@@ -2484,6 +2303,7 @@ Partial Class OrderUserControl
         Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Name = "OrderUserControl"
+        Me.Padding = New System.Windows.Forms.Padding(10)
         Me.Size = New System.Drawing.Size(1896, 988)
         Me.tcInOut.ResumeLayout(False)
         Me.tpIn.ResumeLayout(False)
@@ -2492,8 +2312,6 @@ Partial Class OrderUserControl
         Me.tpOut.PerformLayout()
         Me.grpTransport.ResumeLayout(False)
         Me.grpTransport.PerformLayout()
-        Me.grpSearch_ord.ResumeLayout(False)
-        Me.grpSearch_ord.PerformLayout()
         CType(Me.dgvOrder, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -2511,10 +2329,10 @@ Partial Class OrderUserControl
     Friend WithEvents Label240 As Label
     Friend WithEvents txtBarrelAmount As TextBox
     Friend WithEvents Label238 As Label
-    Friend WithEvents btnEdit_ord As Button
+    Friend WithEvents btnEdit As Button
     Friend WithEvents txtInsurance As TextBox
     Friend WithEvents Label153 As Label
-    Friend WithEvents txtCusCode_ord As TextBox
+    Friend WithEvents txtCusCode As TextBox
     Friend WithEvents txtOperator As TextBox
     Friend WithEvents Label107 As Label
     Friend WithEvents tcInOut As TabControl
@@ -2529,16 +2347,6 @@ Partial Class OrderUserControl
     Friend WithEvents txtBarralUnitPrice_20 As TextBox
     Friend WithEvents txtBarralUnitPrice_50 As TextBox
     Friend WithEvents Label100 As Label
-    Friend WithEvents txtInspect2 As TextBox
-    Friend WithEvents txtInspect4 As TextBox
-    Friend WithEvents txtInspect5 As TextBox
-    Friend WithEvents txtInspect10 As TextBox
-    Friend WithEvents txtInspect14 As TextBox
-    Friend WithEvents txtInspect18 As TextBox
-    Friend WithEvents txtInspect16 As TextBox
-    Friend WithEvents txtInspect20 As TextBox
-    Friend WithEvents txtInspect50 As TextBox
-    Friend WithEvents Label142 As Label
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents TextBox16 As TextBox
     Friend WithEvents TextBox17 As TextBox
@@ -2621,7 +2429,7 @@ Partial Class OrderUserControl
     Friend WithEvents txtCarDeposit_50 As TextBox
     Friend WithEvents Label277 As Label
     Friend WithEvents Label274 As Label
-    Friend WithEvents cmbCarOut_ord As ComboBox
+    Friend WithEvents cmbCarOut As ComboBox
     Friend WithEvents txtCusGas_2 As TextBox
     Friend WithEvents txtCusGas_5 As TextBox
     Friend WithEvents txtCusGas_14 As TextBox
@@ -2692,35 +2500,29 @@ Partial Class OrderUserControl
     Friend WithEvents txto_return As TextBox
     Friend WithEvents txto_memo As TextBox
     Friend WithEvents txtCusName As TextBox
-    Friend WithEvents txtAmount_ord As TextBox
-    Friend WithEvents txtCusID_order As TextBox
+    Friend WithEvents txtTotalAmount As TextBox
+    Friend WithEvents txtCusID As TextBox
     Friend WithEvents txto_id As TextBox
     Friend WithEvents Label204 As Label
     Friend WithEvents Label203 As Label
     Friend WithEvents Label202 As Label
-    Friend WithEvents btnQueryCus_ord As Button
+    Friend WithEvents btnSearchCus As Button
     Friend WithEvents btnPrint As Button
-    Friend WithEvents grpSearch_ord As GroupBox
-    Friend WithEvents chkOut As CheckBox
-    Friend WithEvents chkIn As CheckBox
-    Friend WithEvents chkIsDate_ord As CheckBox
-    Friend WithEvents Label165 As Label
-    Friend WithEvents btnQuery_order As Button
-    Friend WithEvents dtpEnd_order As DateTimePicker
-    Friend WithEvents Label166 As Label
-    Friend WithEvents dtpStart_order As DateTimePicker
     Friend WithEvents Label77 As Label
     Friend WithEvents Label64 As Label
     Friend WithEvents Label63 As Label
     Friend WithEvents Label2 As Label
-    Friend WithEvents cmbCar_ord As ComboBox
+    Friend WithEvents cmbCar As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents dgvOrder As DataGridView
-    Friend WithEvents btnCancel_order As Button
-    Friend WithEvents btnDelete_order As Button
-    Friend WithEvents btnCreate_ord As Button
+    Friend WithEvents btnCancel As Button
+    Friend WithEvents btnDelete As Button
+    Friend WithEvents btnCreate As Button
     Friend WithEvents lblCusCode As Label
     Friend WithEvents lblCarNo As Label
     Friend WithEvents dtpOrder As DateTimePicker
     Friend WithEvents Label151 As Label
+    Friend WithEvents txtInsuranceUnitPrice As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents btnSearch As Button
 End Class

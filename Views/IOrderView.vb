@@ -1,16 +1,46 @@
 ﻿Public Interface IOrderView
-    Inherits IBaseView(Of order, OrderVM)
+    Inherits IFormView(Of order, OrderListVM)
 
-    Sub DisplayCustomer(data As customer)
+    ' 事件
+    Event CustomerSelected As EventHandler(Of String)
+    Event TransportTypeSelected As EventHandler(Of String)
+    Event BarrelInInput As EventHandler
+    Event BarrelOutInput As EventHandler
+    Event BarrelUnitPriceInput As EventHandler
+    Event CarSelected As EventHandler(Of Integer)
+    Event DepositInput As EventHandler
+    Event OrderTypeChanged As EventHandler
+    Event ReturnInput As EventHandler
+    Event PrintRequest As EventHandler(Of Integer)
+    Event PrintCusStkRequest As EventHandler(Of Boolean)
+    Event CustomersGasDetailRequest As EventHandler(Of Tuple(Of Date, Boolean))
+    Event CusGetGasListRequest As EventHandler(Of Tuple(Of Date, Boolean))
 
-    Sub DisplayCusStk(data As customer, isIn As Boolean)
+    Sub ShowCustomer(data As customer)
 
-    Sub DisplayCarStk(data As car, isIn As Boolean)
+    Sub ShowUnitPrice(data As order)
 
-    Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single, barrelAmount As Integer, gasUnitPrice As Single, gasCUnitPrice As Single,
-                           unpaidAmount As Integer)
+    Sub ShowBarrelPrice(price As Integer)
 
-    Sub DisplayInsurance(price As Single)
+    Sub ShowCarBarrelStock_In(data As car)
+
+    Sub ShowCarBarrelStock_Out(data As car)
+
+    Sub ShowTotalAmount(data As Integer)
+
+    Sub ShowInsurance(data As Double)
+
+    ''' <summary>
+    ''' 顯示總氣
+    ''' </summary>
+    ''' <param name="data">總普氣,總丙氣</param>
+    Sub ShowGasAmount(data As Tuple(Of Integer, Integer))
+
+    Sub DisplayList(data As IEnumerable(Of Object))
+
+    Sub SetCarDropdown(list As List(Of SelectListItem))
+
+    Sub SetCusBarrelStock(isIn As Boolean, data As customer)
 
     ''' <summary>
     ''' 取得進貨單輸入
@@ -23,14 +53,13 @@
     ''' <returns></returns>
     Function GetOutInput() As order
 
+    Function GetOrderType() As String
+
     Function GetOrderInput() As order
 
-    Sub GetCusStkInput(currentEntity As customer)
+    Sub GetCusStkInput(ByRef data As customer)
 
-    Sub GetCarStkInput(currentEntity As car)
-
-    Sub SetCarDropdown(list As List(Of SelectListItem))
+    Sub GetCarStkInput(ByRef data As car)
 
     Function GetSearchCriteria() As OrderSearchCriteria
-
 End Interface

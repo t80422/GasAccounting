@@ -15,4 +15,6 @@
     Function GetByMonthAndCompany(month As Date, compId As Integer) As List(Of order)
 
     Function GetByCusIdAndDate(cusId As Integer, day As Date) As List(Of order)
+
+    Function GetLastOrder(cusId As Integer) As order
 End Interface

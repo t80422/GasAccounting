@@ -16,8 +16,8 @@ Partial Public Class accounting_entry
     Public Property ae_TransactionId As Integer
     Public Property ae_Date As Date
     Public Property ae_s_Id As Integer
-    Public Property ae_Debit As Nullable(Of Single)
-    Public Property ae_Credit As Nullable(Of Single)
+    Public Property ae_Debit As Nullable(Of Double)
+    Public Property ae_Credit As Nullable(Of Double)
 
     Public Overridable Property subject As subject
 

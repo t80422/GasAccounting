@@ -1,110 +1,70 @@
-﻿
+﻿''' <summary>
+''' 銷售管理
+''' </summary>
 Public Class OrderUserControl
     Implements IOrderView
 
-    Private _presenter As OrderPresenter
+    ' === 介面 ===
+    Public Event CreateRequest As EventHandler Implements IFormView(Of order, OrderListVM).CreateRequest
+    Public Event UpdateRequest As EventHandler Implements IFormView(Of order, OrderListVM).UpdateRequest
+    Public Event DeleteRequest As EventHandler Implements IFormView(Of order, OrderListVM).DeleteRequest
+    Public Event CancelRequest As EventHandler Implements IFormView(Of order, OrderListVM).CancelRequest
+    Public Event SearchRequest As EventHandler Implements IFormView(Of order, OrderListVM).SearchRequest
+    Public Event CustomerSelected As EventHandler(Of String) Implements IOrderView.CustomerSelected
+    Public Event TransportTypeSelected As EventHandler(Of String) Implements IOrderView.TransportTypeSelected
+    Public Event BarrelInInput As EventHandler Implements IOrderView.BarrelInInput
+    Public Event BarrelUnitPriceInput As EventHandler Implements IOrderView.BarrelUnitPriceInput
+    Public Event BarrelOutInput As EventHandler Implements IOrderView.BarrelOutInput
+    Public Event DepositInput As EventHandler Implements IOrderView.DepositInput
+    Public Event CarSelected As EventHandler(Of Integer) Implements IOrderView.CarSelected
+    Public Event OrderTypeChanged As EventHandler Implements IOrderView.OrderTypeChanged
+    Public Event ReturnInput As EventHandler Implements IOrderView.ReturnInput
+    Public Event DataSelectedRequest As EventHandler(Of Integer) Implements IFormView(Of order, OrderListVM).DataSelectedRequest
+    Public Event PrintRequest As EventHandler(Of Integer) Implements IOrderView.PrintRequest
+    Public Event PrintCusStkRequest As EventHandler(Of Boolean) Implements IOrderView.PrintCusStkRequest
+    Public Event CustomersGasDetailRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CustomersGasDetailRequest
+    Public Event CusGetGasListRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CusGetGasListRequest
 
-    Public Sub New(presenter As OrderPresenter)
-        InitializeComponent()
-        _presenter = presenter
-        _presenter.SetView(Me)
+    Private Sub ClearInput() Implements IFormView(Of order, OrderListVM).ClearInput
+        ClearControls(Me)
+        cmbCar.DataSource = Nothing
+        cmbCarOut.DataSource = Nothing
+
+        txtCusCode.Focus()
+
+        '預設運送方式
+        rdoPickUp.Checked = True
+        tpOut.Parent = tcInOut
+        tpIn.Parent = tcInOut
+        '    txtOperator.Text = Nothing
+        EditMode(False)
     End Sub
 
-    Private Sub Order_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        btnCancel_order.PerformClick()
-        SetupSalesManagementHandlers()
-        tcInOut.DrawMode = TabDrawMode.OwnerDrawFixed
-        AddHandler tcInOut.DrawItem, AddressOf TabControl_DrawItem
-        ReadDataGridWidth(dgvOrder)
+    Public Sub ShowList(data As List(Of OrderListVM)) Implements IFormView(Of order, OrderListVM).ShowList
+
     End Sub
 
-    Public Sub DisplayCustomer(data As customer) Implements IOrderView.DisplayCustomer
-        AutoMapEntityToControls(data, Me)
-        txtCusID_order.Text = data.cus_id
-        AutoMapEntityToControls(data, tpOut)
-    End Sub
-
-    Public Sub DisplayCusStk(data As customer, isIn As Boolean) Implements IOrderView.DisplayCusStk
-        Dim tp = If(isIn, tpIn, tpOut)
-        AutoMapEntityToControls(data, tp)
-    End Sub
-
-    Public Sub DisplayCarStk(data As car, isIn As Boolean) Implements IOrderView.DisplayCarStk
-        Dim tp = If(isIn, tpIn, tpOut)
-        AutoMapEntityToControls(data, tp)
-    End Sub
-
-    Public Sub DisplayGasAndPrice(gas As Integer, gasC As Integer, amount As Single, insurance As Single, barrelAmount As Integer, gasUnitPrice As Single, gasCUnitPrice As Single, unpaidAmount As Integer) Implements IOrderView.DisplayGasAndPrice
-        txtTotalGas.Text = gas
-        txtTotalGas_c.Text = gasC
-        txtAmount_ord.Text = amount
-        txtInsurance.Text = insurance
-        txtBarrelAmount.Text = barrelAmount
-        txtGasUnitPrice.Text = gasUnitPrice
-        txtGasCUnitPrice.Text = gasCUnitPrice
-        txtUnpaid.Text = unpaidAmount
-    End Sub
-
-    Public Sub DisplayInsurance(price As Single) Implements IOrderView.DisplayInsurance
-        txtInsurance.Text = price
-    End Sub
-
-    Public Sub GetCusStkInput(currentEntity As customer) Implements IOrderView.GetCusStkInput
-        AutoMapControlsToEntity(currentEntity, tcInOut.SelectedTab)
-    End Sub
-
-    Public Sub GetCarStkInput(currentEntity As car) Implements IOrderView.GetCarStkInput
-        AutoMapControlsToEntity(currentEntity, tcInOut.SelectedTab)
-    End Sub
-
-    Public Sub SetCarDropdown(list As List(Of SelectListItem)) Implements IOrderView.SetCarDropdown
-        SetComboBox(cmbCar_ord, New List(Of SelectListItem)(list))
-        SetComboBox(cmbCarOut_ord, New List(Of SelectListItem)(list))
-    End Sub
-
-    Public Sub DisplayList(data As List(Of OrderVM)) Implements IBaseView(Of order, OrderVM).DisplayList
+    Public Sub DisplayList(data As IEnumerable(Of Object)) Implements IOrderView.DisplayList
         dgvOrder.DataSource = data
         AddHandler dgvOrder.CellFormatting, AddressOf DgvOrder_CellFormatting
     End Sub
 
-    Public Sub DisplayDetail(data As order) Implements IBaseView(Of order, OrderVM).DisplayDetail
-        AutoMapEntityToControls(data.customer, Me)
-        _presenter.LoadCar()
-        AutoMapEntityToControls(data, Me)
-        txtOperator.Text = data.employee?.emp_name
-
-        If data.o_in_out = "進場單" Then
-            AutoMapEntityToControls(data, tpIn)
-            tpOut.Parent = Nothing
-            tpIn.Parent = tcInOut
-        Else
-            AutoMapEntityToControls(data, tpOut)
-            tpOut.Parent = tcInOut
-            tpIn.Parent = Nothing
-        End If
+    Public Sub ButtonStatus(isSelectedRow As Boolean) Implements IFormView(Of order, OrderListVM).ButtonStatus
+        SetButtonState(Me, isSelectedRow)
     End Sub
 
-    Public Sub ClearInput() Implements IBaseView(Of order, OrderVM).ClearInput
-        ClearControls(Me)
-        ClearControls(tpIn)
-        ClearControls(tpOut)
+    Public Sub ShowCustomer(data As customer) Implements IOrderView.ShowCustomer
+        AutoMapEntityToControls(data, Me)
+        txtCusID.Text = data.cus_id
+        AutoMapEntityToControls(data, tpOut)
+        AutoMapEntityToControls(data, tpIn)
+        If rdoPickUp.Checked Then RaiseEvent TransportTypeSelected(Nothing, rdoPickUp.Text)
+        dtpOrder.Focus()
+    End Sub
 
-        tpOut.Parent = tcInOut
-        tpIn.Parent = tcInOut
-        txtOperator.Text = Nothing
-        cmbCar_ord.DataSource = Nothing
-        cmbCarOut_ord.DataSource = Nothing
-
-        SetButtonState_old(btnCancel_order, True)
-
-        '預設運送方式
-        grpTransport.Controls.OfType(Of RadioButton).First(Function(x) x.Text = "自運").Checked = True
-
-        txtCusCode_ord.ReadOnly = False
-        btnQueryCus_ord.Enabled = True
-        cmbCar_ord.Enabled = True
-        cmbCarOut_ord.Enabled = True
-        grpTransport.Enabled = True
+    Public Sub SetCarDropdown(list As List(Of SelectListItem)) Implements IOrderView.SetCarDropdown
+        SetComboBox(cmbCar, New List(Of SelectListItem)(list))
+        SetComboBox(cmbCarOut, New List(Of SelectListItem)(list))
     End Sub
 
     Public Function GetInInput() As order Implements IOrderView.GetInInput
@@ -119,35 +79,348 @@ Public Class OrderUserControl
         Return data
     End Function
 
+    Public Sub SetCusBarrelStock(isIn As Boolean, data As customer) Implements IOrderView.SetCusBarrelStock
+        If isIn Then
+            AutoMapEntityToControls(data, tpIn)
+        Else
+            AutoMapEntityToControls(data, tpOut)
+        End If
+    End Sub
+
+    Public Function GetOrderType() As String Implements IOrderView.GetOrderType
+        Return tcInOut.SelectedTab.Text
+    End Function
+
+    Public Sub ShowUnitPrice(data As order) Implements IOrderView.ShowUnitPrice
+        AutoMapEntityToControls(data, Me)
+        AutoMapEntityToControls(data, tpIn)
+    End Sub
+
+    Public Sub ShowBarrelPrice(price As Integer) Implements IOrderView.ShowBarrelPrice
+        txtBarrelAmount.Text = price
+    End Sub
+
+    Public Sub ShowCarBarrelStock_In(data As car) Implements IOrderView.ShowCarBarrelStock_In
+        AutoMapEntityToControls(data, tpIn)
+    End Sub
+
+    Public Sub ShowCarBarrelStock_Out(data As car) Implements IOrderView.ShowCarBarrelStock_Out
+        AutoMapEntityToControls(data, tpOut)
+    End Sub
+
+    ''' <summary>
+    ''' 供父表單呼叫的快捷鍵處理
+    ''' </summary>
+    ''' <param name="key"></param>
+    Public Sub HandleShortcut(key As Keys)
+        Select Case key
+            Case Keys.F1
+                If btnCreate.Enabled Then
+
+                End If
+            Case Keys.F2
+                If btnEdit.Enabled Then
+
+                End If
+            Case Keys.F3
+                If btnDelete.Enabled Then
+
+                End If
+            Case Keys.F4
+                btnCancel_Click(btnCancel, EventArgs.Empty)
+            Case Keys.F5
+                btnPrint.PerformClick()
+            Case Keys.F6
+                btnPrintCusStk.PerformClick()
+            Case Keys.F7
+                'btnCusGasPayCollect_Click(btnCusGasPayCollect, EventArgs.Empty)
+            Case Keys.F8
+                'btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
+        End Select
+    End Sub
+
+    Public Sub ShowTotalAmount(data As Integer) Implements IOrderView.ShowTotalAmount
+        txtTotalAmount.Text = data
+    End Sub
+
     Public Function GetOrderInput() As order Implements IOrderView.GetOrderInput
         Dim data As New order
         AutoMapControlsToEntity(data, Me)
         Return data
     End Function
 
-    Public Function GetSearchCriteria() As OrderSearchCriteria Implements IOrderView.GetSearchCriteria
-        Dim cusId As Integer = If(String.IsNullOrEmpty(txtCusID_order.Text), 0, txtCusID_order.Text)
-        Dim data As New OrderSearchCriteria With {
-            .CusId = cusId,
-            .EndDate = dtpEnd_order.Value,
-            .IsDate = chkIsDate_ord.Checked,
-            .StartDate = dtpStart_order.Value,
-            .SearchIn = chkIn.Checked,
-            .SearchOut = chkOut.Checked
-        }
+    Public Sub ShowGasAmount(data As Tuple(Of Integer, Integer)) Implements IOrderView.ShowGasAmount
+        txtTotalGas.Text = data.Item1
+        txtTotalGas_c.Text = data.Item2
+    End Sub
 
-        Return data
+    Public Sub ShowInsurance(data As Double) Implements IOrderView.ShowInsurance
+        txtInsurance.Text = data
+    End Sub
+
+    Public Function GetInput(ByRef model As order) As Boolean Implements IFormView(Of order, OrderListVM).GetInput
+        Try
+            If String.IsNullOrEmpty(txtCusID.Text) Then Throw New Exception("請選擇客戶")
+            If rdoPickUp.Checked AndAlso cmbCar.SelectedIndex = -1 Then Throw New Exception("請選擇車號")
+
+            AutoMapControlsToEntity(model, Me)
+            AutoMapControlsToEntity(model, tcInOut.SelectedTab)
+            Return True
+        Catch ex As Exception
+            Throw
+        End Try
     End Function
 
-    Public Function GetUserInput() As order Implements IBaseView(Of order, OrderVM).GetUserInput
-        Dim data As New order
-
-        AutoMapControlsToEntity(data, Me)
+    Public Sub GetCusStkInput(ByRef data As customer) Implements IOrderView.GetCusStkInput
         AutoMapControlsToEntity(data, tcInOut.SelectedTab)
-        data.o_Operator = Nothing
-        Return data
+    End Sub
+
+    Public Sub GetCarStkInput(ByRef data As car) Implements IOrderView.GetCarStkInput
+        AutoMapControlsToEntity(data, tcInOut.SelectedTab)
+    End Sub
+
+    Public Sub ShowDetail(data As order) Implements IFormView(Of order, OrderListVM).ShowDetail
+        AutoMapEntityToControls(data, Me)
+
+        If data.o_in_out = "進場單" Then
+            AutoMapEntityToControls(data, tpIn)
+            tpOut.Parent = Nothing
+            tpIn.Parent = tcInOut
+        Else
+            AutoMapEntityToControls(data, tpOut)
+            tpOut.Parent = tcInOut
+            tpIn.Parent = Nothing
+        End If
+
+        EditMode(True)
+    End Sub
+
+    Public Function GetSearchCriteria() As OrderSearchCriteria Implements IOrderView.GetSearchCriteria
+        Using frm As New frmSearch_Order
+            If frm.ShowDialog = DialogResult.OK Then
+                Return frm.Criteria
+            End If
+        End Using
+
+        Return Nothing
     End Function
 
+    ' === 事件 ===
+    Private Sub OrderUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        btnCancel.PerformClick()
+        SetupSalesManagementHandlers()
+        tcInOut.DrawMode = TabDrawMode.OwnerDrawFixed
+        AddHandler tcInOut.DrawItem, AddressOf TabControl_DrawItem
+        ReadDataGridWidth(dgvOrder)
+    End Sub
+
+    ' 取消
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        RaiseEvent CancelRequest(sender, e)
+        txtCusCode.Focus()
+    End Sub
+
+    ' 客戶代號
+    Private Sub txtCusCode_ord_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCusCode.KeyDown
+        If e.KeyCode = Keys.Enter Then RaiseEvent CustomerSelected(sender, txtCusCode.Text)
+    End Sub
+
+    ' 搜尋客戶
+    Private Sub btnSearchCus_Click(sender As Object, e As EventArgs) Handles btnSearchCus.Click
+        Using searchForm As New frmQueryCustomer
+            If searchForm.ShowDialog = DialogResult.OK Then RaiseEvent CustomerSelected(sender, searchForm.CusCode)
+        End Using
+    End Sub
+
+    ' 日期
+    Private Sub dtpOrder_KeyDown(sender As Object, e As KeyEventArgs) Handles dtpOrder.KeyDown
+        '按下Enter時,跳到"車號"
+        If e.KeyCode = Keys.Enter Then
+            If rdoPickUp.Checked Then
+                cmbCar.Focus()
+                '自動展開選單
+                cmbCar.DroppedDown = True
+            Else
+                tcInOut.Focus()
+            End If
+        End If
+    End Sub
+
+    ' 運送方式-廠運
+    Private Sub rdoDelivery_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDelivery.CheckedChanged
+        cmbCar.DataSource = Nothing
+        cmbCarOut.DataSource = Nothing
+    End Sub
+
+    ' 運送方式-自運
+    Private Sub rdoPickUp_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPickUp.CheckedChanged
+        If Not String.IsNullOrEmpty(txtCusCode.Text) Then RaiseEvent TransportTypeSelected(sender, txtCusCode.Text)
+    End Sub
+
+    ' 進出場單-按下Enter
+    Private Sub tcInOut_KeyDown(sender As Object, e As KeyEventArgs) Handles tcInOut.KeyDown
+        ' 跳到當前sheet第一格
+        If e.KeyCode = Keys.Enter Then
+            If tcInOut.SelectedTab.Text = "進場單" Then
+                txto_in_50.Focus()
+            ElseIf tcInOut.SelectedTab.Text = "出場單" Then
+                txtGas_c_50.Focus()
+            End If
+        End If
+    End Sub
+
+    ' 車號-選項改變時
+    Private Sub cmbCar_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbCar.SelectedIndexChanged
+        Dim cmb As ComboBox = sender
+
+        If cmb.Focused AndAlso cmb.SelectedIndex >= 0 Then
+            If cmbCarOut.Items.Count > 0 Then
+                '同步"出場單"車號
+                cmbCarOut.SelectedIndex = cmb.SelectedIndex
+            End If
+
+            RaiseEvent CarSelected(sender, cmbCar.SelectedItem.Value)
+        End If
+    End Sub
+
+    ' 出場-車號
+    Private Sub cmbCarOut_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbCarOut.SelectionChangeCommitted
+        RaiseEvent CarSelected(sender, cmbCarOut.SelectedItem.Value)
+    End Sub
+
+    ' 車號-按下Enter
+    Private Sub cmbCar_KeyDown(sender As Object, e As KeyEventArgs) Handles cmbCar.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            tcInOut.Focus()
+        End If
+    End Sub
+
+    ' 紀錄dgv欄寬
+    Private Sub dgvOrder_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvOrder.ColumnWidthChanged
+        SaveDataGridWidth(sender, e)
+    End Sub
+
+    ' 進出場單-切換
+    Private Sub tcInOut_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tcInOut.SelectedIndexChanged
+        Dim tc As TabControl = sender
+
+        '顯示明細的狀況下只會有顯示一種單,不用計算
+        If tc.TabPages.Count = 1 Then Return
+
+        Dim isIn As Boolean = tc.SelectedTab.Text = "進場單"
+        Dim tp = If(isIn, tpOut, tpIn)
+
+        tp.Controls.OfType(Of TextBox).Where(Function(x) Not x.ReadOnly AndAlso Not x.Name.StartsWith("txtBarralUnitPrice_")).ToList.ForEach(Sub(txt) txt.Text = 0)
+
+        RaiseEvent OrderTypeChanged(sender, e)
+    End Sub
+
+    ' 新增
+    Private Sub btnCreate_Click(sender As Object, e As EventArgs) Handles btnCreate.Click
+        RaiseEvent CreateRequest(sender, e)
+    End Sub
+
+    ' dgv
+    Private Sub dgvOrder_SelectionChanged(sender As Object, e As EventArgs) Handles dgvOrder.SelectionChanged, dgvOrder.CellMouseClick
+        If Not dgvOrder.Focused OrElse dgvOrder.SelectedRows.Count = 0 Then Return
+        Dim row = dgvOrder.SelectedRows(0)
+        Dim id As Integer = row.Cells("編號").Value
+        RaiseEvent DataSelectedRequest(sender, id)
+    End Sub
+
+    ' 修改
+    Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
+        RaiseEvent UpdateRequest(sender, e)
+    End Sub
+
+    ' 刪除
+    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        RaiseEvent DeleteRequest(sender, e)
+    End Sub
+
+    ' 列印
+    Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
+        Dim id As Integer
+        If Integer.TryParse(txto_id.Text, id) Then
+            RaiseEvent PrintRequest(sender, id)
+        Else
+            MessageBox.Show("請選擇對象")
+        End If
+    End Sub
+
+    ' 列印客戶鋼瓶結存總冊
+    Private Sub btnPrintCusStk_Click(sender As Object, e As EventArgs) Handles btnPrintCusStk.Click
+        Dim result = MessageBox.Show(
+            "是否列印昨天的報表?",
+            "客戶鋼瓶結存總冊",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question
+        )
+
+        Select Case result
+            Case DialogResult.Yes
+                RaiseEvent PrintCusStkRequest(sender, True)
+            Case DialogResult.No
+                RaiseEvent PrintCusStkRequest(sender, False)
+            Case Else
+        End Select
+    End Sub
+
+    ' 氣量氣款收付明細表
+    Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
+        Using frm As New frmDatePicker
+            If frm.ShowDialog = DialogResult.OK Then RaiseEvent CustomersGasDetailRequest(sender, Tuple.Create(frm.SelectedDate, frm.isMonth))
+        End Using
+    End Sub
+
+    ' 客戶提氣清冊
+    Private Sub btnCusGetGasList_Click(sender As Object, e As EventArgs) Handles btnCusGetGasList.Click
+        Using frm As New frmDatePicker
+            If frm.ShowDialog = DialogResult.OK Then RaiseEvent CusGetGasListRequest(sender, Tuple.Create(frm.SelectedDate, frm.isMonth))
+        End Using
+    End Sub
+
+    ' 查詢
+    Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
+        RaiseEvent SearchRequest(sender, e)
+    End Sub
+
+    ''' <summary>
+    ''' 瓦斯瓶進廠輸入
+    ''' </summary>
+    Private Sub BarrelInKeyIn()
+        RaiseEvent BarrelInInput(Nothing, EventArgs.Empty)
+    End Sub
+
+    ''' <summary>
+    ''' 瓦斯桶出輸入
+    ''' </summary>
+    Private Sub BarrelOutKeyIn()
+        RaiseEvent BarrelOutInput(Nothing, EventArgs.Empty)
+    End Sub
+
+    ''' <summary>
+    ''' 瓦斯桶單價輸入
+    ''' </summary>
+    Private Sub BarrelUnitPriceKeyIn()
+        RaiseEvent BarrelUnitPriceInput(Nothing, EventArgs.Empty)
+    End Sub
+
+    ''' <summary>
+    ''' 寄桶輸入
+    ''' </summary>
+    Private Sub DepositKeyIn()
+        RaiseEvent DepositInput(Nothing, EventArgs.Empty)
+    End Sub
+
+    ''' <summary>
+    ''' 退氣、折讓輸入
+    ''' </summary>
+    Private Sub ReturnKeyIn()
+        RaiseEvent ReturnInput(Nothing, EventArgs.Empty)
+    End Sub
+
+    ' === 方法 ===
     ''' <summary>
     ''' 丙氣的字體顏色設置為紅色
     ''' </summary>
@@ -166,25 +439,21 @@ Public Class OrderUserControl
     ''' 控制項事件設定
     ''' </summary>
     Private Sub SetupSalesManagementHandlers()
-        Try
-            ' 進場單處理
-            SetupTextBoxHandlers(tpIn, AddressOf CalculateOrder, "txto_in", "txto_new_in", "txto_inspect", "txtBarralUnitPrice")
-            SetupTextBoxHandlers(tpIn, AddressOf CalculateCarStock, "txtDepositIn")
+        ' 進場單
+        SetupTextBoxHandlers(tpIn, AddressOf BarrelInKeyIn, "txto_in", "txto_new_in", "txto_inspect")
+        SetupTextBoxHandlers(tpIn, AddressOf BarrelUnitPriceKeyIn, "txtBarralUnitPrice")
+        SetupTextBoxHandlers(tpIn, AddressOf DepositKeyIn, "txtDepositIn")
 
-            ' 為所有非只讀的TextBox添加方向鍵處理
-            AddDirectionHandlers(tpIn)
+        ' 出場單
+        SetupTextBoxHandlers(tpOut, AddressOf BarrelOutKeyIn, "txtGas", "txtEmpty")
+        SetupTextBoxHandlers(tpOut, AddressOf DepositKeyIn, "txtDepositOut")
 
-            ' 出場單處理
-            SetupTextBoxHandlers(tpOut, AddressOf CalculateOrder, "txtGas", "txtEmpty")
-            SetupTextBoxHandlers(tpOut, AddressOf CalculateCarStock, "txtDepositOut")
+        ' 訂單
+        SetupTextBoxHandlers(Me, AddressOf ReturnKeyIn, "txto_return", "txto_return_c", "txto_sales_allowance")
 
-            AddDirectionHandlers(tpOut)
-
-            ' 訂單處理
-            SetupTextBoxHandlers(Me, AddressOf CalculateOrder, "txto_return", "txto_return_c", "txto_sales_allowance")
-        Catch ex As Exception
-            Throw
-        End Try
+        ' 為所有非只讀的TextBox添加方向鍵處理
+        AddDirectionHandlers(tpIn)
+        AddDirectionHandlers(tpOut)
     End Sub
 
     ''' <summary>
@@ -209,29 +478,6 @@ Public Class OrderUserControl
         For Each txt In container.Controls.OfType(Of TextBox)().Where(Function(x) Not x.ReadOnly)
             AddHandler txt.KeyDown, Sub(sender, e) Direction(sender, e, container)
         Next
-    End Sub
-
-    ''' <summary>
-    ''' 計算進出場單
-    ''' </summary>
-    Private Sub CalculateOrder()
-        Try
-            Dim isIn As Boolean = tcInOut.SelectedTab.Text = "進場單"
-            _presenter.CalculateStkAndPrice(isIn)
-        Catch ex As Exception
-            Throw
-        End Try
-    End Sub
-
-    ''' <summary>
-    ''' 計算車寄桶存量
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    Private Sub CalculateCarStock(sender As Object, e As KeyEventArgs)
-        Dim btn As TextBox = sender
-        Dim isIn As Boolean = btn.Parent.Name = "tpIn"
-        _presenter.CalculateCarStk(isIn)
     End Sub
 
     ''' <summary>
@@ -312,306 +558,11 @@ Public Class OrderUserControl
         txt.SelectAll()
     End Sub
 
-    Private Sub GetDetail(id As Integer)
-        _presenter.LoadDetail(id)
-        SetButtonState_old(dgvOrder, False)
-        dgvOrder.Focus()
-        txtCusCode_ord.ReadOnly = True
-        btnQueryCus_ord.Enabled = False
-        cmbCar_ord.Enabled = False
-        cmbCarOut_ord.Enabled = False
-        grpTransport.Enabled = False
-    End Sub
-
-    ''' <summary>
-    ''' 設定銷售管理搜尋相關控制項狀態
-    ''' </summary>
-    ''' <param name="btnQuery"></param>
-    Private Sub SetOrderQueryCtrl(btnQuery As Button)
-
-        Dim lst = New List(Of Control) From {
-            lblCusCode
-        }
-
-        SetQueryControls(btnQuery, lst)
-    End Sub
-
-    ' 取消
-    Private Async Sub btnCancel_order_Click(sender As Object, e As EventArgs) Handles btnCancel_order.Click
-        SetButtonState_old(btnCancel_order, True)
-        Await _presenter.InitializeAsync()
-        dgvOrder.ClearSelection()
-        ClearInput()
-        txtOperator.Text = Nothing
-        dtpOrder.Value = Now
-        txtCusCode_ord.Focus()
-    End Sub
-
-    ' 客戶代號
-    Private Sub txtCusCode_ord_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCusCode_ord.KeyDown
-        '按下Enter時,搜尋客戶資料
-        If e.KeyCode = Keys.Enter AndAlso _presenter.LoadCustomerByCusCode(txtCusCode_ord.Text) Then
-            dtpOrder.Focus()
-            If rdoPickUp.Checked Then _presenter.LoadCar()
-        End If
-    End Sub
-
-    ' 搜尋客戶
-    Private Sub btnQueryCus_ord_Click(sender As Object, e As EventArgs) Handles btnQueryCus_ord.Click
-        Using searchForm As New frmQueryCustomer
-            If searchForm.ShowDialog = DialogResult.OK Then
-                _presenter.LoadCustomerByCusCode(searchForm.CusCode)
-                dtpOrder.Focus()
-            End If
-        End Using
-    End Sub
-
-    ' 日期
-    Private Sub dtpOrder_KeyDown(sender As Object, e As KeyEventArgs) Handles dtpOrder.KeyDown
-        '按下Enter時,跳到"車號"
-        If e.KeyCode = Keys.Enter Then
-            If rdoPickUp.Checked Then
-                cmbCar_ord.Focus()
-                '自動展開選單
-                cmbCar_ord.DroppedDown = True
-            Else
-                tcInOut.Focus()
-            End If
-        End If
-    End Sub
-
-    ' 車號-選項改變時
-    Private Sub cmbCar_ord_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbCar_ord.SelectedIndexChanged
-        Dim cmb As ComboBox = sender
-
-        If cmb.SelectedIndex >= 0 Then
-            If cmbCarOut_ord.Items.Count > 0 Then
-                '同步"出場單"車號
-                cmbCarOut_ord.SelectedIndex = cmb.SelectedIndex
-            End If
-
-            _presenter.LoadCarStk_In(cmb.SelectedItem.Value)
-
-            If cmb.Focused Then
-                '新增時切換車號要重新計算
-                _presenter.CalculateCarStk(True)
-            End If
-        Else
-            tpIn.Controls.OfType(Of TextBox).
-                Where(Function(txt) txt.Tag.ToString.StartsWith("c_deposit")).
-                ToList().
-                ForEach(Sub(t) t.Clear())
-        End If
-    End Sub
-
-    ' 車號-按下Enter
-    Private Sub cmbCar_ord_KeyDown(sender As Object, e As KeyEventArgs) Handles cmbCar_ord.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            tcInOut.Focus()
-        End If
-    End Sub
-
-    ' 進出場單-切換
-    Private Sub tcInOut_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tcInOut.SelectedIndexChanged
-        Try
-            Dim tc As TabControl = sender
-
-            '顯示明細的狀況下只會有顯示一種單,不用計算
-            If tc.TabPages.Count = 1 Then Return
-
-            Dim isIn As Boolean = tc.SelectedTab.Text = "進場單"
-            Dim exception = New List(Of String) From {grpTransport.Name}
-
-            If isIn Then
-                ClearControls(tpOut, exception)
-                If rdoPickUp.Checked AndAlso cmbCar_ord.SelectedItem IsNot Nothing Then _presenter.LoadCarStk_In(cmbCar_ord.SelectedItem.Value)
-            Else
-                ClearControls(tpIn, exception)
-                cmbCarOut_ord.SelectedIndex = cmbCar_ord.SelectedIndex
-                If cmbCarOut_ord.SelectedItem IsNot Nothing Then _presenter.LoadCarStk_Out(cmbCarOut_ord.SelectedItem.Value)
-            End If
-            _presenter.CalculateStkAndPrice(isIn)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    ' 進出場單-按下Enter
-    Private Sub tcInOut_KeyDown(sender As Object, e As KeyEventArgs) Handles tcInOut.KeyDown
-        ' 跳到當前sheet第一格
-        If e.KeyCode = Keys.Enter Then
-            If tcInOut.SelectedTab.Text = "進場單" Then
-                txto_in_50.Focus()
-            ElseIf tcInOut.SelectedTab.Text = "出場單" Then
-                txtGas_c_50.Focus()
-            End If
-        End If
-    End Sub
-
-    ' 出場單-車號-選項改變時
-    Private Sub cmbCarOut_ord_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbCarOut_ord.SelectedIndexChanged
-        Dim cmb As ComboBox = sender
-
-        If cmb.SelectedIndex >= 0 Then
-            _presenter.LoadCarStk_Out(cmb.SelectedItem.Value)
-
-            If cmb.Focused Then
-                '新增時切換車號要重新計算
-                _presenter.CalculateCarStk(False)
-            End If
-        Else
-            tpOut.Controls.OfType(Of TextBox).
-                Where(Function(txt) txt.Tag.ToString.StartsWith("c_deposit")).
-                ToList().
-                ForEach(Sub(t) t.Clear())
-        End If
-    End Sub
-
-    ' 新增
-    Private Async Sub btnCreate_ord_Click(sender As Object, e As EventArgs) Handles btnCreate_ord.Click
-        Dim id = Await _presenter.Add()
-
-        If id <> 0 Then GetDetail(id)
-    End Sub
-
-    ' 修改
-    Private Sub btnEdit_ord_Click(sender As Object, e As EventArgs) Handles btnEdit_ord.Click
-        _presenter.Update()
-    End Sub
-
-    ' 刪除
-    Private Sub btnDelete_order_Click(sender As Object, e As EventArgs) Handles btnDelete_order.Click
-        _presenter.Delete()
-    End Sub
-
-    ' 列印
-    Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
-        Dim id As Integer
-        If Integer.TryParse(txto_id.Text, id) Then
-            _presenter.Print(id)
-        Else
-            MsgBox("請選擇對象")
-        End If
-    End Sub
-
-    ' 列印客戶鋼瓶結存總冊
-    Private Sub btnPrintCusStk_Click(sender As Object, e As EventArgs) Handles btnPrintCusStk.Click
-        Dim result = MessageBox.Show(
-            "是否列印昨天的報表?",
-            "客戶鋼瓶結存總冊",
-            MessageBoxButtons.YesNoCancel,
-            MessageBoxIcon.Question
-        )
-
-        Select Case result
-            Case DialogResult.Yes
-                _presenter.PrintCusStk(True)
-            Case DialogResult.No
-                _presenter.PrintCusStk(False)
-            Case Else
-        End Select
-    End Sub
-
-    ' 氣量氣款收付明細表
-    Private Sub btnCusGasPayCollect_Click(sender As Object, e As EventArgs) Handles btnCusGasPayCollect.Click
-        Using frm As New frmDatePicker
-            If frm.ShowDialog = DialogResult.OK Then _presenter.GenerateCustomersGasDetailByDay(frm.SelectedDate, frm.isMonth)
-        End Using
-    End Sub
-
-    ' 客戶提氣清冊
-    Private Sub btnCusGetGasList_Click(sender As Object, e As EventArgs) Handles btnCusGetGasList.Click
-        Using frm As New frmDatePicker
-            If frm.ShowDialog = DialogResult.OK Then _presenter.GenerateCustomersGetGasList(frm.SelectedDate, frm.isMonth)
-        End Using
-    End Sub
-
-    ' 供父表單呼叫的快捷鍵處理
-    Public Async Sub HandleShortcut(key As Keys)
-        Select Case key
-            Case Keys.F1
-                If btnCreate_ord.Enabled Then Await _presenter.Add()
-            Case Keys.F2
-                If btnEdit_ord.Enabled Then _presenter.Update()
-            Case Keys.F3
-                If btnDelete_order.Enabled Then _presenter.Delete()
-            Case Keys.F4
-                btnCancel_order_Click(btnCancel_order, EventArgs.Empty)
-            Case Keys.F5
-                btnPrint.PerformClick()
-            Case Keys.F6
-                btnPrintCusStk.PerformClick()
-            Case Keys.F7
-                btnCusGasPayCollect_Click(btnCusGasPayCollect, EventArgs.Empty)
-            Case Keys.F8
-                btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
-        End Select
-    End Sub
-
-    ' 選擇廠運時
-    Private Sub rdoDelivery_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDelivery.CheckedChanged
-        Dim rdo As RadioButton = sender
-        If rdo.Checked Then
-            '清空車號
-            cmbCar_ord.DataSource = Nothing
-            cmbCarOut_ord.DataSource = Nothing
-            _presenter.CurrentCarIn = Nothing
-            _presenter.CurrentCarOut = Nothing
-
-            '清空寄桶
-            tpIn.Controls.OfType(Of TextBox).
-                          Where(Function(x) x.Tag.ToString.StartsWith("o_deposit_in_") Or x.Tag.ToString.StartsWith("c_deposit_")).
-                          ToList.
-                          ForEach(Sub(x)
-                                      x.Clear()
-                                      x.ReadOnly = True
-                                  End Sub)
-            tpOut.Controls.OfType(Of TextBox).
-                           Where(Function(x) x.Tag.ToString.StartsWith("o_deposit_out_") Or x.Tag.ToString.StartsWith("c_deposit_")).
-                           ToList.
-                           ForEach(Sub(x)
-                                       x.Clear()
-                                       x.ReadOnly = True
-                                   End Sub)
-        End If
-    End Sub
-
-    ' 選擇自運時
-    Private Sub rdoPickUp_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPickUp.CheckedChanged
-        Dim rdo As RadioButton = sender
-        If rdo.Checked AndAlso dgvOrder.Columns.Count > 0 Then
-            _presenter.LoadCar()
-            tpIn.Controls.OfType(Of TextBox).
-              Where(Function(x) x.Tag.ToString.StartsWith("o_deposit_in_") Or x.Tag.ToString.StartsWith("c_deposit_")).
-              ToList.
-              ForEach(Sub(x) x.ReadOnly = False)
-            tpOut.Controls.OfType(Of TextBox).
-                           Where(Function(x) x.Tag.ToString.StartsWith("o_deposit_out_") Or x.Tag.ToString.StartsWith("c_deposit_")).
-                           ToList.
-                           ForEach(Sub(x) x.ReadOnly = False)
-        End If
-    End Sub
-
-    ' dgv
-    Private Sub dgvOrder_SelectionChanged(sender As Object, e As EventArgs) Handles dgvOrder.SelectionChanged, dgvOrder.CellMouseClick
-        If Not dgvOrder.Focused OrElse dgvOrder.SelectedRows.Count = 0 Then Return
-        Dim row = dgvOrder.SelectedRows(0)
-        Dim id As Integer = row.Cells("編號").Value
-        GetDetail(id)
-    End Sub
-
-    ' 查詢
-    Private Async Sub btnQuery_order_Click(sender As Object, e As EventArgs) Handles btnQuery_order.Click
-        Dim btn As Button = btnQuery_order
-        SetOrderQueryCtrl(btn)
-
-        If btn.Text = "查  詢" Then
-            Await _presenter.LoadList(True)
-        End If
-    End Sub
-
-    ' 紀錄dgv欄寬
-    Private Sub dgvOrder_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvOrder.ColumnWidthChanged
-        SaveDataGridWidth(sender, e)
+    Private Sub EditMode(isDataSelected As Boolean)
+        txtCusCode.ReadOnly = isDataSelected
+        btnSearchCus.Enabled = Not isDataSelected
+        cmbCar.Enabled = Not isDataSelected
+        grpTransport.Enabled = Not isDataSelected
+        cmbCarOut.Enabled = Not isDataSelected
     End Sub
 End Class

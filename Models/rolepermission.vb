@@ -16,6 +16,8 @@ Partial Public Class rolepermission
     Public Property rp_per_Id As Integer
 
     Public Overridable Property permission As permission
+    Public Overridable Property permission1 As permission
     Public Overridable Property role As role
+    Public Overridable Property role1 As role
 
 End Class

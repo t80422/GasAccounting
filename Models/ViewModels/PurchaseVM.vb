@@ -12,6 +12,7 @@
     Public Property 特殊單價 As Boolean
     Public Property 特殊運費 As Boolean
     Public Property 運輸公司 As String
+    Public Property 備註 As String
 
     Public Sub New(data As purchase)
         編號 = data.pur_id
@@ -27,9 +28,6 @@
         特殊單價 = data.pur_SpecialUP
         特殊運費 = data.pur_SpecialDUP
         運輸公司 = data.manufacturer1?.manu_name
-    End Sub
-
-    Public Sub New()
-
+        備註 = data.pur_Memo
     End Sub
 End Class

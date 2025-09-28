@@ -1,4 +1,6 @@
 ﻿' 大氣採購
+Imports System.Runtime.InteropServices.ComTypes
+
 Public Class GasPurchaseUserControl
     Implements IPurchaseView
 
@@ -87,6 +89,16 @@ Public Class GasPurchaseUserControl
         SetButtonState(Me, isSelectRow)
     End Sub
 
+    Public Sub ShowGasUnpaidSummary(datas As List(Of PurchaseGasVendorTradeSummaryListVM)) Implements IPurchaseView.ShowGasUnpaidSummary
+        dgvGasUnpaid.DataSource = datas
+        ReadDataGridWidth(dgvGasUnpaid)
+    End Sub
+
+    Public Sub ShowTransportationSummary(datas As List(Of PurchaseFreightTradeSummaryListVM)) Implements IPurchaseView.ShowTransportationSummary
+        dgvFreightUnpaid.DataSource = datas
+        ReadDataGridWidth(dgvFreightUnpaid)
+    End Sub
+
     ' 事件
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         RaiseEvent CancelClicked(sender, EventArgs.Empty)
@@ -118,7 +130,7 @@ Public Class GasPurchaseUserControl
 
     Private Sub cmbGasVendor_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbGasVendor.SelectionChangeCommitted, cmbProduct.SelectionChangeCommitted
         If cmbGasVendor.SelectedIndex > -1 AndAlso cmbProduct.SelectedIndex > -1 Then
-            RaiseEvent GasVenderSelected(sender, Tuple.Create(cmbGasVendor.SelectedValue, cmbProduct.SelectedValue))
+            RaiseEvent GasVenderSelected(sender, Tuple.Create(cmbGasVendor.SelectedValue, cmbProduct.SelectedItem))
         End If
     End Sub
 
@@ -128,6 +140,11 @@ Public Class GasPurchaseUserControl
 
     Private Sub GasPurchaseUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel.PerformClick()
+        ReadDataGridWidth(dgvPurchase)
+    End Sub
+
+    Private Sub dgv_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvPurchase.ColumnWidthChanged, dgvGasUnpaid.ColumnWidthChanged, dgvFreightUnpaid.ColumnWidthChanged
+        SaveDataGridWidth(sender, e)
     End Sub
 
     ' 方法
@@ -145,7 +162,7 @@ Public Class GasPurchaseUserControl
     ''' </summary>
     Private Sub CalculateSum_Purchase() Handles txtWeight_pur.TextChanged, txtUnitPrice_pur.TextChanged
         Dim weight As Integer = If(String.IsNullOrEmpty(txtWeight_pur.Text), 0, txtWeight_pur.Text)
-        Dim unitPrice As Single = If(String.IsNullOrEmpty(txtUnitPrice_pur.Text), 0, txtUnitPrice_pur.Text)
-        txtSum_pur.Text = weight * unitPrice
+        Dim unitPrice As Double = If(String.IsNullOrEmpty(txtUnitPrice_pur.Text), 0, txtUnitPrice_pur.Text)
+        txtSum_pur.Text = Math.Round(weight * unitPrice, 0)
     End Sub
 End Class

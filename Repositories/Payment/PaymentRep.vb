@@ -110,4 +110,19 @@ Public Class PaymentRep
             Throw
         End Try
     End Function
+
+    Public Function GetByCriteriaAndVendors(criteria As PaymentSearchCriteria, vendorIds As List(Of Integer)) As List(Of payment) Implements IPaymentRep.GetByCriteriaAndVendors
+        Try
+            Dim query = _dbSet.AsNoTracking.AsQueryable
+
+            If criteria.IsSearchDate Then query = query.Where(Function(x) x.p_Date >= criteria.StartDate AndAlso x.p_Date < criteria.EndDate)
+            If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.p_comp_Id = criteria.CompanyId)
+
+            query = query.Where(Function(x) vendorIds.Contains(x.p_m_Id))
+
+            Return query.ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

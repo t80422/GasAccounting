@@ -112,11 +112,12 @@ Partial Public Class order
     Public Property o_barrel_unit_price_5 As Nullable(Of Integer)
     Public Property o_barrel_unit_price_2 As Nullable(Of Integer)
     Public Property o_UnpaidAmount As Integer
+    Public Property o_insurance_unit_price As Nullable(Of Single)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car
+    Public Overridable Property customer As customer
     Public Overridable Property employee As employee
     Public Overridable Property order_collection_mapping As ICollection(Of order_collection_mapping) = New HashSet(Of order_collection_mapping)
-    Public Overridable Property customer As customer
 
 End Class

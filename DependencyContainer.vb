@@ -44,12 +44,14 @@ Public Class DependencyContainer
             .RegisterType(Of IAccountingEntryService, AccountingEntryService)()
             .RegisterType(Of IBankMonthlyBalanceService, BankMonthlyBalanceService)()
             .RegisterType(Of IBarrelMonthlyBalanceService, BarrelMonthlyBalanceService)()
+            .RegisterType(Of IMonthlyAccountService, MonthlyAccountService)
             .RegisterType(Of IPriceCalculationService, PriceCalculationService)()
             .RegisterType(Of IPrinterService, PrinterService)()
             .RegisterType(Of IOrderCollectionMappingService, OrderCollectionMappingService)()
             .RegisterType(Of IReportService, ReportService)()
             .RegisterType(Of IManufacturerService, ManufacturerService)
             .RegisterType(Of IGasMonthlyBalanceService, GasMonthlyBalanceService)
+            .RegisterType(Of IGasPurchaseService, GasPurchaseService)
 
             ' 註冊 View
             .RegisterType(Of IChequePayView, ChequePayUserControl)
@@ -57,6 +59,7 @@ Public Class DependencyContainer
             .RegisterType(Of IPurchaseView, GasPurchaseUserControl)
             .RegisterType(Of IPurchaseBarrelView, PurchaseBarrelUserControl)()
             .RegisterType(Of IPaymentView, PaymentUserControl)()
+            .RegisterType(Of IOrderView, OrderUserControl)
 
             ' 註冊 Presenter
             .RegisterType(Of ChequePayPresenter)

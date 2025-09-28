@@ -32,15 +32,6 @@ Partial Public Class customer
     Public Property cus_gas_5 As Integer
     Public Property cus_gas_2 As Integer
     Public Property cus_pp_Id As Nullable(Of Integer)
-    Public Property cus_inspect_50 As Integer
-    Public Property cus_inspect_20 As Integer
-    Public Property cus_inspect_16 As Integer
-    Public Property cus_inspect_10 As Integer
-    Public Property cus_inspect_4 As Integer
-    Public Property cus_inspect_18 As Integer
-    Public Property cus_inspect_14 As Integer
-    Public Property cus_inspect_5 As Integer
-    Public Property cus_inspect_2 As Integer
     Public Property cus_IsInsurance As Boolean
     Public Property cus_InsurancePrice As Single
     Public Property cus_comp_Id As Nullable(Of Integer)
@@ -49,12 +40,12 @@ Partial Public Class customer
     Public Overridable Property cars As ICollection(Of car) = New HashSet(Of car)
     Public Overridable Property cars1 As ICollection(Of car) = New HashSet(Of car)
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property company As company
     Public Overridable Property priceplan As priceplan
     Public Overridable Property inspections As ICollection(Of inspection) = New HashSet(Of inspection)
     Public Overridable Property invoices As ICollection(Of invoice) = New HashSet(Of invoice)
     Public Overridable Property monthly_account As ICollection(Of monthly_account) = New HashSet(Of monthly_account)
     Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
     Public Overridable Property scrap_barrel_detail As ICollection(Of scrap_barrel_detail) = New HashSet(Of scrap_barrel_detail)
-    Public Overridable Property company As company
 
 End Class

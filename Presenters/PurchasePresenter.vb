@@ -13,6 +13,7 @@ Public Class PurchasePresenter
     Private ReadOnly _gmbSer As IGasMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _printerSer As IPrinterService
+    Private ReadOnly _purchaseSer As IGasPurchaseService
     Private currentData As purchase
 
     Public ReadOnly Property View As IPurchaseView
@@ -22,7 +23,7 @@ Public Class PurchasePresenter
     End Property
 
     Public Sub New(view As IPurchaseView, purRep As IPurchaseRep, compRep As ICompanyRep, manuRep As IManufacturerRep, subRep As ISubjectRep, gmbSer As IGasMonthlyBalanceService,
-                   aeSer As IAccountingEntryService, printerSer As IPrinterService)
+                   aeSer As IAccountingEntryService, printerSer As IPrinterService, purchaseSer As IGasPurchaseService)
         _view = view
         _purRep = purRep
         _compRep = compRep
@@ -31,6 +32,7 @@ Public Class PurchasePresenter
         _gmbSer = gmbSer
         _aeSer = aeSer
         _printerSer = printerSer
+        _purchaseSer = purchaseSer
 
         AddHandler _view.AddClicked, AddressOf Add
         AddHandler _view.EditClicked, AddressOf Edit
@@ -68,6 +70,13 @@ Public Class PurchasePresenter
     Private Sub LoadList(Optional criteria As PurchaseCondition = Nothing)
         Try
             Dim purchases = _purRep.SearchPurchasesAsync(criteria).Result
+
+            If criteria IsNot Nothing Then
+                Dim summary = _purchaseSer.GetPurchaseTradeSummary(purchases, criteria)
+                _view.ShowGasUnpaidSummary(summary.Item1)
+                _view.ShowTransportationSummary(summary.Item2)
+            End If
+
             Dim datas = purchases.Select(Function(x) New PurchaseVM(x)).ToList
             _view.ShowList(datas)
         Catch ex As Exception
@@ -106,7 +115,7 @@ Public Class PurchasePresenter
                         .ae_TransactionType = "大氣進貨",
                         .ae_s_Id = 3,
                         .ae_Debit = 0,
-                        .ae_Credit = insert.pur_price + insert.pur_delivery_fee
+                        .ae_Credit = insert.pur_price.Value + insert.pur_delivery_fee.Value
                     }
                 }
 
@@ -115,10 +124,10 @@ Public Class PurchasePresenter
                 _purRep.SaveChangesAsync()
                 transaction.Commit()
                 Initialize()
-                MsgBox("新增成功")
+                MessageBox.Show("新增成功")
             Catch ex As Exception
                 transaction.Rollback()
-                MsgBox(ex.Message)
+                MessageBox.Show(ex.Message)
             End Try
         End Using
     End Sub
@@ -207,8 +216,8 @@ Public Class PurchasePresenter
 
     Private Sub Search()
         Try
-            Dim data = _view.GetSearchCondition
-            LoadList(data)
+            Dim criteria = _view.GetSearchCondition
+            LoadList(criteria)
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try

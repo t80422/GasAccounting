@@ -113,10 +113,6 @@ Public Class PaymentUserControl
         End If
     End Sub
 
-    Private Sub btnQuery_payment_Click(sender As Object, e As EventArgs) Handles btnQuery_payment.Click
-
-    End Sub
-
     Private Sub cmbPayType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPayType.SelectedIndexChanged
         ControlColumns()
     End Sub

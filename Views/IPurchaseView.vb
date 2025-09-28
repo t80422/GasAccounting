@@ -19,4 +19,6 @@
     Sub ClearInput()
     Sub SetDataToControls(data As purchase)
     Sub SetButton(isSelectRow)
+    Sub ShowGasUnpaidSummary(datas As List(Of PurchaseGasVendorTradeSummaryListVM))
+    Sub ShowTransportationSummary(datas As List(Of PurchaseFreightTradeSummaryListVM))
 End Interface

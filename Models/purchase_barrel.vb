@@ -35,8 +35,9 @@ Partial Public Class purchase_barrel
     Public Property pb_Date As Date
     Public Property pb_comp_Id As Nullable(Of Integer)
 
-    Public Overridable Property manufacturer As manufacturer
     Public Overridable Property company As company
     Public Overridable Property company1 As company
+    Public Overridable Property manufacturer As manufacturer
+    Public Overridable Property manufacturer1 As manufacturer
 
 End Class

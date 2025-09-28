@@ -94,13 +94,15 @@
             Dim chequePayVeiw = DirectCast(chequePayPresenter.View, ChequePayUserControl)
             Dim purchasePresenter = DependencyContainer.Resolve(Of PurchasePresenter)
             Dim purchaseVeiw = DirectCast(purchasePresenter.View, GasPurchaseUserControl)
+            Dim orderPresenter = DependencyContainer.Resolve(Of OrderPresenter)
+            Dim orderView = DirectCast(orderPresenter.View, OrderUserControl)
 
             ' 定義 TabPage 和對應 UserControl 的映射關係
             Dim userControlMappings As New Dictionary(Of TabPage, Control) From {
                 {tpClosingEntry, DependencyContainer.Resolve(Of ucClosingEntry)()},
                 {tpGasCheckout, gasCheckoutView},
                 {tpReport, DependencyContainer.Resolve(Of Report)()},
-                {tpOrder, DependencyContainer.Resolve(Of OrderUserControl)},
+                {tpOrder, orderView},
                 {tpPayment, paymentView},
                 {tpCollection, DependencyContainer.Resolve(Of CollectionUserControl)},
                 {tpScrapBarrel, DependencyContainer.Resolve(Of ScrapBarrelUserControl)},

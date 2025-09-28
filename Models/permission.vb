@@ -16,5 +16,6 @@ Partial Public Class permission
     Public Property per_Name As String
 
     Public Overridable Property rolepermissions As ICollection(Of rolepermission) = New HashSet(Of rolepermission)
+    Public Overridable Property rolepermissions1 As ICollection(Of rolepermission) = New HashSet(Of rolepermission)
 
 End Class

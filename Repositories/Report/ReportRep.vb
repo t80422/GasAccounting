@@ -58,7 +58,7 @@ Public Class ReportRep
                 }).ToList()
 
             ' 一次性取得當月收款資料（始終計算到選定期間結束）
-            Dim monthCollections = _context.collections.Where(Function(c) c.col_Date >= monthStart AndAlso c.col_Date < periodEnd).
+            Dim monthCollections = _context.collections.Where(Function(c) c.col_Date >= monthStart AndAlso c.col_Date < periodEnd AndAlso c.col_cus_Id.HasValue).
                 Select(Function(c) New With {
                     .客戶Id = c.col_cus_Id,
                     .收款 = c.col_Amount
@@ -395,6 +395,7 @@ Public Class ReportRep
                     })
             Next
         Catch ex As Exception
+            MessageBox.Show(ex.StackTrace)
             Throw
         End Try
 

@@ -170,8 +170,8 @@
     <Reference Include="Microsoft.ApplicationInsights, Version=2.23.0.29, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.ApplicationInsights.2.23.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.9.0.5\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.9.0.9\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
@@ -192,8 +192,8 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=9.0.0.5, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.DependencyInjection.9.0.5\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=9.0.0.5, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.9.0.5\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=9.0.0.9, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.9.0.9\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.FileProviders.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
@@ -207,8 +207,8 @@
     <Reference Include="Microsoft.Extensions.Logging, Version=9.0.0.5, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Logging.9.0.5\lib\net462\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=9.0.0.5, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.9.0.5\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=9.0.0.9, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.9.0.9\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Options, Version=9.0.0.5, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Options.9.0.5\lib\net462\Microsoft.Extensions.Options.dll</HintPath>
@@ -297,8 +297,8 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=9.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Diagnostics.DiagnosticSource.9.0.5\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=9.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.9.0.9\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
@@ -411,6 +411,12 @@
       <DependentUpon>frmStartEndDatePicker.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmStartEndDatePicker.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Search\frmSearch_Order.Designer.vb">
+      <DependentUpon>frmSearch_Order.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Search\frmSearch_Order.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Search\Search_GasPurchase.Designer.vb">
@@ -636,11 +642,15 @@
     <Compile Include="Models\ViewModels\InspectionVM.vb" />
     <Compile Include="Models\ViewModels\InvioceVM.vb" />
     <Compile Include="Models\ViewModels\InvoiceSplitVM.vb" />
+    <Compile Include="Models\ViewModels\OrderListOutVM.vb" />
+    <Compile Include="Models\ViewModels\OrderListInVM.vb" />
     <Compile Include="Models\ViewModels\PaymentVM.vb" />
     <Compile Include="Models\ViewModels\PurchaseBarrelVM.vb" />
     <Compile Include="Models\permission.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\PurchaseGasVendorTradeSummaryListVM.vb" />
+    <Compile Include="Models\ViewModels\PurchaseFreightTradeSummaryListVM.vb" />
     <Compile Include="Models\ViewModels\ScrapBarrelDetailVM.vb" />
     <Compile Include="Models\ViewModels\ScrapBarrelVM.vb" />
     <Compile Include="Models\ViewModels\SurplusGasListVM.vb" />
@@ -687,7 +697,6 @@
     <Compile Include="Presenters\InvoicePresenter.vb" />
     <Compile Include="Presenters\PermissionPresenter.vb" />
     <Compile Include="Presenters\PurBarrelPresenter.vb" />
-    <Compile Include="PurchaseEventArgs.vb" />
     <Compile Include="Models\CusGetGas.vb" />
     <Compile Include="Models\CustomersGasDetailByDay.vb" />
     <Compile Include="Models\DailyCustomerReceivable.vb" />
@@ -741,6 +750,8 @@
     <Compile Include="Services\GasMonthlyBalance\GasMonthlyBalanceService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\IBarrelMonthlyBalanceService.vb" />
     <Compile Include="Services\GasMonthlyBalance\IGasMonthlyBalanceService.vb" />
+    <Compile Include="Services\GasPurchase\GasPurchaseService.vb" />
+    <Compile Include="Services\GasPurchase\IGasPurchaseService.vb" />
     <Compile Include="Services\OrderCollectionMapping\IOrderCollectionMappingService.vb" />
     <Compile Include="Services\MonthlyAccount\IMonthlyAccountService.vb" />
     <Compile Include="Services\MonthlyAccount\MonthlyAccountService.vb" />
@@ -757,6 +768,7 @@
     <Compile Include="Views\ICarView.vb" />
     <Compile Include="Views\IChequePayView.vb" />
     <Compile Include="Views\IClosingEntryView.vb" />
+    <Compile Include="Views\IFormView.vb" />
     <Compile Include="Views\IGasBarrelView.vb" />
     <Compile Include="Views\IGasCheckoutView.vb" />
     <Compile Include="Views\IInspectionView.vb" />
@@ -916,7 +928,7 @@
     </Compile>
     <Compile Include="Models\ViewModels\BasicPriceMV.vb" />
     <Compile Include="Models\ViewModels\CarVM.vb" />
-    <Compile Include="Models\ViewModels\OrderVM.vb" />
+    <Compile Include="Models\ViewModels\OrderListVM.vb" />
     <Compile Include="Models\ViewModels\QueryCusVM.vb" />
     <Compile Include="Models\ViewModels\SubjectsVM.vb" />
     <Compile Include="modFormControl.vb" />
@@ -943,6 +955,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\frmStartEndDatePicker.resx">
       <DependentUpon>frmStartEndDatePicker.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Search\frmSearch_Order.resx">
+      <DependentUpon>frmSearch_Order.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Search\Search_GasPurchase.resx">
       <DependentUpon>Search_GasPurchase.vb</DependentUpon>
