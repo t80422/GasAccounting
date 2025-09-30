@@ -637,12 +637,14 @@ Public Class OrderPresenter
     End Sub
 
     Private Sub Print(sender As Object, orderId As Integer)
-        Dim data = _ordRep.GetOrderVoucherData(orderId)
-        Dim templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
-        Dim htmlContent = FillTemplate(templatePath, data)
-        Dim pdfPath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.pdf")
-
+        Dim templatePath As String
+        Dim pdfPath As String
         Try
+            Dim data = _ordRep.GetOrderVoucherData(orderId)
+            templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
+            Dim htmlContent = FillTemplate(templatePath, data)
+            pdfPath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.pdf")
+
             ' 轉換 HTML 為 PDF
             Using pdfWriter As New PdfWriter(pdfPath)
                 Using pdfDocument As New PdfDocument(pdfWriter)
@@ -665,9 +667,25 @@ Public Class OrderPresenter
             PrintPDF(pdfPath)
 
             MsgBox("成功")
+            Initialize()
 
         Catch ex As Exception
-            MessageBox.Show("轉換失敗：" & ex.Message)
+            ' 詳細的錯誤診斷資訊
+            Dim errorDetails = $"PDF轉換失敗 - 環境診斷資訊：{vbCrLf}{vbCrLf}" &
+                             $"錯誤類型：{ex.GetType().Name}{vbCrLf}" &
+                             $"錯誤訊息：{ex.Message}{vbCrLf}{vbCrLf}" &
+                             $"字體檔案檢查：{vbCrLf}" &
+                             $"- kaiu.ttf 存在: {File.Exists("c:/windows/Fonts/kaiu.ttf")}{vbCrLf}" &
+                             $"- 模板檔案路徑: {templatePath}{vbCrLf}" &
+                             $"- 模板檔案存在: {File.Exists(templatePath)}{vbCrLf}" &
+                             $"- PDF輸出路徑: {pdfPath}{vbCrLf}" &
+                             $"- 輸出目錄存在: {Directory.Exists(Path.GetDirectoryName(pdfPath))}{vbCrLf}{vbCrLf}" &
+                             $"堆疊追蹤：{vbCrLf}{ex.StackTrace}"
+
+            MessageBox.Show(errorDetails, "PDF轉換錯誤診斷", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+            ' 同時記錄到控制台供偵錯
+            Console.WriteLine(errorDetails)
         End Try
     End Sub
 
