@@ -116,15 +116,15 @@ Public Class OrderUserControl
         Select Case key
             Case Keys.F1
                 If btnCreate.Enabled Then
-
+                    btnCreate.PerformClick()
                 End If
             Case Keys.F2
                 If btnEdit.Enabled Then
-
+                    btnEdit.PerformClick()
                 End If
             Case Keys.F3
                 If btnDelete.Enabled Then
-
+                    btnDelete.PerformClick()
                 End If
             Case Keys.F4
                 btnCancel_Click(btnCancel, EventArgs.Empty)
@@ -133,9 +133,9 @@ Public Class OrderUserControl
             Case Keys.F6
                 btnPrintCusStk.PerformClick()
             Case Keys.F7
-                'btnCusGasPayCollect_Click(btnCusGasPayCollect, EventArgs.Empty)
+                btnCusGasPayCollect_Click(btnCusGasPayCollect, EventArgs.Empty)
             Case Keys.F8
-                'btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
+                btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
         End Select
     End Sub
 
