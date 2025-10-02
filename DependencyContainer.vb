@@ -33,6 +33,7 @@ Public Class DependencyContainer
             .RegisterType(Of IPrinterService, PrinterService)()
             .RegisterType(Of IPurchaseBarrelRep, PurchaseBarrelRep)()
             .RegisterType(Of IPurchaseRep, PurchaseRep)
+            .RegisterType(Of IPricePlanRep, PricePlanRep)
             .RegisterType(Of IReportRep, ReportRep)()
             .RegisterType(Of IScrapBarrelRep, ScrapBarrelRep)()
             .RegisterType(Of IScrapBarrelDetailRep, ScrapBarrelDetailRep)()
@@ -55,6 +56,7 @@ Public Class DependencyContainer
 
             ' 註冊 View
             .RegisterType(Of IChequePayView, ChequePayUserControl)
+            .RegisterType(Of ICustomerView, CustomerUserControl)
             .RegisterType(Of IGasCheckoutView, GasCheckoutUserControl)
             .RegisterType(Of IPurchaseView, GasPurchaseUserControl)
             .RegisterType(Of IPurchaseBarrelView, PurchaseBarrelUserControl)()
@@ -63,6 +65,7 @@ Public Class DependencyContainer
 
             ' 註冊 Presenter
             .RegisterType(Of ChequePayPresenter)
+            .RegisterType(Of CustomerPresenter)
             .RegisterType(Of GasCheckoutPresenter)
             .RegisterType(Of PurchasePresenter)
             .RegisterType(Of PurBarrelPresenter)()

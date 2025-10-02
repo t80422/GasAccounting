@@ -1,17 +1,42 @@
-﻿Public Class CustomerPresenter
+﻿Imports System.Data.Entity.Core.Mapping
+
+Public Class CustomerPresenter
     Private ReadOnly _view As ICustomerView
     Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _pricePlanRep As IPricePlanRep
     Private ReadOnly _compRep As ICompanyRep
+
+    Private currentData As customer
+
+    Public ReadOnly Property View As ICustomerView
+        Get
+            Return _view
+        End Get
+    End Property
 
     Public Sub New(view As ICustomerView, cusRep As ICustomerRep, pricePlanRep As IPricePlanRep, compRep As ICompanyRep)
         _view = view
         _cusRep = cusRep
         _pricePlanRep = pricePlanRep
         _compRep = compRep
+
+        SubscribeToViewEvents()
     End Sub
 
-    Public Async Sub InitializeAsync()
+    ''' <summary>
+    ''' 訂閱 View 事件
+    ''' </summary>
+    Private Sub SubscribeToViewEvents()
+        AddHandler _view.CancelRequest, AddressOf InitializeAsync
+        AddHandler _view.PricePlanSelectedChange, AddressOf LoadPricePlanDetailsAsync
+        AddHandler _view.CreateRequest, AddressOf AddAsync
+        AddHandler _view.DataSelectedRequest, AddressOf LoadDetail
+        AddHandler _view.UpdateRequest, AddressOf UpdateAsync
+        AddHandler _view.DeleteRequest, AddressOf DeleteAsync
+        AddHandler _view.SearchRequest, AddressOf Search
+    End Sub
+
+    Private Async Sub InitializeAsync()
         Try
             _view.ClearInput()
 
@@ -20,10 +45,11 @@
                 LoadCompanyAsync
             )
 
-            Await SearchAsync()
+            LoadList()
+            _view.ButtonStatus(False)
+            currentData = Nothing
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
@@ -45,76 +71,79 @@
         End Try
     End Function
 
-    Public Async Sub LoadPricePlanDetailsAsync(id As Integer)
+    Private Sub LoadList(Optional criteria As customer = Nothing)
+        Try
+            Dim data = _cusRep.SearchAsync(criteria).Result
+            _view.ClearInput()
+            _view.ShowList(data.Select(Function(x) New CustomerVM(x)).ToList)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Private Async Sub LoadPricePlanDetailsAsync(sender As Object, id As Integer)
         Try
             Dim data = Await _pricePlanRep.GetByIdAsync(id)
             _view.ClearPricePlan()
             _view.SetPricePlanDetails(data)
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
-    Public Async Function SearchAsync() As Task
+    Private Async Sub AddAsync()
         Try
-            Dim criteria = _view.GetUserInput
-            Dim data = Await _cusRep.SearchAsync(criteria)
-            _view.DisplayList(data.Select(Function(x) New CustomerVM(x)).ToList)
-        Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
-        End Try
-    End Function
-
-    Public Async Sub AddAsync()
-        Try
-            Dim data = _view.GetUserInput
+            Dim data As New customer
+            _view.GetInput(data)
             Validate(data)
             Await _cusRep.AddAsync(data)
-            _view.ClearInput()
-            Await SearchAsync()
-            MsgBox("新增成功")
+            MessageBox.Show("新增成功")
+            InitializeAsync()
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
-    Public Async Sub UpdateAsync()
+    Private Sub LoadDetail(sender As Object, id As Integer)
         Try
-            Dim data = _view.GetUserInput
-            Validate(data)
-            Await _cusRep.UpdateAsync(data.cus_id, data)
+            currentData = _cusRep.GetByIdAsync(id).Result
             _view.ClearInput()
-            Await SearchAsync()
-            MsgBox("修改成功")
+            _view.ShowDetail(currentData)
+            _view.ButtonStatus(True)
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
-    Public Async Sub DeleteAsync(id As Integer)
+    Private Async Sub UpdateAsync()
         Try
-            Await _cusRep.DeleteAsync(id)
-            _view.ClearInput()
-            Await SearchAsync()
-            MsgBox("刪除成功")
+            _view.GetInput(currentData)
+            Validate(currentData)
+            Await _cusRep.SaveChangesAsync
+            MessageBox.Show("修改成功")
+            InitializeAsync()
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
-    Public Async Sub LoadDetailAsync(id As Integer)
+    Public Async Sub DeleteAsync()
         Try
-            Dim data = Await _cusRep.GetByIdAsync(id)
-            _view.ClearInput()
-            _view.DisplayDetail(data)
+            Await _cusRep.DeleteAsync(currentData)
+            Await _cusRep.SaveChangesAsync
+            MessageBox.Show("刪除成功")
+            InitializeAsync()
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+    Public Sub Search()
+        Try
+            Dim criteria = _view.GetSearchCriteria
+            LoadList(criteria)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 

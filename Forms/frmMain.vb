@@ -1,5 +1,5 @@
 ﻿Public Class frmMain
-    Implements ISubjectsView, IManufacturerView, ICustomerView, IPricePlanView, IEmployeeView, IBankView, IUnitPriceHistoryView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, ICarView, IInvoiceSplitView, IInspectionView
+    Implements ISubjectsView, IManufacturerView, IPricePlanView, IEmployeeView, IBankView, IUnitPriceHistoryView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, ICarView, IInvoiceSplitView, IInspectionView
 
     Public Structure UserData
         Public Id As Integer
@@ -12,7 +12,6 @@
 
     Private _basicPrice As BasicPricePresenter
     Private _car As CarPresenter
-    Private _customer As CustomerPresenter
     Private _gasBarrel As GasBarrelPresenter
     Private _invoice As InvoicePresenter
     Private _invoiceIn As InvoiceSplitPresenters
@@ -56,7 +55,6 @@
         Dim bpRep As New BasicPriceRep(context)
         Dim paymentRep As New PaymentRep(context)
         Dim permissionRep As New PermissionRep(context)
-        Dim ppRep As New PricePlanRep(context)
         Dim subjectRep As New SubjectRep(context)
         Dim inspectionRep As New InspectionRep(context)
 
@@ -67,7 +65,6 @@
 
         _basicPrice = New BasicPricePresenter(Me, bpRep)
         _car = New CarPresenter(Me, cusRep, carRep)
-        _customer = New CustomerPresenter(Me, cusRep, ppRep, compRep)
         _gasBarrel = New GasBarrelPresenter(Me, gbRep)
         _invoice = New InvoicePresenter(Me, cusRep, invoiceRep, priceCalSer, ordRep)
         _invoiceIn = New InvoiceSplitPresenters(Me, invoiceInRep, compRep)
@@ -96,10 +93,13 @@
             Dim purchaseVeiw = DirectCast(purchasePresenter.View, GasPurchaseUserControl)
             Dim orderPresenter = DependencyContainer.Resolve(Of OrderPresenter)
             Dim orderView = DirectCast(orderPresenter.View, OrderUserControl)
+            Dim customerPresenter = DependencyContainer.Resolve(Of CustomerPresenter)
+            Dim customerView = DirectCast(customerPresenter.View, CustomerUserControl)
 
             ' 定義 TabPage 和對應 UserControl 的映射關係
             Dim userControlMappings As New Dictionary(Of TabPage, Control) From {
                 {tpClosingEntry, DependencyContainer.Resolve(Of ucClosingEntry)()},
+                {tpCustomer, customerView},
                 {tpGasCheckout, gasCheckoutView},
                 {tpReport, DependencyContainer.Resolve(Of Report)()},
                 {tpOrder, orderView},
@@ -162,7 +162,6 @@
     Private Sub SetCtrlStyle()
         Try
             SetQueryEnterEven(Me)
-            SetTextBoxIntOnly()
             PositiveIntegerOnly()
             PositiveFloatOnly()
             SetFloatOnly()
@@ -183,7 +182,6 @@
     ''' </summary>
     Private Sub InitTabPage()
         btnCancel_emp_Click(btnCancel_emp, EventArgs.Empty)
-        btnCancel_cus_Click(btnCancel_cus, EventArgs.Empty)
         btnCancel_bp_Click(btnCancel_bp, EventArgs.Empty)
         btnCancel_bank_Click(btnCancel_bank, EventArgs.Empty)
         btnCancel_car_Click(btnCancel_car, EventArgs.Empty)
@@ -271,23 +269,6 @@
     End Sub
 
     ''' <summary>
-    ''' 設定TextBox只能輸入整數
-    ''' </summary>
-    Private Sub SetTextBoxIntOnly()
-        Dim numeric As New List(Of TextBox) From {
-            txtcus_gas_normal,
-            txtcus_gas_c,
-            txtcus_gas_normal_deliver,
-            txtcus_gas_c_deliver
-        }
-
-        ' 為這些控件添加 KeyPress 事件處理器
-        For Each textBox In numeric
-            AddHandler textBox.KeyPress, AddressOf TextBox_KeyPress_Int
-        Next
-    End Sub
-
-    ''' <summary>
     ''' 設定所有dgv在調整欄寬時紀錄
     ''' </summary>
     Private Sub SetDGVColumnWidthSave()
@@ -306,113 +287,6 @@
                          x.DrawMode = TabDrawMode.OwnerDrawFixed
                          AddHandler x.DrawItem, AddressOf TabControl_DrawItem
                      End Sub)
-    End Sub
-
-    Public Sub SetPricePlanDetails(data As priceplan) Implements ICustomerView.SetPricePlanDetails
-        AutoMapEntityToControls(data, grpPricePlan)
-    End Sub
-
-    Public Sub ClearPricePlan() Implements ICustomerView.ClearPricePlan
-        Dim exception = New List(Of String) From {cmbPricePlan.Name}
-        ClearControls(grpPricePlan, exception)
-    End Sub
-
-    Public Sub PopulatePricePlanDropdown(data As List(Of SelectListItem)) Implements ICustomerView.PopulatePricePlanDropdown
-        SetComboBox(cmbPricePlan, data)
-    End Sub
-
-    Public Sub DisplayList(data As List(Of CustomerVM)) Implements IBaseView(Of customer, CustomerVM).DisplayList
-        dgvCustomer.DataSource = data
-    End Sub
-
-    Public Sub DisplayDetail(data As customer) Implements IBaseView(Of customer, CustomerVM).DisplayDetail
-        AutoMapEntityToControls(data, tpCustomer)
-        AutoMapEntityToControls(data, grpStock)
-        AutoMapEntityToControls(data, grpPricePlan)
-        AutoMapEntityToControls(data, grpInsurance)
-    End Sub
-
-    Private Function ICustomerView_GetUserInput() As customer Implements IBaseView(Of customer, CustomerVM).GetUserInput
-        Dim data As New customer
-        AutoMapControlsToEntity(data, tpCustomer)
-        AutoMapControlsToEntity(data, grpStock)
-        AutoMapControlsToEntity(data, grpPricePlan)
-        AutoMapControlsToEntity(data, grpInsurance)
-        Return data
-    End Function
-
-    Private Sub ICustomerView_ClearInput() Implements IBaseView(Of customer, CustomerVM).ClearInput
-        Dim exception = New List(Of String) From {grpInsurance.Name}
-        ClearControls(tpCustomer, exception)
-    End Sub
-
-    Public Sub SetCompanyDropdown(data As List(Of SelectListItem)) Implements ICustomerView.SetCompanyDropdown
-        SetComboBox(cmbCompany_cus, data)
-    End Sub
-
-    '基本資料-客戶管理-取消
-    Private Sub btnCancel_cus_Click(sender As Object, e As EventArgs) Handles btnCancel_cus.Click
-        SetButtonState_old(sender, True)
-        _customer.InitializeAsync()
-    End Sub
-
-    '基本資料-客戶管理-新增
-    Private Sub btnAdd_cus_Click(sender As Object, e As EventArgs) Handles btnCreate_cus.Click
-        _customer.AddAsync()
-    End Sub
-
-    '基本資料-客戶管理-dgv
-    Private Sub dgvCustomer_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCustomer.SelectionChanged, dgvCustomer.CellClick
-        Dim ctrl As DataGridView = sender
-        If Not ctrl.Focused Then Return
-
-        SetButtonState_old(ctrl, False)
-
-        Dim id As Integer = ctrl.SelectedRows(0).Cells(0).Value
-        _customer.LoadDetailAsync(id)
-    End Sub
-
-    '基本資料-客戶管理-修改
-    Private Sub btnEdit_cus_Click(sender As Object, e As EventArgs) Handles btnEdit_cus.Click
-        _customer.UpdateAsync()
-        SetButtonState_old(sender, True)
-    End Sub
-
-    '基本資料-客戶管理-刪除
-    Private Sub btnDelete_cus_Click(sender As Object, e As EventArgs) Handles btnDelete_cus.Click
-        Dim id As Integer = txtcus_id.Text
-        _customer.DeleteAsync(id)
-        SetButtonState_old(sender, True)
-    End Sub
-
-    '基本資料-客戶管理-查詢
-    Private Async Sub btnQuery_cus_Click(sender As Object, e As EventArgs) Handles btnQuery_cus.Click
-        Dim btn As Button = sender
-        Dim lst = New List(Of Control) From {
-            txtCusCode,
-            txtCusName_cus,
-            txtCusPhone1,
-            cmbCompany_cus
-        }
-
-        SetQueryControls(btn, lst)
-
-        If btn.Text = "查  詢" Then
-            Await _customer.SearchAsync()
-        End If
-    End Sub
-
-    '基本資料-客戶管理-價格方案
-    Private Sub cmbPricePlan_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPricePlan.SelectedIndexChanged
-        Dim cmb As ComboBox = sender
-
-        If cmb.SelectedIndex >= 0 Then
-            Dim id As Integer
-
-            If Integer.TryParse(cmb.SelectedValue.ToString, id) Then
-                _customer.LoadPricePlanDetailsAsync(id)
-            End If
-        End If
     End Sub
 
     Public Sub DisplayList(data As List(Of CarVM)) Implements IBaseView(Of car, CarVM).DisplayList

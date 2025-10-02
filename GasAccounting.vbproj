@@ -467,6 +467,12 @@
     <Compile Include="Forms\UserControl\CompanyUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Forms\UserControl\CustomerUserControl.Designer.vb">
+      <DependentUpon>CustomerUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\CustomerUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\UserControl\GasCheckoutUserControl.Designer.vb">
       <DependentUpon>GasCheckoutUserControl.vb</DependentUpon>
     </Compile>
@@ -985,6 +991,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\CompanyUserControl.resx">
       <DependentUpon>CompanyUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\CustomerUserControl.resx">
+      <DependentUpon>CustomerUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\GasCheckoutUserControl.resx">
       <DependentUpon>GasCheckoutUserControl.vb</DependentUpon>
