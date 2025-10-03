@@ -107,6 +107,9 @@ Public Class CustomerPresenter
     Private Sub LoadDetail(sender As Object, id As Integer)
         Try
             currentData = _cusRep.GetByIdAsync(id).Result
+            If currentData IsNot Nothing Then
+                _cusRep.Reload(currentData)
+            End If
             _view.ClearInput()
             _view.ShowDetail(currentData)
             _view.ButtonStatus(True)
@@ -117,6 +120,9 @@ Public Class CustomerPresenter
 
     Private Async Sub UpdateAsync()
         Try
+            If currentData IsNot Nothing Then
+                _cusRep.Reload(currentData)
+            End If
             _view.GetInput(currentData)
             Validate(currentData)
             Await _cusRep.SaveChangesAsync
@@ -129,6 +135,9 @@ Public Class CustomerPresenter
 
     Public Async Sub DeleteAsync()
         Try
+            If currentData IsNot Nothing Then
+                _cusRep.Reload(currentData)
+            End If
             Await _cusRep.DeleteAsync(currentData)
             Await _cusRep.SaveChangesAsync
             MessageBox.Show("刪除成功")

@@ -1,17 +1,16 @@
 ﻿' 大氣採購
-Imports System.Runtime.InteropServices.ComTypes
 
 Public Class GasPurchaseUserControl
     Implements IPurchaseView
 
-    Public Event AddClicked As EventHandler Implements IPurchaseView.AddClicked
-    Public Event EditClicked As EventHandler Implements IPurchaseView.EditClicked
-    Public Event DeleteClicked As EventHandler Implements IPurchaseView.DeleteClicked
-    Public Event CancelClicked As EventHandler Implements IPurchaseView.CancelClicked
-    Public Event SerchClicked As EventHandler Implements IPurchaseView.SerchClicked
     Public Event GasVenderSelected As EventHandler(Of Object) Implements IPurchaseView.GasVenderSelected
     Public Event PrintClicked As EventHandler(Of Object) Implements IPurchaseView.PrintClicked
-    Public Event RowSelected As EventHandler(Of Integer) Implements IPurchaseView.RowSelected
+    Public Event CreateRequest As EventHandler Implements IFormView(Of purchase, PurchaseVM).CreateRequest
+    Public Event DataSelectedRequest As EventHandler(Of Integer) Implements IFormView(Of purchase, PurchaseVM).DataSelectedRequest
+    Public Event UpdateRequest As EventHandler Implements IFormView(Of purchase, PurchaseVM).UpdateRequest
+    Public Event DeleteRequest As EventHandler Implements IFormView(Of purchase, PurchaseVM).DeleteRequest
+    Public Event CancelRequest As EventHandler Implements IFormView(Of purchase, PurchaseVM).CancelRequest
+    Public Event SearchRequest As EventHandler Implements IFormView(Of purchase, PurchaseVM).SearchRequest
 
     ' 介面
     Public Sub SetCompanyCmb(items As List(Of SelectListItem)) Implements IPurchaseView.SetCompanyCmb
@@ -45,7 +44,7 @@ Public Class GasPurchaseUserControl
         ClearControls(Me)
     End Sub
 
-    Public Sub SetDataToControls(data As purchase) Implements IPurchaseView.SetDataToControls
+    Public Sub ShowDetail(data As purchase) Implements IFormView(Of purchase, PurchaseVM).ShowDetail
         AutoMapEntityToControls(data, Me)
     End Sub
 
@@ -59,34 +58,18 @@ Public Class GasPurchaseUserControl
         Return Nothing
     End Function
 
-    Public Function GetInput() As purchase Implements IPurchaseView.GetInput
+    Public Function GetInput(ByRef model As purchase) As Boolean Implements IFormView(Of purchase, PurchaseVM).GetInput
         If cmbCompany_pur.SelectedIndex = -1 Then Throw New Exception("請選擇公司")
         If cmbProduct.SelectedIndex = -1 Then Throw New Exception("請選擇產品")
-        If cmbGasVendor.SelectedIndex = -1 Then Throw New Exception("請選擇大氣廠商")
         If String.IsNullOrEmpty(txtWeight_pur.Text) Then Throw New Exception("請輸入重量")
 
-        Dim data As New purchase With {
-            .pur_id = If(String.IsNullOrEmpty(txtId_pur.Text), 0, txtId_pur.Text),
-            .pur_comp_id = cmbCompany_pur.SelectedValue,
-            .pur_date = dtpDate_pur.Value.Date,
-            .pur_delivery_fee = If(String.IsNullOrEmpty(txtFreight.Text), 0, Double.Parse(txtFreight.Text)),
-            .pur_deli_unit_price = If(String.IsNullOrEmpty(txtDeliUnitPrice.Text), 0, Double.Parse(txtDeliUnitPrice.Text)),
-            .pur_DriveCmpId = cmbDriveCmp.SelectedValue,
-            .pur_manu_id = cmbGasVendor.SelectedValue,
-            .pur_Memo = txtMemo_pur.Text,
-            .pur_price = If(String.IsNullOrEmpty(txtSum_pur.Text), 0, Double.Parse(txtSum_pur.Text)),
-            .pur_product = cmbProduct.SelectedItem,
-            .pur_quantity = txtWeight_pur.Text,
-            .pur_SpecialDUP = chkSp.Checked,
-            .pur_SpecialUP = chkSpecial.Checked,
-            .pur_unit_price = If(String.IsNullOrEmpty(txtUnitPrice_pur.Text), 0, Double.Parse(txtUnitPrice_pur.Text))
-        }
+        AutoMapControlsToEntity(model, Me)
 
-        Return data
+        Return True
     End Function
 
-    Public Sub SetButton(isSelectRow As Object) Implements IPurchaseView.SetButton
-        SetButtonState(Me, isSelectRow)
+    Public Sub ButtonStatus(isSelectedRow As Boolean) Implements IFormView(Of purchase, PurchaseVM).ButtonStatus
+        SetButtonState(Me, isSelectedRow)
     End Sub
 
     Public Sub ShowGasUnpaidSummary(datas As List(Of PurchaseGasVendorTradeSummaryListVM)) Implements IPurchaseView.ShowGasUnpaidSummary
@@ -101,11 +84,11 @@ Public Class GasPurchaseUserControl
 
     ' 事件
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        RaiseEvent CancelClicked(sender, EventArgs.Empty)
+        RaiseEvent CancelRequest(sender, EventArgs.Empty)
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
-        RaiseEvent AddClicked(sender, EventArgs.Empty)
+        RaiseEvent CreateRequest(sender, EventArgs.Empty)
     End Sub
 
     Private Sub dgvPurchase_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPurchase.SelectionChanged, dgvPurchase.CellMouseClick
@@ -113,19 +96,19 @@ Public Class GasPurchaseUserControl
         If Not ctrl.Focused OrElse ctrl.SelectedRows.Count = 0 Then Return
 
         Dim id As Integer = ctrl.SelectedRows(0).Cells("編號").Value
-        RaiseEvent RowSelected(sender, id)
+        RaiseEvent DataSelectedRequest(sender, id)
     End Sub
 
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
-        RaiseEvent EditClicked(sender, e)
+        RaiseEvent UpdateRequest(sender, e)
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        RaiseEvent DeleteClicked(sender, e)
+        RaiseEvent DeleteRequest(sender, e)
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
-        RaiseEvent SerchClicked(sender, e)
+        RaiseEvent SearchRequest(sender, e)
     End Sub
 
     Private Sub cmbGasVendor_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbGasVendor.SelectionChangeCommitted, cmbProduct.SelectionChangeCommitted

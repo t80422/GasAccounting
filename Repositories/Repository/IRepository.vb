@@ -11,4 +11,5 @@ Public Interface IRepository(Of TEntity As Class)
     Function DeleteAsync(currentEntity As TEntity) As Task
     Function SaveChangesAsync() As Task
     Function BeginTransaction() As DbContextTransaction
+    Sub Reload(entity As TEntity)
 End Interface

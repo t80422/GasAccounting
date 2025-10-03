@@ -8,8 +8,11 @@ Public Class DependencyContainer
         _container = New UnityContainer()
 
         With _container
-            ' 註冊 DbContext 為 Singleton（整個應用程式共用一個實例）
+            ' 註冊 DbContext 為 Singleton（給舊的 Presenter 使用）
             .RegisterType(Of gas_accounting_systemEntities)(New ContainerControlledLifetimeManager())
+
+            ' 註冊 UnitOfWork（每次創建新的 Transient DbContext）
+            .RegisterType(Of IUnitOfWork, UnitOfWork)(New TransientLifetimeManager())
 
             ' 註冊 Repository
             .RegisterType(Of IAccountingEntryRep, AccountingEntryRep)()

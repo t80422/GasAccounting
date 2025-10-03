@@ -105,4 +105,9 @@ Public Class Repository(Of TEntity As Class)
     Public Function BeginTransaction() As DbContextTransaction Implements IRepository(Of TEntity).BeginTransaction
         Return _context.Database.BeginTransaction
     End Function
+
+    Public Sub Reload(entity As TEntity) Implements IRepository(Of TEntity).Reload
+        If entity Is Nothing Then Return
+        _context.Entry(entity).Reload()
+    End Sub
 End Class

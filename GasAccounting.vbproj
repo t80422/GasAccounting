@@ -696,6 +696,8 @@
     <Compile Include="Repositories\ScrapBarrel\ScrapBarrelRep.vb" />
     <Compile Include="Repositories\SurplusGas\ISurplusGasRep.vb" />
     <Compile Include="Repositories\SurplusGas\SurplusGasRep.vb" />
+    <Compile Include="Repositories\UnitOfWork\IUnitOfWork.vb" />
+    <Compile Include="Repositories\UnitOfWork\UnitOfWork.vb" />
     <Compile Include="Repositories\WriteOffRep.vb" />
     <Compile Include="Services\AccountingEntry\AccountingEntryService.vb" />
     <Compile Include="Services\AccountingEntry\IAccountingEntryService.vb" />

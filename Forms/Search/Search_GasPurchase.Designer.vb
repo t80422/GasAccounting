@@ -186,6 +186,7 @@ Partial Class Search_GasPurchase
         Me.Name = "Search_GasPurchase"
         Me.Padding = New System.Windows.Forms.Padding(10)
         Me.ShowIcon = False
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "大氣進貨搜尋"
         Me.TopMost = True
         Me.ResumeLayout(False)

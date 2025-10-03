@@ -39,6 +39,20 @@ Public Class OrderPresenter
         End Get
     End Property
 
+    Private Sub RefreshCurrentEntities(Optional includeOrder As Boolean = False)
+        If includeOrder AndAlso currentOrder IsNot Nothing Then
+            _ordRep.Reload(currentOrder)
+        End If
+
+        If currentCustomer IsNot Nothing Then
+            _cusRep.Reload(currentCustomer)
+        End If
+
+        If currentCar IsNot Nothing Then
+            _carRep.Reload(currentCar)
+        End If
+    End Sub
+
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
                    priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService,
                    reportRep As IReportRep, maService As IMonthlyAccountService)
@@ -192,7 +206,13 @@ Public Class OrderPresenter
     ''' <param name="cusCode"></param>
     Private Sub LoadCustomer(cusCode As String)
         Try
-            currentCustomer = _cusRep.GetByCusCode(cusCode)
+            Dim customerEntity = _cusRep.GetByCusCode(cusCode)
+
+            If customerEntity IsNot Nothing Then
+                _cusRep.Reload(customerEntity)
+            End If
+
+            currentCustomer = customerEntity
 
             If currentCustomer Is Nothing Then
                 Throw New Exception("查無此客戶")
@@ -249,6 +269,7 @@ Public Class OrderPresenter
     Private Sub LoadCarBarrelStock(carId As Integer)
         Try
             currentCar = _carRep.GetByIdAsync(carId).Result
+            _carRep.Reload(currentCar)
             _view.ShowCarBarrelStock_In(currentCar)
             _view.ShowCarBarrelStock_Out(currentCar)
         Catch ex As Exception
@@ -446,6 +467,7 @@ Public Class OrderPresenter
     Private Sub Add()
         Using transaction = _ordRep.BeginTransaction
             Try
+                RefreshCurrentEntities()
                 Dim orderInput As New order
                 _view.GetInput(orderInput)
                 Dim order = _ordRep.AddAsync(orderInput).Result
@@ -505,10 +527,14 @@ Public Class OrderPresenter
 
             If currentOrder Is Nothing Then Throw New Exception("資料已被刪除，請刷新")
 
+            _ordRep.Reload(currentOrder)
+
             _view.ClearInput()
 
             currentCustomer = currentOrder.customer
             currentCar = If(currentOrder.o_in_out = "進場單", currentOrder.car, currentOrder.car1)
+
+            RefreshCurrentEntities()
 
             _view.ShowCustomer(currentCustomer)
             _view.ShowDetail(currentOrder)
@@ -523,6 +549,7 @@ Public Class OrderPresenter
     Private Sub Update()
         Using transaction = _ordRep.BeginTransaction
             Try
+                RefreshCurrentEntities(includeOrder:=True)
                 _view.GetInput(currentOrder)
                 _view.GetCusStkInput(currentCustomer)
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
@@ -546,6 +573,7 @@ Public Class OrderPresenter
     Private Sub Delete()
         Using transaction = _ordRep.BeginTransaction
             Try
+                RefreshCurrentEntities(includeOrder:=True)
                 If currentOrder Is Nothing Then
                     Throw New Exception("沒有選擇要刪除的訂單")
                 End If

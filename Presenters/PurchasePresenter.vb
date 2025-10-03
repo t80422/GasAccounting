@@ -1,15 +1,11 @@
 ﻿Imports System.IO
 
 ''' <summary>
-''' 大氣採購
+''' 大氣採購 (使用 Unit of Work 模式 - 每次操作創建新的 UnitOfWork)
 ''' </summary>
 Public Class PurchasePresenter
 
     Private ReadOnly _view As IPurchaseView
-    Private ReadOnly _purRep As IPurchaseRep
-    Private ReadOnly _compRep As ICompanyRep
-    Private ReadOnly _manuRep As IManufacturerRep
-    Private ReadOnly _subRep As ISubjectRep
     Private ReadOnly _gmbSer As IGasMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _printerSer As IPrinterService
@@ -22,202 +18,229 @@ Public Class PurchasePresenter
         End Get
     End Property
 
-    Public Sub New(view As IPurchaseView, purRep As IPurchaseRep, compRep As ICompanyRep, manuRep As IManufacturerRep, subRep As ISubjectRep, gmbSer As IGasMonthlyBalanceService,
+    Public Sub New(view As IPurchaseView, gmbSer As IGasMonthlyBalanceService,
                    aeSer As IAccountingEntryService, printerSer As IPrinterService, purchaseSer As IGasPurchaseService)
         _view = view
-        _purRep = purRep
-        _compRep = compRep
-        _manuRep = manuRep
-        _subRep = subRep
         _gmbSer = gmbSer
         _aeSer = aeSer
         _printerSer = printerSer
         _purchaseSer = purchaseSer
 
-        AddHandler _view.AddClicked, AddressOf Add
-        AddHandler _view.EditClicked, AddressOf Edit
-        AddHandler _view.DeleteClicked, AddressOf Delete
-        AddHandler _view.CancelClicked, AddressOf Initialize
-        AddHandler _view.SerchClicked, AddressOf Search
+        AddHandler _view.CreateRequest, AddressOf Add
+        AddHandler _view.UpdateRequest, AddressOf Edit
+        AddHandler _view.DeleteRequest, AddressOf Delete
+        AddHandler _view.CancelRequest, AddressOf Initialize
+        AddHandler _view.SearchRequest, AddressOf Search
         AddHandler _view.PrintClicked, AddressOf Print
         AddHandler _view.GasVenderSelected, AddressOf GetDefaultPrice
-        AddHandler _view.RowSelected, AddressOf SelectRowAsync
+        AddHandler _view.DataSelectedRequest, AddressOf SelectRowAsync
     End Sub
 
-    Private Sub Initialize()
+    Private Async Sub Initialize()
         Try
             _view.ClearInput()
-            SetCompanyCmb()
-            SetGasVendorCmb()
-            SetDriveCompanyCmb()
+            Await SetCompanyCmbAsync()
+            Await SetGasVendorCmbAsync()
+            Await SetDriveCompanyCmbAsync()
             currentData = Nothing
-            LoadList()
-            _view.SetButton(False)
+            Await LoadListAsync()
+            _view.ButtonStatus(False)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
 
-    Private Sub GetDefaultPrice(sender As Object, data As Tuple(Of Object, Object))
+    Private Async Sub GetDefaultPrice(sender As Object, data As Tuple(Of Object, Object))
         Try
-            Dim result = _purRep.GetDefaultPricesAsync(data.Item1, data.Item2).Result
-            _view.SetDefaultPrice(result.Item1, result.Item2)
+            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+                Dim result = Await uow.PurchaseRepository.GetDefaultPricesAsync(data.Item1, data.Item2)
+                _view.SetDefaultPrice(result.Item1, result.Item2)
+            End Using
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
 
-    Private Sub LoadList(Optional criteria As PurchaseCondition = Nothing)
+    Private Async Function LoadListAsync(Optional criteria As PurchaseCondition = Nothing) As Task
         Try
-            Dim purchases = _purRep.SearchPurchasesAsync(criteria).Result
+            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+                Dim purchases = Await uow.PurchaseRepository.SearchPurchasesAsync(criteria)
 
-            If criteria IsNot Nothing Then
-                Dim summary = _purchaseSer.GetPurchaseTradeSummary(purchases, criteria)
-                _view.ShowGasUnpaidSummary(summary.Item1)
-                _view.ShowTransportationSummary(summary.Item2)
-            End If
+                If criteria IsNot Nothing Then
+                    ' 使用新版本的 Service 方法（傳入 Repository）
+                    Dim summary = _purchaseSer.GetPurchaseTradeSummary(uow.PaymentRepository, purchases.ToList, criteria)
+                    _view.ShowGasUnpaidSummary(summary.Item1)
+                    _view.ShowTransportationSummary(summary.Item2)
+                End If
 
-            Dim datas = purchases.Select(Function(x) New PurchaseVM(x)).ToList
-            _view.ShowList(datas)
+                Dim datas = purchases.Select(Function(x) New PurchaseVM(x)).ToList
+                _view.ShowList(datas)
+            End Using
         Catch ex As Exception
             MsgBox(ex.StackTrace)
         End Try
-    End Sub
+    End Function
 
-    Private Sub Add()
-        Using transaction = _purRep.BeginTransaction
-            Try
-                Dim data = _view.GetInput()
-                Dim insert = _purRep.AddAsync(data).Result
+    Private Async Sub Add()
+        Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+            Using transaction = uow.BeginTransaction()
+                Try
+                    Dim data As New purchase
+                    _view.GetInput(data)
+                    Dim insert = Await uow.PurchaseRepository.AddAsync(data)
 
-                _gmbSer.UpdateOrAdd(data.pur_date, data.pur_comp_id)
+                    ' 使用新版本的 Service 方法（傳入 Repository）
+                    _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
+                                       uow.CompanyRepository, uow.BasicSetRepository,
+                                       data.pur_date, data.pur_comp_id)
 
-                Dim entries = New List(Of accounting_entry) From {
-                    New accounting_entry With {
-                        .ae_TransactionId = insert.pur_id,
-                        .ae_Date = Now,
-                        .ae_TransactionType = "大氣進貨",
-                        .ae_s_Id = 1,
-                        .ae_Debit = insert.pur_price,
-                        .ae_Credit = 0
-                    },
-                    New accounting_entry With {
-                        .ae_TransactionId = insert.pur_id,
-                        .ae_Date = Now,
-                        .ae_TransactionType = "大氣進貨",
-                        .ae_s_Id = 2,
-                        .ae_Debit = insert.pur_delivery_fee,
-                        .ae_Credit = 0
-                    },
-                    New accounting_entry With {
-                        .ae_TransactionId = insert.pur_id,
-                        .ae_Date = Now,
-                        .ae_TransactionType = "大氣進貨",
-                        .ae_s_Id = 3,
-                        .ae_Debit = 0,
-                        .ae_Credit = insert.pur_price.Value + insert.pur_delivery_fee.Value
+                    Dim entries = New List(Of accounting_entry) From {
+                        New accounting_entry With {
+                            .ae_TransactionId = insert.pur_id,
+                            .ae_Date = Now,
+                            .ae_TransactionType = "大氣進貨",
+                            .ae_s_Id = 1,
+                            .ae_Debit = insert.pur_price,
+                            .ae_Credit = 0
+                        },
+                        New accounting_entry With {
+                            .ae_TransactionId = insert.pur_id,
+                            .ae_Date = Now,
+                            .ae_TransactionType = "大氣進貨",
+                            .ae_s_Id = 2,
+                            .ae_Debit = insert.pur_delivery_fee,
+                            .ae_Credit = 0
+                        },
+                        New accounting_entry With {
+                            .ae_TransactionId = insert.pur_id,
+                            .ae_Date = Now,
+                            .ae_TransactionType = "大氣進貨",
+                            .ae_s_Id = 3,
+                            .ae_Debit = 0,
+                            .ae_Credit = insert.pur_price.Value + insert.pur_delivery_fee.Value
+                        }
                     }
-                }
 
-                _aeSer.AddEntries(entries)
+                    ' 使用新版本的 Service 方法（傳入 Repository）
+                    _aeSer.AddEntries(uow.AccountingEntryRepository, entries)
 
-                _purRep.SaveChangesAsync()
-                transaction.Commit()
-                Initialize()
-                MessageBox.Show("新增成功")
-            Catch ex As Exception
-                transaction.Rollback()
-                MessageBox.Show(ex.Message)
-            End Try
+                    ' 統一由 UnitOfWork 保存
+                    Await uow.SaveChangesAsync()
+                    transaction.Commit()
+                    Initialize()
+                    MessageBox.Show("新增成功")
+                Catch ex As Exception
+                    transaction.Rollback()
+                    MessageBox.Show(ex.Message)
+                End Try
+            End Using
         End Using
     End Sub
 
-    Private Sub Edit()
-        Using transaction = _purRep.BeginTransaction
-            Try
-                Dim data = _view.GetInput()
-                _gmbSer.UpdateOrAdd(data.pur_date, data.pur_comp_id)
+    Private Async Sub Edit()
+        Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+            Using transaction = uow.BeginTransaction()
+                Try
+                    _view.GetInput(currentData)
 
-                Dim entries = New List(Of accounting_entry) From {
-                    New accounting_entry With {
-                        .ae_TransactionId = data.pur_id,
-                        .ae_Date = Now,
-                        .ae_TransactionType = "大氣進貨",
-                        .ae_s_Id = 1,
-                        .ae_Debit = data.pur_price,
-                        .ae_Credit = 0
-                    },
-                    New accounting_entry With {
-                        .ae_TransactionId = data.pur_id,
-                        .ae_Date = Now,
-                        .ae_TransactionType = "大氣進貨",
-                        .ae_s_Id = 2,
-                        .ae_Debit = data.pur_delivery_fee,
-                        .ae_Credit = 0
-                    },
-                    New accounting_entry With {
-                        .ae_TransactionId = data.pur_id,
-                        .ae_Date = Now,
-                        .ae_TransactionType = "大氣進貨",
-                        .ae_s_Id = 3,
-                        .ae_Debit = 0,
-                        .ae_Credit = data.pur_price + data.pur_delivery_fee
+                    ' 使用新版本的 Service 方法（傳入 Repository）
+                    _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
+                                       uow.CompanyRepository, uow.BasicSetRepository,
+                                       currentData.pur_date, currentData.pur_comp_id)
+
+                    Dim entries = New List(Of accounting_entry) From {
+                        New accounting_entry With {
+                            .ae_TransactionId = currentData.pur_id,
+                            .ae_Date = Now,
+                            .ae_TransactionType = "大氣進貨",
+                            .ae_s_Id = 1,
+                            .ae_Debit = currentData.pur_price,
+                            .ae_Credit = 0
+                        },
+                        New accounting_entry With {
+                            .ae_TransactionId = currentData.pur_id,
+                            .ae_Date = Now,
+                            .ae_TransactionType = "大氣進貨",
+                            .ae_s_Id = 2,
+                            .ae_Debit = currentData.pur_delivery_fee,
+                            .ae_Credit = 0
+                        },
+                        New accounting_entry With {
+                            .ae_TransactionId = currentData.pur_id,
+                            .ae_Date = Now,
+                            .ae_TransactionType = "大氣進貨",
+                            .ae_s_Id = 3,
+                            .ae_Debit = 0,
+                            .ae_Credit = currentData.pur_price + currentData.pur_delivery_fee
+                        }
                     }
-                }
 
-                _aeSer.UpdateEntries(entries)
-                _purRep.UpdateAsync(currentData, data)
-                _purRep.SaveChangesAsync()
+                    ' 使用新版本的 Service 方法（傳入 Repository）
+                    _aeSer.UpdateEntries(uow.AccountingEntryRepository, entries)
+                    Await uow.PurchaseRepository.UpdateAsync(currentData.pur_id, currentData)
 
-                transaction.Commit()
-                Initialize()
-                MsgBox("修改成功")
-            Catch ex As Exception
-                transaction.Rollback()
-                MsgBox(ex.Message)
-            End Try
+                    ' 統一由 UnitOfWork 保存
+                    Await uow.SaveChangesAsync()
+
+                    transaction.Commit()
+                    Initialize()
+                    MsgBox("修改成功")
+                Catch ex As Exception
+                    transaction.Rollback()
+                    MsgBox(ex.Message)
+                End Try
+            End Using
         End Using
     End Sub
 
-    Public Sub Delete()
-        Using transaction = _purRep.BeginTransaction
-            Try
-                _aeSer.DeleteEntries("大氣進貨", currentData.pur_id)
+    Public Async Sub Delete()
+        Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+            Using transaction = uow.BeginTransaction()
+                Try
+                    ' 使用新版本的 Service 方法（傳入 Repository）
+                    _aeSer.DeleteEntries(uow.AccountingEntryRepository, "大氣進貨", currentData.pur_id)
 
-                _purRep.DeleteAsync(currentData)
+                    Await uow.PurchaseRepository.DeleteAsync(currentData)
 
-                _gmbSer.UpdateOrAdd(currentData.pur_date, currentData.pur_comp_id)
+                    ' 使用新版本的 Service 方法（傳入 Repository）
+                    _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
+                                       uow.CompanyRepository, uow.BasicSetRepository,
+                                       currentData.pur_date, currentData.pur_comp_id)
 
-                _purRep.SaveChangesAsync()
+                    ' 統一由 UnitOfWork 保存
+                    Await uow.SaveChangesAsync()
 
-                transaction.Commit()
-                Initialize()
-                MessageBox.Show("刪除成功")
-            Catch ex As Exception
-                transaction.Rollback()
-                MessageBox.Show(ex.Message)
-            End Try
+                    transaction.Commit()
+                    Initialize()
+                    MessageBox.Show("刪除成功")
+                Catch ex As Exception
+                    transaction.Rollback()
+                    MessageBox.Show(ex.Message)
+                End Try
+            End Using
         End Using
     End Sub
 
-    Private Sub SelectRowAsync(sender As Object, id As Integer)
+    Private Async Sub SelectRowAsync(sender As Object, id As Integer)
         Try
-            Dim data = _purRep.GetByIdAsync(id).Result
-            If data IsNot Nothing Then
-                _view.ClearInput()
-                currentData = data
-                _view.SetDataToControls(data)
-                _view.SetButton(True)
-            End If
+            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+                Dim data = Await uow.PurchaseRepository.GetByIdAsync(id)
+                If data IsNot Nothing Then
+                    _view.ClearInput()
+                    currentData = data
+                    _view.ShowDetail(data)
+                    _view.ButtonStatus(True)
+                End If
+            End Using
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
 
-    Private Sub Search()
+    Private Async Sub Search()
         Try
             Dim criteria = _view.GetSearchCondition
-            LoadList(criteria)
+            Await LoadListAsync(criteria)
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
@@ -259,30 +282,36 @@ Public Class PurchasePresenter
         End Try
     End Sub
 
-    Private Sub SetCompanyCmb()
+    Private Async Function SetCompanyCmbAsync() As Task
         Try
-            Dim companies = _compRep.GetCompanyDropdownAsync.Result
-            _view.SetCompanyCmb(companies)
+            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+                Dim companies = Await uow.CompanyRepository.GetCompanyDropdownAsync
+                _view.SetCompanyCmb(companies)
+            End Using
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Sub
+    End Function
 
-    Private Sub SetGasVendorCmb()
+    Private Async Function SetGasVendorCmbAsync() As Task
         Try
-            Dim data = _manuRep.GetGasVendorCmbDataAsync.Result
-            _view.SetGasVendorCmb(data)
+            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+                Dim data = Await uow.ManufacturerRepository.GetGasVendorCmbDataAsync
+                _view.SetGasVendorCmb(data)
+            End Using
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Sub
+    End Function
 
-    Private Sub SetDriveCompanyCmb()
+    Private Async Function SetDriveCompanyCmbAsync() As Task
         Try
-            Dim data = _manuRep.GetVendorCmbWithoutGasAsync.Result
-            _view.SetDriveVendorCmb(data)
+            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+                Dim data = Await uow.ManufacturerRepository.GetVendorCmbWithoutGasAsync
+                _view.SetDriveVendorCmb(data)
+            End Using
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
-    End Sub
+    End Function
 End Class

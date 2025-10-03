@@ -12,7 +12,7 @@ Imports System.Collections.Generic
 
 Partial Public Class purchase
     Public Property pur_id As Integer
-    Public Property pur_manu_id As Integer
+    Public Property pur_manu_id As Nullable(Of Integer)
     Public Property pur_date As Nullable(Of Date)
     Public Property pur_product As String
     Public Property pur_quantity As Nullable(Of Integer)

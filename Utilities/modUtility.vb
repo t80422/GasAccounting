@@ -70,7 +70,7 @@ Module modUtility
                     Try
                         ' 獲取屬性的基礎類型（處理可空類型）
                         Dim propType = If(Nullable.GetUnderlyingType(prop.PropertyType), prop.PropertyType)
-                        If propType.Name = "Int32" Or propType.Name = "Single" Then
+                        If propType.Name = "Int32" Or propType.Name = "Single" Or propType.Name = "Double" Then
                             If String.IsNullOrEmpty(propValue) Then
                                 propValue = 0
                             End If

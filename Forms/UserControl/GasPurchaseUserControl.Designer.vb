@@ -29,7 +29,6 @@ Partial Class GasPurchaseUserControl
         Me.chkSpecial = New System.Windows.Forms.CheckBox()
         Me.Label308 = New System.Windows.Forms.Label()
         Me.Label307 = New System.Windows.Forms.Label()
-        Me.Label306 = New System.Windows.Forms.Label()
         Me.Label305 = New System.Windows.Forms.Label()
         Me.txtDeliUnitPrice = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -141,16 +140,6 @@ Partial Class GasPurchaseUserControl
         Me.Label307.Size = New System.Drawing.Size(20, 19)
         Me.Label307.TabIndex = 486
         Me.Label307.Text = "*"
-        '
-        'Label306
-        '
-        Me.Label306.AutoSize = True
-        Me.Label306.ForeColor = System.Drawing.Color.Red
-        Me.Label306.Location = New System.Drawing.Point(293, 65)
-        Me.Label306.Name = "Label306"
-        Me.Label306.Size = New System.Drawing.Size(20, 19)
-        Me.Label306.TabIndex = 485
-        Me.Label306.Text = "*"
         '
         'Label305
         '
@@ -478,7 +467,6 @@ Partial Class GasPurchaseUserControl
         Me.Controls.Add(Me.chkSpecial)
         Me.Controls.Add(Me.Label308)
         Me.Controls.Add(Me.Label307)
-        Me.Controls.Add(Me.Label306)
         Me.Controls.Add(Me.Label305)
         Me.Controls.Add(Me.txtDeliUnitPrice)
         Me.Controls.Add(Me.Label4)
@@ -529,7 +517,6 @@ Partial Class GasPurchaseUserControl
     Friend WithEvents chkSpecial As CheckBox
     Friend WithEvents Label308 As Label
     Friend WithEvents Label307 As Label
-    Friend WithEvents Label306 As Label
     Friend WithEvents Label305 As Label
     Friend WithEvents txtDeliUnitPrice As TextBox
     Friend WithEvents Label4 As Label

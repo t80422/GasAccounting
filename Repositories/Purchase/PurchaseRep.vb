@@ -10,7 +10,11 @@ Public Class PurchaseRep
 
     Public Async Function SearchPurchasesAsync(Optional conditions As PurchaseCondition = Nothing) As Task(Of IEnumerable(Of purchase)) Implements IPurchaseRep.SearchPurchasesAsync
         Try
-            Dim query = _dbSet.AsNoTracking.AsQueryable
+            ' 載入導航屬性：manufacturer (大氣廠商) 和 manufacturer1 (運輸廠商)
+            Dim query = _dbSet.AsNoTracking _
+                             .Include(Function(x) x.manufacturer) _
+                             .Include(Function(x) x.manufacturer1) _
+                             .AsQueryable
 
             If conditions IsNot Nothing Then
                 If conditions.CompanyId <> 0 Then query = query.Where(Function(x) x.pur_comp_id = conditions.CompanyId)
