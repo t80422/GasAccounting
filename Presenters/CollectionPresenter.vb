@@ -125,7 +125,7 @@
             _currentCheque = If(String.IsNullOrEmpty(_currentData.col_Cheque), Nothing, _chequeRep.GetByNumberAsync(_currentData.col_Cheque).Result)
             _view.ClearInput()
             _view.DisplayDetail(_currentData)
-            _view.ShowCheque(_currentCheque)
+            If _currentCheque IsNot Nothing Then _view.ShowCheque(_currentCheque)
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
@@ -167,8 +167,13 @@
 
                         If _currentData.col_Type = "應收票據" Then
                             Dim orgCheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
-                            cheque.che_Id = orgCheque.che_Id
-                            Await _chequeRep.UpdateAsync(orgCheque, cheque)
+                            If orgCheque Is Nothing Then
+                                cheque.che_CollectionDate = col.col_Date
+                                Await _chequeRep.AddAsync(cheque)
+                            Else
+                                cheque.che_Id = orgCheque.che_Id
+                                Await _chequeRep.UpdateAsync(orgCheque, cheque)
+                            End If
                         ElseIf _currentData.col_Type = "現金" Then
                             Await _chequeRep.AddAsync(cheque)
                         ElseIf _currentData.col_Type = "銀行存款" Then

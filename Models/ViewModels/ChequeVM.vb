@@ -6,7 +6,7 @@
     Public Property 收票日期 As Date?
     Public Property 代收日期 As Date?
     Public Property 支票兌現日期 As Date?
-    Public Property 銀行兌現日期 As Date
+    Public Property 銀行兌現日期 As Date?
     Public Property 金額 As Integer
     Public Property 狀態 As String
     Public Property 發票人 As String
@@ -19,9 +19,9 @@
         發票人 = data.che_IssuerName
         金額 = data.che_Amount
         狀態 = data.chu_State
-        支票兌現日期 = data.che_CashingDate
+        銀行兌現日期 = data.che_CashingDate
         代收日期 = data.che_CollectionDate
         客戶代號 = data.collection.customer?.cus_code
-        銀行兌現日期 = data.che_AbleCashingDate
+        支票兌現日期 = data.che_AbleCashingDate
     End Sub
 End Class
