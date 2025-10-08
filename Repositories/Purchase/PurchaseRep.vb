@@ -10,11 +10,7 @@ Public Class PurchaseRep
 
     Public Async Function SearchPurchasesAsync(Optional conditions As PurchaseCondition = Nothing) As Task(Of IEnumerable(Of purchase)) Implements IPurchaseRep.SearchPurchasesAsync
         Try
-            ' 載入導航屬性：manufacturer (大氣廠商) 和 manufacturer1 (運輸廠商)
-            Dim query = _dbSet.AsNoTracking _
-                             .Include(Function(x) x.manufacturer) _
-                             .Include(Function(x) x.manufacturer1) _
-                             .AsQueryable
+            Dim query = _dbSet.AsNoTracking.AsQueryable
 
             If conditions IsNot Nothing Then
                 If conditions.CompanyId <> 0 Then query = query.Where(Function(x) x.pur_comp_id = conditions.CompanyId)
@@ -25,7 +21,12 @@ Public Class PurchaseRep
 
             Return Await query.OrderByDescending(Function(x) x.pur_date).ToListAsync()
         Catch ex As Exception
-            Throw New Exception("取得purchase列表時發生錯誤", ex)
+            Dim errorMsg = $"【PurchaseRep.SearchPurchasesAsync】查詢大氣採購列表時發生錯誤" & vbCrLf &
+                          $"查詢條件: CompanyId={If(conditions?.CompanyId, 0)}, ManufacturerId={If(conditions?.ManufacturerId, 0)}, Product={If(conditions?.Product, "無")}, IsDateSearch={If(conditions?.IsDateSearch, False)}" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                          $"堆疊追蹤: {ex.StackTrace}"
+            Throw New Exception(errorMsg, ex)
         End Try
     End Function
 
@@ -45,7 +46,12 @@ Public Class PurchaseRep
 
             Return New Tuple(Of Double, Double)(Math.Round(unitPrice, 3), Math.Round(deliveryUnitPrice, 3))
         Catch ex As Exception
-            Throw New Exception("取得預設價格時發生錯誤", ex)
+            Dim errorMsg = $"【PurchaseRep.GetDefaultPricesAsync】取得預設價格時發生錯誤" & vbCrLf &
+                          $"參數: ManufacturerId={manuId}, Product={productName}" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                          $"堆疊追蹤: {ex.StackTrace}"
+            Throw New Exception(errorMsg, ex)
         End Try
     End Function
 
@@ -62,7 +68,13 @@ Public Class PurchaseRep
 
             Return Await query.ToListAsync
         Catch ex As Exception
-            Throw New Exception("取得未結帳訂貨資訊錯誤", ex)
+            Dim errorMsg = $"【PurchaseRep.GetPurchasesWithoutCheckoutAsync】取得未結帳採購資料時發生錯誤" & vbCrLf &
+                          $"查詢條件: ManufacturerId={If(criteria?.ManufacturerId, 0)}, IsDateSearch={If(criteria?.IsDateSearch, False)}" & vbCrLf &
+                          If(criteria?.IsDateSearch, $"日期區間: {criteria.StartDate:yyyy/MM/dd} ~ {criteria.EndDate:yyyy/MM/dd}" & vbCrLf, "") &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                          $"堆疊追蹤: {ex.StackTrace}"
+            Throw New Exception(errorMsg, ex)
         End Try
     End Function
 
@@ -72,7 +84,12 @@ Public Class PurchaseRep
             purchases.ForEach(Sub(x) x.pur_Checkout = True)
             Return Await _context.SaveChangesAsync
         Catch ex As Exception
-            Throw New Exception("更新結帳狀態時發生錯誤", ex)
+            Dim errorMsg = $"【PurchaseRep.UpdateCheckoutStatusAsync】更新結帳狀態時發生錯誤" & vbCrLf &
+                          $"採購單ID列表: [{String.Join(", ", If(ids, New List(Of Integer)))}]" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                          $"堆疊追蹤: {ex.StackTrace}"
+            Throw New Exception(errorMsg, ex)
         End Try
     End Function
 End Class

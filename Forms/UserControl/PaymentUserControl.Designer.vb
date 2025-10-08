@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class PaymentUserControl
     Inherits System.Windows.Forms.UserControl
 
     'UserControl 覆寫 Dispose 以清除元件清單。
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class PaymentUserControl
     '注意: 以下為 Windows Form 設計工具所需的程序
     '可以使用 Windows Form 設計工具進行修改。
     '請勿使用程式碼編輯器進行修改。
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.txtVendorAccount_payment = New System.Windows.Forms.TextBox()
         Me.btnPrint_pay = New System.Windows.Forms.Button()
@@ -69,7 +69,7 @@ Partial Class PaymentUserControl
         '
         'txtVendorAccount_payment
         '
-        Me.txtVendorAccount_payment.Location = New System.Drawing.Point(464, 133)
+        Me.txtVendorAccount_payment.Location = New System.Drawing.Point(503, 148)
         Me.txtVendorAccount_payment.Name = "txtVendorAccount_payment"
         Me.txtVendorAccount_payment.Size = New System.Drawing.Size(458, 30)
         Me.txtVendorAccount_payment.TabIndex = 495
@@ -77,7 +77,7 @@ Partial Class PaymentUserControl
         'btnPrint_pay
         '
         Me.btnPrint_pay.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnPrint_pay.Location = New System.Drawing.Point(632, 232)
+        Me.btnPrint_pay.Location = New System.Drawing.Point(637, 227)
         Me.btnPrint_pay.Name = "btnPrint_pay"
         Me.btnPrint_pay.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_pay.TabIndex = 494
@@ -87,11 +87,11 @@ Partial Class PaymentUserControl
         'chkCashing
         '
         Me.chkCashing.AutoSize = True
-        Me.chkCashing.Location = New System.Drawing.Point(38, 178)
+        Me.chkCashing.Location = New System.Drawing.Point(39, 196)
         Me.chkCashing.Name = "chkCashing"
         Me.chkCashing.Size = New System.Drawing.Size(112, 23)
         Me.chkCashing.TabIndex = 493
-        Me.chkCashing.Tag = "p_IsCashing"
+        Me.chkCashing.Tag = "cp_IsCashing"
         Me.chkCashing.Text = "是否兌付"
         Me.chkCashing.UseVisualStyleBackColor = True
         Me.chkCashing.Visible = False
@@ -99,29 +99,29 @@ Partial Class PaymentUserControl
         'dtpCashing
         '
         Me.dtpCashing.CustomFormat = ""
-        Me.dtpCashing.Location = New System.Drawing.Point(137, 133)
+        Me.dtpCashing.Location = New System.Drawing.Point(180, 148)
         Me.dtpCashing.Name = "dtpCashing"
         Me.dtpCashing.Size = New System.Drawing.Size(190, 30)
         Me.dtpCashing.TabIndex = 492
-        Me.dtpCashing.Tag = "p_CashingDate"
+        Me.dtpCashing.Tag = "cp_CashingDate"
         Me.dtpCashing.Visible = False
         '
         'lblCashingDate_payment
         '
         Me.lblCashingDate_payment.AutoSize = True
         Me.lblCashingDate_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblCashingDate_payment.Location = New System.Drawing.Point(34, 139)
+        Me.lblCashingDate_payment.Location = New System.Drawing.Point(39, 154)
         Me.lblCashingDate_payment.Name = "lblCashingDate_payment"
-        Me.lblCashingDate_payment.Size = New System.Drawing.Size(93, 19)
+        Me.lblCashingDate_payment.Size = New System.Drawing.Size(135, 19)
         Me.lblCashingDate_payment.TabIndex = 491
-        Me.lblCashingDate_payment.Text = "兌現日期"
+        Me.lblCashingDate_payment.Text = "支票兌現日期"
         Me.lblCashingDate_payment.Visible = False
         '
         'Label144
         '
         Me.Label144.AutoSize = True
         Me.Label144.ForeColor = System.Drawing.Color.Red
-        Me.Label144.Location = New System.Drawing.Point(928, 10)
+        Me.Label144.Location = New System.Drawing.Point(967, 19)
         Me.Label144.Name = "Label144"
         Me.Label144.Size = New System.Drawing.Size(20, 19)
         Me.Label144.TabIndex = 490
@@ -131,7 +131,7 @@ Partial Class PaymentUserControl
         '
         Me.Label83.AutoSize = True
         Me.Label83.ForeColor = System.Drawing.Color.Red
-        Me.Label83.Location = New System.Drawing.Point(928, 53)
+        Me.Label83.Location = New System.Drawing.Point(967, 63)
         Me.Label83.Name = "Label83"
         Me.Label83.Size = New System.Drawing.Size(20, 19)
         Me.Label83.TabIndex = 489
@@ -140,9 +140,9 @@ Partial Class PaymentUserControl
         'grpAmountDue
         '
         Me.grpAmountDue.Controls.Add(Me.dgvAmountDue)
-        Me.grpAmountDue.Location = New System.Drawing.Point(1245, 4)
+        Me.grpAmountDue.Location = New System.Drawing.Point(1287, 4)
         Me.grpAmountDue.Name = "grpAmountDue"
-        Me.grpAmountDue.Size = New System.Drawing.Size(630, 222)
+        Me.grpAmountDue.Size = New System.Drawing.Size(588, 222)
         Me.grpAmountDue.TabIndex = 488
         Me.grpAmountDue.TabStop = False
         Me.grpAmountDue.Text = "應付未付列表"
@@ -155,14 +155,14 @@ Partial Class PaymentUserControl
         Me.dgvAmountDue.Name = "dgvAmountDue"
         Me.dgvAmountDue.ReadOnly = True
         Me.dgvAmountDue.RowTemplate.Height = 24
-        Me.dgvAmountDue.Size = New System.Drawing.Size(624, 193)
+        Me.dgvAmountDue.Size = New System.Drawing.Size(582, 193)
         Me.dgvAmountDue.TabIndex = 435
         '
         'Label113
         '
         Me.Label113.AutoSize = True
         Me.Label113.ForeColor = System.Drawing.Color.Red
-        Me.Label113.Location = New System.Drawing.Point(333, 53)
+        Me.Label113.Location = New System.Drawing.Point(376, 63)
         Me.Label113.Name = "Label113"
         Me.Label113.Size = New System.Drawing.Size(20, 19)
         Me.Label113.TabIndex = 487
@@ -172,7 +172,7 @@ Partial Class PaymentUserControl
         '
         Me.cmbCompany_payment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbCompany_payment.FormattingEnabled = True
-        Me.cmbCompany_payment.Location = New System.Drawing.Point(464, 49)
+        Me.cmbCompany_payment.Location = New System.Drawing.Point(503, 59)
         Me.cmbCompany_payment.Name = "cmbCompany_payment"
         Me.cmbCompany_payment.Size = New System.Drawing.Size(458, 27)
         Me.cmbCompany_payment.TabIndex = 486
@@ -182,7 +182,7 @@ Partial Class PaymentUserControl
         '
         Me.Label114.AutoSize = True
         Me.Label114.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label114.Location = New System.Drawing.Point(361, 53)
+        Me.Label114.Location = New System.Drawing.Point(402, 63)
         Me.Label114.Name = "Label114"
         Me.Label114.Size = New System.Drawing.Size(95, 19)
         Me.Label114.TabIndex = 485
@@ -192,7 +192,7 @@ Partial Class PaymentUserControl
         '
         Me.lblReq_Chuque.AutoSize = True
         Me.lblReq_Chuque.ForeColor = System.Drawing.Color.Red
-        Me.lblReq_Chuque.Location = New System.Drawing.Point(8, 96)
+        Me.lblReq_Chuque.Location = New System.Drawing.Point(13, 108)
         Me.lblReq_Chuque.Name = "lblReq_Chuque"
         Me.lblReq_Chuque.Size = New System.Drawing.Size(20, 19)
         Me.lblReq_Chuque.TabIndex = 484
@@ -203,7 +203,7 @@ Partial Class PaymentUserControl
         '
         Me.Label81.AutoSize = True
         Me.Label81.ForeColor = System.Drawing.Color.Red
-        Me.Label81.Location = New System.Drawing.Point(8, 53)
+        Me.Label81.Location = New System.Drawing.Point(13, 63)
         Me.Label81.Name = "Label81"
         Me.Label81.Size = New System.Drawing.Size(20, 19)
         Me.Label81.TabIndex = 482
@@ -213,7 +213,7 @@ Partial Class PaymentUserControl
         '
         Me.lblVendorBank_payment.AutoSize = True
         Me.lblVendorBank_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblVendorBank_payment.Location = New System.Drawing.Point(361, 139)
+        Me.lblVendorBank_payment.Location = New System.Drawing.Point(402, 154)
         Me.lblVendorBank_payment.Name = "lblVendorBank_payment"
         Me.lblVendorBank_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblVendorBank_payment.TabIndex = 481
@@ -222,7 +222,7 @@ Partial Class PaymentUserControl
         'cmbManu_payment
         '
         Me.cmbManu_payment.FormattingEnabled = True
-        Me.cmbManu_payment.Location = New System.Drawing.Point(464, 6)
+        Me.cmbManu_payment.Location = New System.Drawing.Point(503, 15)
         Me.cmbManu_payment.Name = "cmbManu_payment"
         Me.cmbManu_payment.Size = New System.Drawing.Size(458, 27)
         Me.cmbManu_payment.TabIndex = 480
@@ -232,7 +232,7 @@ Partial Class PaymentUserControl
         '
         Me.lblManu_payment.AutoSize = True
         Me.lblManu_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblManu_payment.Location = New System.Drawing.Point(361, 10)
+        Me.lblManu_payment.Location = New System.Drawing.Point(402, 19)
         Me.lblManu_payment.Name = "lblManu_payment"
         Me.lblManu_payment.Size = New System.Drawing.Size(95, 19)
         Me.lblManu_payment.TabIndex = 479
@@ -242,7 +242,7 @@ Partial Class PaymentUserControl
         '
         Me.cmbSubjects_payment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbSubjects_payment.FormattingEnabled = True
-        Me.cmbSubjects_payment.Location = New System.Drawing.Point(1055, 6)
+        Me.cmbSubjects_payment.Location = New System.Drawing.Point(1097, 15)
         Me.cmbSubjects_payment.Name = "cmbSubjects_payment"
         Me.cmbSubjects_payment.Size = New System.Drawing.Size(184, 27)
         Me.cmbSubjects_payment.TabIndex = 478
@@ -252,7 +252,7 @@ Partial Class PaymentUserControl
         '
         Me.lblSubjects_payment.AutoSize = True
         Me.lblSubjects_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblSubjects_payment.Location = New System.Drawing.Point(954, 10)
+        Me.lblSubjects_payment.Location = New System.Drawing.Point(993, 19)
         Me.lblSubjects_payment.Name = "lblSubjects_payment"
         Me.lblSubjects_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblSubjects_payment.TabIndex = 477
@@ -262,7 +262,7 @@ Partial Class PaymentUserControl
         '
         Me.lblVendorBankRequired_payment.AutoSize = True
         Me.lblVendorBankRequired_payment.ForeColor = System.Drawing.Color.Red
-        Me.lblVendorBankRequired_payment.Location = New System.Drawing.Point(333, 139)
+        Me.lblVendorBankRequired_payment.Location = New System.Drawing.Point(376, 154)
         Me.lblVendorBankRequired_payment.Name = "lblVendorBankRequired_payment"
         Me.lblVendorBankRequired_payment.Size = New System.Drawing.Size(20, 19)
         Me.lblVendorBankRequired_payment.TabIndex = 476
@@ -270,17 +270,17 @@ Partial Class PaymentUserControl
         '
         'txtCheNo_payment
         '
-        Me.txtCheNo_payment.Location = New System.Drawing.Point(137, 90)
+        Me.txtCheNo_payment.Location = New System.Drawing.Point(180, 102)
         Me.txtCheNo_payment.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCheNo_payment.Name = "txtCheNo_payment"
         Me.txtCheNo_payment.Size = New System.Drawing.Size(190, 30)
         Me.txtCheNo_payment.TabIndex = 474
-        Me.txtCheNo_payment.Tag = "p_Cheque"
+        Me.txtCheNo_payment.Tag = "cp_Number"
         Me.txtCheNo_payment.Visible = False
         '
         'txtMemo_payment
         '
-        Me.txtMemo_payment.Location = New System.Drawing.Point(464, 90)
+        Me.txtMemo_payment.Location = New System.Drawing.Point(503, 102)
         Me.txtMemo_payment.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtMemo_payment.Name = "txtMemo_payment"
         Me.txtMemo_payment.Size = New System.Drawing.Size(458, 30)
@@ -289,7 +289,7 @@ Partial Class PaymentUserControl
         '
         'txtAmount
         '
-        Me.txtAmount.Location = New System.Drawing.Point(1055, 47)
+        Me.txtAmount.Location = New System.Drawing.Point(1097, 57)
         Me.txtAmount.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtAmount.Name = "txtAmount"
         Me.txtAmount.Size = New System.Drawing.Size(184, 30)
@@ -298,7 +298,7 @@ Partial Class PaymentUserControl
         '
         'txtId_payment
         '
-        Me.txtId_payment.Location = New System.Drawing.Point(937, 246)
+        Me.txtId_payment.Location = New System.Drawing.Point(949, 227)
         Me.txtId_payment.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtId_payment.Name = "txtId_payment"
         Me.txtId_payment.ReadOnly = True
@@ -311,7 +311,7 @@ Partial Class PaymentUserControl
         '
         Me.lblCheNo_payment.AutoSize = True
         Me.lblCheNo_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblCheNo_payment.Location = New System.Drawing.Point(34, 96)
+        Me.lblCheNo_payment.Location = New System.Drawing.Point(39, 108)
         Me.lblCheNo_payment.Name = "lblCheNo_payment"
         Me.lblCheNo_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblCheNo_payment.TabIndex = 475
@@ -320,7 +320,7 @@ Partial Class PaymentUserControl
         '
         'dtpPayment
         '
-        Me.dtpPayment.Location = New System.Drawing.Point(137, 4)
+        Me.dtpPayment.Location = New System.Drawing.Point(180, 13)
         Me.dtpPayment.Name = "dtpPayment"
         Me.dtpPayment.Size = New System.Drawing.Size(190, 30)
         Me.dtpPayment.TabIndex = 473
@@ -332,7 +332,7 @@ Partial Class PaymentUserControl
         Me.cmbPayType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbPayType.FormattingEnabled = True
         Me.cmbPayType.Items.AddRange(New Object() {"現金", "銀行存款", "應付票據"})
-        Me.cmbPayType.Location = New System.Drawing.Point(137, 49)
+        Me.cmbPayType.Location = New System.Drawing.Point(180, 59)
         Me.cmbPayType.Name = "cmbPayType"
         Me.cmbPayType.Size = New System.Drawing.Size(190, 27)
         Me.cmbPayType.TabIndex = 472
@@ -342,17 +342,17 @@ Partial Class PaymentUserControl
         '
         Me.dgvPayment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPayment.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvPayment.Location = New System.Drawing.Point(0, 309)
+        Me.dgvPayment.Location = New System.Drawing.Point(10, 299)
         Me.dgvPayment.Name = "dgvPayment"
         Me.dgvPayment.ReadOnly = True
         Me.dgvPayment.RowTemplate.Height = 24
-        Me.dgvPayment.Size = New System.Drawing.Size(1882, 640)
+        Me.dgvPayment.Size = New System.Drawing.Size(1862, 640)
         Me.dgvPayment.TabIndex = 471
         '
         'btnQuery_payment
         '
         Me.btnQuery_payment.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_payment.Location = New System.Drawing.Point(788, 232)
+        Me.btnQuery_payment.Location = New System.Drawing.Point(793, 227)
         Me.btnQuery_payment.Name = "btnQuery_payment"
         Me.btnQuery_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_payment.TabIndex = 470
@@ -362,7 +362,7 @@ Partial Class PaymentUserControl
         'btnCancel_payment
         '
         Me.btnCancel_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_payment.Location = New System.Drawing.Point(476, 232)
+        Me.btnCancel_payment.Location = New System.Drawing.Point(481, 227)
         Me.btnCancel_payment.Name = "btnCancel_payment"
         Me.btnCancel_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_payment.TabIndex = 469
@@ -372,7 +372,7 @@ Partial Class PaymentUserControl
         'btnDelete_payment
         '
         Me.btnDelete_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete_payment.Location = New System.Drawing.Point(320, 232)
+        Me.btnDelete_payment.Location = New System.Drawing.Point(325, 227)
         Me.btnDelete_payment.Name = "btnDelete_payment"
         Me.btnDelete_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_payment.TabIndex = 468
@@ -382,7 +382,7 @@ Partial Class PaymentUserControl
         'btnEdit_payment
         '
         Me.btnEdit_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit_payment.Location = New System.Drawing.Point(164, 232)
+        Me.btnEdit_payment.Location = New System.Drawing.Point(169, 227)
         Me.btnEdit_payment.Name = "btnEdit_payment"
         Me.btnEdit_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_payment.TabIndex = 467
@@ -392,7 +392,7 @@ Partial Class PaymentUserControl
         'btnAdd_payment
         '
         Me.btnAdd_payment.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnAdd_payment.Location = New System.Drawing.Point(8, 232)
+        Me.btnAdd_payment.Location = New System.Drawing.Point(13, 227)
         Me.btnAdd_payment.Name = "btnAdd_payment"
         Me.btnAdd_payment.Size = New System.Drawing.Size(140, 44)
         Me.btnAdd_payment.TabIndex = 466
@@ -404,7 +404,7 @@ Partial Class PaymentUserControl
         '
         Me.lblPayType_payment.AutoSize = True
         Me.lblPayType_payment.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblPayType_payment.Location = New System.Drawing.Point(34, 53)
+        Me.lblPayType_payment.Location = New System.Drawing.Point(39, 63)
         Me.lblPayType_payment.Name = "lblPayType_payment"
         Me.lblPayType_payment.Size = New System.Drawing.Size(93, 19)
         Me.lblPayType_payment.TabIndex = 465
@@ -414,7 +414,7 @@ Partial Class PaymentUserControl
         '
         Me.Label190.AutoSize = True
         Me.Label190.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label190.Location = New System.Drawing.Point(361, 96)
+        Me.Label190.Location = New System.Drawing.Point(402, 108)
         Me.Label190.Name = "Label190"
         Me.Label190.Size = New System.Drawing.Size(95, 19)
         Me.Label190.TabIndex = 464
@@ -424,7 +424,7 @@ Partial Class PaymentUserControl
         '
         Me.Label191.AutoSize = True
         Me.Label191.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label191.Location = New System.Drawing.Point(34, 10)
+        Me.Label191.Location = New System.Drawing.Point(39, 19)
         Me.Label191.Name = "Label191"
         Me.Label191.Size = New System.Drawing.Size(95, 19)
         Me.Label191.TabIndex = 462
@@ -434,7 +434,7 @@ Partial Class PaymentUserControl
         '
         Me.Label192.AutoSize = True
         Me.Label192.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label192.Location = New System.Drawing.Point(954, 53)
+        Me.Label192.Location = New System.Drawing.Point(993, 63)
         Me.Label192.Name = "Label192"
         Me.Label192.Size = New System.Drawing.Size(95, 19)
         Me.Label192.TabIndex = 461
@@ -444,7 +444,7 @@ Partial Class PaymentUserControl
         '
         Me.lblBank.AutoSize = True
         Me.lblBank.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblBank.Location = New System.Drawing.Point(361, 185)
+        Me.lblBank.Location = New System.Drawing.Point(402, 198)
         Me.lblBank.Name = "lblBank"
         Me.lblBank.Size = New System.Drawing.Size(93, 19)
         Me.lblBank.TabIndex = 497
@@ -454,7 +454,7 @@ Partial Class PaymentUserControl
         '
         Me.lblBankReq.AutoSize = True
         Me.lblBankReq.ForeColor = System.Drawing.Color.Red
-        Me.lblBankReq.Location = New System.Drawing.Point(333, 185)
+        Me.lblBankReq.Location = New System.Drawing.Point(376, 198)
         Me.lblBankReq.Name = "lblBankReq"
         Me.lblBankReq.Size = New System.Drawing.Size(20, 19)
         Me.lblBankReq.TabIndex = 496
@@ -463,7 +463,7 @@ Partial Class PaymentUserControl
         'cmbBank
         '
         Me.cmbBank.FormattingEnabled = True
-        Me.cmbBank.Location = New System.Drawing.Point(464, 181)
+        Me.cmbBank.Location = New System.Drawing.Point(503, 194)
         Me.cmbBank.Name = "cmbBank"
         Me.cmbBank.Size = New System.Drawing.Size(458, 27)
         Me.cmbBank.TabIndex = 498
@@ -513,8 +513,9 @@ Partial Class PaymentUserControl
         Me.Controls.Add(Me.Label191)
         Me.Controls.Add(Me.Label192)
         Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.Margin = New System.Windows.Forms.Padding(0)
         Me.Name = "PaymentUserControl"
+        Me.Padding = New System.Windows.Forms.Padding(10)
         Me.Size = New System.Drawing.Size(1882, 949)
         Me.grpAmountDue.ResumeLayout(False)
         CType(Me.dgvAmountDue, System.ComponentModel.ISupportInitialize).EndInit()

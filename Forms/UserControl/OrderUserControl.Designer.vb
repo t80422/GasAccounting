@@ -2238,7 +2238,7 @@ Partial Class OrderUserControl
         'btnSearch
         '
         Me.btnSearch.BackColor = System.Drawing.Color.Lime
-        Me.btnSearch.Location = New System.Drawing.Point(17, 422)
+        Me.btnSearch.Location = New System.Drawing.Point(13, 422)
         Me.btnSearch.Name = "btnSearch"
         Me.btnSearch.Size = New System.Drawing.Size(140, 44)
         Me.btnSearch.TabIndex = 529

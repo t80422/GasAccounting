@@ -9,7 +9,7 @@
     Private ReadOnly _reportSer As IReportService
     Private ReadOnly _cpRep As IChequePayRep
     Private ReadOnly _bankRep As IBankRep
-    Private selectData As payment
+    Private selectPayment As payment
 
     Public ReadOnly Property View As IPaymentView
         Get
@@ -37,11 +37,11 @@
     ''' 訂閱 View 的事件
     ''' </summary>
     Private Sub SubscribeToViewEvents()
-        AddHandler _view.AddRequested, AddressOf Add
-        AddHandler _view.UpdateRequested, AddressOf Update
-        AddHandler _view.DeleteRequested, AddressOf Delete
-        AddHandler _view.CancelRequested, AddressOf Initialize
-        AddHandler _view.DetailRequested, AddressOf LoadPaymentDetail
+        AddHandler _view.CreateRequest, AddressOf Add
+        AddHandler _view.UpdateRequest, AddressOf Update
+        AddHandler _view.DeleteRequest, AddressOf Delete
+        AddHandler _view.CancelRequest, AddressOf Initialize
+        AddHandler _view.DataSelectedRequest, AddressOf LoadPaymentDetail
         AddHandler _view.PrintRequested, AddressOf Print
         AddHandler _view.ManufacturerSelected, AddressOf ManufacturerSelected
         AddHandler _view.CompanySelected, AddressOf LoadBankDropdown
@@ -56,9 +56,9 @@
             LoadCompanyDropdown()
 
             LoadList()
-            selectData = Nothing
+            selectPayment = Nothing
 
-            _view.SetButton(False)
+            _view.ButtonStatus(False)
         Catch ex As Exception
             MsgBox("付款作業初始化發生錯誤:" + ex.Message)
         End Try
@@ -68,7 +68,7 @@
         Try
             Dim criteria = _view.GetSearchCriteria
             Dim payments = _paymentRep.SearchPaymentAsync(criteria).Result
-            _view.DisplayList(payments.Select(Function(x) New PaymentListVM(x)).ToList)
+            _view.ShowList(payments.Select(Function(x) New PaymentListVM(x)).ToList)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -132,21 +132,21 @@
     Private Sub Add()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim input = _view.GetUserInput
-                _paymentRep.AddAsync(input)
+                Dim data As New payment
+                _view.GetInput(data)
 
-                If input.p_Type = "應付票據" Then
-                    Dim cheque = New chque_pay With {
-                        .cp_Date = input.p_Date,
-                        .cp_Number = input.p_Cheque,
-                        .cp_Amount = input.p_Amount,
-                        .cp_AccountNumber = input.manufacturer?.manu_account
-                    }
+
+                If data.p_Type = "應付票據" Then
+                    Dim cheque As New chque_pay
+                    _view.GetChequeInput(cheque)
+                    cheque.cp_Date = data.p_Date
+                    cheque.cp_Amount = data.p_Amount
 
                     _cpRep.AddAsync(cheque)
-                ElseIf input.p_Type = "銀行存款" Then
+                    data.chque_pay = cheque
+                ElseIf data.p_Type = "銀行存款" Then
                     ' 支票兌現
-                    Dim subject = _subjectRep.GetByIdAsync(input.p_s_Id).Result
+                    Dim subject = _subjectRep.GetByIdAsync(data.p_s_Id).Result
 
                     If subject.s_name = "應付票據" Then
                         Dim chequeNo = InputBox("請輸入支票號碼")
@@ -160,21 +160,21 @@
                                 Throw New Exception("此支票已兌現")
                             Else
                                 cheque.cp_IsCashing = True
-                                cheque.cp_CashingDate = input.p_Date
+                                cheque.cp_BankCashing = data.p_Date
                             End If
                         End If
                     End If
                 End If
-
-                Dim entries = CreatePaymentEntries(input)
+                _paymentRep.AddAsync(data)
+                Dim entries = CreatePaymentEntries(data)
                 _aeSer.AddEntries(entries)
 
                 transaction.Commit()
                 Initialize()
-                MsgBox("新增成功")
+                MessageBox.Show("新增成功")
             Catch ex As Exception
                 transaction.Rollback()
-                MsgBox(ex.Message)
+                MessageBox.Show(ex.Message)
             End Try
         End Using
     End Sub
@@ -182,32 +182,31 @@
     Private Sub Update()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim input = _view.GetUserInput
+                Dim data As New payment
+                _view.GetInput(data)
 
-                _paymentRep.UpdateAsync(selectData, input)
+                _paymentRep.UpdateAsync(selectPayment, data)
 
-                If input.p_Type = "應付票據" Then
-                    Dim cheque = _cpRep.GetByChequeNumber(input.p_Cheque)
+                If data.p_Type = "應付票據" Then
+                    Dim cheque = _cpRep.GetByChequeNumber(data.chque_pay.cp_Number)
 
                     If cheque IsNot Nothing Then
-                        cheque.cp_Date = input.p_Date
-                        cheque.cp_Number = input.p_Cheque
-                        cheque.cp_Amount = input.p_Amount
-                        cheque.cp_AccountNumber = input.manufacturer?.manu_account
+                        cheque.cp_Date = data.p_Date
+                        cheque.cp_Number = data.chque_pay.cp_Number
+                        cheque.cp_Amount = data.p_Amount
                     Else
                         '如果支票不存在，則新增一個新的支票記錄
                         cheque = New chque_pay With {
-                            .cp_Date = input.p_Date,
-                            .cp_Number = input.p_Cheque,
-                            .cp_Amount = input.p_Amount,
-                            .cp_AccountNumber = input.manufacturer?.manu_account
+                            .cp_Date = data.p_Date,
+                            .cp_Number = data.chque_pay.cp_Number,
+                            .cp_Amount = data.p_Amount
                         }
                         _cpRep.AddAsync(cheque)
                     End If
                 End If
 
                 '更新會計分錄
-                Dim entries = CreatePaymentEntries(input)
+                Dim entries = CreatePaymentEntries(data)
                 _aeSer.UpdateEntries(entries)
 
                 _paymentRep.SaveChangesAsync()
@@ -225,34 +224,29 @@
     Private Sub Delete()
         Using transaction = _paymentRep.BeginTransaction
             Try
-                Dim payType = selectData.p_Type
-                Dim bankId = selectData.p_bank_Id
+                Dim payType = selectPayment.p_Type
+                Dim bankId = selectPayment.p_bank_Id
 
                 '刪除支票
-                If selectData.p_Type = "支票" Then
-                    Dim cheque = _cpRep.GetByChequeNumber(selectData.p_Cheque)
-                    If cheque IsNot Nothing Then
-                        _cpRep.DeleteAsync(cheque.cp_Id)
-                    End If
+                If selectPayment.p_Type = "應付票據" Then
+                    _cpRep.DeleteAsync(selectPayment.chque_pay)
                 End If
 
                 '刪除付款
-                _paymentRep.DeleteAsync(selectData.p_Id)
+                _paymentRep.DeleteAsync(selectPayment.p_Id)
 
                 '更新月結餘額
-                If payType = "銀行" Then _bmbService.UpdateMonthBalanceAsync(bankId, selectData.p_Date)
+                If payType = "銀行" Then _bmbService.UpdateMonthBalanceAsync(bankId, selectPayment.p_Date)
 
-                _aeSer.DeleteEntries("付款作業", selectData.p_Id)
+                _aeSer.DeleteEntries("付款作業", selectPayment.p_Id)
                 _paymentRep.SaveChangesAsync()
 
                 transaction.Commit()
-
-                _view.ClearInput()
-                LoadList()
-                MsgBox("刪除成功")
+                Initialize()
+                MessageBox.Show("刪除成功")
             Catch ex As Exception
                 transaction.Rollback()
-                MsgBox(ex.Message)
+                MessageBox.Show(ex.Message)
             End Try
         End Using
     End Sub
@@ -260,12 +254,12 @@
     Private Sub LoadPaymentDetail(sender As Object, id As Integer)
         Try
             _view.ClearInput()
-            selectData = _paymentRep.GetByIdAsync(id).Result
-
-            LoadBankDropdown(sender, selectData.p_comp_Id)
-            _view.DisplayDetail(selectData)
-            If selectData.p_m_Id.HasValue Then ManufacturerSelected(sender, selectData.p_m_Id)
-            _view.SetButton(True)
+            selectPayment = _paymentRep.GetByIdAsync(id).Result
+            _paymentRep.Reload(selectPayment)
+            LoadBankDropdown(sender, selectPayment.p_comp_Id)
+            _view.ShowDetail(selectPayment)
+            If selectPayment.p_m_Id.HasValue Then ManufacturerSelected(sender, selectPayment.p_m_Id)
+            _view.ButtonStatus(True)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try

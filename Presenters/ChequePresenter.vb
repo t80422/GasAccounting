@@ -22,7 +22,7 @@ Public Class ChequePresenter
     Public Sub LoadList(Optional conditions As ChequeSC = Nothing)
         Try
             Using db As New gas_accounting_systemEntities
-                Dim query = db.cheques.AsQueryable
+                Dim query = db.cheques.AsNoTracking.AsQueryable
 
                 If conditions IsNot Nothing Then
                     If conditions.IsDate Then query = query.Where(Function(x) x.che_ReceivedDate >= conditions.StartDate AndAlso x.che_ReceivedDate < conditions.EndDate)
@@ -30,7 +30,9 @@ Public Class ChequePresenter
                 Else
                     query = query.Where(Function(x) x.chu_State <> "已兌現")
                 End If
-                _view.ShowList(SetListViewModel(query))
+
+                Dim result = query.OrderByDescending(Function(x) x.che_Id).ToList
+                _view.ShowList(result.Select(Function(x) New ChequeVM(x)).ToList)
             End Using
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -120,7 +122,7 @@ Public Class ChequePresenter
                         .WriteToCell(rowIndex, 4, item.發票人)
                         .WriteToCell(rowIndex, 5, item.金額.ToString)
                         .WriteToCell(rowIndex, 6, item.狀態)
-                        .WriteToCell(rowIndex, 7, If(item.兌現日期.HasValue, item.兌現日期.Value.ToString("yyyy/MM/dd"), ""))
+                        .WriteToCell(rowIndex, 7, If(item.支票兌現日期.HasValue, item.支票兌現日期.Value.ToString("yyyy/MM/dd"), ""))
                         .WriteToCell(rowIndex, 8, If(item.代收日期.HasValue, item.代收日期.Value.ToString("yyyy/MM/dd"), ""))
 
                         rowIndex += 1
@@ -137,18 +139,4 @@ Public Class ChequePresenter
             MsgBox(ex.Message)
         End Try
     End Sub
-
-    Private Function SetListViewModel(query As IQueryable(Of cheque)) As List(Of ChequeVM)
-        Return query.Select(Function(x) New ChequeVM With {
-            .代收日期 = If(x.che_CollectionDate, Nothing),
-            .兌現日期 = If(x.che_CashingDate, Nothing),
-            .支票號碼 = x.che_Number,
-            .收票日期 = If(x.che_ReceivedDate, Nothing),
-            .狀態 = x.chu_State,
-            .發票人 = x.che_IssuerName,
-            .金額 = x.che_Amount,
-            .銀行帳號 = x.che_AccountNumber,
-            .編號 = x.che_Id
-        }).ToList
-    End Function
 End Class

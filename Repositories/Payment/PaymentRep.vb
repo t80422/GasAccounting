@@ -16,7 +16,7 @@ Public Class PaymentRep
                 If criteria.IsSearchDate Then query = query.Where(Function(x) x.p_Date >= criteria.StartDate AndAlso x.p_Date < criteria.EndDate)
                 If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.p_comp_Id = criteria.CompanyId)
                 If criteria.BankId.HasValue Then query = query.Where(Function(x) x.p_bank_Id = criteria.BankId)
-                If Not String.IsNullOrEmpty(criteria.ChequeNo) Then query = query.Where(Function(x) x.p_Cheque = criteria.ChequeNo)
+                If Not String.IsNullOrEmpty(criteria.ChequeNo) Then query = query.Where(Function(x) x.chque_pay.cp_Number = criteria.ChequeNo)
                 If criteria.SubjectId.HasValue Then query = query.Where(Function(x) x.p_s_Id = criteria.SubjectId)
                 If criteria.VendorId.HasValue Then query = query.Where(Function(x) x.p_m_Id = criteria.VendorId)
             End If

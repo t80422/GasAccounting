@@ -46,7 +46,10 @@ Public Class PurchasePresenter
             Await LoadListAsync()
             _view.ButtonStatus(False)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            Dim errorMsg = $"【PurchasePresenter.Initialize】初始化大氣採購畫面時發生錯誤" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "")
+            MsgBox(errorMsg, MsgBoxStyle.Critical, "初始化錯誤")
         End Try
     End Sub
 
@@ -57,7 +60,11 @@ Public Class PurchasePresenter
                 _view.SetDefaultPrice(result.Item1, result.Item2)
             End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            Dim errorMsg = $"【PurchasePresenter.GetDefaultPrice】取得預設價格時發生錯誤" & vbCrLf &
+                          $"廠商ID: {data.Item1}, 產品: {data.Item2}" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "")
+            MsgBox(errorMsg, MsgBoxStyle.Exclamation, "取得預設價格錯誤")
         End Try
     End Sub
 
@@ -77,7 +84,12 @@ Public Class PurchasePresenter
                 _view.ShowList(datas)
             End Using
         Catch ex As Exception
-            MsgBox(ex.StackTrace)
+            Dim errorMsg = $"【PurchasePresenter.LoadListAsync】載入大氣採購列表時發生錯誤" & vbCrLf &
+                          $"查詢條件: {If(criteria IsNot Nothing, $"CompanyId={criteria.CompanyId}, ManufacturerId={criteria.ManufacturerId}", "無條件")}" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                          $"堆疊追蹤: {ex.StackTrace}"
+            MsgBox(errorMsg, MsgBoxStyle.Critical, "載入列表錯誤")
         End Try
     End Function
 
@@ -128,10 +140,14 @@ Public Class PurchasePresenter
                     Await uow.SaveChangesAsync()
                     transaction.Commit()
                     Initialize()
-                    MessageBox.Show("新增成功")
+                    MessageBox.Show("新增成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
                     transaction.Rollback()
-                    MessageBox.Show(ex.Message)
+                    Dim errorMsg = $"【PurchasePresenter.Add】新增大氣採購時發生錯誤" & vbCrLf &
+                                  $"錯誤訊息: {ex.Message}" & vbCrLf &
+                                  If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                                  $"堆疊追蹤: {ex.StackTrace}"
+                    MessageBox.Show(errorMsg, "新增錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -184,10 +200,15 @@ Public Class PurchasePresenter
 
                     transaction.Commit()
                     Initialize()
-                    MsgBox("修改成功")
+                    MsgBox("修改成功", MsgBoxStyle.Information, "成功")
                 Catch ex As Exception
                     transaction.Rollback()
-                    MsgBox(ex.Message)
+                    Dim errorMsg = $"【PurchasePresenter.Edit】修改大氣採購時發生錯誤" & vbCrLf &
+                                  $"採購單ID: {If(currentData?.pur_id, 0)}" & vbCrLf &
+                                  $"錯誤訊息: {ex.Message}" & vbCrLf &
+                                  If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                                  $"堆疊追蹤: {ex.StackTrace}"
+                    MsgBox(errorMsg, MsgBoxStyle.Critical, "修改錯誤")
                 End Try
             End Using
         End Using
@@ -212,10 +233,15 @@ Public Class PurchasePresenter
 
                     transaction.Commit()
                     Initialize()
-                    MessageBox.Show("刪除成功")
+                    MessageBox.Show("刪除成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
                     transaction.Rollback()
-                    MessageBox.Show(ex.Message)
+                    Dim errorMsg = $"【PurchasePresenter.Delete】刪除大氣採購時發生錯誤" & vbCrLf &
+                                  $"採購單ID: {If(currentData?.pur_id, 0)}, 日期: {If(currentData?.pur_date, Date.MinValue):yyyy/MM/dd}" & vbCrLf &
+                                  $"錯誤訊息: {ex.Message}" & vbCrLf &
+                                  If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                                  $"堆疊追蹤: {ex.StackTrace}"
+                    MessageBox.Show(errorMsg, "刪除錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -233,7 +259,11 @@ Public Class PurchasePresenter
                 End If
             End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            Dim errorMsg = $"【PurchasePresenter.SelectRowAsync】選取大氣採購資料時發生錯誤" & vbCrLf &
+                          $"採購單ID: {id}" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "")
+            MsgBox(errorMsg, MsgBoxStyle.Exclamation, "選取資料錯誤")
         End Try
     End Sub
 
@@ -242,7 +272,10 @@ Public Class PurchasePresenter
             Dim criteria = _view.GetSearchCondition
             Await LoadListAsync(criteria)
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            Dim errorMsg = $"【PurchasePresenter.Search】搜尋大氣採購時發生錯誤" & vbCrLf &
+                          $"錯誤訊息: {ex.Message}" & vbCrLf &
+                          If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "")
+            MessageBox.Show(errorMsg, "搜尋錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
     End Sub
 

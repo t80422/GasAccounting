@@ -6,4 +6,5 @@
     Sub SetBankCmb(datas As List(Of SelectListItem))
     Function GetChequeInput() As cheque
     Function GetChequeNumber() As String
+    Sub ShowCheque(data As cheque)
 End Interface

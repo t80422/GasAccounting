@@ -22,23 +22,23 @@ Public Class ChequePayPresenter
         AddHandler _view.PrintClicked, AddressOf OnPrintClicked
     End Sub
 
-    Private Async Sub OnLoaded(sender As Object, e As EventArgs)
-        Await LoadAllAsync()
+    Private Sub OnLoaded(sender As Object, e As EventArgs)
+        LoadAllAsync()
     End Sub
 
-    Private Async Sub OnCancelClicked(sender As Object, e As EventArgs)
+    Private Sub OnCancelClicked(sender As Object, e As EventArgs)
         _view.ClearInput()
-        Await LoadAllAsync()
+        LoadAllAsync()
     End Sub
 
-    Private Async Sub OnSearchClicked(sender As Object, e As EventArgs)
+    Private Sub OnSearchClicked(sender As Object, e As EventArgs)
         Dim criteria = _view.GetSearchCriteria()
         If criteria IsNot Nothing Then
             Try
-                Dim items = Await _rep.Search(criteria)
-                _view.DisplayList(ToViewModel(items))
+                Dim items = _rep.GetList(criteria)
+                _view.DisplayList(items)
             Catch ex As Exception
-                MsgBox(ex.Message)
+                MessageBox.Show(ex.Message)
             End Try
         End If
     End Sub
@@ -54,28 +54,14 @@ Public Class ChequePayPresenter
         End Try
     End Sub
 
-    Private Async Function LoadAllAsync() As Task
+    Private Sub LoadAllAsync()
         Try
-            Dim items = Await _rep.GetAllAsync()
-            _view.DisplayList(ToViewModel(items))
+            Dim items = _rep.GetList
+            _view.DisplayList(items)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
-    End Function
-
-    Private Function ToViewModel(items As IEnumerable(Of chque_pay)) As List(Of ChequePayVM)
-        Return items.Select(Function(x) New ChequePayVM With {
-            .編號 = x.cp_Id,
-            .日期 = x.cp_Date.Value.ToString("yyyy/MM/dd"),
-            .支票號碼 = x.cp_Number,
-            .金額 = x.cp_Amount,
-            .兌現日期 = If(x.cp_CashingDate.HasValue, x.cp_CashingDate.Value.ToString("yyyy/MM/dd"), Nothing),
-            .是否兌現 = If(x.cp_IsCashing, False),
-            .備註 = If(x.cp_Memo, ""),
-            .對方銀行 = If(x.cp_AccountNumber, ""),
-            .銀行帳號 = If(x.bank Is Nothing, "", x.bank.bank_Account)
-        }).ToList()
-    End Function
+    End Sub
 
     Private Sub OnPrintClicked(sender As Object, e As EventArgs)
         Try
@@ -98,7 +84,7 @@ Public Class ChequePayPresenter
                         .WriteToCell(rowIndex, 3, item.對方銀行)
                         .WriteToCell(rowIndex, 4, item.銀行帳號)
                         .WriteToCell(rowIndex, 5, item.金額.ToString)
-                        .WriteToCell(rowIndex, 6, item.兌現日期)
+                        .WriteToCell(rowIndex, 6, item.支票兌現日期)
                         .WriteToCell(rowIndex, 7, item.備註)
 
                         rowIndex += 1

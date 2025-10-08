@@ -52,6 +52,11 @@ Public Interface IUnitOfWork
     ReadOnly Property PaymentRepository As IPaymentRep
 
     ''' <summary>
+    ''' 取得 ChequePay Repository
+    ''' </summary>
+    ReadOnly Property ChequePayRepository As IChequePayRep
+
+    ''' <summary>
     ''' 開始資料庫交易
     ''' </summary>
     Function BeginTransaction() As DbContextTransaction

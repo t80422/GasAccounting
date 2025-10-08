@@ -1,15 +1,10 @@
-﻿Imports System.Data.Entity.Core.Mapping
-Imports System.Drawing.Printing
+﻿Imports System.Drawing.Printing
 Imports System.IO
-Imports System.Reflection
 Imports ClosedXML.Excel
-Imports DocumentFormat.OpenXml.Drawing.Charts
 Imports iText.Html2pdf
 Imports iText.Html2pdf.Resolver.Font
 Imports iText.Kernel.Geom
 Imports iText.Kernel.Pdf
-Imports NLog
-Imports SixLabors.Fonts.Tables.General
 Imports Path = System.IO.Path
 
 ''' <summary>
@@ -78,7 +73,7 @@ Public Class OrderPresenter
     Private Sub SubscribeToViewEvents()
         AddHandler _view.CancelRequest, AddressOf Initialize
         AddHandler _view.CustomerSelected, AddressOf OnCustomerSelected
-        AddHandler _view.TransportTypeSelected, AddressOf LoadCar
+        AddHandler _view.TransportTypeSelected, AddressOf OnTransportTypeSelected
         AddHandler _view.BarrelInInput, AddressOf OnBarrelIn
         AddHandler _view.BarrelOutInput, AddressOf OnBarrelOut
         AddHandler _view.BarrelUnitPriceInput, AddressOf CalculateBarrelAmount
@@ -200,6 +195,11 @@ Public Class OrderPresenter
         End Try
     End Sub
 
+    Private Sub OnTransportTypeSelected()
+        LoadCar()
+        LoadUnitPrice()
+    End Sub
+
     ''' <summary>
     ''' 載入客戶
     ''' </summary>
@@ -238,7 +238,7 @@ Public Class OrderPresenter
 
         Dim data As New order With {
             .o_UnitPrice = _priceCalSer.CalculateUnitPrice(currentCustomer, inputOrder.o_date, isDelivery, True),
-            .o_UnitPriceC = _priceCalSer.CalculateUnitPrice(currentCustomer, inputOrder.o_date, isDelivery, True),
+            .o_UnitPriceC = _priceCalSer.CalculateUnitPrice(currentCustomer, inputOrder.o_date, isDelivery, False),
             .o_barrel_unit_price_10 = lastOrder?.o_barrel_unit_price_10,
             .o_barrel_unit_price_14 = lastOrder?.o_barrel_unit_price_14,
             .o_barrel_unit_price_16 = lastOrder?.o_barrel_unit_price_16,

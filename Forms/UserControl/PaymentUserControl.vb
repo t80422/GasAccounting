@@ -2,14 +2,15 @@
 Public Class PaymentUserControl
     Implements IPaymentView
 
-    Public Event AddRequested As EventHandler Implements IPaymentView.AddRequested
-    Public Event UpdateRequested As EventHandler Implements IPaymentView.UpdateRequested
-    Public Event DeleteRequested As EventHandler Implements IPaymentView.DeleteRequested
-    Public Event CancelRequested As EventHandler Implements IPaymentView.CancelRequested
-    Public Event DetailRequested As EventHandler(Of Integer) Implements IPaymentView.DetailRequested
     Public Event PrintRequested As EventHandler(Of Tuple(Of Date, String)) Implements IPaymentView.PrintRequested
     Public Event ManufacturerSelected As EventHandler(Of Integer) Implements IPaymentView.ManufacturerSelected
     Public Event CompanySelected As EventHandler(Of Integer) Implements IPaymentView.CompanySelected
+    Public Event CreateRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).CreateRequest
+    Public Event DataSelectedRequest As EventHandler(Of Integer) Implements IFormView(Of payment, PaymentListVM).DataSelectedRequest
+    Public Event UpdateRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).UpdateRequest
+    Public Event DeleteRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).DeleteRequest
+    Public Event CancelRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).CancelRequest
+    Public Event SearchRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).SearchRequest
 
     ' 互動
     Public Sub PopulateVendorDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateVendorDropdown
@@ -36,15 +37,16 @@ Public Class PaymentUserControl
         txtVendorAccount_payment.Text = data
     End Sub
 
-    Public Sub DisplayList(data As List(Of PaymentListVM)) Implements IBaseView(Of payment, PaymentListVM).DisplayList
+    Public Sub ShowList(data As List(Of PaymentListVM)) Implements IFormView(Of payment, PaymentListVM).ShowList
         dgvPayment.DataSource = data
     End Sub
 
-    Public Sub DisplayDetail(data As payment) Implements IBaseView(Of payment, PaymentListVM).DisplayDetail
+    Public Sub ShowDetail(data As payment) Implements IFormView(Of payment, PaymentListVM).ShowDetail
         AutoMapEntityToControls(data, Me)
+        If data.chque_pay IsNot Nothing Then AutoMapEntityToControls(data.chque_pay, Me)
     End Sub
 
-    Public Sub ClearInput() Implements IBaseView(Of payment, PaymentListVM).ClearInput
+    Private Sub ClearInput() Implements IFormView(Of payment, PaymentListVM).ClearInput
         ClearControls(Me)
         dgvAmountDue.DataSource = Nothing
     End Sub
@@ -53,30 +55,37 @@ Public Class PaymentUserControl
         Return Nothing
     End Function
 
-    Public Function GetUserInput() As payment Implements IBaseView(Of payment, PaymentListVM).GetUserInput
-        Dim data As New payment
-        AutoMapControlsToEntity(data, Me)
+    Public Function GetInput(ByRef model As payment) As Boolean Implements IFormView(Of payment, PaymentListVM).GetInput
+        AutoMapControlsToEntity(model, Me)
+        If model.p_Type = "應付票據" AndAlso model.chque_pay Is Nothing Then
+            model.chque_pay = New chque_pay
+            AutoMapControlsToEntity(model.chque_pay, Me)
+        End If
 
-        If Not data.p_comp_Id.HasValue Then Throw New Exception("請選擇公司")
+        If Not model.p_comp_Id.HasValue Then Throw New Exception("請選擇公司")
 
-        If String.IsNullOrEmpty(data.p_Type) Then
+        If String.IsNullOrEmpty(model.p_Type) Then
             Throw New Exception("請選擇付款類型")
-        ElseIf data.p_Type = "銀行存款" AndAlso Not data.p_bank_Id.HasValue Then
+        ElseIf model.p_Type = "銀行存款" AndAlso Not model.p_bank_Id.HasValue Then
             Throw New Exception("請選擇銀行帳號")
-        ElseIf data.p_Type = "應付票據" AndAlso String.IsNullOrEmpty(data.p_Cheque) Then
+        ElseIf model.p_Type = "應付票據" AndAlso String.IsNullOrEmpty(model.chque_pay.cp_Number) Then
             Throw New Exception("請選擇支票號碼")
         End If
 
-        If Not data.p_s_Id.HasValue Then Throw New Exception("請選擇科目")
+        If Not model.p_s_Id.HasValue Then Throw New Exception("請選擇科目")
 
-        If data.p_Amount <= 0 Then Throw New Exception("請選擇輸入金額")
+        If model.p_Amount <= 0 Then Throw New Exception("請選擇輸入金額")
 
-        If data.p_Type <> "應付票據" Then data.p_CashingDate = Nothing
-
-        Return data
+        Return True
     End Function
 
-    Public Sub SetButton(isSelectedRow As Boolean) Implements IPaymentView.SetButton
+    Public Sub GetChequeInput(ByRef model As chque_pay) Implements IPaymentView.GetChequeInput
+        AutoMapControlsToEntity(model, Me)
+
+        If String.IsNullOrEmpty(txtCheNo_payment.Text) Then Throw New Exception("請選擇支票號碼")
+    End Sub
+
+    Public Sub ButtonStatus(isSelectedRow As Boolean) Implements IFormView(Of payment, PaymentListVM).ButtonStatus
         SetButtonState(Me, isSelectedRow)
     End Sub
 
@@ -87,11 +96,11 @@ Public Class PaymentUserControl
     End Sub
 
     Private Sub btnCancel_payment_Click(sender As Object, e As EventArgs) Handles btnCancel_payment.Click
-        RaiseEvent CancelRequested(Me, EventArgs.Empty)
+        RaiseEvent CancelRequest(Me, EventArgs.Empty)
     End Sub
 
     Private Sub btnAdd_payment_Click(sender As Object, e As EventArgs) Handles btnAdd_payment.Click
-        RaiseEvent AddRequested(Me, EventArgs.Empty)
+        RaiseEvent CreateRequest(Me, EventArgs.Empty)
     End Sub
 
     Private Sub dgvPayment_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPayment.SelectionChanged, dgvPayment.CellMouseClick
@@ -100,16 +109,16 @@ Public Class PaymentUserControl
         Dim row = dgvPayment.SelectedRows(0)
         Dim id As Integer = row.Cells("編號").Value
 
-        RaiseEvent DetailRequested(Me, id)
+        RaiseEvent DataSelectedRequest(Me, id)
     End Sub
 
     Private Sub btnEdit_payment_Click(sender As Object, e As EventArgs) Handles btnEdit_payment.Click
-        RaiseEvent UpdateRequested(Me, EventArgs.Empty)
+        RaiseEvent UpdateRequest(Me, EventArgs.Empty)
     End Sub
 
     Private Sub btnDelete_payment_Click(sender As Object, e As EventArgs) Handles btnDelete_payment.Click
         If MessageBox.Show("確定要刪除這筆資料嗎？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-            RaiseEvent DeleteRequested(Me, EventArgs.Empty)
+            RaiseEvent DeleteRequest(Me, EventArgs.Empty)
         End If
     End Sub
 

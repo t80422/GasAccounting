@@ -17,7 +17,7 @@
         廠商名稱 = payment.manufacturer?.manu_name
         銀行名稱 = payment.bank?.bank_name
         科目 = payment.subject?.s_name
-        支票號碼 = payment.p_Cheque
+        支票號碼 = payment.chque_pay?.cp_Number
         備註 = payment.p_Memo
     End Sub
 End Class

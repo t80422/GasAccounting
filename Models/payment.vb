@@ -17,15 +17,14 @@ Partial Public Class payment
     Public Property p_Type As String
     Public Property p_m_Id As Nullable(Of Integer)
     Public Property p_Memo As String
-    Public Property p_Cheque As String
     Public Property p_bank_Id As Nullable(Of Integer)
     Public Property p_s_Id As Nullable(Of Integer)
     Public Property p_comp_Id As Nullable(Of Integer)
     Public Property p_SubpoenaNo As Integer
-    Public Property p_IsCashing As Nullable(Of Boolean)
-    Public Property p_CashingDate As Nullable(Of Date)
+    Public Property p_cp_Id As Nullable(Of Integer)
 
     Public Overridable Property bank As bank
+    Public Overridable Property chque_pay As chque_pay
     Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
     Public Overridable Property subject As subject

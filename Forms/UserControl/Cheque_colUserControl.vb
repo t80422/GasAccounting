@@ -1,4 +1,7 @@
-﻿Public Class Cheque_colUserControl
+﻿''' <summary>
+''' 會計管理-應收支票管理
+''' </summary>
+Public Class Cheque_colUserControl
     Implements ICheque
 
     Private _presenter As ChequePresenter

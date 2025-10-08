@@ -11,6 +11,7 @@
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
     Private ReadOnly _reportSer As IReportService
     Private _currentData As collection
+    Private _currentCheque As cheque
 
     Public Sub New(subjectRep As ISubjectRep, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
                    bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, compRep As ICompanyRep, ocmSer As IOrderCollectionMappingService,
@@ -37,7 +38,7 @@
             LoadCmbsAsync()
             LoadList()
             _currentData = Nothing
-
+            _currentCheque = Nothing
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -118,14 +119,15 @@
         End Using
     End Sub
 
-    Public Async Sub LoadDetail(id As Integer)
+    Public Sub LoadDetail(id As Integer)
         Try
-            Dim data = Await _colRep.GetByIdAsync(id)
-            _currentData = data
+            _currentData = _colRep.GetByIdAsync(id).Result
+            _currentCheque = If(String.IsNullOrEmpty(_currentData.col_Cheque), Nothing, _chequeRep.GetByNumberAsync(_currentData.col_Cheque).Result)
             _view.ClearInput()
-            _view.DisplayDetail(data)
+            _view.DisplayDetail(_currentData)
+            _view.ShowCheque(_currentCheque)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 

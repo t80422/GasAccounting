@@ -19,6 +19,7 @@ Public Class UnitOfWork
     Private _orderRepository As IOrderRep
     Private _basicSetRepository As IBasicSetRep
     Private _paymentRepository As IPaymentRep
+    Private _chequePayRepository As IChequePayRep
 
     ''' <summary>
     ''' 建構函數：創建新的 Transient DbContext 實例
@@ -111,6 +112,15 @@ Public Class UnitOfWork
                 _paymentRepository = New PaymentRep(_context)
             End If
             Return _paymentRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property ChequePayRepository As IChequePayRep Implements IUnitOfWork.ChequePayRepository
+        Get
+            If _chequePayRepository Is Nothing Then
+                _chequePayRepository = New ChequePayRep(_context)
+            End If
+            Return _chequePayRepository
         End Get
     End Property
 

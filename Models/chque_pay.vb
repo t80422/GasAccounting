@@ -17,10 +17,9 @@ Partial Public Class chque_pay
     Public Property cp_Amount As Nullable(Of Integer)
     Public Property cp_CashingDate As Nullable(Of Date)
     Public Property cp_Memo As String
-    Public Property cp_AccountNumber As String
     Public Property cp_IsCashing As Nullable(Of Boolean)
-    Public Property cp_bank_Id As Nullable(Of Integer)
+    Public Property cp_BankCashing As Nullable(Of Date)
 
-    Public Overridable Property bank As bank
+    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class

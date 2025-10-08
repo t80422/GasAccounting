@@ -184,4 +184,8 @@
             End If
         End Using
     End Sub
+
+    Public Sub ShowCheque(data As cheque) Implements ICollectionView.ShowCheque
+        AutoMapEntityToControls(data, Me)
+    End Sub
 End Class
