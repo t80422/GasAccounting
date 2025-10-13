@@ -25,6 +25,7 @@ Public Class ucOrder
     Public Event CustomersGasDetailRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CustomersGasDetailRequest
     Public Event CusGetGasListRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CusGetGasListRequest
 
+    ' === 介面 ===
     Private Sub ClearInput() Implements IFormView(Of order, OrderListVM).ClearInput
         ClearControls(Me)
         cmbCar.DataSource = Nothing
@@ -108,37 +109,6 @@ Public Class ucOrder
         AutoMapEntityToControls(data, tpOut)
     End Sub
 
-    ''' <summary>
-    ''' 供父表單呼叫的快捷鍵處理
-    ''' </summary>
-    ''' <param name="key"></param>
-    Public Sub HandleShortcut(key As Keys)
-        Select Case key
-            Case Keys.F1
-                If btnCreate.Enabled Then
-                    btnCreate.PerformClick()
-                End If
-            Case Keys.F2
-                If btnEdit.Enabled Then
-                    btnEdit.PerformClick()
-                End If
-            Case Keys.F3
-                If btnDelete.Enabled Then
-                    btnDelete.PerformClick()
-                End If
-            Case Keys.F4
-                btnCancel_Click(btnCancel, EventArgs.Empty)
-            Case Keys.F5
-                btnPrint.PerformClick()
-            Case Keys.F6
-                btnPrintCusStk.PerformClick()
-            Case Keys.F7
-                btnCusGasPayCollect_Click(btnCusGasPayCollect, EventArgs.Empty)
-            Case Keys.F8
-                btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
-        End Select
-    End Sub
-
     Public Sub ShowTotalAmount(data As Integer) Implements IOrderView.ShowTotalAmount
         txtTotalAmount.Text = data
     End Sub
@@ -162,7 +132,6 @@ Public Class ucOrder
         Try
             If String.IsNullOrEmpty(txtCusID.Text) Then Throw New Exception("請選擇客戶")
             If rdoPickUp.Checked AndAlso cmbCar.SelectedIndex = -1 Then Throw New Exception("請選擇車號")
-
             AutoMapControlsToEntity(model, Me)
             AutoMapControlsToEntity(model, tcInOut.SelectedTab)
             Return True
@@ -564,5 +533,36 @@ Public Class ucOrder
         cmbCar.Enabled = Not isDataSelected
         grpTransport.Enabled = Not isDataSelected
         cmbCarOut.Enabled = Not isDataSelected
+    End Sub
+
+    ''' <summary>
+    ''' 供父表單呼叫的快捷鍵處理
+    ''' </summary>
+    ''' <param name="key"></param>
+    Public Sub HandleShortcut(key As Keys)
+        Select Case key
+            Case Keys.F1
+                If btnCreate.Enabled Then
+                    btnCreate.PerformClick()
+                End If
+            Case Keys.F2
+                If btnEdit.Enabled Then
+                    btnEdit.PerformClick()
+                End If
+            Case Keys.F3
+                If btnDelete.Enabled Then
+                    btnDelete.PerformClick()
+                End If
+            Case Keys.F4
+                btnCancel_Click(btnCancel, EventArgs.Empty)
+            Case Keys.F5
+                btnPrint.PerformClick()
+            Case Keys.F6
+                btnPrintCusStk.PerformClick()
+            Case Keys.F7
+                btnCusGasPayCollect_Click(btnCusGasPayCollect, EventArgs.Empty)
+            Case Keys.F8
+                btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
+        End Select
     End Sub
 End Class

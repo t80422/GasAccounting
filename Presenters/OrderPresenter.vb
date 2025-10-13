@@ -25,6 +25,7 @@ Public Class OrderPresenter
     Private ReadOnly _reportRep As IReportRep
     Private ReadOnly _unitOfWork As IUnitOfWork
     Private ReadOnly _logger As ILoggerService
+    Private ReadOnly _currentUserService As ICurrentUserService
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -52,7 +53,7 @@ Public Class OrderPresenter
 
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
                    priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService,
-                   reportRep As IReportRep, maService As IMonthlyAccountService, unitOfWork As IUnitOfWork, logger As ILoggerService)
+                   reportRep As IReportRep, maService As IMonthlyAccountService, unitOfWork As IUnitOfWork, logger As ILoggerService, currentUserService As ICurrentUserService)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
@@ -67,6 +68,7 @@ Public Class OrderPresenter
         _reportRep = reportRep
         _unitOfWork = unitOfWork
         _logger = logger
+        _currentUserService = currentUserService
 
         SubscribeToViewEvents()
     End Sub
@@ -494,7 +496,9 @@ Public Class OrderPresenter
                 
                 Dim orderInput As New order
                 _view.GetInput(orderInput)
-                
+
+                If _currentUserService.UserRole <> 1 AndAlso orderInput.o_date < Today.AddDays(-3) Then Throw New Exception("非管理者不能新增三天前的訂單")
+
                 ' 記錄輸入的瓦斯桶數量
                 Dim inputQty = FormatOrderBarrelQty(orderInput, orderType = "進場單")
                 _logger.LogInfo($"[Add] 輸入數量 | 客戶[{cusCode}] | {inputQty}")
@@ -596,9 +600,9 @@ Public Class OrderPresenter
                 Dim beforeOrderQty = FormatOrderBarrelQty(currentOrder, orderType = "進場單")
                 
                 _logger.LogInfo($"[Update] 修改開始 | 訂單ID:{orderId} | 客戶[{cusCode}] | 修改前結存:{beforeStock} | 修改前訂單:{beforeOrderQty}")
-                
+
                 _view.GetInput(currentOrder)
-                
+
                 ' 記錄修改後的訂單數量
                 Dim afterOrderQty = FormatOrderBarrelQty(currentOrder, orderType = "進場單")
                 _logger.LogInfo($"[Update] 修改後訂單 | 訂單ID:{orderId} | 客戶[{cusCode}] | {afterOrderQty}")
@@ -746,7 +750,13 @@ Public Class OrderPresenter
         Dim templatePath As String = ""
         Dim pdfPath As String = ""
         Try
+            Dim stopWatch As New Stopwatch
+
+            stopWatch.Restart()
             Dim data = _ordRep.GetOrderVoucherData(orderId)
+            stopWatch.Stop()
+            _logger.LogInfo($"OrderPrint-取得資料時間: {stopWatch.ElapsedMilliseconds / 1000} 秒")
+
             templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
             Dim htmlContent = FillTemplate(templatePath, data)
             pdfPath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.pdf")
@@ -772,9 +782,8 @@ Public Class OrderPresenter
 
             PrintPDF(pdfPath)
 
-            MsgBox("成功")
+            MessageBox.Show("成功")
             Initialize()
-
         Catch ex As Exception
             ' 詳細的錯誤診斷資訊
             Dim errorDetails = $"PDF轉換失敗 - 環境診斷資訊：{vbCrLf}{vbCrLf}" &
@@ -789,9 +798,6 @@ Public Class OrderPresenter
                              $"堆疊追蹤：{vbCrLf}{ex.StackTrace}"
 
             MessageBox.Show(errorDetails, "PDF轉換錯誤診斷", MessageBoxButtons.OK, MessageBoxIcon.Error)
-
-            ' 同時記錄到控制台供偵錯
-            Console.WriteLine(errorDetails)
         End Try
     End Sub
 

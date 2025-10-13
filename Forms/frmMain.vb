@@ -9,6 +9,7 @@ Public Class frmMain
     End Structure
 
     Public User As UserData
+    Private _currentUserService As ICurrentUserService
 
     Private _manuService As IManufacturerService = New ManufacturerService
 
@@ -39,6 +40,13 @@ Public Class frmMain
         }
 
         InitializeTabPages(permissions)
+
+        ' 初始化 DI 容器（需要在使用服務之前初始化）
+        DependencyContainer.Initialize()
+
+        ' 取得 CurrentUserService 並設定使用者資訊
+        _currentUserService = DependencyContainer.Resolve(Of ICurrentUserService)()
+        _currentUserService.SetCurrentUser(user.emp_id, user.emp_name, user.emp_r_id)
 
         Dim context As New gas_accounting_systemEntities
 
@@ -73,9 +81,6 @@ Public Class frmMain
         _subjects = New SubjectsPresenter(Me, subjectRep)
         _permission = New PermissionPresenter(Me, permissionRep)
         _inspection = New InspectionPresenter(Me, cusRep, inspectionRep)
-
-        ' 初始化 DI 容器
-        DependencyContainer.Initialize()
 
         InitializeUserControls()
     End Sub
@@ -211,14 +216,6 @@ Public Class frmMain
                 If qtyCtrl IsNot Nothing Then AddHandler qtyCtrl.TextChanged, Sub(sender, e) CalculateInspectionFields()
                 If priceCtrl IsNot Nothing Then AddHandler priceCtrl.TextChanged, Sub(sender, e) CalculateInspectionFields()
             Next
-#End Region
-
-#Region "大氣採購"
-            'SetupGasPurchaseHandlers()
-#End Region
-
-#Region "新瓶採購"
-            'SetupNewBottlePurchaseHandlers()
 #End Region
         Catch ex As Exception
             Throw

@@ -755,11 +755,13 @@
     <Compile Include="Services\BankMonthlyBalance\IBankMonthlyBalanceService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\BarrelMonthlyBalanceService.vb" />
     <Compile Include="Services\ChequeService.vb" />
+    <Compile Include="Services\CurrentUserService.vb" />
     <Compile Include="Services\GasMonthlyBalance\GasMonthlyBalanceService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\IBarrelMonthlyBalanceService.vb" />
     <Compile Include="Services\GasMonthlyBalance\IGasMonthlyBalanceService.vb" />
     <Compile Include="Services\GasPurchase\GasPurchaseService.vb" />
     <Compile Include="Services\GasPurchase\IGasPurchaseService.vb" />
+    <Compile Include="Services\ICurrentUserService.vb" />
     <Compile Include="Services\ILoggerService.vb" />
     <Compile Include="Services\LoggerService.vb" />
     <Compile Include="Services\OrderCollectionMapping\IOrderCollectionMappingService.vb" />
