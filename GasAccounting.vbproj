@@ -485,10 +485,10 @@
     <Compile Include="Forms\UserControl\GasPurchaseUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControl\OrderUserControl.Designer.vb">
-      <DependentUpon>OrderUserControl.vb</DependentUpon>
+    <Compile Include="Forms\UserControl\ucOrder.Designer.vb">
+      <DependentUpon>ucOrder.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControl\OrderUserControl.vb">
+    <Compile Include="Forms\UserControl\ucOrder.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\UserControl\PaymentUserControl.Designer.vb">
@@ -760,6 +760,8 @@
     <Compile Include="Services\GasMonthlyBalance\IGasMonthlyBalanceService.vb" />
     <Compile Include="Services\GasPurchase\GasPurchaseService.vb" />
     <Compile Include="Services\GasPurchase\IGasPurchaseService.vb" />
+    <Compile Include="Services\ILoggerService.vb" />
+    <Compile Include="Services\LoggerService.vb" />
     <Compile Include="Services\OrderCollectionMapping\IOrderCollectionMappingService.vb" />
     <Compile Include="Services\MonthlyAccount\IMonthlyAccountService.vb" />
     <Compile Include="Services\MonthlyAccount\MonthlyAccountService.vb" />
@@ -1003,8 +1005,8 @@
     <EmbeddedResource Include="Forms\UserControl\GasPurchaseUserControl.resx">
       <DependentUpon>GasPurchaseUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControl\OrderUserControl.resx">
-      <DependentUpon>OrderUserControl.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\UserControl\ucOrder.resx">
+      <DependentUpon>ucOrder.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\PaymentUserControl.resx">
       <DependentUpon>PaymentUserControl.vb</DependentUpon>
@@ -1072,6 +1074,9 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>

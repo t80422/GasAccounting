@@ -7,6 +7,7 @@ Public Class UnitOfWork
     Implements IUnitOfWork
 
     Private ReadOnly _context As gas_accounting_systemEntities
+    Private _transaction As DbContextTransaction
     Private _disposed As Boolean = False
 
     ' Repository 延遲初始化
@@ -20,12 +21,10 @@ Public Class UnitOfWork
     Private _basicSetRepository As IBasicSetRep
     Private _paymentRepository As IPaymentRep
     Private _chequePayRepository As IChequePayRep
+    Private _reportRepository As IReportRep
 
-    ''' <summary>
-    ''' 建構函數：創建新的 Transient DbContext 實例
-    ''' </summary>
-    Public Sub New()
-        _context = New gas_accounting_systemEntities()
+    Public Sub New(context As gas_accounting_systemEntities)
+        _context = context
     End Sub
 
     Public ReadOnly Property Context As gas_accounting_systemEntities Implements IUnitOfWork.Context
@@ -124,9 +123,24 @@ Public Class UnitOfWork
         End Get
     End Property
 
-    Public Function BeginTransaction() As DbContextTransaction Implements IUnitOfWork.BeginTransaction
-        Return _context.Database.BeginTransaction()
-    End Function
+    Public ReadOnly Property ReportRepository As IReportRep Implements IUnitOfWork.ReportRepository
+        Get
+            If _reportRepository Is Nothing Then _reportRepository = New ReportRep(_context)
+            Return _reportRepository
+        End Get
+    End Property
+
+    Public Sub BeginTransaction() Implements IUnitOfWork.BeginTransaction
+        _transaction = _context.Database.BeginTransaction()
+    End Sub
+
+    Public Sub Commit() Implements IUnitOfWork.Commit
+        If _transaction IsNot Nothing Then _transaction.Commit()
+    End Sub
+
+    Public Sub Rollback() Implements IUnitOfWork.Rollback
+        If _transaction IsNot Nothing Then _transaction.Rollback()
+    End Sub
 
     Public Async Function SaveChangesAsync() As Task(Of Integer) Implements IUnitOfWork.SaveChangesAsync
         Try

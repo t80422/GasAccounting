@@ -1,7 +1,7 @@
 ﻿''' <summary>
 ''' 銷售管理
 ''' </summary>
-Public Class OrderUserControl
+Public Class ucOrder
     Implements IOrderView
 
     ' === 介面 ===

@@ -107,67 +107,65 @@ Public Class ReportRep
         Dim result As New List(Of CusGetGas)
 
         Try
-            Using db As New gas_accounting_systemEntities
-                '獲取所有客戶資料
-                Dim customers = db.customers.OrderBy(Function(x) x.cus_code).ToList
+            '獲取所有客戶資料
+            Dim customers = _context.customers.OrderBy(Function(x) x.cus_code).ToList
 
-                '遍歷每個客戶並蒐集相關資料
-                For Each cus In customers
-                    Dim detail As New CusGetGas With {
-                        .客戶名稱 = cus.cus_name
-                    }
+            '遍歷每個客戶並蒐集相關資料
+            For Each cus In customers
+                Dim detail As New CusGetGas With {
+                    .客戶名稱 = cus.cus_name
+                }
 
-                    Dim startDay As Date
-                    Dim endDay As Date
+                Dim startDay As Date
+                Dim endDay As Date
 
-                    If isMonth Then
-                        startDay = New Date(d.Year, d.Month, 1)
-                        endDay = startDay.AddMonths(1)
-                    Else
-                        startDay = d.Date
-                        endDay = d.Date.AddDays(1)
-                    End If
+                ' 設定日期範圍
+                If isMonth Then
+                    startDay = New Date(d.Year, d.Month, 1)
+                    endDay = startDay.AddMonths(1)
+                Else
+                    startDay = d.Date
+                    endDay = d.Date.AddDays(1)
+                End If
 
-                    Dim ordersToday = db.orders.Where(Function(x) x.o_cus_Id = cus.cus_id And x.o_date.Value >= startDay And x.o_date.Value < endDay).ToList
+                Dim ordersToday = _context.orders.Where(Function(x) x.o_cus_Id = cus.cus_id And x.o_date.Value >= startDay And x.o_date.Value < endDay).ToList
 
-                    detail.普氣50Kg = ordersToday.Sum(Function(x) x.o_gas_50)
-                    detail.丙氣50Kg = ordersToday.Sum(Function(x) x.o_gas_c_50)
+                detail.普氣50Kg = ordersToday.Sum(Function(x) x.o_gas_50)
+                detail.丙氣50Kg = ordersToday.Sum(Function(x) x.o_gas_c_50)
 
-                    detail.普氣20Kg = ordersToday.Sum(Function(x) x.o_gas_20)
-                    detail.丙氣20Kg = ordersToday.Sum(Function(x) x.o_gas_c_20)
+                detail.普氣20Kg = ordersToday.Sum(Function(x) x.o_gas_20)
+                detail.丙氣20Kg = ordersToday.Sum(Function(x) x.o_gas_c_20)
 
-                    detail.普氣16Kg = ordersToday.Sum(Function(x) x.o_gas_16)
-                    detail.丙氣16Kg = ordersToday.Sum(Function(x) x.o_gas_c_16)
+                detail.普氣16Kg = ordersToday.Sum(Function(x) x.o_gas_16)
+                detail.丙氣16Kg = ordersToday.Sum(Function(x) x.o_gas_c_16)
 
-                    detail.普氣10Kg = ordersToday.Sum(Function(x) x.o_gas_10)
-                    detail.丙氣10Kg = ordersToday.Sum(Function(x) x.o_gas_c_10)
+                detail.普氣10Kg = ordersToday.Sum(Function(x) x.o_gas_10)
+                detail.丙氣10Kg = ordersToday.Sum(Function(x) x.o_gas_c_10)
 
-                    detail.普氣4Kg = ordersToday.Sum(Function(x) x.o_gas_4)
-                    detail.丙氣4Kg = ordersToday.Sum(Function(x) x.o_gas_c_4)
+                detail.普氣4Kg = ordersToday.Sum(Function(x) x.o_gas_4)
+                detail.丙氣4Kg = ordersToday.Sum(Function(x) x.o_gas_c_4)
 
-                    detail.普氣18Kg = ordersToday.Sum(Function(x) x.o_gas_18)
-                    detail.丙氣18Kg = ordersToday.Sum(Function(x) x.o_gas_c_18)
+                detail.普氣18Kg = ordersToday.Sum(Function(x) x.o_gas_18)
+                detail.丙氣18Kg = ordersToday.Sum(Function(x) x.o_gas_c_18)
 
-                    detail.普氣14Kg = ordersToday.Sum(Function(x) x.o_gas_14)
-                    detail.丙氣14Kg = ordersToday.Sum(Function(x) x.o_gas_c_14)
+                detail.普氣14Kg = ordersToday.Sum(Function(x) x.o_gas_14)
+                detail.丙氣14Kg = ordersToday.Sum(Function(x) x.o_gas_c_14)
 
-                    detail.普氣5Kg = ordersToday.Sum(Function(x) x.o_gas_5)
-                    detail.丙氣5Kg = ordersToday.Sum(Function(x) x.o_gas_c_5)
+                detail.普氣5Kg = ordersToday.Sum(Function(x) x.o_gas_5)
+                detail.丙氣5Kg = ordersToday.Sum(Function(x) x.o_gas_c_5)
 
-                    detail.普氣2Kg = ordersToday.Sum(Function(x) x.o_gas_2)
-                    detail.丙氣2Kg = ordersToday.Sum(Function(x) x.o_gas_c_2)
+                detail.普氣2Kg = ordersToday.Sum(Function(x) x.o_gas_2)
+                detail.丙氣2Kg = ordersToday.Sum(Function(x) x.o_gas_c_2)
 
-                    detail.普氣殘氣 = ordersToday.Sum(Function(x) x.o_return)
-                    detail.丙氣殘氣 = ordersToday.Sum(Function(x) x.o_return_c)
+                detail.普氣殘氣 = ordersToday.Sum(Function(x) x.o_return)
+                detail.丙氣殘氣 = ordersToday.Sum(Function(x) x.o_return_c)
 
-                    detail.普氣提量 = ordersToday.Sum(Function(x) x.o_gas_total)
-                    detail.丙氣提量 = ordersToday.Sum(Function(x) x.o_gas_c_total)
+                detail.普氣提量 = ordersToday.Sum(Function(x) x.o_gas_total + x.o_return)
+                detail.丙氣提量 = ordersToday.Sum(Function(x) x.o_gas_c_total + x.o_return_c)
 
-                    result.Add(detail)
-                Next
-            End Using
+                result.Add(detail)
+            Next
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
             Throw
         End Try
 

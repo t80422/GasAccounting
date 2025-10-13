@@ -23,6 +23,8 @@ Public Class OrderPresenter
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
     Private ReadOnly _maService As IMonthlyAccountService
     Private ReadOnly _reportRep As IReportRep
+    Private ReadOnly _unitOfWork As IUnitOfWork
+    Private ReadOnly _logger As ILoggerService
 
     Private currentCustomer As customer
     Private currentOrder As order
@@ -50,7 +52,7 @@ Public Class OrderPresenter
 
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
                    priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService,
-                   reportRep As IReportRep, maService As IMonthlyAccountService)
+                   reportRep As IReportRep, maService As IMonthlyAccountService, unitOfWork As IUnitOfWork, logger As ILoggerService)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
@@ -63,6 +65,8 @@ Public Class OrderPresenter
         _ocmSer = ocmSer
         _maService = maService
         _reportRep = reportRep
+        _unitOfWork = unitOfWork
+        _logger = logger
 
         SubscribeToViewEvents()
     End Sub
@@ -285,6 +289,12 @@ Public Class OrderPresenter
             If currentCustomer Is Nothing Then Exit Sub
 
             Dim isIn = _view.GetOrderType = "進場單"
+            Dim orderType = If(isIn, "進場單", "出場單")
+            Dim cusCode = currentCustomer.cus_code
+            
+            ' 記錄計算前的庫存
+            Dim beforeStock = FormatBarrelStock(currentCustomer)
+            
             Dim cusProps = currentCustomer?.GetType.GetProperties
             Dim inputInOut = If(isIn, _view.GetInInput, _view.GetOutInput)
             Dim inputProps = inputInOut.GetType.GetProperties
@@ -322,6 +332,12 @@ Public Class OrderPresenter
                 targetProp.SetValue(cusBarrelStock, barrelStk)
             Next
 
+            ' 記錄計算後的庫存
+            Dim afterStock = FormatBarrelStock(cusBarrelStock)
+            Dim stockDiff = FormatBarrelDiff(currentCustomer, cusBarrelStock)
+            
+            _logger.LogInfo($"[CaculateCusBarrelStock] 客戶[{cusCode}] {orderType} | 計算前:{beforeStock} | 計算後:{afterStock} | 變化:{stockDiff}")
+            
             _view.SetCusBarrelStock(isIn, cusBarrelStock)
         Catch ex As Exception
             Throw
@@ -468,11 +484,29 @@ Public Class OrderPresenter
         Using transaction = _ordRep.BeginTransaction
             Try
                 RefreshCurrentEntities()
+                
+                ' 記錄交易前的客戶庫存
+                Dim cusCode = currentCustomer?.cus_code
+                Dim beforeStock = FormatBarrelStock(currentCustomer)
+                Dim orderType = _view.GetOrderType
+                
+                _logger.LogInfo($"[Add] 交易開始 | 客戶[{cusCode}] | 訂單類型:{orderType} | 交易前結存:{beforeStock}")
+                
                 Dim orderInput As New order
                 _view.GetInput(orderInput)
+                
+                ' 記錄輸入的瓦斯桶數量
+                Dim inputQty = FormatOrderBarrelQty(orderInput, orderType = "進場單")
+                _logger.LogInfo($"[Add] 輸入數量 | 客戶[{cusCode}] | {inputQty}")
+                
                 Dim order = _ordRep.AddAsync(orderInput).Result
 
                 _view.GetCusStkInput(currentCustomer)
+                
+                ' 記錄交易後的客戶庫存
+                Dim afterStock = FormatBarrelStock(currentCustomer)
+                Dim stockDiff = FormatBarrelDiff_FromString(beforeStock, afterStock)
+                _logger.LogInfo($"[Add] 交易後結存 | 客戶[{cusCode}] | 交易後:{afterStock} | 變化:{stockDiff}")
 
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
 
@@ -505,6 +539,9 @@ Public Class OrderPresenter
                 _cusRep.SaveChangesAsync()
 
                 transaction.Commit()
+                
+                _logger.LogInfo($"[Add] 交易成功 | 訂單ID:{order.o_id} | 客戶[{cusCode}]")
+                
                 Initialize()
                 MessageBox.Show("新增成功")
                 LoadDetail(Nothing, order.o_id)
@@ -550,8 +587,29 @@ Public Class OrderPresenter
         Using transaction = _ordRep.BeginTransaction
             Try
                 RefreshCurrentEntities(includeOrder:=True)
+                
+                ' 記錄修改前的資訊
+                Dim cusCode = currentCustomer?.cus_code
+                Dim orderId = currentOrder?.o_id
+                Dim orderType = _view.GetOrderType
+                Dim beforeStock = FormatBarrelStock(currentCustomer)
+                Dim beforeOrderQty = FormatOrderBarrelQty(currentOrder, orderType = "進場單")
+                
+                _logger.LogInfo($"[Update] 修改開始 | 訂單ID:{orderId} | 客戶[{cusCode}] | 修改前結存:{beforeStock} | 修改前訂單:{beforeOrderQty}")
+                
                 _view.GetInput(currentOrder)
+                
+                ' 記錄修改後的訂單數量
+                Dim afterOrderQty = FormatOrderBarrelQty(currentOrder, orderType = "進場單")
+                _logger.LogInfo($"[Update] 修改後訂單 | 訂單ID:{orderId} | 客戶[{cusCode}] | {afterOrderQty}")
+                
                 _view.GetCusStkInput(currentCustomer)
+                
+                ' 記錄修改後的客戶庫存
+                Dim afterStock = FormatBarrelStock(currentCustomer)
+                Dim stockDiff = FormatBarrelDiff_FromString(beforeStock, afterStock)
+                _logger.LogInfo($"[Update] 修改後結存 | 訂單ID:{orderId} | 客戶[{cusCode}] | 修改後:{afterStock} | 變化:{stockDiff}")
+                
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
 
                 _service.UpdateOrAddAsync(currentOrder.o_date)
@@ -561,6 +619,9 @@ Public Class OrderPresenter
 
                 _cusRep.SaveChangesAsync()
                 transaction.Commit()
+                
+                _logger.LogInfo($"[Update] 修改成功 | 訂單ID:{orderId} | 客戶[{cusCode}]")
+                
                 Initialize()
                 MessageBox.Show("修改成功")
             Catch ex As Exception
@@ -579,6 +640,15 @@ Public Class OrderPresenter
                 End If
 
                 If MessageBox.Show("確定要刪除這筆訂單嗎？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then Return
+
+                ' 記錄刪除前的資訊
+                Dim cusCode = currentCustomer?.cus_code
+                Dim orderId = currentOrder?.o_id
+                Dim orderType = _view.GetOrderType
+                Dim beforeStock = FormatBarrelStock(currentCustomer)
+                Dim orderQty = FormatOrderBarrelQty(currentOrder, orderType = "進場單")
+                
+                _logger.LogInfo($"[Delete] 刪除開始 | 訂單ID:{orderId} | 客戶[{cusCode}] | 刪除前結存:{beforeStock} | 訂單數量:{orderQty}")
 
                 ' 更新客戶庫存、存氣
                 If currentCustomer Is Nothing Then Throw New Exception("未取得客戶資料")
@@ -610,6 +680,11 @@ Public Class OrderPresenter
 
                     targetProp.SetValue(currentCustomer, barrelStk)
                 Next
+
+                ' 記錄刪除後的客戶庫存（應該回退）
+                Dim afterStock = FormatBarrelStock(currentCustomer)
+                Dim stockDiff = FormatBarrelDiff_FromString(beforeStock, afterStock)
+                _logger.LogInfo($"[Delete] 回退結存 | 訂單ID:{orderId} | 客戶[{cusCode}] | 回退後:{afterStock} | 變化:{stockDiff}")
 
                 ' 更新車輛庫存
                 If currentOrder.o_delivery_type = "自運" Then
@@ -655,6 +730,9 @@ Public Class OrderPresenter
                 _ordRep.SaveChangesAsync()
 
                 transaction.Commit()
+                
+                _logger.LogInfo($"[Delete] 刪除成功 | 訂單ID:{orderId} | 客戶[{cusCode}]")
+                
                 Initialize()
                 MessageBox.Show("刪除成功")
             Catch ex As Exception
@@ -665,8 +743,8 @@ Public Class OrderPresenter
     End Sub
 
     Private Sub Print(sender As Object, orderId As Integer)
-        Dim templatePath As String
-        Dim pdfPath As String
+        Dim templatePath As String = ""
+        Dim pdfPath As String = ""
         Try
             Dim data = _ordRep.GetOrderVoucherData(orderId)
             templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
@@ -807,8 +885,8 @@ Public Class OrderPresenter
     ''' <summary>
     ''' 產生氣量氣款收付明細表
     ''' </summary>
-    ''' <param name="d"></param>
-    ''' <param name="isMonth"></param>
+    ''' <param name="sender"></param>
+    ''' <param name="tu"></param>
     Private Sub GenerateCustomersGasDetailByDay(sender As Object, tu As Tuple(Of Date, Boolean))
         Try
             Dim d As Date = tu.Item1
@@ -875,13 +953,18 @@ Public Class OrderPresenter
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 產生客戶提氣清冊
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="tu"></param>
     Private Sub GenerateCustomersGetGasList(sender As Object, tu As Tuple(Of Date, Boolean))
         Try
             Dim d As Date = tu.Item1
             Dim isMonth As Boolean = tu.Item2
 
             '蒐集資料
-            Dim datas = _reportRep.CustomersGetGasList(d, isMonth)
+            Dim datas = _unitOfWork.ReportRepository.CustomersGetGasList(d, isMonth)
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣清冊範本檔.xlsx")
@@ -1011,7 +1094,7 @@ Public Class OrderPresenter
                 End With
             End Using
         Catch ex As Exception
-            MsgBox("列印失敗:" + ex.Message)
+            MessageBox.Show("列印失敗:" + ex.Message)
         End Try
     End Sub
 
@@ -1123,5 +1206,153 @@ Public Class OrderPresenter
         htmlContent = htmlContent.Replace("{{已收氣款}}", data.已收氣款.ToString)
 
         Return htmlContent
+    End Function
+
+    ''' <summary>
+    ''' 格式化瓦斯桶庫存資訊
+    ''' </summary>
+    ''' <param name="cus">客戶物件</param>
+    ''' <returns>格式化字串，例如："50Kg=10,20Kg=5,16Kg=3"</returns>
+    Private Function FormatBarrelStock(cus As customer) As String
+        If cus Is Nothing Then Return "無資料"
+        
+        Dim items As New List(Of String)
+        If cus.cus_gas_50 <> 0 Then items.Add($"50Kg={cus.cus_gas_50}")
+        If cus.cus_gas_20 <> 0 Then items.Add($"20Kg={cus.cus_gas_20}")
+        If cus.cus_gas_16 <> 0 Then items.Add($"16Kg={cus.cus_gas_16}")
+        If cus.cus_gas_10 <> 0 Then items.Add($"10Kg={cus.cus_gas_10}")
+        If cus.cus_gas_4 <> 0 Then items.Add($"4Kg={cus.cus_gas_4}")
+        If cus.cus_gas_18 <> 0 Then items.Add($"18Kg={cus.cus_gas_18}")
+        If cus.cus_gas_14 <> 0 Then items.Add($"14Kg={cus.cus_gas_14}")
+        If cus.cus_gas_5 <> 0 Then items.Add($"5Kg={cus.cus_gas_5}")
+        If cus.cus_gas_2 <> 0 Then items.Add($"2Kg={cus.cus_gas_2}")
+        
+        Return If(items.Count > 0, String.Join(",", items), "全部為0")
+    End Function
+
+    ''' <summary>
+    ''' 格式化瓦斯桶庫存變化
+    ''' </summary>
+    ''' <param name="before">變化前的客戶物件</param>
+    ''' <param name="after">變化後的客戶物件</param>
+    ''' <returns>格式化字串，例如："50Kg:10→15(+5),20Kg:5→8(+3)"</returns>
+    Private Function FormatBarrelDiff(before As customer, after As customer) As String
+        If before Is Nothing OrElse after Is Nothing Then Return "無資料"
+        
+        Dim items As New List(Of String)
+        Dim barrelTypes = New String() {"50", "20", "16", "10", "4", "18", "14", "5", "2"}
+        
+        For Each barrelType In barrelTypes
+            Dim beforeVal = CInt(before.GetType().GetProperty($"cus_gas_{barrelType}").GetValue(before))
+            Dim afterVal = CInt(after.GetType().GetProperty($"cus_gas_{barrelType}").GetValue(after))
+            Dim diff = afterVal - beforeVal
+            
+            If diff <> 0 Then
+                Dim sign = If(diff > 0, "+", "")
+                items.Add($"{barrelType}Kg:{beforeVal}→{afterVal}({sign}{diff})")
+            End If
+        Next
+        
+        Return If(items.Count > 0, String.Join(",", items), "無變化")
+    End Function
+
+    ''' <summary>
+    ''' 從字串格式計算庫存變化（用於 Add/Update/Delete 方法）
+    ''' </summary>
+    ''' <param name="beforeStr">變化前的字串，例如："50Kg=10,20Kg=5"</param>
+    ''' <param name="afterStr">變化後的字串，例如："50Kg=15,20Kg=8"</param>
+    ''' <returns>格式化字串，例如："50Kg:10→15(+5),20Kg:5→8(+3)"</returns>
+    Private Function FormatBarrelDiff_FromString(beforeStr As String, afterStr As String) As String
+        If String.IsNullOrEmpty(beforeStr) OrElse String.IsNullOrEmpty(afterStr) Then Return "無資料"
+        If beforeStr = "無資料" OrElse afterStr = "無資料" Then Return "無資料"
+        If beforeStr = "全部為0" AndAlso afterStr = "全部為0" Then Return "無變化"
+        
+        ' 解析字串為 Dictionary
+        Dim ParseStock = Function(str As String) As Dictionary(Of String, Integer)
+            Dim result As New Dictionary(Of String, Integer)
+            If str = "全部為0" Then Return result
+            
+            For Each item In str.Split(","c)
+                Dim parts = item.Split("="c)
+                If parts.Length = 2 Then
+                    result(parts(0).Trim()) = Integer.Parse(parts(1).Trim())
+                End If
+            Next
+            Return result
+        End Function
+        
+        Dim beforeDict = ParseStock(beforeStr)
+        Dim afterDict = ParseStock(afterStr)
+        
+        ' 收集所有的公斤數類型
+        Dim allTypes As New HashSet(Of String)(beforeDict.Keys)
+        For Each key In afterDict.Keys
+            allTypes.Add(key)
+        Next
+        
+        Dim items As New List(Of String)
+        Dim barrelOrder = New String() {"50Kg", "20Kg", "16Kg", "10Kg", "4Kg", "18Kg", "14Kg", "5Kg", "2Kg"}
+        
+        For Each barrelType In barrelOrder
+            If allTypes.Contains(barrelType) Then
+                Dim beforeVal = If(beforeDict.ContainsKey(barrelType), beforeDict(barrelType), 0)
+                Dim afterVal = If(afterDict.ContainsKey(barrelType), afterDict(barrelType), 0)
+                Dim diff = afterVal - beforeVal
+                
+                If diff <> 0 Then
+                    Dim sign = If(diff > 0, "+", "")
+                    items.Add($"{barrelType}:{beforeVal}→{afterVal}({sign}{diff})")
+                End If
+            End If
+        Next
+        
+        Return If(items.Count > 0, String.Join(",", items), "無變化")
+    End Function
+
+    ''' <summary>
+    ''' 格式化訂單中的瓦斯桶數量
+    ''' </summary>
+    ''' <param name="ord">訂單物件</param>
+    ''' <param name="isIn">是否為進場單</param>
+    ''' <returns>格式化字串</returns>
+    Private Function FormatOrderBarrelQty(ord As order, isIn As Boolean) As String
+        If ord Is Nothing Then Return "無訂單資料"
+        
+        Dim items As New List(Of String)
+        Dim barrelTypes = New String() {"50", "20", "16", "10", "4", "18", "14", "5", "2"}
+        
+        If isIn Then
+            ' 進場單：收舊瓶、新瓶、檢驗
+            For Each barrelType In barrelTypes
+                Dim inQty = CInt(ord.GetType().GetProperty($"o_in_{barrelType}")?.GetValue(ord))
+                Dim newInQty = CInt(ord.GetType().GetProperty($"o_new_in_{barrelType}")?.GetValue(ord))
+                Dim inspectQty = CInt(ord.GetType().GetProperty($"o_inspect_{barrelType}")?.GetValue(ord))
+                
+                If inQty <> 0 OrElse newInQty <> 0 OrElse inspectQty <> 0 Then
+                    Dim parts As New List(Of String)
+                    If inQty <> 0 Then parts.Add($"收舊瓶:{inQty}")
+                    If newInQty <> 0 Then parts.Add($"新瓶:{newInQty}")
+                    If inspectQty <> 0 Then parts.Add($"檢驗:{inspectQty}")
+                    items.Add($"{barrelType}Kg({String.Join(",", parts)})")
+                End If
+            Next
+        Else
+            ' 出場單：普氣、丙氣、空瓶
+            For Each barrelType In barrelTypes
+                Dim gasQty = CInt(ord.GetType().GetProperty($"o_gas_{barrelType}")?.GetValue(ord))
+                Dim gasCQty = CInt(ord.GetType().GetProperty($"o_gas_c_{barrelType}")?.GetValue(ord))
+                Dim emptyQty = CInt(ord.GetType().GetProperty($"o_empty_{barrelType}")?.GetValue(ord))
+                
+                If gasQty <> 0 OrElse gasCQty <> 0 OrElse emptyQty <> 0 Then
+                    Dim parts As New List(Of String)
+                    If gasQty <> 0 Then parts.Add($"普氣:{gasQty}")
+                    If gasCQty <> 0 Then parts.Add($"丙氣:{gasCQty}")
+                    If emptyQty <> 0 Then parts.Add($"空瓶:{emptyQty}")
+                    items.Add($"{barrelType}Kg({String.Join(",", parts)})")
+                End If
+            Next
+        End If
+        
+        Return If(items.Count > 0, String.Join(",", items), "全部為0")
     End Function
 End Class

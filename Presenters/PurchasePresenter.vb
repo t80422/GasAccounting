@@ -95,76 +95,75 @@ Public Class PurchasePresenter
 
     Private Async Sub Add()
         Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
-            Using transaction = uow.BeginTransaction()
-                Try
-                    Dim data As New purchase
-                    _view.GetInput(data)
-                    Dim insert = Await uow.PurchaseRepository.AddAsync(data)
+            uow.BeginTransaction()
+            Try
+                Dim data As New purchase
+                _view.GetInput(data)
+                Dim insert = Await uow.PurchaseRepository.AddAsync(data)
 
-                    ' 使用新版本的 Service 方法（傳入 Repository）
-                    _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
-                                       uow.CompanyRepository, uow.BasicSetRepository,
-                                       data.pur_date, data.pur_comp_id)
+                ' 使用新版本的 Service 方法（傳入 Repository）
+                _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
+                                   uow.CompanyRepository, uow.BasicSetRepository,
+                                   data.pur_date, data.pur_comp_id)
 
-                    Dim entries = New List(Of accounting_entry) From {
-                        New accounting_entry With {
-                            .ae_TransactionId = insert.pur_id,
-                            .ae_Date = Now,
-                            .ae_TransactionType = "大氣進貨",
-                            .ae_s_Id = 1,
-                            .ae_Debit = insert.pur_price,
-                            .ae_Credit = 0
-                        },
-                        New accounting_entry With {
-                            .ae_TransactionId = insert.pur_id,
-                            .ae_Date = Now,
-                            .ae_TransactionType = "大氣進貨",
-                            .ae_s_Id = 2,
-                            .ae_Debit = insert.pur_delivery_fee,
-                            .ae_Credit = 0
-                        },
-                        New accounting_entry With {
-                            .ae_TransactionId = insert.pur_id,
-                            .ae_Date = Now,
-                            .ae_TransactionType = "大氣進貨",
-                            .ae_s_Id = 3,
-                            .ae_Debit = 0,
-                            .ae_Credit = insert.pur_price.Value + insert.pur_delivery_fee.Value
-                        }
+                Dim entries = New List(Of accounting_entry) From {
+                    New accounting_entry With {
+                        .ae_TransactionId = insert.pur_id,
+                        .ae_Date = Now,
+                        .ae_TransactionType = "大氣進貨",
+                        .ae_s_Id = 1,
+                        .ae_Debit = insert.pur_price,
+                        .ae_Credit = 0
+                    },
+                    New accounting_entry With {
+                        .ae_TransactionId = insert.pur_id,
+                        .ae_Date = Now,
+                        .ae_TransactionType = "大氣進貨",
+                        .ae_s_Id = 2,
+                        .ae_Debit = insert.pur_delivery_fee,
+                        .ae_Credit = 0
+                    },
+                    New accounting_entry With {
+                        .ae_TransactionId = insert.pur_id,
+                        .ae_Date = Now,
+                        .ae_TransactionType = "大氣進貨",
+                        .ae_s_Id = 3,
+                        .ae_Debit = 0,
+                        .ae_Credit = insert.pur_price.Value + insert.pur_delivery_fee.Value
                     }
+                }
 
-                    ' 使用新版本的 Service 方法（傳入 Repository）
-                    _aeSer.AddEntries(uow.AccountingEntryRepository, entries)
+                ' 使用新版本的 Service 方法（傳入 Repository）
+                _aeSer.AddEntries(uow.AccountingEntryRepository, entries)
 
-                    ' 統一由 UnitOfWork 保存
-                    Await uow.SaveChangesAsync()
-                    transaction.Commit()
-                    Initialize()
-                    MessageBox.Show("新增成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Dim errorMsg = $"【PurchasePresenter.Add】新增大氣採購時發生錯誤" & vbCrLf &
-                                  $"錯誤訊息: {ex.Message}" & vbCrLf &
-                                  If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
-                                  $"堆疊追蹤: {ex.StackTrace}"
-                    MessageBox.Show(errorMsg, "新增錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Try
-            End Using
+                ' 統一由 UnitOfWork 保存
+                Await uow.SaveChangesAsync()
+                uow.Commit()
+                Initialize()
+                MessageBox.Show("新增成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Catch ex As Exception
+                uow.Rollback()
+                Dim errorMsg = $"【PurchasePresenter.Add】新增大氣採購時發生錯誤" & vbCrLf &
+                              $"錯誤訊息: {ex.Message}" & vbCrLf &
+                              If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
+                              $"堆疊追蹤: {ex.StackTrace}"
+                MessageBox.Show(errorMsg, "新增錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End Using
     End Sub
 
     Private Async Sub Edit()
         Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
-            Using transaction = uow.BeginTransaction()
-                Try
-                    _view.GetInput(currentData)
+            uow.BeginTransaction()
+            Try
+                _view.GetInput(currentData)
 
-                    ' 使用新版本的 Service 方法（傳入 Repository）
-                    _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
+                ' 使用新版本的 Service 方法（傳入 Repository）
+                _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
                                        uow.CompanyRepository, uow.BasicSetRepository,
                                        currentData.pur_date, currentData.pur_comp_id)
 
-                    Dim entries = New List(Of accounting_entry) From {
+                Dim entries = New List(Of accounting_entry) From {
                         New accounting_entry With {
                             .ae_TransactionId = currentData.pur_id,
                             .ae_Date = Now,
@@ -191,59 +190,57 @@ Public Class PurchasePresenter
                         }
                     }
 
-                    ' 使用新版本的 Service 方法（傳入 Repository）
-                    _aeSer.UpdateEntries(uow.AccountingEntryRepository, entries)
-                    Await uow.PurchaseRepository.UpdateAsync(currentData.pur_id, currentData)
+                ' 使用新版本的 Service 方法（傳入 Repository）
+                _aeSer.UpdateEntries(uow.AccountingEntryRepository, entries)
+                Await uow.PurchaseRepository.UpdateAsync(currentData.pur_id, currentData)
 
-                    ' 統一由 UnitOfWork 保存
-                    Await uow.SaveChangesAsync()
+                ' 統一由 UnitOfWork 保存
+                Await uow.SaveChangesAsync()
 
-                    transaction.Commit()
-                    Initialize()
-                    MsgBox("修改成功", MsgBoxStyle.Information, "成功")
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Dim errorMsg = $"【PurchasePresenter.Edit】修改大氣採購時發生錯誤" & vbCrLf &
+                uow.Commit()
+                Initialize()
+                MsgBox("修改成功", MsgBoxStyle.Information, "成功")
+            Catch ex As Exception
+                uow.Rollback()
+                Dim errorMsg = $"【PurchasePresenter.Edit】修改大氣採購時發生錯誤" & vbCrLf &
                                   $"採購單ID: {If(currentData?.pur_id, 0)}" & vbCrLf &
                                   $"錯誤訊息: {ex.Message}" & vbCrLf &
                                   If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
                                   $"堆疊追蹤: {ex.StackTrace}"
-                    MsgBox(errorMsg, MsgBoxStyle.Critical, "修改錯誤")
-                End Try
-            End Using
+                MsgBox(errorMsg, MsgBoxStyle.Critical, "修改錯誤")
+            End Try
         End Using
     End Sub
 
     Public Async Sub Delete()
         Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
-            Using transaction = uow.BeginTransaction()
-                Try
-                    ' 使用新版本的 Service 方法（傳入 Repository）
-                    _aeSer.DeleteEntries(uow.AccountingEntryRepository, "大氣進貨", currentData.pur_id)
+            uow.BeginTransaction()
+            Try
+                ' 使用新版本的 Service 方法（傳入 Repository）
+                _aeSer.DeleteEntries(uow.AccountingEntryRepository, "大氣進貨", currentData.pur_id)
 
-                    Await uow.PurchaseRepository.DeleteAsync(currentData)
+                Await uow.PurchaseRepository.DeleteAsync(currentData)
 
-                    ' 使用新版本的 Service 方法（傳入 Repository）
-                    _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
+                ' 使用新版本的 Service 方法（傳入 Repository）
+                _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,
                                        uow.CompanyRepository, uow.BasicSetRepository,
                                        currentData.pur_date, currentData.pur_comp_id)
 
-                    ' 統一由 UnitOfWork 保存
-                    Await uow.SaveChangesAsync()
+                ' 統一由 UnitOfWork 保存
+                Await uow.SaveChangesAsync()
 
-                    transaction.Commit()
-                    Initialize()
-                    MessageBox.Show("刪除成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Dim errorMsg = $"【PurchasePresenter.Delete】刪除大氣採購時發生錯誤" & vbCrLf &
+                uow.Commit()
+                Initialize()
+                MessageBox.Show("刪除成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Catch ex As Exception
+                uow.Rollback()
+                Dim errorMsg = $"【PurchasePresenter.Delete】刪除大氣採購時發生錯誤" & vbCrLf &
                                   $"採購單ID: {If(currentData?.pur_id, 0)}, 日期: {If(currentData?.pur_date, Date.MinValue):yyyy/MM/dd}" & vbCrLf &
                                   $"錯誤訊息: {ex.Message}" & vbCrLf &
                                   If(ex.InnerException IsNot Nothing, $"內部錯誤: {ex.InnerException.Message}" & vbCrLf, "") &
                                   $"堆疊追蹤: {ex.StackTrace}"
-                    MessageBox.Show(errorMsg, "刪除錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Try
-            End Using
+                MessageBox.Show(errorMsg, "刪除錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End Using
     End Sub
 

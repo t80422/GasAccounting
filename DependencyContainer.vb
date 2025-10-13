@@ -57,6 +57,12 @@ Public Class DependencyContainer
             .RegisterType(Of IGasMonthlyBalanceService, GasMonthlyBalanceService)
             .RegisterType(Of IGasPurchaseService, GasPurchaseService)
 
+            ' 註冊 LoggerService（使用工廠方法為每個呼叫者建立專屬的 Logger）
+            .RegisterFactory(Of ILoggerService)(
+                Function(container) New LoggerService("GasAccounting"),
+                New TransientLifetimeManager()
+            )
+
             ' 註冊 View
             .RegisterType(Of IChequePayView, ChequePayUserControl)
             .RegisterType(Of ICustomerView, CustomerUserControl)
@@ -64,7 +70,7 @@ Public Class DependencyContainer
             .RegisterType(Of IPurchaseView, GasPurchaseUserControl)
             .RegisterType(Of IPurchaseBarrelView, PurchaseBarrelUserControl)()
             .RegisterType(Of IPaymentView, PaymentUserControl)()
-            .RegisterType(Of IOrderView, OrderUserControl)
+            .RegisterType(Of IOrderView, ucOrder)
 
             ' 註冊 Presenter
             .RegisterType(Of ChequePayPresenter)

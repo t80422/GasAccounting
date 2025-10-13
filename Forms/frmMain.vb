@@ -1,4 +1,6 @@
-﻿Public Class frmMain
+﻿Imports Unity.Resolution
+
+Public Class frmMain
     Implements ISubjectsView, IManufacturerView, IPricePlanView, IEmployeeView, IBankView, IUnitPriceHistoryView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, ICarView, IInvoiceSplitView, IInspectionView
 
     Public Structure UserData
@@ -92,7 +94,7 @@
             Dim purchasePresenter = DependencyContainer.Resolve(Of PurchasePresenter)
             Dim purchaseVeiw = DirectCast(purchasePresenter.View, GasPurchaseUserControl)
             Dim orderPresenter = DependencyContainer.Resolve(Of OrderPresenter)
-            Dim orderView = DirectCast(orderPresenter.View, OrderUserControl)
+            Dim orderView = DirectCast(orderPresenter.View, ucOrder)
             Dim customerPresenter = DependencyContainer.Resolve(Of CustomerPresenter)
             Dim customerView = DirectCast(customerPresenter.View, CustomerUserControl)
 
@@ -1409,7 +1411,7 @@
             Case Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5, Keys.F6, Keys.F7, Keys.F8
                 ' 僅在當前頁為「訂單管理」時處理
                 If TabControl1.SelectedTab Is tpOrder Then
-                    Dim ordCtrl = TryCast(tpOrder.Controls.OfType(Of OrderUserControl)().FirstOrDefault(), OrderUserControl)
+                    Dim ordCtrl = TryCast(tpOrder.Controls.OfType(Of ucOrder)().FirstOrDefault(), ucOrder)
                     If ordCtrl IsNot Nothing Then
                         ordCtrl.HandleShortcut(keyData)
                         Return True ' 已處理，避免系統預設響應
