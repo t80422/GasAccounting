@@ -749,14 +749,9 @@ Public Class OrderPresenter
     Private Sub Print(sender As Object, orderId As Integer)
         Dim templatePath As String = ""
         Dim pdfPath As String = ""
+
         Try
-            Dim stopWatch As New Stopwatch
-
-            stopWatch.Restart()
             Dim data = _ordRep.GetOrderVoucherData(orderId)
-            stopWatch.Stop()
-            _logger.LogInfo($"OrderPrint-取得資料時間: {stopWatch.ElapsedMilliseconds / 1000} 秒")
-
             templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
             Dim htmlContent = FillTemplate(templatePath, data)
             pdfPath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.pdf")
@@ -897,62 +892,65 @@ Public Class OrderPresenter
         Try
             Dim d As Date = tu.Item1
             Dim isMonth As Boolean = tu.Item2
+
             '蒐集資料
-            Dim datas = _reportRep.CustomersGasDetailByDay(d, isMonth)
+            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+                Dim datas = uow.ReportRepository.CustomersGasDetailByDay(d, isMonth)
 
-            '套版
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "氣量氣款收付明細表範本檔.xlsx")
+                '套版
+                Dim filePath = Path.Combine(Application.StartupPath, "Report", "氣量氣款收付明細表範本檔.xlsx")
 
-            Using xml As New CloseXML_Excel(filePath)
-                With xml
-                    .SelectWorksheet("Sheet1")
+                Using xml As New CloseXML_Excel(filePath)
+                    With xml
+                        .SelectWorksheet("Sheet1")
 
-                    If isMonth Then
-                        .WriteToCell(2, 1, $"{d:yyyy年MM月 氣量氣款收付明細表}")
-                    Else
-                        .WriteToCell(2, 1, $"{d:yyyy年MM月dd日 氣量氣款收付明細表}")
-                    End If
+                        If isMonth Then
+                            .WriteToCell(2, 1, $"{d:yyyy年MM月 氣量氣款收付明細表}")
+                        Else
+                            .WriteToCell(2, 1, $"{d:yyyy年MM月dd日 氣量氣款收付明細表}")
+                        End If
 
-                    .WriteToCell(3, 7, $"列印日期: {Now:yyyy/MM/dd}")
+                        .WriteToCell(3, 7, $"列印日期: {Now:yyyy/MM/dd}")
 
-                    Dim rowIndex As Integer
+                        Dim rowIndex As Integer
 
-                    Dim dataStyle = New CloseXML_Excel.CellFormatOptions With {
-                        .Horizontal = XLAlignmentHorizontalValues.Center
-                    }
+                        Dim dataStyle = New CloseXML_Excel.CellFormatOptions With {
+                            .Horizontal = XLAlignmentHorizontalValues.Center
+                        }
 
-                    For i As Integer = 0 To datas.Count - 1
-                        rowIndex = 5 + i
+                        For i As Integer = 0 To datas.Count - 1
+                            rowIndex = 5 + i
 
-                        .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
-                        .WriteToCell(rowIndex, 2, If(datas(i).存氣 <> Nothing, datas(i).存氣.ToString("#,##"), 0), dataStyle)
-                        .WriteToCell(rowIndex, 3, If(datas(i).本日提量 <> Nothing, datas(i).本日提量.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 4, If(datas(i).當月累計提量 <> Nothing, datas(i).當月累計提量.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 5, If(datas(i).本日氣款 <> Nothing, datas(i).本日氣款.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 6, If(datas(i).本日收款 <> Nothing, datas(i).本日收款.ToString("#,##"), "0"), dataStyle)
-                        .WriteToCell(rowIndex, 7, If(datas(i).結欠 <> Nothing, datas(i).結欠.ToString("#,##"), "0"), dataStyle)
-                    Next
+                            .WriteToCell(rowIndex, 1, datas(i).客戶名稱)
+                            .WriteToCell(rowIndex, 2, If(datas(i).存氣 <> Nothing, datas(i).存氣.ToString("#,##"), 0), dataStyle)
+                            .WriteToCell(rowIndex, 3, If(datas(i).本日提量 <> Nothing, datas(i).本日提量.ToString("#,##"), "0"), dataStyle)
+                            .WriteToCell(rowIndex, 4, If(datas(i).當月累計提量 <> Nothing, datas(i).當月累計提量.ToString("#,##"), "0"), dataStyle)
+                            .WriteToCell(rowIndex, 5, If(datas(i).本日氣款 <> Nothing, datas(i).本日氣款.ToString("#,##"), "0"), dataStyle)
+                            .WriteToCell(rowIndex, 6, If(datas(i).本日收款 <> Nothing, datas(i).本日收款.ToString("#,##"), "0"), dataStyle)
+                            .WriteToCell(rowIndex, 7, If(datas(i).結欠 <> Nothing, datas(i).結欠.ToString("#,##"), "0"), dataStyle)
+                        Next
 
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 7, bottomStyle:=XLBorderStyleValues.Thin)
+                        .SetCustomBorders(rowIndex, 1, rowIndex, 7, bottomStyle:=XLBorderStyleValues.Thin)
 
-                    rowIndex += 1
+                        rowIndex += 1
 
-                    .WriteToCell(rowIndex, 1, "合計:", dataStyle)
-                    .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.存氣).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.本日提量).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.當月累計提量).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.本日氣款).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.本日收款).ToString("#,##"), dataStyle)
-                    .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"), dataStyle)
+                        .WriteToCell(rowIndex, 1, "合計:", dataStyle)
+                        .WriteToCell(rowIndex, 2, datas.Sum(Function(x) x.存氣).ToString("#,##"), dataStyle)
+                        .WriteToCell(rowIndex, 3, datas.Sum(Function(x) x.本日提量).ToString("#,##"), dataStyle)
+                        .WriteToCell(rowIndex, 4, datas.Sum(Function(x) x.當月累計提量).ToString("#,##"), dataStyle)
+                        .WriteToCell(rowIndex, 5, datas.Sum(Function(x) x.本日氣款).ToString("#,##"), dataStyle)
+                        .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.本日收款).ToString("#,##"), dataStyle)
+                        .WriteToCell(rowIndex, 7, datas.Sum(Function(x) x.結欠).ToString("#,##"), dataStyle)
 
-                    '存檔
-                    If isMonth Then
-                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMM}")
-                    Else
-                        .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMMdd}")
-                    End If
+                        '存檔
+                        If isMonth Then
+                            .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMM}")
+                        Else
+                            .SaveExcel($"日氣量氣款收付明細表_{d:yyyyMMdd}")
+                        End If
 
-                End With
+                    End With
+                End Using
             End Using
         Catch ex As Exception
             MsgBox("產生氣量氣款收付明細表出現錯誤:" + ex.Message)

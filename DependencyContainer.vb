@@ -11,8 +11,10 @@ Public Class DependencyContainer
             ' 註冊 DbContext 為 Singleton（給舊的 Presenter 使用）
             .RegisterType(Of gas_accounting_systemEntities)(New ContainerControlledLifetimeManager())
 
-            ' 註冊 UnitOfWork（每次創建新的 Transient DbContext）
-            .RegisterType(Of IUnitOfWork, UnitOfWork)(New TransientLifetimeManager())
+            ' 註冊 UnitOfWork（使用工廠方法，每次創建新的 UnitOfWork 和 DbContext）
+            .RegisterFactory(Of IUnitOfWork)(
+                Function(container) New UnitOfWork()
+            )
 
             ' 註冊 Repository
             .RegisterType(Of IAccountingEntryRep, AccountingEntryRep)()
@@ -70,7 +72,7 @@ Public Class DependencyContainer
             .RegisterType(Of IChequePayView, ChequePayUserControl)
             .RegisterType(Of ICustomerView, CustomerUserControl)
             .RegisterType(Of IGasCheckoutView, GasCheckoutUserControl)
-            .RegisterType(Of IPurchaseView, GasPurchaseUserControl)
+            .RegisterType(Of IPurchaseView, ucPurchase)
             .RegisterType(Of IPurchaseBarrelView, PurchaseBarrelUserControl)()
             .RegisterType(Of IPaymentView, PaymentUserControl)()
             .RegisterType(Of IOrderView, ucOrder)

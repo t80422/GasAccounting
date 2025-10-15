@@ -23,6 +23,16 @@ Public Class UnitOfWork
     Private _chequePayRepository As IChequePayRep
     Private _reportRepository As IReportRep
 
+    ''' <summary>
+    ''' 預設建構子 - 給正式環境使用（自己創建新的 DbContext）
+    ''' </summary>
+    Public Sub New()
+        _context = New gas_accounting_systemEntities()
+    End Sub
+
+    ''' <summary>
+    ''' 參數建構子 - 給測試環境使用（注入 Mock DbContext）
+    ''' </summary>
     Public Sub New(context As gas_accounting_systemEntities)
         _context = context
     End Sub

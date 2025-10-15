@@ -97,7 +97,7 @@ Public Class frmMain
             Dim chequePayPresenter = DependencyContainer.Resolve(Of ChequePayPresenter)
             Dim chequePayVeiw = DirectCast(chequePayPresenter.View, ChequePayUserControl)
             Dim purchasePresenter = DependencyContainer.Resolve(Of PurchasePresenter)
-            Dim purchaseVeiw = DirectCast(purchasePresenter.View, GasPurchaseUserControl)
+            Dim purchaseVeiw = DirectCast(purchasePresenter.View, ucPurchase)
             Dim orderPresenter = DependencyContainer.Resolve(Of OrderPresenter)
             Dim orderView = DirectCast(orderPresenter.View, ucOrder)
             Dim customerPresenter = DependencyContainer.Resolve(Of CustomerPresenter)

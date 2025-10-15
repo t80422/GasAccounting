@@ -479,10 +479,10 @@
     <Compile Include="Forms\UserControl\GasCheckoutUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControl\GasPurchaseUserControl.Designer.vb">
-      <DependentUpon>GasPurchaseUserControl.vb</DependentUpon>
+    <Compile Include="Forms\UserControl\ucPurchase.Designer.vb">
+      <DependentUpon>ucPurchase.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControl\GasPurchaseUserControl.vb">
+    <Compile Include="Forms\UserControl\ucPurchase.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\UserControl\ucOrder.Designer.vb">
@@ -1004,8 +1004,8 @@
     <EmbeddedResource Include="Forms\UserControl\GasCheckoutUserControl.resx">
       <DependentUpon>GasCheckoutUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControl\GasPurchaseUserControl.resx">
-      <DependentUpon>GasPurchaseUserControl.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\UserControl\ucPurchase.resx">
+      <DependentUpon>ucPurchase.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\ucOrder.resx">
       <DependentUpon>ucOrder.vb</DependentUpon>

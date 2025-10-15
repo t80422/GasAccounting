@@ -1,5 +1,4 @@
 ﻿Imports System.Data.Entity
-Imports System.Data.Entity.Core.Mapping
 
 Public Class ReportRep
     Implements IReportRep
@@ -51,18 +50,25 @@ Public Class ReportRep
                 }).ToList()
 
             ' 一次性取得主要期間的收款資料（當日或當月）
-            Dim periodCollections = _context.collections.Where(Function(c) c.col_Date >= periodStart AndAlso c.col_Date < periodEnd).
-                Select(Function(c) New With {
-                    .客戶Id = c.col_cus_Id,
-                    .收款 = c.col_Amount
-                }).ToList()
+            Dim periodCollections = _context.collections.Where(Function(c) c.col_Date >= periodStart AndAlso
+                                                                           c.col_Date < periodEnd AndAlso
+                                                                           c.col_AccountMonth.Year = selectDate.Year AndAlso
+                                                                           c.col_AccountMonth.Month = selectDate.Month).
+                                                        Select(Function(c) New With {
+                                                            .客戶Id = c.col_cus_Id,
+                                                            .收款 = c.col_Amount
+                                                        }).ToList()
 
             ' 一次性取得當月收款資料（始終計算到選定期間結束）
-            Dim monthCollections = _context.collections.Where(Function(c) c.col_Date >= monthStart AndAlso c.col_Date < periodEnd AndAlso c.col_cus_Id.HasValue).
-                Select(Function(c) New With {
-                    .客戶Id = c.col_cus_Id,
-                    .收款 = c.col_Amount
-                }).ToList()
+            Dim monthCollections = _context.collections.Where(Function(c) c.col_Date >= monthStart AndAlso
+                                                                          c.col_Date < periodEnd AndAlso
+                                                                          c.col_cus_Id.HasValue AndAlso
+                                                                          c.col_AccountMonth.Year = selectDate.Year AndAlso
+                                                                          c.col_AccountMonth.Month = selectDate.Month).
+                                                        Select(Function(c) New With {
+                                                            .客戶Id = c.col_cus_Id,
+                                                            .收款 = c.col_Amount
+                                                        }).ToList()
 
             ' 將資料按客戶分組
             Dim periodOrdersByCustomer = periodOrders.GroupBy(Function(o) o.客戶Id).
@@ -98,7 +104,6 @@ Public Class ReportRep
 
             Return result
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
             Throw
         End Try
     End Function

@@ -1,6 +1,5 @@
 ﻿' 大氣採購
-
-Public Class GasPurchaseUserControl
+Public Class ucPurchase
     Implements IPurchaseView
 
     Public Event GasVenderSelected As EventHandler(Of Object) Implements IPurchaseView.GasVenderSelected

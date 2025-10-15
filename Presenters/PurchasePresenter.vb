@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 ''' <summary>
-''' 大氣採購 (使用 Unit of Work 模式 - 每次操作創建新的 UnitOfWork)
+''' 大氣採購
 ''' </summary>
 Public Class PurchasePresenter
 
@@ -18,8 +18,7 @@ Public Class PurchasePresenter
         End Get
     End Property
 
-    Public Sub New(view As IPurchaseView, gmbSer As IGasMonthlyBalanceService,
-                   aeSer As IAccountingEntryService, printerSer As IPrinterService, purchaseSer As IGasPurchaseService)
+    Public Sub New(view As IPurchaseView, gmbSer As IGasMonthlyBalanceService, aeSer As IAccountingEntryService, printerSer As IPrinterService, purchaseSer As IGasPurchaseService)
         _view = view
         _gmbSer = gmbSer
         _aeSer = aeSer
@@ -39,8 +38,8 @@ Public Class PurchasePresenter
     Private Async Sub Initialize()
         Try
             _view.ClearInput()
-            Await SetCompanyCmbAsync()
             Await SetGasVendorCmbAsync()
+            Await SetCompanyCmbAsync()
             Await SetDriveCompanyCmbAsync()
             currentData = Nothing
             Await LoadListAsync()
@@ -74,8 +73,7 @@ Public Class PurchasePresenter
                 Dim purchases = Await uow.PurchaseRepository.SearchPurchasesAsync(criteria)
 
                 If criteria IsNot Nothing Then
-                    ' 使用新版本的 Service 方法（傳入 Repository）
-                    Dim summary = _purchaseSer.GetPurchaseTradeSummary(uow.PaymentRepository, purchases.ToList, criteria)
+                    Dim summary = _purchaseSer.GetPurchaseTradeSummary(purchases.ToList, criteria)
                     _view.ShowGasUnpaidSummary(summary.Item1)
                     _view.ShowTransportationSummary(summary.Item2)
                 End If
