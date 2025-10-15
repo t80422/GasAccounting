@@ -12,7 +12,7 @@ Public Class PaymentUserControl
     Public Event CancelRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).CancelRequest
     Public Event SearchRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).SearchRequest
 
-    ' 互動
+    ' === 介面 ===
     Public Sub PopulateVendorDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateVendorDropdown
         SetComboBox(cmbManu_payment, data)
     End Sub
@@ -52,7 +52,13 @@ Public Class PaymentUserControl
     End Sub
 
     Public Function GetSearchCriteria() As PaymentSearchCriteria Implements IPaymentView.GetSearchCriteria
-        Return Nothing
+        Using frm As New frmSearch_Payment
+            If frm.ShowDialog() = DialogResult.OK Then
+                Return frm.Criteria
+            Else
+                Return Nothing
+            End If
+        End Using
     End Function
 
     Public Function GetInput(ByRef model As payment) As Boolean Implements IFormView(Of payment, PaymentListVM).GetInput
@@ -89,7 +95,7 @@ Public Class PaymentUserControl
         SetButtonState(Me, isSelectedRow)
     End Sub
 
-    ' 事件
+    ' === 事件 ===
     Private Sub PaymentUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel_payment.PerformClick()
         ReadDataGridWidth(dgvPayment)
@@ -152,7 +158,11 @@ Public Class PaymentUserControl
         ControlColumns()
     End Sub
 
-    ' 方法
+    Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
+        RaiseEvent SearchRequest(sender, e)
+    End Sub
+
+    ' === 方法 ===
     Private Sub ControlColumns()
         Dim paymentType As String = cmbPayType.Text
         Dim debitType As String = cmbSubjects_payment.Text

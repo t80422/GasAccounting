@@ -1,7 +1,7 @@
 ﻿Public Interface IPaymentRep
     Inherits IRepository(Of payment)
 
-    Function SearchPaymentAsync(criteria As PaymentSearchCriteria) As Task(Of IEnumerable(Of payment))
+    Function SearchPaymentAsync(Optional criteria As PaymentSearchCriteria = Nothing) As Task(Of IEnumerable(Of payment))
 
     ''' <summary>
     ''' 使用查詢條件與廠商編號取得資料

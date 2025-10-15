@@ -419,6 +419,12 @@
     <Compile Include="Forms\Search\frmSearch_Order.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Search\frmSearch_Payment.Designer.vb">
+      <DependentUpon>frmSearch_Payment.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Search\frmSearch_Payment.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Search\Search_GasPurchase.Designer.vb">
       <DependentUpon>Search_GasPurchase.vb</DependentUpon>
     </Compile>
@@ -970,6 +976,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Search\frmSearch_Order.resx">
       <DependentUpon>frmSearch_Order.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Search\frmSearch_Payment.resx">
+      <DependentUpon>frmSearch_Payment.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Search\Search_GasPurchase.resx">
       <DependentUpon>Search_GasPurchase.vb</DependentUpon>

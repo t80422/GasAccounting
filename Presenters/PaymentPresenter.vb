@@ -45,6 +45,7 @@
         AddHandler _view.PrintRequested, AddressOf Print
         AddHandler _view.ManufacturerSelected, AddressOf ManufacturerSelected
         AddHandler _view.CompanySelected, AddressOf LoadBankDropdown
+        AddHandler _view.SearchRequest, AddressOf Search
     End Sub
 
     Private Sub Initialize()
@@ -64,13 +65,12 @@
         End Try
     End Sub
 
-    Private Sub LoadList()
+    Private Sub LoadList(Optional criteria As PaymentSearchCriteria = Nothing)
         Try
-            Dim criteria = _view.GetSearchCriteria
             Dim payments = _paymentRep.SearchPaymentAsync(criteria).Result
             _view.ShowList(payments.Select(Function(x) New PaymentListVM(x)).ToList)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
@@ -344,4 +344,13 @@
 
         Return entries
     End Function
+
+    Private Sub Search()
+        Try
+            Dim criteria = _view.GetSearchCriteria
+            LoadList(criteria)
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
 End Class

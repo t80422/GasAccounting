@@ -50,7 +50,7 @@ Partial Class PaymentUserControl
         Me.dtpPayment = New System.Windows.Forms.DateTimePicker()
         Me.cmbPayType = New System.Windows.Forms.ComboBox()
         Me.dgvPayment = New System.Windows.Forms.DataGridView()
-        Me.btnQuery_payment = New System.Windows.Forms.Button()
+        Me.btnSearch = New System.Windows.Forms.Button()
         Me.btnCancel_payment = New System.Windows.Forms.Button()
         Me.btnDelete_payment = New System.Windows.Forms.Button()
         Me.btnEdit_payment = New System.Windows.Forms.Button()
@@ -349,15 +349,15 @@ Partial Class PaymentUserControl
         Me.dgvPayment.Size = New System.Drawing.Size(1862, 640)
         Me.dgvPayment.TabIndex = 471
         '
-        'btnQuery_payment
+        'btnSearch
         '
-        Me.btnQuery_payment.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_payment.Location = New System.Drawing.Point(793, 227)
-        Me.btnQuery_payment.Name = "btnQuery_payment"
-        Me.btnQuery_payment.Size = New System.Drawing.Size(140, 44)
-        Me.btnQuery_payment.TabIndex = 470
-        Me.btnQuery_payment.Text = "查  詢"
-        Me.btnQuery_payment.UseVisualStyleBackColor = False
+        Me.btnSearch.BackColor = System.Drawing.Color.Lime
+        Me.btnSearch.Location = New System.Drawing.Point(793, 227)
+        Me.btnSearch.Name = "btnSearch"
+        Me.btnSearch.Size = New System.Drawing.Size(140, 44)
+        Me.btnSearch.TabIndex = 470
+        Me.btnSearch.Text = "查  詢"
+        Me.btnSearch.UseVisualStyleBackColor = False
         '
         'btnCancel_payment
         '
@@ -503,7 +503,7 @@ Partial Class PaymentUserControl
         Me.Controls.Add(Me.dtpPayment)
         Me.Controls.Add(Me.cmbPayType)
         Me.Controls.Add(Me.dgvPayment)
-        Me.Controls.Add(Me.btnQuery_payment)
+        Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.btnCancel_payment)
         Me.Controls.Add(Me.btnDelete_payment)
         Me.Controls.Add(Me.btnEdit_payment)
@@ -553,7 +553,7 @@ Partial Class PaymentUserControl
     Friend WithEvents dtpPayment As DateTimePicker
     Friend WithEvents cmbPayType As ComboBox
     Friend WithEvents dgvPayment As DataGridView
-    Friend WithEvents btnQuery_payment As Button
+    Friend WithEvents btnSearch As Button
     Friend WithEvents btnCancel_payment As Button
     Friend WithEvents btnDelete_payment As Button
     Friend WithEvents btnEdit_payment As Button

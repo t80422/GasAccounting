@@ -8,7 +8,7 @@ Public Class PaymentRep
         MyBase.New(context)
     End Sub
 
-    Public Async Function SearchPaymentAsync(criteria As PaymentSearchCriteria) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.SearchPaymentAsync
+    Public Async Function SearchPaymentAsync(Optional criteria As PaymentSearchCriteria = Nothing) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.SearchPaymentAsync
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
 
