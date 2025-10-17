@@ -31,12 +31,14 @@ Partial Class Search_Cheque
         Me.cmbStatus = New System.Windows.Forms.ComboBox()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.chkStatus = New System.Windows.Forms.CheckBox()
+        Me.cmbBank = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 17)
+        Me.Label1.Location = New System.Drawing.Point(14, 18)
         Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(55, 16)
@@ -45,22 +47,22 @@ Partial Class Search_Cheque
         '
         'dtpStart
         '
-        Me.dtpStart.Location = New System.Drawing.Point(75, 12)
+        Me.dtpStart.Location = New System.Drawing.Point(76, 13)
         Me.dtpStart.Name = "dtpStart"
-        Me.dtpStart.Size = New System.Drawing.Size(150, 27)
+        Me.dtpStart.Size = New System.Drawing.Size(134, 27)
         Me.dtpStart.TabIndex = 1
         '
         'dtpEnd
         '
-        Me.dtpEnd.Location = New System.Drawing.Point(294, 12)
+        Me.dtpEnd.Location = New System.Drawing.Point(279, 13)
         Me.dtpEnd.Name = "dtpEnd"
-        Me.dtpEnd.Size = New System.Drawing.Size(150, 27)
+        Me.dtpEnd.Size = New System.Drawing.Size(134, 27)
         Me.dtpEnd.TabIndex = 3
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(232, 17)
+        Me.Label2.Location = New System.Drawing.Point(217, 18)
         Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(55, 16)
@@ -70,7 +72,7 @@ Partial Class Search_Cheque
         'chkDate
         '
         Me.chkDate.AutoSize = True
-        Me.chkDate.Location = New System.Drawing.Point(450, 15)
+        Me.chkDate.Location = New System.Drawing.Point(419, 16)
         Me.chkDate.Name = "chkDate"
         Me.chkDate.Size = New System.Drawing.Size(122, 20)
         Me.chkDate.TabIndex = 4
@@ -80,7 +82,7 @@ Partial Class Search_Cheque
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(13, 59)
+        Me.Label3.Location = New System.Drawing.Point(14, 60)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(39, 16)
         Me.Label3.TabIndex = 5
@@ -90,17 +92,17 @@ Partial Class Search_Cheque
         '
         Me.cmbStatus.FormattingEnabled = True
         Me.cmbStatus.Items.AddRange(New Object() {"已代收", "已兌現"})
-        Me.cmbStatus.Location = New System.Drawing.Point(75, 55)
+        Me.cmbStatus.Location = New System.Drawing.Point(76, 56)
         Me.cmbStatus.Name = "cmbStatus"
-        Me.cmbStatus.Size = New System.Drawing.Size(150, 24)
+        Me.cmbStatus.Size = New System.Drawing.Size(134, 24)
         Me.cmbStatus.TabIndex = 6
         '
         'btnOK
         '
         Me.btnOK.BackColor = System.Drawing.Color.Lime
-        Me.btnOK.Location = New System.Drawing.Point(497, 55)
+        Me.btnOK.Location = New System.Drawing.Point(442, 55)
         Me.btnOK.Name = "btnOK"
-        Me.btnOK.Size = New System.Drawing.Size(75, 25)
+        Me.btnOK.Size = New System.Drawing.Size(67, 25)
         Me.btnOK.TabIndex = 7
         Me.btnOK.Text = "OK"
         Me.btnOK.UseVisualStyleBackColor = False
@@ -108,18 +110,38 @@ Partial Class Search_Cheque
         'chkStatus
         '
         Me.chkStatus.AutoSize = True
-        Me.chkStatus.Location = New System.Drawing.Point(231, 57)
+        Me.chkStatus.Location = New System.Drawing.Point(216, 58)
         Me.chkStatus.Name = "chkStatus"
         Me.chkStatus.Size = New System.Drawing.Size(122, 20)
         Me.chkStatus.TabIndex = 8
         Me.chkStatus.Text = "使用狀態查詢"
         Me.chkStatus.UseVisualStyleBackColor = True
         '
+        'cmbBank
+        '
+        Me.cmbBank.FormattingEnabled = True
+        Me.cmbBank.Items.AddRange(New Object() {"已代收", "已兌現"})
+        Me.cmbBank.Location = New System.Drawing.Point(76, 96)
+        Me.cmbBank.Name = "cmbBank"
+        Me.cmbBank.Size = New System.Drawing.Size(337, 24)
+        Me.cmbBank.TabIndex = 10
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(14, 99)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(39, 16)
+        Me.Label4.TabIndex = 9
+        Me.Label4.Text = "銀行"
+        '
         'Search_Cheque
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 16.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(582, 92)
+        Me.ClientSize = New System.Drawing.Size(547, 137)
+        Me.Controls.Add(Me.cmbBank)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.chkStatus)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.cmbStatus)
@@ -129,11 +151,13 @@ Partial Class Search_Cheque
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.dtpStart)
         Me.Controls.Add(Me.Label1)
-        Me.Font = New System.Drawing.Font("新細明體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False
         Me.Name = "Search_Cheque"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Padding = New System.Windows.Forms.Padding(10)
+        Me.ShowIcon = False
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "支票管理查詢"
         Me.TopMost = True
         Me.ResumeLayout(False)
@@ -150,4 +174,6 @@ Partial Class Search_Cheque
     Friend WithEvents cmbStatus As ComboBox
     Friend WithEvents btnOK As Button
     Friend WithEvents chkStatus As CheckBox
+    Friend WithEvents cmbBank As ComboBox
+    Friend WithEvents Label4 As Label
 End Class

@@ -425,6 +425,12 @@
     <Compile Include="Forms\Search\frmSearch_Payment.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Search\Search_ChequePay.Designer.vb">
+      <DependentUpon>Search_ChequePay.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Search\Search_ChequePay.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Search\Search_GasPurchase.Designer.vb">
       <DependentUpon>Search_GasPurchase.vb</DependentUpon>
     </Compile>
@@ -437,16 +443,16 @@
     <Compile Include="Forms\UserControl\BasicSetUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControl\ChequePayUserControl.Designer.vb">
-      <DependentUpon>ChequePayUserControl.vb</DependentUpon>
+    <Compile Include="Forms\UserControl\ucChequePay.Designer.vb">
+      <DependentUpon>ucChequePay.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControl\ChequePayUserControl.vb">
+    <Compile Include="Forms\UserControl\ucChequePay.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControl\Cheque_colUserControl.Designer.vb">
-      <DependentUpon>Cheque_colUserControl.vb</DependentUpon>
+    <Compile Include="Forms\UserControl\ucCheque_col.Designer.vb">
+      <DependentUpon>ucCheque_col.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControl\Cheque_colUserControl.vb">
+    <Compile Include="Forms\UserControl\ucCheque_col.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\UserControl\CollectionUserControl.Designer.vb">
@@ -980,17 +986,20 @@
     <EmbeddedResource Include="Forms\Search\frmSearch_Payment.resx">
       <DependentUpon>frmSearch_Payment.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Search\Search_ChequePay.resx">
+      <DependentUpon>Search_ChequePay.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Search\Search_GasPurchase.resx">
       <DependentUpon>Search_GasPurchase.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\BasicSetUserControl.resx">
       <DependentUpon>BasicSetUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControl\ChequePayUserControl.resx">
-      <DependentUpon>ChequePayUserControl.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\UserControl\ucChequePay.resx">
+      <DependentUpon>ucChequePay.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControl\Cheque_colUserControl.resx">
-      <DependentUpon>Cheque_colUserControl.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\UserControl\ucCheque_col.resx">
+      <DependentUpon>ucCheque_col.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\CollectionUserControl.resx">
       <DependentUpon>CollectionUserControl.vb</DependentUpon>

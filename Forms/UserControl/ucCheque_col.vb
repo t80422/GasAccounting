@@ -1,18 +1,20 @@
 ﻿''' <summary>
 ''' 會計管理-應收支票管理
 ''' </summary>
-Public Class Cheque_colUserControl
+Public Class ucCheque_col
     Implements ICheque
 
-    Private _presenter As ChequePresenter
+    Public Event CreateRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).CreateRequest
+    Public Event DataSelectedRequest As EventHandler(Of Integer) Implements IFormView(Of cheque, ChequeVM).DataSelectedRequest
+    Public Event UpdateRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).UpdateRequest
+    Public Event DeleteRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).DeleteRequest
+    Public Event CancelRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).CancelRequest
+    Public Event SearchRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).SearchRequest
+    Public Event SetBatchStatusRequest As EventHandler(Of Boolean) Implements ICheque.SetBatchStatusRequest
+    Public Event PrintRequest As EventHandler(Of List(Of ChequeVM)) Implements ICheque.PrintRequest
 
-    Public Sub New(presenter As ChequePresenter)
-        InitializeComponent()
-        _presenter = presenter
-        _presenter.SetView(Me)
-    End Sub
-
-    Public Sub ShowList(data As List(Of ChequeVM)) Implements ICommonView_old(Of cheque, ChequeVM).ShowList
+    ' === 介面 ===
+    Private Sub ShowList(data As List(Of ChequeVM)) Implements IFormView(Of cheque, ChequeVM).ShowList
         '檢查是否有chk
         Dim chkColName = "ChkCol"
 
@@ -38,39 +40,51 @@ Public Class Cheque_colUserControl
         Next
     End Sub
 
-    Public Sub SetDataToControl(data As cheque) Implements ICommonView_old(Of cheque, ChequeVM).SetDataToControl
+    Public Sub ShowDetail(data As cheque) Implements IFormView(Of cheque, ChequeVM).ShowDetail
         AutoMapEntityToControls(data, Me)
     End Sub
 
-    Public Sub ClearInput() Implements ICommonView_old(Of cheque, ChequeVM).ClearInput
+    Private Sub ClearInput() Implements IFormView(Of cheque, ChequeVM).ClearInput
         ClearControls(Me)
     End Sub
 
-    Public Function GetUserInput() As cheque Implements ICommonView_old(Of cheque, ChequeVM).GetUserInput
-        Dim data As New cheque
-        AutoMapControlsToEntity(data, Me)
-        Return data
+    Public Function GetInput(ByRef model As cheque) As Boolean Implements IFormView(Of cheque, ChequeVM).GetInput
+        AutoMapControlsToEntity(model, Me)
+        Return True
     End Function
 
-    Public Function SetRequired() As List(Of Control) Implements ICommonView_old(Of cheque, ChequeVM).SetRequired
-        Return Nothing
+    Public Sub ButtonStatus(isSelectedRow As Boolean) Implements IFormView(Of cheque, ChequeVM).ButtonStatus
+        SetButtonState(Me, isSelectedRow)
+    End Sub
+
+    Public Function GetSearchCriteria() As ChequeSC Implements ICheque.GetSearchCriteria
+        Using frm As New Search_Cheque
+            If frm.ShowDialog = DialogResult.OK Then
+                Return frm.Criteria
+            Else
+                Return Nothing
+            End If
+        End Using
     End Function
 
+    Public Function GetSelectedIds() As List(Of Integer) Implements ICheque.GetSelectedIds
+        Return dgvCheque.Rows.Cast(Of DataGridViewRow).
+                Where(Function(x) Convert.ToBoolean(x.Cells("ChkCol").Value)).
+                Select(Function(x) CInt(x.Cells("編號").Value)).ToList
+    End Function
+
+    ' === 事件 ===
     ' 取消
     Private Sub btnCancel_Che_Click(sender As Object, e As EventArgs) Handles btnCancel_Che.Click
-        ClearControls(Me)
-        _presenter.LoadList()
+        RaiseEvent CancelRequest(sender, EventArgs.Empty)
     End Sub
 
     ' dgv
     Private Sub dgvCheque_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCheque.SelectionChanged, dgvCheque.CellMouseClick
         Dim ctrl As DataGridView = sender
         If Not ctrl.Focused Or ctrl.SelectedRows.Count = 0 Then Return
-
-        SetButtonState_old(ctrl, False)
-
         Dim id = ctrl.SelectedRows(0).Cells(1).Value
-        _presenter.SelectRow(id)
+        RaiseEvent DataSelectedRequest(sender, id)
     End Sub
 
     ' 狀態
@@ -88,11 +102,7 @@ Public Class Cheque_colUserControl
 
     ' 查詢
     Private Sub btnQuery_che_Click(sender As Object, e As EventArgs) Handles btnQuery_che.Click
-        Using frm As New Search_Cheque
-            If frm.ShowDialog = DialogResult.OK Then
-                _presenter.LoadList(frm.Criteria)
-            End If
-        End Using
+        RaiseEvent SearchRequest(sender, e)
     End Sub
 
     ' 全選
@@ -106,40 +116,22 @@ Public Class Cheque_colUserControl
 
     ' 轉為已代收
     Private Sub btnChange_Click(sender As Object, e As EventArgs) Handles btnChange.Click
-        Dim selectedIds = GetSelectedChequeIds()
-        If selectedIds.Count = 0 Then
-            MsgBox("請至少選擇一個對象")
-            Return
-        End If
-        _presenter.SetBatchStatus(selectedIds, dtpCollectionDate.Value.Date, True)
-    End Sub
-
-    ''' <summary>
-    ''' 取得勾選的Id
-    ''' </summary>
-    ''' <returns></returns>
-    Private Function GetSelectedChequeIds() As List(Of Integer)
-        Return dgvCheque.Rows.Cast(Of DataGridViewRow).
-                Where(Function(x) Convert.ToBoolean(x.Cells("ChkCol").Value)).
-                Select(Function(x) CInt(x.Cells("編號").Value)).ToList
-    End Function
-
-    ' 列印
-    Private Sub btnPrint_cheque_Click(sender As Object, e As EventArgs) Handles btnPrint_cheque.Click
-        _presenter.Print(dgvCheque.DataSource)
-    End Sub
-
-    Private Sub Cheque_colUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        btnCancel_Che.PerformClick()
+        RaiseEvent SetBatchStatusRequest(sender, True)
     End Sub
 
     ' 轉為已兌現
     Private Sub btnRedeemed_Click(sender As Object, e As EventArgs) Handles btnRedeemed.Click
-        Dim selectedIds = GetSelectedChequeIds()
-        If selectedIds.Count = 0 Then
-            MsgBox("請至少選擇一個對象")
-            Return
-        End If
-        _presenter.SetBatchStatus(selectedIds, dtpCashingDate.Value.Date, False)
+        RaiseEvent SetBatchStatusRequest(sender, False)
+    End Sub
+
+    ' 列印
+    Private Sub btnPrint_cheque_Click(sender As Object, e As EventArgs) Handles btnPrint_cheque.Click
+        Cursor = Cursors.WaitCursor
+        RaiseEvent PrintRequest(sender, dgvCheque.DataSource)
+        Cursor = Cursors.Default
+    End Sub
+
+    Private Sub Cheque_colUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        btnCancel_Che.PerformClick()
     End Sub
 End Class

@@ -23,12 +23,12 @@ Public Class ChequePayPresenter
     End Sub
 
     Private Sub OnLoaded(sender As Object, e As EventArgs)
-        LoadAllAsync()
+        LoadList()
     End Sub
 
     Private Sub OnCancelClicked(sender As Object, e As EventArgs)
         _view.ClearInput()
-        LoadAllAsync()
+        LoadList()
     End Sub
 
     Private Sub OnSearchClicked(sender As Object, e As EventArgs)
@@ -54,9 +54,9 @@ Public Class ChequePayPresenter
         End Try
     End Sub
 
-    Private Sub LoadAllAsync()
+    Private Sub LoadList(Optional criteria As ChequeSC = Nothing)
         Try
-            Dim items = _rep.GetList
+            Dim items = _rep.GetList(criteria)
             _view.DisplayList(items)
         Catch ex As Exception
             MessageBox.Show(ex.Message)

@@ -95,7 +95,9 @@ Public Class frmMain
             Dim gasCheckoutPresenter = DependencyContainer.Resolve(Of GasCheckoutPresenter)
             Dim gasCheckoutView = DirectCast(gasCheckoutPresenter.View, GasCheckoutUserControl)
             Dim chequePayPresenter = DependencyContainer.Resolve(Of ChequePayPresenter)
-            Dim chequePayVeiw = DirectCast(chequePayPresenter.View, ChequePayUserControl)
+            Dim chequePayVeiw = DirectCast(chequePayPresenter.View, ucChequePay)
+            Dim chequeColPresenter = DependencyContainer.Resolve(Of ChequePresenter)
+            Dim chequeColView = DirectCast(chequeColPresenter.View, ucCheque_col)
             Dim purchasePresenter = DependencyContainer.Resolve(Of PurchasePresenter)
             Dim purchaseVeiw = DirectCast(purchasePresenter.View, ucPurchase)
             Dim orderPresenter = DependencyContainer.Resolve(Of OrderPresenter)
@@ -113,7 +115,7 @@ Public Class frmMain
                 {tpPayment, paymentView},
                 {tpCollection, DependencyContainer.Resolve(Of CollectionUserControl)},
                 {tpScrapBarrel, DependencyContainer.Resolve(Of ScrapBarrelUserControl)},
-                {tpCheque_col, DependencyContainer.Resolve(Of Cheque_colUserControl)},
+                {tpCheque_col, chequeColView},
                 {tpChequePay, chequePayVeiw},
                 {tpCompany, DependencyContainer.Resolve(Of CompanyUserControl)},
                 {tpSurplusGas, DependencyContainer.Resolve(Of SurplusGasUserControl)},

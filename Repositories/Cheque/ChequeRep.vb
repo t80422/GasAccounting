@@ -22,46 +22,6 @@ Public Class ChequeRep
         End Try
     End Sub
 
-    Public Function GetState(cheNum As String) As String Implements IChequeRep.GetState
-        Try
-            Using db As New gas_accounting_systemEntities
-                Dim che = db.cheques.FirstOrDefault(Function(x) x.che_Number = cheNum)
-                If che IsNot Nothing Then Return che.chu_State
-            End Using
-        Catch ex As Exception
-            Throw
-        End Try
-
-        Return Nothing
-    End Function
-
-    Public Function Query(startDate As Date, endDate As Date, Optional filter As cheque = Nothing) As List(Of ChequeVM) Implements IChequeRep.Query
-        Try
-            Using db As New gas_accounting_systemEntities
-                Dim start = startDate.Date
-                Dim endd = endDate.Date.AddDays(1).AddSeconds(-1)
-                Dim result As List(Of cheque)
-                ' 先執行查詢取得數據
-                Dim cheques = db.cheques.Where(Function(x) x.che_ReceivedDate >= start AndAlso x.che_ReceivedDate <= endd)
-
-                If filter IsNot Nothing Then
-                    If Not String.IsNullOrEmpty(filter.chu_State) Then
-                        cheques = cheques.Where(Function(x) x.chu_State = filter.chu_State)
-                    End If
-                End If
-
-                result = cheques.ToList
-
-                ' 然後在內存中轉換數據到 ViewModel
-                Return result.Select(Function(x) New ChequeVM(x)).ToList()
-            End Using
-        Catch ex As Exception
-            MsgBox(ex.StackTrace)
-            Console.WriteLine(ex.Message)
-            Return New List(Of ChequeVM)
-        End Try
-    End Function
-
     Public Async Function UpdateCollectionStatusAsync(chequeIds As List(Of Integer), collectionDate As Date) As Task Implements IChequeRep.UpdateCollectionStatusAsync
         Try
             Dim cheques = Await _dbSet.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = Nothing).ToListAsync
@@ -83,6 +43,24 @@ Public Class ChequeRep
             Return Await _dbSet.FirstOrDefaultAsync(Function(x) x.che_Number = chequeNum)
         Catch ex As Exception
             Throw New Exception("ChequeRep.GetByNumberAsync發生錯誤", ex)
+        End Try
+    End Function
+
+    Public Function GetList(Optional criteria As ChequeSC = Nothing) As List(Of cheque) Implements IChequeRep.GetList
+        Try
+            Dim query = _dbSet.AsNoTracking
+
+            If criteria IsNot Nothing Then
+                If criteria.IsDate Then query = query.Where(Function(x) x.che_ReceivedDate >= criteria.StartDate AndAlso x.che_ReceivedDate < criteria.EndDate)
+                If criteria.IsStatus Then query = query.Where(Function(x) x.chu_State = criteria.Status)
+                If criteria.BankId.HasValue Then query = query.Where(Function(x) x.collection.col_bank_Id = criteria.BankId)
+            Else
+                query = query.Where(Function(x) x.chu_State <> "已兌現")
+            End If
+
+            Return query.OrderByDescending(Function(x) x.che_Id).ToList
+        Catch ex As Exception
+            Throw
         End Try
     End Function
 End Class

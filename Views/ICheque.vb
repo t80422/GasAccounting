@@ -1,3 +1,10 @@
 ﻿Public Interface ICheque
-    Inherits ICommonView_old(Of cheque, ChequeVM)
+    Inherits IFormView(Of cheque, ChequeVM)
+
+    Event SetBatchStatusRequest As EventHandler(Of Boolean)
+    Event PrintRequest As EventHandler(Of List(Of ChequeVM))
+
+    Function GetSearchCriteria() As ChequeSC
+
+    Function GetSelectedIds() As List(Of Integer)
 End Interface

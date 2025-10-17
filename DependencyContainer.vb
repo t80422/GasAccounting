@@ -69,13 +69,14 @@ Public Class DependencyContainer
             )
 
             ' 註冊 View
-            .RegisterType(Of IChequePayView, ChequePayUserControl)
+            .RegisterType(Of IChequePayView, ucChequePay)
             .RegisterType(Of ICustomerView, CustomerUserControl)
             .RegisterType(Of IGasCheckoutView, GasCheckoutUserControl)
             .RegisterType(Of IPurchaseView, ucPurchase)
-            .RegisterType(Of IPurchaseBarrelView, PurchaseBarrelUserControl)()
-            .RegisterType(Of IPaymentView, PaymentUserControl)()
+            .RegisterType(Of IPurchaseBarrelView, PurchaseBarrelUserControl)
+            .RegisterType(Of IPaymentView, PaymentUserControl)
             .RegisterType(Of IOrderView, ucOrder)
+            .RegisterType(Of ICheque, ucCheque_col)
 
             ' 註冊 Presenter
             .RegisterType(Of ChequePayPresenter)
@@ -90,7 +91,7 @@ Public Class DependencyContainer
             .RegisterType(Of CollectionPresenter)()
             .RegisterType(Of ScrapBarrelPresenter)
             .RegisterType(Of ScrapBarrelDetailPresenter)
-            .RegisterType(Of ChequePresenter)()
+            .RegisterType(Of ChequePresenter)
         End With
     End Sub
 

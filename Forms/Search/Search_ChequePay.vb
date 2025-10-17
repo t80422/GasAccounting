@@ -1,5 +1,12 @@
-﻿Public Class Search_Cheque
+﻿Public Class Search_ChequePay
     Public Criteria As New ChequeSC
+    Private Sub Search_ChequePay_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Using db As New gas_accounting_systemEntities
+            Dim compRep As New CompanyRep(db)
+            Dim companise = compRep.GetCompanyDropdownAsync().Result
+            SetComboBox(cmbCompany, companise)
+        End Using
+    End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         With Criteria
@@ -8,17 +15,9 @@
             .IsDate = chkDate.Checked
             .Status = cmbStatus.SelectedItem
             .IsStatus = chkStatus.Checked
-            .BankId = cmbBank.SelectedValue
+            .CompanyId = cmbCompany.SelectedValue
         End With
 
         DialogResult = DialogResult.OK
-    End Sub
-
-    Private Sub Search_Cheque_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Using db As New gas_accounting_systemEntities
-            Dim bankRep As New BankRep(db)
-            Dim banks = bankRep.GetBankDropdownAsync().Result
-            SetComboBox(cmbBank, banks)
-        End Using
     End Sub
 End Class

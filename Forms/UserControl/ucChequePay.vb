@@ -1,7 +1,7 @@
 ﻿''' <summary>
 ''' 會計管理-應付票據管理
 ''' </summary>
-Public Class ChequePayUserControl
+Public Class ucChequePay
 	Implements IChequePayView
 
 	' IChequePayView 事件
@@ -40,7 +40,17 @@ Public Class ChequePayUserControl
 		Return dgvCheque.DataSource
 	End Function
 
-	' UI 事件 → View 事件
+	Public Function GetSearchCriteria() As ChequeSC Implements IChequePayView.GetSearchCriteria
+		Using frm As New Search_ChequePay
+			If frm.ShowDialog() = DialogResult.OK Then
+				Return frm.Criteria
+			Else
+				Return Nothing
+			End If
+		End Using
+	End Function
+
+	' UI 事件
 	Private Sub ChequePayUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		RaiseEvent Loaded(Me, EventArgs.Empty)
 	End Sub
@@ -61,16 +71,6 @@ Public Class ChequePayUserControl
 			RaiseEvent RowSelected(Me, vm.編號)
 		End If
 	End Sub
-
-	Public Function GetSearchCriteria() As ChequeSC Implements IChequePayView.GetSearchCriteria
-		Using frm As New Search_Cheque
-			If frm.ShowDialog() = DialogResult.OK Then
-				Return frm.Criteria
-			Else
-				Return Nothing
-			End If
-		End Using
-	End Function
 
 	Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
 		RaiseEvent PrintClicked(Me, EventArgs.Empty)
