@@ -1,5 +1,5 @@
 ﻿Public Class CarVM
-    Inherits GasBarrelQtyDTO
+    Inherits GasBarrelQtyVM
     Public Property 編號 As Integer
     Public Property 客戶名稱 As String
     Public Property 車號 As String

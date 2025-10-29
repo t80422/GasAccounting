@@ -113,6 +113,17 @@ Partial Public Class order
     Public Property o_barrel_unit_price_2 As Nullable(Of Integer)
     Public Property o_UnpaidAmount As Integer
     Public Property o_insurance_unit_price As Nullable(Of Single)
+    Public Property o_cus_50 As Integer
+    Public Property o_cus_20 As Integer
+    Public Property o_cus_16 As Integer
+    Public Property o_cus_10 As Integer
+    Public Property o_cus_4 As Integer
+    Public Property o_cus_18 As Integer
+    Public Property o_cus_14 As Integer
+    Public Property o_cus_5 As Integer
+    Public Property o_cus_2 As Integer
+    Public Property o_create_at As Date
+    Public Property o_update_at As Nullable(Of Date)
 
     Public Overridable Property car As car
     Public Overridable Property car1 As car

@@ -16,14 +16,34 @@
     Event CustomersGasDetailRequest As EventHandler(Of Tuple(Of Date, Boolean))
     Event CusGetGasListRequest As EventHandler(Of Tuple(Of Date, Boolean))
 
+    ''' <summary>
+    ''' 顯示客戶資訊
+    ''' </summary>
+    ''' <param name="data"></param>
     Sub ShowCustomer(data As customer)
 
+    ''' <summary>
+    ''' 顯示單價
+    ''' </summary>
+    ''' <param name="data"></param>
     Sub ShowUnitPrice(data As order)
 
+    ''' <summary>
+    ''' 顯示瓦斯桶價格
+    ''' </summary>
+    ''' <param name="price"></param>
     Sub ShowBarrelPrice(price As Integer)
 
+    ''' <summary>
+    ''' 顯示進場寄瓶
+    ''' </summary>
+    ''' <param name="data"></param>
     Sub ShowCarBarrelStock_In(data As car)
 
+    ''' <summary>
+    ''' 顯示出場寄瓶
+    ''' </summary>
+    ''' <param name="data"></param>
     Sub ShowCarBarrelStock_Out(data As car)
 
     Sub ShowTotalAmount(data As Integer)
@@ -35,6 +55,10 @@
     ''' </summary>
     ''' <param name="data">總普氣,總丙氣</param>
     Sub ShowGasAmount(data As Tuple(Of Integer, Integer))
+
+    Sub ShowOrderDetail(data As order)
+
+    Sub ShowCusBarrelStock(data As order)
 
     Sub DisplayList(data As IEnumerable(Of Object))
 

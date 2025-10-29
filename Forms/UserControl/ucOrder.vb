@@ -57,8 +57,6 @@ Public Class ucOrder
     Public Sub ShowCustomer(data As customer) Implements IOrderView.ShowCustomer
         AutoMapEntityToControls(data, Me)
         txtCusID.Text = data.cus_id
-        AutoMapEntityToControls(data, tpOut)
-        AutoMapEntityToControls(data, tpIn)
         If rdoPickUp.Checked Then RaiseEvent TransportTypeSelected(Nothing, rdoPickUp.Text)
         dtpOrder.Focus()
     End Sub
@@ -173,6 +171,36 @@ Public Class ucOrder
 
         Return Nothing
     End Function
+
+    Public Sub ShowOrderDetail(data As order) Implements IOrderView.ShowOrderDetail
+        AutoMapEntityToControls(data, tpIn)
+        AutoMapEntityToControls(data, tpOut)
+    End Sub
+
+    Public Sub ShowCusBarrelStock(data As order) Implements IOrderView.ShowCusBarrelStock
+        Select Case tcInOut.SelectedTab.Text
+            Case "進場單"
+                txtBarrelIn_50.Text = data.o_cus_50
+                txtBarrelIn_20.Text = data.o_cus_20
+                txtBarrelIn_16.Text = data.o_cus_16
+                txtBarrelIn_10.Text = data.o_cus_10
+                txtBarrelIn_4.Text = data.o_cus_4
+                txtBarrelIn_18.Text = data.o_cus_18
+                txtBarrelIn_14.Text = data.o_cus_14
+                txtBarrelIn_5.Text = data.o_cus_5
+                txtBarrelIn_2.Text = data.o_cus_2
+            Case "出場單"
+                txtCusGas_50.Text = data.o_cus_50
+                txtCusGas_20.Text = data.o_cus_20
+                txtCusGas_16.Text = data.o_cus_16
+                txtCusGas_10.Text = data.o_cus_10
+                txtCusGas_4.Text = data.o_cus_4
+                txtCusGas_18.Text = data.o_cus_18
+                txtCusGas_14.Text = data.o_cus_14
+                txtCusGas_5.Text = data.o_cus_5
+                txtCusGas_2.Text = data.o_cus_2
+        End Select
+    End Sub
 
     ' === 事件 ===
     Private Sub OrderUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load

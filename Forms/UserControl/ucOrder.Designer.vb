@@ -229,6 +229,10 @@ Partial Class ucOrder
         Me.txtInsuranceUnitPrice = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnSearch = New System.Windows.Forms.Button()
+        Me.txtCreateAt = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtUpdateAt = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.tcInOut.SuspendLayout()
         Me.tpIn.SuspendLayout()
         Me.tpOut.SuspendLayout()
@@ -399,10 +403,10 @@ Partial Class ucOrder
         '
         Me.tcInOut.Controls.Add(Me.tpIn)
         Me.tcInOut.Controls.Add(Me.tpOut)
-        Me.tcInOut.Location = New System.Drawing.Point(844, 13)
+        Me.tcInOut.Location = New System.Drawing.Point(1045, 13)
         Me.tcInOut.Name = "tcInOut"
         Me.tcInOut.SelectedIndex = 0
-        Me.tcInOut.Size = New System.Drawing.Size(1039, 392)
+        Me.tcInOut.Size = New System.Drawing.Size(838, 392)
         Me.tcInOut.TabIndex = 509
         Me.tcInOut.Tag = "o_in_out"
         '
@@ -492,7 +496,7 @@ Partial Class ucOrder
         Me.tpIn.Location = New System.Drawing.Point(4, 29)
         Me.tpIn.Name = "tpIn"
         Me.tpIn.Padding = New System.Windows.Forms.Padding(5)
-        Me.tpIn.Size = New System.Drawing.Size(1031, 359)
+        Me.tpIn.Size = New System.Drawing.Size(830, 359)
         Me.tpIn.TabIndex = 0
         Me.tpIn.Text = "進場單"
         '
@@ -677,7 +681,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_2.ReadOnly = True
         Me.txtBarrelIn_2.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_2.TabIndex = 499
-        Me.txtBarrelIn_2.Tag = "cus_gas_2"
+        Me.txtBarrelIn_2.Tag = "o_cus_2"
         '
         'txtBarrelIn_4
         '
@@ -686,7 +690,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_4.ReadOnly = True
         Me.txtBarrelIn_4.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_4.TabIndex = 498
-        Me.txtBarrelIn_4.Tag = "cus_gas_4"
+        Me.txtBarrelIn_4.Tag = "o_cus_4"
         '
         'txtBarrelIn_5
         '
@@ -696,7 +700,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_5.ReadOnly = True
         Me.txtBarrelIn_5.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_5.TabIndex = 497
-        Me.txtBarrelIn_5.Tag = "cus_gas_5"
+        Me.txtBarrelIn_5.Tag = "o_cus_5"
         '
         'txtBarrelIn_10
         '
@@ -705,7 +709,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_10.ReadOnly = True
         Me.txtBarrelIn_10.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_10.TabIndex = 496
-        Me.txtBarrelIn_10.Tag = "cus_gas_10"
+        Me.txtBarrelIn_10.Tag = "o_cus_10"
         '
         'txtBarrelIn_14
         '
@@ -715,7 +719,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_14.ReadOnly = True
         Me.txtBarrelIn_14.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_14.TabIndex = 495
-        Me.txtBarrelIn_14.Tag = "cus_gas_14"
+        Me.txtBarrelIn_14.Tag = "o_cus_14"
         '
         'txtBarrelIn_18
         '
@@ -725,7 +729,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_18.ReadOnly = True
         Me.txtBarrelIn_18.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_18.TabIndex = 494
-        Me.txtBarrelIn_18.Tag = "cus_gas_18"
+        Me.txtBarrelIn_18.Tag = "o_cus_18"
         '
         'txtBarrelIn_16
         '
@@ -734,7 +738,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_16.ReadOnly = True
         Me.txtBarrelIn_16.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_16.TabIndex = 493
-        Me.txtBarrelIn_16.Tag = "cus_gas_16"
+        Me.txtBarrelIn_16.Tag = "o_cus_16"
         '
         'txtBarrelIn_20
         '
@@ -743,7 +747,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_20.ReadOnly = True
         Me.txtBarrelIn_20.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_20.TabIndex = 492
-        Me.txtBarrelIn_20.Tag = "cus_gas_20"
+        Me.txtBarrelIn_20.Tag = "o_cus_20"
         '
         'txtBarrelIn_50
         '
@@ -752,7 +756,7 @@ Partial Class ucOrder
         Me.txtBarrelIn_50.ReadOnly = True
         Me.txtBarrelIn_50.Size = New System.Drawing.Size(53, 30)
         Me.txtBarrelIn_50.TabIndex = 491
-        Me.txtBarrelIn_50.Tag = "cus_gas_50"
+        Me.txtBarrelIn_50.Tag = "o_cus_50"
         '
         'Label205
         '
@@ -1269,7 +1273,7 @@ Partial Class ucOrder
         Me.tpOut.Location = New System.Drawing.Point(4, 29)
         Me.tpOut.Name = "tpOut"
         Me.tpOut.Padding = New System.Windows.Forms.Padding(5)
-        Me.tpOut.Size = New System.Drawing.Size(1031, 359)
+        Me.tpOut.Size = New System.Drawing.Size(830, 359)
         Me.tpOut.TabIndex = 1
         Me.tpOut.Text = "出場單"
         '
@@ -1388,7 +1392,7 @@ Partial Class ucOrder
         Me.txtCusGas_2.ReadOnly = True
         Me.txtCusGas_2.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_2.TabIndex = 490
-        Me.txtCusGas_2.Tag = "cus_gas_2"
+        Me.txtCusGas_2.Tag = "o_cus_2"
         '
         'txtCusGas_5
         '
@@ -1397,7 +1401,7 @@ Partial Class ucOrder
         Me.txtCusGas_5.ReadOnly = True
         Me.txtCusGas_5.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_5.TabIndex = 489
-        Me.txtCusGas_5.Tag = "cus_gas_5"
+        Me.txtCusGas_5.Tag = "o_cus_5"
         '
         'txtCusGas_14
         '
@@ -1406,7 +1410,7 @@ Partial Class ucOrder
         Me.txtCusGas_14.ReadOnly = True
         Me.txtCusGas_14.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_14.TabIndex = 488
-        Me.txtCusGas_14.Tag = "cus_gas_14"
+        Me.txtCusGas_14.Tag = "o_cus_14"
         '
         'txtCusGas_18
         '
@@ -1415,7 +1419,7 @@ Partial Class ucOrder
         Me.txtCusGas_18.ReadOnly = True
         Me.txtCusGas_18.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_18.TabIndex = 487
-        Me.txtCusGas_18.Tag = "cus_gas_18"
+        Me.txtCusGas_18.Tag = "o_cus_18"
         '
         'txtCusGas_4
         '
@@ -1424,7 +1428,7 @@ Partial Class ucOrder
         Me.txtCusGas_4.ReadOnly = True
         Me.txtCusGas_4.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_4.TabIndex = 486
-        Me.txtCusGas_4.Tag = "cus_gas_4"
+        Me.txtCusGas_4.Tag = "o_cus_4"
         '
         'txtCusGas_10
         '
@@ -1433,7 +1437,7 @@ Partial Class ucOrder
         Me.txtCusGas_10.ReadOnly = True
         Me.txtCusGas_10.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_10.TabIndex = 485
-        Me.txtCusGas_10.Tag = "cus_gas_10"
+        Me.txtCusGas_10.Tag = "o_cus_10"
         '
         'txtCusGas_16
         '
@@ -1442,7 +1446,7 @@ Partial Class ucOrder
         Me.txtCusGas_16.ReadOnly = True
         Me.txtCusGas_16.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_16.TabIndex = 484
-        Me.txtCusGas_16.Tag = "cus_gas_16"
+        Me.txtCusGas_16.Tag = "o_cus_16"
         '
         'txtCusGas_20
         '
@@ -1451,7 +1455,7 @@ Partial Class ucOrder
         Me.txtCusGas_20.ReadOnly = True
         Me.txtCusGas_20.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_20.TabIndex = 483
-        Me.txtCusGas_20.Tag = "cus_gas_20"
+        Me.txtCusGas_20.Tag = "o_cus_20"
         '
         'txtCusGas_50
         '
@@ -1460,7 +1464,7 @@ Partial Class ucOrder
         Me.txtCusGas_50.ReadOnly = True
         Me.txtCusGas_50.Size = New System.Drawing.Size(53, 30)
         Me.txtCusGas_50.TabIndex = 482
-        Me.txtCusGas_50.Tag = "cus_gas_50"
+        Me.txtCusGas_50.Tag = "o_cus_50"
         '
         'Label273
         '
@@ -2012,7 +2016,7 @@ Partial Class ucOrder
         '
         'txtCusID
         '
-        Me.txtCusID.Location = New System.Drawing.Point(324, 286)
+        Me.txtCusID.Location = New System.Drawing.Point(829, 382)
         Me.txtCusID.Name = "txtCusID"
         Me.txtCusID.ReadOnly = True
         Me.txtCusID.Size = New System.Drawing.Size(100, 30)
@@ -2022,7 +2026,7 @@ Partial Class ucOrder
         '
         'txto_id
         '
-        Me.txto_id.Location = New System.Drawing.Point(218, 286)
+        Me.txto_id.Location = New System.Drawing.Point(723, 382)
         Me.txto_id.Name = "txto_id"
         Me.txto_id.ReadOnly = True
         Me.txto_id.Size = New System.Drawing.Size(100, 30)
@@ -2141,11 +2145,11 @@ Partial Class ucOrder
         Me.dgvOrder.AllowUserToDeleteRows = False
         Me.dgvOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvOrder.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvOrder.Location = New System.Drawing.Point(10, 488)
+        Me.dgvOrder.Location = New System.Drawing.Point(10, 448)
         Me.dgvOrder.Name = "dgvOrder"
         Me.dgvOrder.ReadOnly = True
         Me.dgvOrder.RowTemplate.Height = 24
-        Me.dgvOrder.Size = New System.Drawing.Size(1876, 490)
+        Me.dgvOrder.Size = New System.Drawing.Size(1876, 530)
         Me.dgvOrder.TabIndex = 488
         '
         'btnCancel
@@ -2238,17 +2242,57 @@ Partial Class ucOrder
         'btnSearch
         '
         Me.btnSearch.BackColor = System.Drawing.Color.Lime
-        Me.btnSearch.Location = New System.Drawing.Point(13, 422)
+        Me.btnSearch.Location = New System.Drawing.Point(793, 322)
         Me.btnSearch.Name = "btnSearch"
         Me.btnSearch.Size = New System.Drawing.Size(140, 44)
         Me.btnSearch.TabIndex = 529
         Me.btnSearch.Text = "查詢"
         Me.btnSearch.UseVisualStyleBackColor = False
         '
-        'OrderUserControl
+        'txtCreateAt
+        '
+        Me.txtCreateAt.Location = New System.Drawing.Point(318, 286)
+        Me.txtCreateAt.Name = "txtCreateAt"
+        Me.txtCreateAt.ReadOnly = True
+        Me.txtCreateAt.Size = New System.Drawing.Size(313, 30)
+        Me.txtCreateAt.TabIndex = 531
+        Me.txtCreateAt.Tag = "o_create_at"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(219, 292)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(93, 19)
+        Me.Label4.TabIndex = 530
+        Me.Label4.Text = "建立時間"
+        '
+        'txtUpdateAt
+        '
+        Me.txtUpdateAt.Location = New System.Drawing.Point(738, 286)
+        Me.txtUpdateAt.Name = "txtUpdateAt"
+        Me.txtUpdateAt.ReadOnly = True
+        Me.txtUpdateAt.Size = New System.Drawing.Size(301, 30)
+        Me.txtUpdateAt.TabIndex = 533
+        Me.txtUpdateAt.Tag = "o_update_at"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(637, 292)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(93, 19)
+        Me.Label5.TabIndex = 532
+        Me.Label5.Text = "更新時間"
+        '
+        'ucOrder
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.txtUpdateAt)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.txtCreateAt)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.txtInsuranceUnitPrice)
         Me.Controls.Add(Me.Label3)
@@ -2302,7 +2346,7 @@ Partial Class ucOrder
         Me.Controls.Add(Me.Label151)
         Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
-        Me.Name = "OrderUserControl"
+        Me.Name = "ucOrder"
         Me.Padding = New System.Windows.Forms.Padding(10)
         Me.Size = New System.Drawing.Size(1896, 988)
         Me.tcInOut.ResumeLayout(False)
@@ -2525,4 +2569,8 @@ Partial Class ucOrder
     Friend WithEvents txtInsuranceUnitPrice As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents btnSearch As Button
+    Friend WithEvents txtCreateAt As TextBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents txtUpdateAt As TextBox
+    Friend WithEvents Label5 As Label
 End Class

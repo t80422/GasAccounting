@@ -6,7 +6,7 @@ Public Class CustomerGasCylinderInventory
     Public Property List As List(Of DepositList)
 
     Public Class DepositList
-        Inherits GasBarrelQtyDTO
+        Inherits GasBarrelQtyVM
         Public Property CarNo As String
         Public Property DriverName As String
     End Class

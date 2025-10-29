@@ -455,6 +455,17 @@
           <Property Name="o_barrel_unit_price_2" Type="int" />
           <Property Name="o_UnpaidAmount" Type="int" Nullable="false" />
           <Property Name="o_insurance_unit_price" Type="float" />
+          <Property Name="o_cus_50" Type="int" Nullable="false" />
+          <Property Name="o_cus_20" Type="int" Nullable="false" />
+          <Property Name="o_cus_16" Type="int" Nullable="false" />
+          <Property Name="o_cus_10" Type="int" Nullable="false" />
+          <Property Name="o_cus_4" Type="int" Nullable="false" />
+          <Property Name="o_cus_18" Type="int" Nullable="false" />
+          <Property Name="o_cus_14" Type="int" Nullable="false" />
+          <Property Name="o_cus_5" Type="int" Nullable="false" />
+          <Property Name="o_cus_2" Type="int" Nullable="false" />
+          <Property Name="o_create_at" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="o_update_at" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="payment">
           <Key>
@@ -2171,6 +2182,17 @@
           <NavigationProperty Name="employee" Relationship="gas_accounting_systemModel.orders_ibfk_3" FromRole="order" ToRole="employee" />
           <NavigationProperty Name="order_collection_mapping" Relationship="gas_accounting_systemModel.order_collection_mapping_ibfk_2" FromRole="order" ToRole="order_collection_mapping" />
           <Property Name="o_insurance_unit_price" Type="Single" />
+          <Property Name="o_cus_50" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_20" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_16" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_10" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_4" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_18" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_14" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_5" Type="Int32" Nullable="false" />
+          <Property Name="o_cus_2" Type="Int32" Nullable="false" />
+          <Property Name="o_create_at" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="o_update_at" Type="DateTime" />
         </EntityType>
         <EntityType Name="permission">
           <Key>
@@ -3340,6 +3362,17 @@
           <EntitySetMapping Name="orders">
             <EntityTypeMapping TypeName="gas_accounting_systemModel.order">
               <MappingFragment StoreEntitySet="orders">
+                <ScalarProperty Name="o_update_at" ColumnName="o_update_at" />
+                <ScalarProperty Name="o_create_at" ColumnName="o_create_at" />
+                <ScalarProperty Name="o_cus_2" ColumnName="o_cus_2" />
+                <ScalarProperty Name="o_cus_5" ColumnName="o_cus_5" />
+                <ScalarProperty Name="o_cus_14" ColumnName="o_cus_14" />
+                <ScalarProperty Name="o_cus_18" ColumnName="o_cus_18" />
+                <ScalarProperty Name="o_cus_4" ColumnName="o_cus_4" />
+                <ScalarProperty Name="o_cus_10" ColumnName="o_cus_10" />
+                <ScalarProperty Name="o_cus_16" ColumnName="o_cus_16" />
+                <ScalarProperty Name="o_cus_20" ColumnName="o_cus_20" />
+                <ScalarProperty Name="o_cus_50" ColumnName="o_cus_50" />
                 <ScalarProperty Name="o_insurance_unit_price" ColumnName="o_insurance_unit_price" />
                 <ScalarProperty Name="o_UnpaidAmount" ColumnName="o_UnpaidAmount" />
                 <ScalarProperty Name="o_barrel_unit_price_2" ColumnName="o_barrel_unit_price_2" />

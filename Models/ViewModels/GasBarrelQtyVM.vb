@@ -1,4 +1,4 @@
-﻿Public Class GasBarrelQtyDTO
+﻿Public Class GasBarrelQtyVM
     Public Property 瓦斯瓶50Kg As Integer
     Public Property 瓦斯瓶20Kg As Integer
     Public Property 瓦斯瓶16Kg As Integer
