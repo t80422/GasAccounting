@@ -32,6 +32,10 @@ Public Class OrderPresenter
     Private initCusStk As New GasBarrelDTO
     Public currentCar As car
 
+    'edit by kevin 20251109
+    Public InitCustStock(999)() As Integer
+
+
     ' 常量：所有瓦斯桶規格
     Private Shared ReadOnly BARREL_TYPES As String() = {"50", "20", "16", "10", "4", "18", "14", "5", "2"}
 
@@ -336,6 +340,54 @@ Public Class OrderPresenter
     ''' 計算結存瓶
     ''' </summary>
     Private Sub CaculateCusBarrelStock()
+
+        InitCustStock(30) = New Integer() {27, 101, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(50) = New Integer() {6, 42, 3, 2, 1, 0, 0, 0, 0}
+        InitCustStock(60) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(61) = New Integer() {5, 124, 0, 0, 37, 0, 0, 0, 0}
+        InitCustStock(62) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(70) = New Integer() {18, 72, 8, 4, 10, 0, 0, 0, 0}
+        InitCustStock(71) = New Integer() {7, 67, 8, 2, 9, 0, 0, 0, 0}
+        InitCustStock(80) = New Integer() {0, 6, 0, 0, 1, 0, 0, 0, 0}
+        InitCustStock(90) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(100) = New Integer() {23, 26, 0, 1, 2, 0, 0, 0, 0}
+        InitCustStock(110) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(120) = New Integer() {17, 81, 4, 2, 18, 0, 0, 0, 0}
+        InitCustStock(130) = New Integer() {11, 15, 12, 2, 0, 0, 0, 0, 0}
+        InitCustStock(140) = New Integer() {24, 61, 6, 7, 21, 0, 0, 0, 0}
+        InitCustStock(150) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(160) = New Integer() {0, 86, 16, 11, 6, 0, 0, 0, 0}
+        InitCustStock(170) = New Integer() {8, 48, 7, 5, 11, 0, 0, 0, 0}
+        InitCustStock(180) = New Integer() {41, 73, 22, 13, 12, 0, 0, 0, 0}
+        InitCustStock(190) = New Integer() {22, 113, 9, 12, 17, 0, 0, 0, 0}
+        InitCustStock(200) = New Integer() {12, 55, 2, 1, 11, 0, 0, 0, 0}
+        InitCustStock(210) = New Integer() {8, 62, 10, 8, 1, 0, 0, 0, 0}
+        InitCustStock(220) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(221) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(226) = New Integer() {68, 79, 10, 4, 1, 0, 0, 0, 0}
+        InitCustStock(230) = New Integer() {17, 6, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(250) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(260) = New Integer() {0, 17, 0, 0, 2, 0, 0, 0, 0}
+        InitCustStock(271) = New Integer() {200, 6, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(280) = New Integer() {114, 21, 0, 1, 1, 0, 0, 0, 0}
+        InitCustStock(310) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(320) = New Integer() {6, 84, 5, 12, 19, 0, 0, 0, 0}
+        InitCustStock(330) = New Integer() {5, 14, 6, 0, 0, 0, 0, 0, 0}
+        InitCustStock(340) = New Integer() {5, 36, 4, 1, 3, 0, 0, 0, 0}
+        InitCustStock(360) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(370) = New Integer() {0, 13, 1, 0, 0, 0, 0, 0, 0}
+        InitCustStock(381) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(382) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(383) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(385) = New Integer() {4, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(390) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(410) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(420) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(493) = New Integer() {79, 90, 5, 7, 17, 0, 0, 0, 0}
+        InitCustStock(519) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        InitCustStock(999) = New Integer() {0, 0, 0, 0, 0, 0, 0, 0, 0}
+
+
         Try
             Dim isIn = _view.GetOrderType = "進場單"
             Dim initProps = initCusStk.GetType.GetProperties
@@ -345,32 +397,191 @@ Public Class OrderPresenter
             Dim cusBarrelStock As New order
             Dim cusBarrelStockProps = cusBarrelStock.GetType.GetProperties
 
+            'edit by kevin 20251103
+            Dim db As New gas_accounting_systemEntities
+            Dim endOfToday As DateTime = Date.Today + New TimeSpan(23, 59, 59)
+            Dim query = From o In db.orders Where o.o_date < endOfToday AndAlso o.o_cus_Id = currentCustomer.cus_id Select o
+
+            'Dim sql As String = query.ToString()
+            Dim counter50to2 = 0
             For Each prop In initProps
                 Dim barrelType = prop.Name.Substring(7)
                 Dim currentStk = prop.GetValue(initCusStk)
                 Dim barrelStk As Integer
                 Dim targetProp = cusBarrelStockProps.FirstOrDefault(Function(x) x.Name = $"o_cus_{barrelType}")
 
+                'edit by kevin 20251109 檢查庫存有異動就跳訊息
+                If InitCustStock(CInt(currentCustomer.cus_code))(counter50to2) <> currentStk Then
+                    '    MsgBox("庫存有變動了!!" + barrelType)
+                End If
+                counter50to2 = counter50to2 + 1
+
+                '訂單收空瓶
+                'Dim orderInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_in_{barrelType}").GetValue(currentOrder)
+                Dim orderInQty As Integer = 0
+
+                '訂單新瓶
+                'Dim orderNewInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_new_in_{barrelType}").GetValue(currentOrder)
+                Dim orderNewInQty As Integer = 0
+
+                '訂單檢驗瓶
+                'Dim orderInspectInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_inspect_{barrelType}").GetValue(currentOrder)
+                Dim orderInspectInQty As Integer = 0
+
+                'Dim orderGasC As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_gas_c_{barrelType}").GetValue(currentOrder)
+                Dim orderGasC As Integer = 0
+
+                'Dim orderGas As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_gas_{barrelType}").GetValue(currentOrder)
+                Dim orderGas As Integer = 0
+
+                'Dim orderEmpty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_empty_{barrelType}").GetValue(currentOrder)
+                Dim orderEmpty As Integer = 0
+
+                If currentCustomer IsNot Nothing And query.Any() Then
+                    Select Case $"o_in_{barrelType}"
+                        Case "o_in_50"
+                            orderInQty = query.Sum(Function(x) x.o_in_50)
+                        Case "o_in_20"
+                            orderInQty = query.Sum(Function(x) x.o_in_20)
+                        Case "o_in_16"
+                            orderInQty = query.Sum(Function(x) x.o_in_16)
+                        Case "o_in_10"
+                            orderInQty = query.Sum(Function(x) x.o_in_10)
+                        Case "o_in_4"
+                            orderInQty = query.Sum(Function(x) x.o_in_4)
+                        Case "o_in_18"
+                            orderInQty = query.Sum(Function(x) x.o_in_18)
+                        Case "o_in_14"
+                            orderInQty = query.Sum(Function(x) x.o_in_14)
+                        Case "o_in_5"
+                            orderInQty = query.Sum(Function(x) x.o_in_5)
+                        Case "o_in_2"
+                            orderInQty = query.Sum(Function(x) x.o_in_2)
+                    End Select
+                    Select Case $"o_new_in_{barrelType}"
+                        Case "o_new_in_50"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_50)
+                        Case "o_new_in_20"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_20)
+                        Case "o_new_in_16"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_16)
+                        Case "o_new_in_10"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_10)
+                        Case "o_new_in_4"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_4)
+                        Case "o_new_in_18"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_18)
+                        Case "o_new_in_14"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_14)
+                        Case "o_new_in_5"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_5)
+                        Case "o_new_in_2"
+                            orderNewInQty = query.Sum(Function(x) x.o_new_in_2)
+                    End Select
+                    Select Case $"o_inspect_{barrelType}"
+                        Case "o_inspect_50"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_50)
+                        Case "o_inspect_20"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_20)
+                        Case "o_inspect_16"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_16)
+                        Case "o_inspect_10"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_10)
+                        Case "o_inspect_4"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_4)
+                        Case "o_inspect_18"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_18)
+                        Case "o_inspect_14"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_14)
+                        Case "o_inspect_5"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_5)
+                        Case "o_inspect_2"
+                            orderInspectInQty = query.Sum(Function(x) x.o_inspect_2)
+                    End Select
+                    Select Case $"o_gas_c_{barrelType}"
+                        Case "o_gas_c_50"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_50)
+                        Case "o_gas_c_20"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_20)
+                        Case "o_gas_c_16"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_16)
+                        Case "o_gas_c_10"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_10)
+                        Case "o_gas_c_4"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_4)
+                        Case "o_gas_c_18"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_18)
+                        Case "o_gas_c_14"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_14)
+                        Case "o_gas_c_5"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_5)
+                        Case "o_gas_c_2"
+                            orderGasC = query.Sum(Function(x) x.o_gas_c_2)
+                    End Select
+                    Select Case $"o_gas_{barrelType}"
+                        Case "o_gas_50"
+                            orderGas = query.Sum(Function(x) x.o_gas_50)
+                        Case "o_gas_20"
+                            orderGas = query.Sum(Function(x) x.o_gas_20)
+                        Case "o_gas_16"
+                            orderGas = query.Sum(Function(x) x.o_gas_16)
+                        Case "o_gas_10"
+                            orderGas = query.Sum(Function(x) x.o_gas_10)
+                        Case "o_gas_4"
+                            orderGas = query.Sum(Function(x) x.o_gas_4)
+                        Case "o_gas_18"
+                            orderGas = query.Sum(Function(x) x.o_gas_18)
+                        Case "o_gas_14"
+                            orderGas = query.Sum(Function(x) x.o_gas_14)
+                        Case "o_gas_5"
+                            orderGas = query.Sum(Function(x) x.o_gas_5)
+                        Case "o_gas_2"
+                            orderGas = query.Sum(Function(x) x.o_gas_2)
+                    End Select
+                    Select Case $"o_empty_{barrelType}"
+                        Case "o_empty_50"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_50)
+                        Case "o_empty_20"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_20)
+                        Case "o_empty_16"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_16)
+                        Case "o_empty_10"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_10)
+                        Case "o_empty_4"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_4)
+                        Case "o_empty_18"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_18)
+                        Case "o_empty_14"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_14)
+                        Case "o_empty_5"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_5)
+                        Case "o_empty_2"
+                            orderEmpty = query.Sum(Function(x) x.o_empty_2)
+                    End Select
+                End If
+
+
                 If isIn Then
                     ' 計算進場單的結存：初始 + 輸入數量 - 舊訂單數量
+                    '收空瓶
                     Dim inQty As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_in_{barrelType}").GetValue(inputInOut)
+                    '新瓶
                     Dim newInQty As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_new_in_{barrelType}").GetValue(inputInOut)
+                    '檢驗瓶
                     Dim inspectInQty As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_inspect_{barrelType}").GetValue(inputInOut)
-                    Dim orderInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_in_{barrelType}").GetValue(currentOrder)
-                    Dim orderNewInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_new_in_{barrelType}").GetValue(currentOrder)
-                    Dim orderInspectInQty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_inspect_{barrelType}").GetValue(currentOrder)
 
-                    barrelStk = currentStk + inQty - orderInQty + newInQty - orderNewInQty + inspectInQty - orderInspectInQty
+                    'edit by kevin 20251104 
+                    'barrelStk = currentStk + inQty - orderInQty + newInQty - orderNewInQty + inspectInQty - orderInspectInQty
+                    barrelStk = currentStk + inQty + newInQty + inspectInQty + orderInQty + orderNewInQty + orderInspectInQty - orderGasC - orderGas - orderEmpty
                 Else
                     ' 計算出場單的結存：初始 - 輸入數量 + 舊訂單數量
                     Dim gasC As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_gas_c_{barrelType}").GetValue(inputInOut)
                     Dim gas As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_gas_{barrelType}").GetValue(inputInOut)
                     Dim empty As Integer = inputProps.FirstOrDefault(Function(x) x.Name = $"o_empty_{barrelType}").GetValue(inputInOut)
-                    Dim orderGasC As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_gas_c_{barrelType}").GetValue(currentOrder)
-                    Dim orderGas As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_gas_{barrelType}").GetValue(currentOrder)
-                    Dim orderEmpty As Integer = currentOrderProps?.FirstOrDefault(Function(x) x.Name = $"o_empty_{barrelType}").GetValue(currentOrder)
 
-                    barrelStk = currentStk - gasC + orderGasC - gas + orderGas - empty + orderEmpty
+                    'edit by kevin 20251104
+                    'barrelStk = currentStk - gasC + orderGasC - gas + orderGas - empty + orderEmpty
+                    barrelStk = currentStk - gasC - gas - empty + orderInQty + orderNewInQty + orderInspectInQty - orderGasC - orderGas - orderEmpty
                 End If
 
                 targetProp.SetValue(cusBarrelStock, barrelStk)
@@ -736,7 +947,8 @@ Public Class OrderPresenter
 
                 ' === 回退客戶庫存（分析訂單數量並反向操作）===
                 If currentCustomer Is Nothing Then Throw New Exception("未取得客戶資料")
-                RevertCustomerStockByDiff(currentOrder)
+                '20251111 edit by kevin 不用補數量回去
+                'RevertCustomerStockByDiff(currentOrder)
 
                 ' 記錄刪除後的客戶庫存
                 Dim afterStock = FormatBarrelStock(currentCustomer)
@@ -801,6 +1013,301 @@ Public Class OrderPresenter
         Try
             Dim data = _ordRep.GetOrderVoucherData(orderId)
             templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
+            '20251105 edit by kevin 
+            Dim db As New gas_accounting_systemEntities
+            Dim endOfToday As DateTime = Date.Today + New TimeSpan(23, 59, 59)
+            Dim query = From o In db.orders Where o.o_date < endOfToday AndAlso o.o_cus_Id = currentCustomer.cus_id Select o
+
+            '訂單收空瓶
+            Dim orderInQty50 As Integer = 0
+            Dim orderInQty20 As Integer = 0
+            Dim orderInQty16 As Integer = 0
+            Dim orderInQty10 As Integer = 0
+            Dim orderInQty4 As Integer = 0
+            Dim orderInQty18 As Integer = 0
+            Dim orderInQty14 As Integer = 0
+            Dim orderInQty5 As Integer = 0
+            Dim orderInQty2 As Integer = 0
+            '訂單新瓶
+            Dim orderNewInQty50 As Integer = 0
+            Dim orderNewInQty20 As Integer = 0
+            Dim orderNewInQty16 As Integer = 0
+            Dim orderNewInQty10 As Integer = 0
+            Dim orderNewInQty4 As Integer = 0
+            Dim orderNewInQty18 As Integer = 0
+            Dim orderNewInQty14 As Integer = 0
+            Dim orderNewInQty5 As Integer = 0
+            Dim orderNewInQty2 As Integer = 0
+            '訂單檢驗瓶
+            Dim orderInspectInQty50 As Integer = 0
+            Dim orderInspectInQty20 As Integer = 0
+            Dim orderInspectInQty16 As Integer = 0
+            Dim orderInspectInQty10 As Integer = 0
+            Dim orderInspectInQty4 As Integer = 0
+            Dim orderInspectInQty18 As Integer = 0
+            Dim orderInspectInQty14 As Integer = 0
+            Dim orderInspectInQty5 As Integer = 0
+            Dim orderInspectInQty2 As Integer = 0
+
+            Dim orderGasC50 As Integer = 0
+            Dim orderGasC20 As Integer = 0
+            Dim orderGasC16 As Integer = 0
+            Dim orderGasC10 As Integer = 0
+            Dim orderGasC4 As Integer = 0
+            Dim orderGasC18 As Integer = 0
+            Dim orderGasC14 As Integer = 0
+            Dim orderGasC5 As Integer = 0
+            Dim orderGasC2 As Integer = 0
+
+            Dim orderGas50 As Integer = 0
+            Dim orderGas20 As Integer = 0
+            Dim orderGas16 As Integer = 0
+            Dim orderGas10 As Integer = 0
+            Dim orderGas4 As Integer = 0
+            Dim orderGas18 As Integer = 0
+            Dim orderGas14 As Integer = 0
+            Dim orderGas5 As Integer = 0
+            Dim orderGas2 As Integer = 0
+
+            Dim orderEmpty50 As Integer = 0
+            Dim orderEmpty20 As Integer = 0
+            Dim orderEmpty16 As Integer = 0
+            Dim orderEmpty10 As Integer = 0
+            Dim orderEmpty4 As Integer = 0
+            Dim orderEmpty18 As Integer = 0
+            Dim orderEmpty14 As Integer = 0
+            Dim orderEmpty5 As Integer = 0
+            Dim orderEmpty2 As Integer = 0
+
+            Try
+                orderInQty50 = query.Sum(Function(x) x.o_in_50)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty20 = query.Sum(Function(x) x.o_in_20)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty16 = query.Sum(Function(x) x.o_in_16)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty10 = query.Sum(Function(x) x.o_in_10)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty4 = query.Sum(Function(x) x.o_in_4)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty18 = query.Sum(Function(x) x.o_in_18)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty14 = query.Sum(Function(x) x.o_in_14)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty5 = query.Sum(Function(x) x.o_in_5)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInQty2 = query.Sum(Function(x) x.o_in_2)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty50 = query.Sum(Function(x) x.o_new_in_50)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty20 = query.Sum(Function(x) x.o_new_in_20)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty16 = query.Sum(Function(x) x.o_new_in_16)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty10 = query.Sum(Function(x) x.o_new_in_10)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty4 = query.Sum(Function(x) x.o_new_in_4)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty18 = query.Sum(Function(x) x.o_new_in_18)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty14 = query.Sum(Function(x) x.o_new_in_14)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty5 = query.Sum(Function(x) x.o_new_in_5)
+            Catch ex As Exception
+            End Try
+            Try
+                orderNewInQty2 = query.Sum(Function(x) x.o_new_in_2)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty50 = query.Sum(Function(x) x.o_inspect_50)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty20 = query.Sum(Function(x) x.o_inspect_20)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty16 = query.Sum(Function(x) x.o_inspect_16)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty10 = query.Sum(Function(x) x.o_inspect_10)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty4 = query.Sum(Function(x) x.o_inspect_4)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty18 = query.Sum(Function(x) x.o_inspect_18)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty14 = query.Sum(Function(x) x.o_inspect_14)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty5 = query.Sum(Function(x) x.o_inspect_5)
+            Catch ex As Exception
+            End Try
+            Try
+                orderInspectInQty2 = query.Sum(Function(x) x.o_inspect_2)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC50 = query.Sum(Function(x) x.o_gas_c_50)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC20 = query.Sum(Function(x) x.o_gas_c_20)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC16 = query.Sum(Function(x) x.o_gas_c_16)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC10 = query.Sum(Function(x) x.o_gas_c_10)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC4 = query.Sum(Function(x) x.o_gas_c_4)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC18 = query.Sum(Function(x) x.o_gas_c_18)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC14 = query.Sum(Function(x) x.o_gas_c_14)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC5 = query.Sum(Function(x) x.o_gas_c_5)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGasC2 = query.Sum(Function(x) x.o_gas_c_2)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas50 = query.Sum(Function(x) x.o_gas_50)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas20 = query.Sum(Function(x) x.o_gas_20)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas16 = query.Sum(Function(x) x.o_gas_16)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas10 = query.Sum(Function(x) x.o_gas_10)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas4 = query.Sum(Function(x) x.o_gas_4)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas18 = query.Sum(Function(x) x.o_gas_18)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas14 = query.Sum(Function(x) x.o_gas_14)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas5 = query.Sum(Function(x) x.o_gas_5)
+            Catch ex As Exception
+            End Try
+            Try
+                orderGas2 = query.Sum(Function(x) x.o_gas_2)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty50 = query.Sum(Function(x) x.o_empty_50)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty20 = query.Sum(Function(x) x.o_empty_20)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty16 = query.Sum(Function(x) x.o_empty_16)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty10 = query.Sum(Function(x) x.o_empty_10)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty4 = query.Sum(Function(x) x.o_empty_4)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty18 = query.Sum(Function(x) x.o_empty_18)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty14 = query.Sum(Function(x) x.o_empty_14)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty5 = query.Sum(Function(x) x.o_empty_5)
+            Catch ex As Exception
+            End Try
+            Try
+                orderEmpty2 = query.Sum(Function(x) x.o_empty_2)
+            Catch ex As Exception
+            End Try
+
+
+            data.結存50kg = data.結存50kg + orderInQty50 + orderNewInQty50 + orderInspectInQty50 - orderGasC50 - orderGas50 - orderEmpty50
+            data.結存50kg = data.結存20kg + orderInQty20 + orderNewInQty20 + orderInspectInQty20 - orderGasC20 - orderGas20 - orderEmpty20
+            data.結存16kg = data.結存16kg + orderInQty16 + orderNewInQty16 + orderInspectInQty16 - orderGasC16 - orderGas16 - orderEmpty16
+            data.結存10kg = data.結存10kg + orderInQty10 + orderNewInQty10 + orderInspectInQty10 - orderGasC10 - orderGas10 - orderEmpty10
+            data.結存4kg = data.結存4kg + orderInQty4 + orderNewInQty4 + orderInspectInQty4 - orderGasC4 - orderGas4 - orderEmpty4
+            data.結存18kg = data.結存18kg + orderInQty18 + orderNewInQty18 + orderInspectInQty18 - orderGasC18 - orderGas18 - orderEmpty18
+            data.結存14kg = data.結存14kg + orderInQty14 + orderNewInQty14 + orderInspectInQty14 - orderGasC14 - orderGas14 - orderEmpty14
+            data.結存5kg = data.結存5kg + orderInQty5 + orderNewInQty5 + orderInspectInQty5 - orderGasC5 - orderGas5 - orderEmpty5
+            data.結存2kg = data.結存2kg + orderInQty2 + orderNewInQty2 + orderInspectInQty2 - orderGasC2 - orderGas2 - orderEmpty2
+
+
             Dim htmlContent = FillTemplate(templatePath, data)
             pdfPath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.pdf")
 
@@ -866,50 +1373,343 @@ Public Class OrderPresenter
 
                     Dim rowIndex = 5
                     Dim totalSum As Integer
+                    Dim db As New gas_accounting_systemEntities
+                    Dim endOfToday As DateTime = Date.Today + New TimeSpan(23, 59, 59)
 
                     For Each cus In customers
-                        Dim totalBarrel = cus.cus_gas_50 + cus.cus_gas_20 + cus.cus_gas_16 + cus.cus_gas_10 + cus.cus_gas_4 + cus.cus_gas_18 + cus.cus_gas_14 + cus.cus_gas_5 + cus.cus_gas_2
-                        .WriteToCell(rowIndex, 1, cus.cus_code)
-                        .WriteToCell(rowIndex, 2, cus.cus_name)
-                        .WriteToCell(rowIndex, 3, cus.cus_gas_50.ToString)
-                        .WriteToCell(rowIndex, 4, cus.cus_gas_20.ToString)
-                        .WriteToCell(rowIndex, 5, cus.cus_gas_16.ToString)
-                        .WriteToCell(rowIndex, 6, cus.cus_gas_10.ToString)
-                        .WriteToCell(rowIndex, 7, cus.cus_gas_4.ToString)
-                        .WriteToCell(rowIndex, 8, cus.cus_gas_18.ToString)
-                        .WriteToCell(rowIndex, 9, cus.cus_gas_14.ToString)
-                        .WriteToCell(rowIndex, 10, cus.cus_gas_5.ToString)
-                        .WriteToCell(rowIndex, 11, cus.cus_gas_2.ToString)
-                        .WriteToCell(rowIndex, 12, totalBarrel.ToString)
-                        .InsertRow(rowIndex)
-                        rowIndex += 1
-                        totalSum += totalBarrel
-                    Next
+                        Dim query = From o In db.orders Where o.o_date < endOfToday AndAlso o.o_cus_Id = cus.cus_id Select o
+                        '訂單收空瓶
+                        Dim orderInQty50 As Integer = 0
+                        Dim orderInQty20 As Integer = 0
+                        Dim orderInQty16 As Integer = 0
+                        Dim orderInQty10 As Integer = 0
+                        Dim orderInQty4 As Integer = 0
+                        Dim orderInQty18 As Integer = 0
+                        Dim orderInQty14 As Integer = 0
+                        Dim orderInQty5 As Integer = 0
+                        Dim orderInQty2 As Integer = 0
+                        '訂單新瓶
+                        Dim orderNewInQty50 As Integer = 0
+                        Dim orderNewInQty20 As Integer = 0
+                        Dim orderNewInQty16 As Integer = 0
+                        Dim orderNewInQty10 As Integer = 0
+                        Dim orderNewInQty4 As Integer = 0
+                        Dim orderNewInQty18 As Integer = 0
+                        Dim orderNewInQty14 As Integer = 0
+                        Dim orderNewInQty5 As Integer = 0
+                        Dim orderNewInQty2 As Integer = 0
+                        '訂單檢驗瓶
+                        Dim orderInspectInQty50 As Integer = 0
+                        Dim orderInspectInQty20 As Integer = 0
+                        Dim orderInspectInQty16 As Integer = 0
+                        Dim orderInspectInQty10 As Integer = 0
+                        Dim orderInspectInQty4 As Integer = 0
+                        Dim orderInspectInQty18 As Integer = 0
+                        Dim orderInspectInQty14 As Integer = 0
+                        Dim orderInspectInQty5 As Integer = 0
+                        Dim orderInspectInQty2 As Integer = 0
 
-                    Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
-                        .Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center
-                    }
+                        Dim orderGasC50 As Integer = 0
+                        Dim orderGasC20 As Integer = 0
+                        Dim orderGasC16 As Integer = 0
+                        Dim orderGasC10 As Integer = 0
+                        Dim orderGasC4 As Integer = 0
+                        Dim orderGasC18 As Integer = 0
+                        Dim orderGasC14 As Integer = 0
+                        Dim orderGasC5 As Integer = 0
+                        Dim orderGasC2 As Integer = 0
 
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
-                    .WriteToCell(rowIndex, 2, "合計", totalStyle)
-                    .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50).ToString)
-                    .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20).ToString)
-                    .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16).ToString)
-                    .WriteToCell(rowIndex, 6, customers.Sum(Function(x) x.cus_gas_10).ToString)
-                    .WriteToCell(rowIndex, 7, customers.Sum(Function(x) x.cus_gas_4).ToString)
-                    .WriteToCell(rowIndex, 8, customers.Sum(Function(x) x.cus_gas_18).ToString)
-                    .WriteToCell(rowIndex, 9, customers.Sum(Function(x) x.cus_gas_14).ToString)
-                    .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5).ToString)
-                    .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2).ToString)
-                    .WriteToCell(rowIndex, 12, totalSum.ToString)
+                        Dim orderGas50 As Integer = 0
+                        Dim orderGas20 As Integer = 0
+                        Dim orderGas16 As Integer = 0
+                        Dim orderGas10 As Integer = 0
+                        Dim orderGas4 As Integer = 0
+                        Dim orderGas18 As Integer = 0
+                        Dim orderGas14 As Integer = 0
+                        Dim orderGas5 As Integer = 0
+                        Dim orderGas2 As Integer = 0
 
-                    '存檔
-                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶鋼瓶結存總冊.xlsx")
-                    .SaveAs(exportFilePath)
+                        Dim orderEmpty50 As Integer = 0
+                        Dim orderEmpty20 As Integer = 0
+                        Dim orderEmpty16 As Integer = 0
+                        Dim orderEmpty10 As Integer = 0
+                        Dim orderEmpty4 As Integer = 0
+                        Dim orderEmpty18 As Integer = 0
+                        Dim orderEmpty14 As Integer = 0
+                        Dim orderEmpty5 As Integer = 0
+                        Dim orderEmpty2 As Integer = 0
 
-                    '取得印表機
-                    Dim printerName = _printerSer.GetOrSelectPrinter
+                        Try
+                            orderInQty50 = query.Sum(Function(x) x.o_in_50)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty20 = query.Sum(Function(x) x.o_in_20)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty16 = query.Sum(Function(x) x.o_in_16)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty10 = query.Sum(Function(x) x.o_in_10)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty4 = query.Sum(Function(x) x.o_in_4)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty18 = query.Sum(Function(x) x.o_in_18)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty14 = query.Sum(Function(x) x.o_in_14)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty5 = query.Sum(Function(x) x.o_in_5)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInQty2 = query.Sum(Function(x) x.o_in_2)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty50 = query.Sum(Function(x) x.o_new_in_50)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty20 = query.Sum(Function(x) x.o_new_in_20)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty16 = query.Sum(Function(x) x.o_new_in_16)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty10 = query.Sum(Function(x) x.o_new_in_10)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty4 = query.Sum(Function(x) x.o_new_in_4)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty18 = query.Sum(Function(x) x.o_new_in_18)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty14 = query.Sum(Function(x) x.o_new_in_14)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty5 = query.Sum(Function(x) x.o_new_in_5)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderNewInQty2 = query.Sum(Function(x) x.o_new_in_2)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty50 = query.Sum(Function(x) x.o_inspect_50)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty20 = query.Sum(Function(x) x.o_inspect_20)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty16 = query.Sum(Function(x) x.o_inspect_16)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty10 = query.Sum(Function(x) x.o_inspect_10)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty4 = query.Sum(Function(x) x.o_inspect_4)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty18 = query.Sum(Function(x) x.o_inspect_18)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty14 = query.Sum(Function(x) x.o_inspect_14)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty5 = query.Sum(Function(x) x.o_inspect_5)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderInspectInQty2 = query.Sum(Function(x) x.o_inspect_2)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC50 = query.Sum(Function(x) x.o_gas_c_50)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC20 = query.Sum(Function(x) x.o_gas_c_20)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC16 = query.Sum(Function(x) x.o_gas_c_16)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC10 = query.Sum(Function(x) x.o_gas_c_10)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC4 = query.Sum(Function(x) x.o_gas_c_4)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC18 = query.Sum(Function(x) x.o_gas_c_18)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC14 = query.Sum(Function(x) x.o_gas_c_14)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC5 = query.Sum(Function(x) x.o_gas_c_5)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGasC2 = query.Sum(Function(x) x.o_gas_c_2)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas50 = query.Sum(Function(x) x.o_gas_50)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas20 = query.Sum(Function(x) x.o_gas_20)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas16 = query.Sum(Function(x) x.o_gas_16)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas10 = query.Sum(Function(x) x.o_gas_10)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas4 = query.Sum(Function(x) x.o_gas_4)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas18 = query.Sum(Function(x) x.o_gas_18)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas14 = query.Sum(Function(x) x.o_gas_14)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas5 = query.Sum(Function(x) x.o_gas_5)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderGas2 = query.Sum(Function(x) x.o_gas_2)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty50 = query.Sum(Function(x) x.o_empty_50)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty20 = query.Sum(Function(x) x.o_empty_20)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty16 = query.Sum(Function(x) x.o_empty_16)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty10 = query.Sum(Function(x) x.o_empty_10)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty4 = query.Sum(Function(x) x.o_empty_4)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty18 = query.Sum(Function(x) x.o_empty_18)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty14 = query.Sum(Function(x) x.o_empty_14)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty5 = query.Sum(Function(x) x.o_empty_5)
+                        Catch ex As Exception
+                        End Try
+                        Try
+                            orderEmpty2 = query.Sum(Function(x) x.o_empty_2)
+                        Catch ex As Exception
+                        End Try
+
+
+                        cus.cus_gas_50 = cus.cus_gas_50 + orderInQty50 + orderNewInQty50 + orderInspectInQty50 - orderGasC50 - orderGas50 - orderEmpty50
+            cus.cus_gas_20 = cus.cus_gas_20 + orderInQty20 + orderNewInQty20 + orderInspectInQty20 - orderGasC20 - orderGas20 - orderEmpty20
+            cus.cus_gas_16 = cus.cus_gas_16 + orderInQty16 + orderNewInQty16 + orderInspectInQty16 - orderGasC16 - orderGas16 - orderEmpty16
+            cus.cus_gas_10 = cus.cus_gas_10 + orderInQty10 + orderNewInQty10 + orderInspectInQty10 - orderGasC10 - orderGas10 - orderEmpty10
+            cus.cus_gas_4 = cus.cus_gas_4 + orderInQty4 + orderNewInQty4 + orderInspectInQty4 - orderGasC4 - orderGas4 - orderEmpty4
+            cus.cus_gas_18 = cus.cus_gas_18 + orderInQty18 + orderNewInQty18 + orderInspectInQty18 - orderGasC18 - orderGas18 - orderEmpty18
+            cus.cus_gas_14 = cus.cus_gas_14 + orderInQty14 + orderNewInQty14 + orderInspectInQty14 - orderGasC14 - orderGas14 - orderEmpty14
+            cus.cus_gas_5 = cus.cus_gas_5 + orderInQty5 + orderNewInQty5 + orderInspectInQty5 - orderGasC5 - orderGas5 - orderEmpty5
+            cus.cus_gas_2 = cus.cus_gas_2 + orderInQty2 + orderNewInQty2 + orderInspectInQty2 - orderGasC2 - orderGas2 - orderEmpty2
+
+            Dim totalBarrel = cus.cus_gas_50 + cus.cus_gas_20 + cus.cus_gas_16 + cus.cus_gas_10 + cus.cus_gas_4 + cus.cus_gas_18 + cus.cus_gas_14 + cus.cus_gas_5 + cus.cus_gas_2
+            .WriteToCell(rowIndex, 1, cus.cus_code)
+            .WriteToCell(rowIndex, 2, cus.cus_name)
+            .WriteToCell(rowIndex, 3, cus.cus_gas_50.ToString)
+            .WriteToCell(rowIndex, 4, cus.cus_gas_20.ToString)
+            .WriteToCell(rowIndex, 5, cus.cus_gas_16.ToString)
+            .WriteToCell(rowIndex, 6, cus.cus_gas_10.ToString)
+            .WriteToCell(rowIndex, 7, cus.cus_gas_4.ToString)
+            .WriteToCell(rowIndex, 8, cus.cus_gas_18.ToString)
+            .WriteToCell(rowIndex, 9, cus.cus_gas_14.ToString)
+            .WriteToCell(rowIndex, 10, cus.cus_gas_5.ToString)
+            .WriteToCell(rowIndex, 11, cus.cus_gas_2.ToString)
+            .WriteToCell(rowIndex, 12, totalBarrel.ToString)
+            .InsertRow(rowIndex)
+            rowIndex += 1
+            totalSum += totalBarrel
+            Next
+
+            Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
+                .Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center
+            }
+
+            .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+            .WriteToCell(rowIndex, 2, "合計", totalStyle)
+            .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50).ToString)
+            .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20).ToString)
+            .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16).ToString)
+            .WriteToCell(rowIndex, 6, customers.Sum(Function(x) x.cus_gas_10).ToString)
+            .WriteToCell(rowIndex, 7, customers.Sum(Function(x) x.cus_gas_4).ToString)
+            .WriteToCell(rowIndex, 8, customers.Sum(Function(x) x.cus_gas_18).ToString)
+            .WriteToCell(rowIndex, 9, customers.Sum(Function(x) x.cus_gas_14).ToString)
+            .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5).ToString)
+            .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2).ToString)
+            .WriteToCell(rowIndex, 12, totalSum.ToString)
+
+            '存檔
+            Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶鋼瓶結存總冊.xlsx")
+            .SaveAs(exportFilePath)
+
+            '取得印表機
+            Dim printerName = _printerSer.GetOrSelectPrinter
                     .Print(exportFilePath, printerName, 1, 4)
+
                 End With
             End Using
         Catch ex As Exception
@@ -1349,7 +2149,9 @@ Public Class OrderPresenter
             Dim diff = finalStock - initStock
             Dim cusProperty = currentCustomer.GetType().GetProperty($"cus_gas_{barrelType}")
             Dim currentStock = CInt(cusProperty.GetValue(currentCustomer))
-            cusProperty.SetValue(currentCustomer, currentStock + diff)
+
+            'edit by Kevin 20251103 不用回存到 customer資料表
+            'cusProperty.SetValue(currentCustomer, currentStock + diff)
 
             If diff <> 0 Then
                 _logger.LogInfo($"[UpdateCustomerStockByDiff] {barrelType}Kg: 初始={initStock}, 結存={finalStock}, 差值={diff}, 更新後={currentStock + diff}")

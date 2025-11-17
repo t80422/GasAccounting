@@ -593,4 +593,8 @@ Public Class ucOrder
                 btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
         End Select
     End Sub
+
+    Private Sub dgvOrder_SelectionChanged(sender As Object, e As DataGridViewCellMouseEventArgs)
+
+    End Sub
 End Class

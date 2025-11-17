@@ -4,50 +4,52 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f3026bfe868e4a868cd9929ee7884524" Name="Diagram1" ShowGrid="true" ZoomLevel="74">
-        <EntityTypeShape EntityType="gas_accounting_systemModel.accounting_entry" Width="1.5" PointX="8.25" PointY="25.125" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.bank" Width="1.5" PointX="3" PointY="40.625" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.bank_monthly_balances" Width="1.5" PointX="5.25" PointY="52.875" />
+      <Diagram DiagramId="f3026bfe868e4a868cd9929ee7884524" Name="Diagram1" ShowGrid="true" ZoomLevel="39">
+        <EntityTypeShape EntityType="gas_accounting_systemModel.accounting_entry" Width="1.5" PointX="8.25" PointY="52" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.bank" Width="1.5" PointX="3" PointY="50.125" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.bank_monthly_balances" Width="1.5" PointX="5.25" PointY="60.375" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.barrel_monthly_balances" Width="1.5" PointX="3" PointY="1" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.basic_price" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.basic_set" Width="1.5" PointX="2.75" PointY="4.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.car" Width="1.5" PointX="5.25" PointY="56.25" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.cheque" Width="1.5" PointX="10.5" PointY="42.25" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.closing_entry" Width="1.5" PointX="8.25" PointY="21.5" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.collection" Width="1.5" PointX="8.25" PointY="41.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.company" Width="1.5" PointX="0.75" PointY="43.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.customer" Width="1.5" PointX="3" PointY="44.875" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.employee" Width="1.5" PointX="11.25" PointY="56" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.car" Width="1.5" PointX="11.25" PointY="30.625" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.cheque" Width="1.5" PointX="10.5" PointY="56.25" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.chque_pay" Width="1.5" PointX="3" PointY="54.75" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.closing_entry" Width="1.5" PointX="8.25" PointY="55.25" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.collection" Width="1.5" PointX="8.25" PointY="45.75" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.company" Width="1.5" PointX="0.75" PointY="42.875" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.customer" Width="1.5" PointX="9" PointY="37" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.employee" Width="1.5" PointX="11.25" PointY="25.875" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.gas_barrel" Width="1.5" PointX="0.75" PointY="1.125" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.gas_monthly_balances" Width="1.5" PointX="3" PointY="82.625" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.inspection" Width="1.5" PointX="5.25" PointY="27.5" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.invoice" Width="1.5" PointX="5.25" PointY="65.125" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.invoice_split" Width="1.5" PointX="3" PointY="79" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.manufacturer" Width="1.5" PointX="3.75" PointY="20.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.monthly_account" Width="1.5" PointX="5.25" PointY="61.125" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.order_collection_mapping" Width="1.5" PointX="13.5" PointY="42.875" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.order" Width="1.5" PointX="13.5" PointY="46.375" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.permission" Width="1.5" PointX="9" PointY="64.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.priceplan" Width="1.5" PointX="0.75" PointY="48.5" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.purchase_barrel" Width="1.5" PointX="8" PointY="47.625" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.rolepermission" Width="1.5" PointX="11.25" PointY="60.5" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.role" Width="1.5" PointX="9" PointY="56.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.scrap_barrel" Width="1.5" PointX="8" PointY="59.875" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.scrap_barrel_detail" Width="1.5" PointX="10.25" PointY="47.125" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.gas_monthly_balances" Width="1.5" PointX="3" PointY="80.25" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.inspection" Width="1.5" PointX="11.25" PointY="47.375" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.invoice" Width="1.5" PointX="11.25" PointY="39.25" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.invoice_split" Width="1.5" PointX="3" PointY="46.625" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.manufacturer" Width="1.5" PointX="0.75" PointY="36" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.monthly_account" Width="1.5" PointX="11.25" PointY="43.375" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.order_collection_mapping" Width="1.5" PointX="15.75" PointY="36.125" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.payment" Width="1.5" PointX="5.25" PointY="46" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.permission" Width="1.5" PointX="9" PointY="22.625" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.priceplan" Width="1.5" PointX="6.75" PointY="36.625" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.purchase" Width="1.5" PointX="6" PointY="40.5" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.purchase_barrel" Width="1.5" PointX="3" PointY="39.75" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.rolepermission" Width="1.5" PointX="11.25" PointY="22.375" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.role" Width="1.5" PointX="9" PointY="26.625" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.scrap_barrel" Width="1.5" PointX="14" PointY="50" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.scrap_barrel_detail" Width="1.5" PointX="16.25" PointY="39.25" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.stock" Width="1.5" PointX="4.75" PointY="4.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.subject" Width="1.5" PointX="6" PointY="23.25" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.subject" Width="1.5" PointX="6" PointY="51.75" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.surplus_gas" Width="1.5" PointX="5.75" PointY="0.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.write_off" Width="1.5" PointX="10.5" PointY="52" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.write_off" Width="1.5" PointX="16.5" PointY="45.75" />
         <AssociationConnector Association="gas_accounting_systemModel.accounting_entry_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.bank_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.bank_monthly_balances_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.collection_ibfk_3" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.barrel_monthly_balances_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.car_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.car_ibfk_2" />
-        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.cheque_ibfk_1" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_5" />
         <AssociationConnector Association="gas_accounting_systemModel.closing_entry_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.closing_entry_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.collection_ibfk_1" />
@@ -58,36 +60,34 @@
         <AssociationConnector Association="gas_accounting_systemModel.customer_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.gas_monthly_balances_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.invoice_split_ibfk_1" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_3" />
+        <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.customer_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.inspection_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.invoice_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.monthly_account_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_5" />
         <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.employee_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_3" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_4" />
+        <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_2" />
+        <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.write_off_ibfk_2" />
-        <AssociationConnector Association="gas_accounting_systemModel.order_collection_mapping_ibfk_2" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_4" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_4" />
         <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.purchase" Width="1.5" PointX="8" PointY="31.875" />
-        <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_2" />
-        <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_3" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.chque_pay" Width="1.5" PointX="8" PointY="37.75" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.payment" Width="1.5" PointX="10.25" PointY="32.125" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_2" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_5" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_3" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_4" />
+        <EntityTypeShape EntityType="gas_accounting_systemModel.order" Width="1.5" PointX="13.5" PointY="23.75" />
+        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_1" />
+        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_2" />
+        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_5" />
+        <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_3" />
+        <AssociationConnector Association="gas_accounting_systemModel.order_collection_mapping_ibfk_2" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

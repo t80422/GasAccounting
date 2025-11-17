@@ -122,7 +122,7 @@ Partial Public Class order
     Public Property o_cus_14 As Integer
     Public Property o_cus_5 As Integer
     Public Property o_cus_2 As Integer
-    Public Property o_create_at As Date
+    Public Property o_create_at As Nullable(Of Date)
     Public Property o_update_at As Nullable(Of Date)
 
     Public Overridable Property car As car
