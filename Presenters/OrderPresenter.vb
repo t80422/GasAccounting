@@ -400,10 +400,18 @@ Public Class OrderPresenter
             'edit by kevin 20251103
             Dim db As New gas_accounting_systemEntities
             Dim endOfToday As DateTime = Date.Today + New TimeSpan(23, 59, 59)
-            Dim query = From o In db.orders Where o.o_date < endOfToday AndAlso o.o_cus_Id = currentCustomer.cus_id Select o
+            Dim query = (From o In db.orders
+                         Where o.o_date < endOfToday AndAlso o.o_cus_Id = currentCustomer.cus_id
+                         Select o.o_in_50, o.o_in_20, o.o_in_16, o.o_in_10, o.o_in_4, o.o_in_18, o.o_in_14, o.o_in_5, o.o_in_2,
+                                o.o_new_in_50, o.o_new_in_20, o.o_new_in_16, o.o_new_in_10, o.o_new_in_4, o.o_new_in_18, o.o_new_in_14, o.o_new_in_5, o.o_new_in_2,
+                                o.o_inspect_50, o.o_inspect_20, o.o_inspect_16, o.o_inspect_10, o.o_inspect_4, o.o_inspect_18, o.o_inspect_14, o.o_inspect_5, o.o_inspect_2,
+                                o.o_gas_c_50, o.o_gas_c_20, o.o_gas_c_16, o.o_gas_c_10, o.o_gas_c_4, o.o_gas_c_18, o.o_gas_c_14, o.o_gas_c_5, o.o_gas_c_2,
+                                o.o_gas_50, o.o_gas_20, o.o_gas_16, o.o_gas_10, o.o_gas_4, o.o_gas_18, o.o_gas_14, o.o_gas_5, o.o_gas_2,
+                                o.o_empty_50, o.o_empty_20, o.o_empty_16, o.o_empty_10, o.o_empty_4, o.o_empty_18, o.o_empty_14, o.o_empty_5, o.o_empty_2).ToList
 
             'Dim sql As String = query.ToString()
             Dim counter50to2 = 0
+
             For Each prop In initProps
                 Dim barrelType = prop.Name.Substring(7)
                 Dim currentStk = prop.GetValue(initCusStk)
@@ -1658,56 +1666,56 @@ Public Class OrderPresenter
 
 
                         cus.cus_gas_50 = cus.cus_gas_50 + orderInQty50 + orderNewInQty50 + orderInspectInQty50 - orderGasC50 - orderGas50 - orderEmpty50
-            cus.cus_gas_20 = cus.cus_gas_20 + orderInQty20 + orderNewInQty20 + orderInspectInQty20 - orderGasC20 - orderGas20 - orderEmpty20
-            cus.cus_gas_16 = cus.cus_gas_16 + orderInQty16 + orderNewInQty16 + orderInspectInQty16 - orderGasC16 - orderGas16 - orderEmpty16
-            cus.cus_gas_10 = cus.cus_gas_10 + orderInQty10 + orderNewInQty10 + orderInspectInQty10 - orderGasC10 - orderGas10 - orderEmpty10
-            cus.cus_gas_4 = cus.cus_gas_4 + orderInQty4 + orderNewInQty4 + orderInspectInQty4 - orderGasC4 - orderGas4 - orderEmpty4
-            cus.cus_gas_18 = cus.cus_gas_18 + orderInQty18 + orderNewInQty18 + orderInspectInQty18 - orderGasC18 - orderGas18 - orderEmpty18
-            cus.cus_gas_14 = cus.cus_gas_14 + orderInQty14 + orderNewInQty14 + orderInspectInQty14 - orderGasC14 - orderGas14 - orderEmpty14
-            cus.cus_gas_5 = cus.cus_gas_5 + orderInQty5 + orderNewInQty5 + orderInspectInQty5 - orderGasC5 - orderGas5 - orderEmpty5
-            cus.cus_gas_2 = cus.cus_gas_2 + orderInQty2 + orderNewInQty2 + orderInspectInQty2 - orderGasC2 - orderGas2 - orderEmpty2
+                        cus.cus_gas_20 = cus.cus_gas_20 + orderInQty20 + orderNewInQty20 + orderInspectInQty20 - orderGasC20 - orderGas20 - orderEmpty20
+                        cus.cus_gas_16 = cus.cus_gas_16 + orderInQty16 + orderNewInQty16 + orderInspectInQty16 - orderGasC16 - orderGas16 - orderEmpty16
+                        cus.cus_gas_10 = cus.cus_gas_10 + orderInQty10 + orderNewInQty10 + orderInspectInQty10 - orderGasC10 - orderGas10 - orderEmpty10
+                        cus.cus_gas_4 = cus.cus_gas_4 + orderInQty4 + orderNewInQty4 + orderInspectInQty4 - orderGasC4 - orderGas4 - orderEmpty4
+                        cus.cus_gas_18 = cus.cus_gas_18 + orderInQty18 + orderNewInQty18 + orderInspectInQty18 - orderGasC18 - orderGas18 - orderEmpty18
+                        cus.cus_gas_14 = cus.cus_gas_14 + orderInQty14 + orderNewInQty14 + orderInspectInQty14 - orderGasC14 - orderGas14 - orderEmpty14
+                        cus.cus_gas_5 = cus.cus_gas_5 + orderInQty5 + orderNewInQty5 + orderInspectInQty5 - orderGasC5 - orderGas5 - orderEmpty5
+                        cus.cus_gas_2 = cus.cus_gas_2 + orderInQty2 + orderNewInQty2 + orderInspectInQty2 - orderGasC2 - orderGas2 - orderEmpty2
 
-            Dim totalBarrel = cus.cus_gas_50 + cus.cus_gas_20 + cus.cus_gas_16 + cus.cus_gas_10 + cus.cus_gas_4 + cus.cus_gas_18 + cus.cus_gas_14 + cus.cus_gas_5 + cus.cus_gas_2
-            .WriteToCell(rowIndex, 1, cus.cus_code)
-            .WriteToCell(rowIndex, 2, cus.cus_name)
-            .WriteToCell(rowIndex, 3, cus.cus_gas_50.ToString)
-            .WriteToCell(rowIndex, 4, cus.cus_gas_20.ToString)
-            .WriteToCell(rowIndex, 5, cus.cus_gas_16.ToString)
-            .WriteToCell(rowIndex, 6, cus.cus_gas_10.ToString)
-            .WriteToCell(rowIndex, 7, cus.cus_gas_4.ToString)
-            .WriteToCell(rowIndex, 8, cus.cus_gas_18.ToString)
-            .WriteToCell(rowIndex, 9, cus.cus_gas_14.ToString)
-            .WriteToCell(rowIndex, 10, cus.cus_gas_5.ToString)
-            .WriteToCell(rowIndex, 11, cus.cus_gas_2.ToString)
-            .WriteToCell(rowIndex, 12, totalBarrel.ToString)
-            .InsertRow(rowIndex)
-            rowIndex += 1
-            totalSum += totalBarrel
-            Next
+                        Dim totalBarrel = cus.cus_gas_50 + cus.cus_gas_20 + cus.cus_gas_16 + cus.cus_gas_10 + cus.cus_gas_4 + cus.cus_gas_18 + cus.cus_gas_14 + cus.cus_gas_5 + cus.cus_gas_2
+                        .WriteToCell(rowIndex, 1, cus.cus_code)
+                        .WriteToCell(rowIndex, 2, cus.cus_name)
+                        .WriteToCell(rowIndex, 3, cus.cus_gas_50.ToString)
+                        .WriteToCell(rowIndex, 4, cus.cus_gas_20.ToString)
+                        .WriteToCell(rowIndex, 5, cus.cus_gas_16.ToString)
+                        .WriteToCell(rowIndex, 6, cus.cus_gas_10.ToString)
+                        .WriteToCell(rowIndex, 7, cus.cus_gas_4.ToString)
+                        .WriteToCell(rowIndex, 8, cus.cus_gas_18.ToString)
+                        .WriteToCell(rowIndex, 9, cus.cus_gas_14.ToString)
+                        .WriteToCell(rowIndex, 10, cus.cus_gas_5.ToString)
+                        .WriteToCell(rowIndex, 11, cus.cus_gas_2.ToString)
+                        .WriteToCell(rowIndex, 12, totalBarrel.ToString)
+                        .InsertRow(rowIndex)
+                        rowIndex += 1
+                        totalSum += totalBarrel
+                    Next
 
-            Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
-                .Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center
-            }
+                    Dim totalStyle = New CloseXML_Excel.CellFormatOptions With {
+                        .Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center
+                    }
 
-            .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
-            .WriteToCell(rowIndex, 2, "合計", totalStyle)
-            .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50).ToString)
-            .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20).ToString)
-            .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16).ToString)
-            .WriteToCell(rowIndex, 6, customers.Sum(Function(x) x.cus_gas_10).ToString)
-            .WriteToCell(rowIndex, 7, customers.Sum(Function(x) x.cus_gas_4).ToString)
-            .WriteToCell(rowIndex, 8, customers.Sum(Function(x) x.cus_gas_18).ToString)
-            .WriteToCell(rowIndex, 9, customers.Sum(Function(x) x.cus_gas_14).ToString)
-            .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5).ToString)
-            .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2).ToString)
-            .WriteToCell(rowIndex, 12, totalSum.ToString)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+                    .WriteToCell(rowIndex, 2, "合計", totalStyle)
+                    .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50).ToString)
+                    .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20).ToString)
+                    .WriteToCell(rowIndex, 5, customers.Sum(Function(x) x.cus_gas_16).ToString)
+                    .WriteToCell(rowIndex, 6, customers.Sum(Function(x) x.cus_gas_10).ToString)
+                    .WriteToCell(rowIndex, 7, customers.Sum(Function(x) x.cus_gas_4).ToString)
+                    .WriteToCell(rowIndex, 8, customers.Sum(Function(x) x.cus_gas_18).ToString)
+                    .WriteToCell(rowIndex, 9, customers.Sum(Function(x) x.cus_gas_14).ToString)
+                    .WriteToCell(rowIndex, 10, customers.Sum(Function(x) x.cus_gas_5).ToString)
+                    .WriteToCell(rowIndex, 11, customers.Sum(Function(x) x.cus_gas_2).ToString)
+                    .WriteToCell(rowIndex, 12, totalSum.ToString)
 
-            '存檔
-            Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶鋼瓶結存總冊.xlsx")
-            .SaveAs(exportFilePath)
+                    '存檔
+                    Dim exportFilePath = Path.Combine(Application.StartupPath, "報表", "客戶鋼瓶結存總冊.xlsx")
+                    .SaveAs(exportFilePath)
 
-            '取得印表機
-            Dim printerName = _printerSer.GetOrSelectPrinter
+                    '取得印表機
+                    Dim printerName = _printerSer.GetOrSelectPrinter
                     .Print(exportFilePath, printerName, 1, 4)
 
                 End With
