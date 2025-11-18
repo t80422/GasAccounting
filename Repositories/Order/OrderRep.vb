@@ -1,4 +1,5 @@
 ﻿Imports System.Data.Entity
+Imports System.Data.Entity.Core.Mapping
 
 Public Class OrderRep
     Inherits Repository(Of order)
@@ -94,6 +95,15 @@ Public Class OrderRep
                 OrderByDescending(Function(x) x.o_date).
                 ThenByDescending(Function(x) x.o_id).
                 FirstOrDefault()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetCustomerStock(cusId As Integer) As List(Of order) Implements IOrderRep.GetCustomerStock
+        Try
+            Dim endDate = Today.Date.AddDays(1)
+            Return _dbSet.AsNoTracking.Where(Function(x) x.o_cus_Id = cusId AndAlso x.o_date < endDate).ToList
         Catch ex As Exception
             Throw
         End Try

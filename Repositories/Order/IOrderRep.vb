@@ -17,4 +17,6 @@
     Function GetByCusIdAndDate(cusId As Integer, day As Date) As List(Of order)
 
     Function GetLastOrder(cusId As Integer) As order
+
+    Function GetCustomerStock(cusId As Integer) As List(Of order)
 End Interface
