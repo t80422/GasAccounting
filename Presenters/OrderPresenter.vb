@@ -340,6 +340,7 @@ Public Class OrderPresenter
     ''' 計算結存瓶
     ''' </summary>
     Private Sub CaculateCusBarrelStock()
+        If currentCustomer Is Nothing Then Return
 
         InitCustStock(30) = New Integer() {27, 101, 0, 0, 0, 0, 0, 0, 0}
         InitCustStock(50) = New Integer() {6, 42, 3, 2, 1, 0, 0, 0, 0}

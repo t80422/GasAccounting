@@ -66,11 +66,4 @@ Public Class frmLogin
                                       ToList
         End Using
     End Function
-
-    Private Sub frmLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        UsernameTextBox.Text = "qq"
-        PasswordTextBox.Text = "dd"
-        ' OrderPresenter.vb   1332行   PrintPDF(pdfPath)
-
-    End Sub
 End Class
