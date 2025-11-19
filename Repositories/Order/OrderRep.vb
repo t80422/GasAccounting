@@ -18,13 +18,31 @@ Public Class OrderRep
                 Dim month = order.o_date.Value.Month
                 Dim startDate = New DateTime(year, month, 1)
                 Dim endDate = startDate.AddMonths(1)
-                Dim orderMonthData = _dbSet.AsNoTracking.
-                                     Where(Function(x) x.o_cus_Id = order.o_cus_Id AndAlso x.o_date >= startDate AndAlso x.o_date < endDate).
-                                     ToList
-                Dim orderMonth = orderMonthData.Select(Function(x) New OrderVoucherVM(x))
+                'Dim orderMonthData = _dbSet.AsNoTracking.
+                '                     Where(Function(x) x.o_cus_Id = order.o_cus_Id AndAlso x.o_date >= startDate AndAlso x.o_date < endDate).
+                '                     ToList
+                'Dim orderMonth = orderMonthData.Select(Function(x) New OrderVoucherVM(x))
+                Dim baseQuery = _dbSet.AsNoTracking().
+                                Where(Function(x) x.o_date.Value >= startDate AndAlso
+                                                 x.o_date.Value < endDate AndAlso
+                                                 x.o_cus_Id = order.o_cus_Id)
 
-                result.本月累計實提量 = orderMonth.Sum(Function(x) x.本日提量)
-                result.本月累計退氣 = orderMonth.Sum(Function(x) x.本日退氣)
+                Dim count_t = baseQuery.Sum(Function(x) _
+                                                x.o_gas_c_50 * 50 + x.o_gas_50 * 50 +
+                                                x.o_gas_c_20 * 20 + x.o_gas_20 * 20 +
+                                                x.o_gas_c_16 * 16 + x.o_gas_16 * 16 +
+                                                x.o_gas_c_10 * 10 + x.o_gas_10 * 10 +
+                                                x.o_gas_c_4 * 4 + x.o_gas_4 * 4 +
+                                                x.o_gas_c_18 * 18 + x.o_gas_18 * 18 +
+                                                x.o_gas_c_14 * 14 + x.o_gas_14 * 14 +
+                                                x.o_gas_c_2 * 2 + x.o_gas_2 * 2 +
+                                                x.o_gas_c_5 * 5 + x.o_gas_5 * 5
+                )
+
+                Dim count_re = baseQuery.Sum(Function(x) x.o_return + x.o_return_c)
+
+                result.本月累計實提量 = count_t
+                result.本月累計退氣 = count_re
 
                 '確認是當月還是全部
                 result.尚欠氣款 = 0
