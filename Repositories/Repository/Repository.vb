@@ -19,7 +19,7 @@ Public Class Repository(Of TEntity As Class)
 
     Public Async Function GetAllAsync() As Task(Of IEnumerable(Of TEntity)) Implements IRepository(Of TEntity).GetAllAsync
         Try
-            Return Await _dbSet.ToListAsync()
+            Return Await _dbSet.AsNoTracking.ToListAsync()
         Catch ex As Exception
             Throw New Exception("獲取所有實體時發生錯誤", ex)
         End Try

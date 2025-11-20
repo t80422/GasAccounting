@@ -15,6 +15,11 @@ Public Interface IUnitOfWork
     ReadOnly Property PaymentRepository As IPaymentRep
     ReadOnly Property ChequePayRepository As IChequePayRep
     ReadOnly Property ReportRepository As IReportRep
+    ReadOnly Property BankRepository As IBankRep
+    ReadOnly Property BankMonthlyBalancesRepository As IBankMonthlyBalancesRep
+    ReadOnly Property CollectionRepository As ICollectionRep
+    ReadOnly Property CustomerRepository As ICustomerRep
+    ReadOnly Property ChequeRepository As IChequeRep
 
     Sub BeginTransaction()
     Sub Commit()

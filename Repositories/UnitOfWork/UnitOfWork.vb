@@ -22,6 +22,11 @@ Public Class UnitOfWork
     Private _paymentRepository As IPaymentRep
     Private _chequePayRepository As IChequePayRep
     Private _reportRepository As IReportRep
+    Private _bankRepository As IBankRep
+    Private _bankMonthlyBalancesRepository As IBankMonthlyBalancesRep
+    Private _collectionRepository As ICollectionRep
+    Private _customerRepository As ICustomerRep
+    Private _chequeRepository As IChequeRep
 
     ''' <summary>
     ''' 預設建構子 - 給正式環境使用（自己創建新的 DbContext）
@@ -137,6 +142,51 @@ Public Class UnitOfWork
         Get
             If _reportRepository Is Nothing Then _reportRepository = New ReportRep(_context)
             Return _reportRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property BankRepository As IBankRep Implements IUnitOfWork.BankRepository
+        Get
+            If _bankRepository Is Nothing Then
+                _bankRepository = New BankRep(_context)
+            End If
+            Return _bankRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property BankMonthlyBalancesRepository As IBankMonthlyBalancesRep Implements IUnitOfWork.BankMonthlyBalancesRepository
+        Get
+            If _bankMonthlyBalancesRepository Is Nothing Then
+                _bankMonthlyBalancesRepository = New BankMonthlyBalancesRep(_context)
+            End If
+            Return _bankMonthlyBalancesRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property CollectionRepository As ICollectionRep Implements IUnitOfWork.CollectionRepository
+        Get
+            If _collectionRepository Is Nothing Then
+                _collectionRepository = New CollectionRep(_context)
+            End If
+            Return _collectionRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property CustomerRepository As ICustomerRep Implements IUnitOfWork.CustomerRepository
+        Get
+            If _customerRepository Is Nothing Then
+                _customerRepository = New CustomerRep(_context)
+            End If
+            Return _customerRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property ChequeRepository As IChequeRep Implements IUnitOfWork.ChequeRepository
+        Get
+            If _chequeRepository Is Nothing Then
+                _chequeRepository = New ChequeRep(_context)
+            End If
+            Return _chequeRepository
         End Get
     End Property
 

@@ -1,29 +1,19 @@
 ﻿Public Class CollectionPresenter
     Private _view As ICollectionView
-    Private ReadOnly _subjectRep As ISubjectRep
-    Private ReadOnly _colRep As ICollectionRep
-    Private ReadOnly _bankRep As IBankRep
-    Private ReadOnly _cusRep As ICustomerRep
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
-    Private ReadOnly _chequeRep As IChequeRep
     Private ReadOnly _aeSer As IAccountingEntryService
-    Private ReadOnly _compRep As ICompanyRep
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
     Private ReadOnly _reportSer As IReportService
     Private _currentData As collection
     Private _currentCheque As cheque
 
-    Public Sub New(subjectRep As ISubjectRep, colRep As ICollectionRep, bankRep As IBankRep, cusRep As ICustomerRep,
-                   bmbService As IBankMonthlyBalanceService, chequeRep As IChequeRep, aeSer As IAccountingEntryService, compRep As ICompanyRep, ocmSer As IOrderCollectionMappingService,
-                   reportSer As IReportService)
-        _subjectRep = subjectRep
-        _colRep = colRep
-        _bankRep = bankRep
-        _cusRep = cusRep
+    ''' <summary>
+    ''' 建構子：使用 UnitOfWork 模式，只需注入 Service 層依賴
+    ''' </summary>
+    Public Sub New(bmbService As IBankMonthlyBalanceService, aeSer As IAccountingEntryService,
+                   ocmSer As IOrderCollectionMappingService, reportSer As IReportService)
         _bmbService = bmbService
-        _chequeRep = chequeRep
         _aeSer = aeSer
-        _compRep = compRep
         _ocmSer = ocmSer
         _reportSer = reportSer
     End Sub
@@ -45,28 +35,38 @@
     End Sub
 
     Private Async Sub LoadCmbsAsync()
-        _view.SetBankCmb(Await _bankRep.GetBankDropdownAsync)
-        _view.SetCompanyCmb(Await _compRep.GetCompanyDropdownAsync)
-        _view.SetSubjectCmb(Await _subjectRep.GetSubjectDropdownAsync)
+        Try
+            Using uow As New UnitOfWork()
+                _view.SetBankCmb(Await uow.BankRepository.GetBankDropdownAsync)
+                _view.SetCompanyCmb(Await uow.CompanyRepository.GetCompanyDropdownAsync)
+                _view.SetSubjectCmb(Await uow.SubjectRepository.GetSubjectDropdownAsync)
+            End Using
+        Catch ex As Exception
+            MsgBox("載入下拉選單時發生錯誤：" & ex.Message)
+        End Try
     End Sub
 
     Public Sub LoadList(Optional criteria As CollectionSearchCriteria = Nothing)
         Try
-            Dim datas = _colRep.GetList(criteria)
-            _view.DisplayList(datas)
+            Using uow As New UnitOfWork()
+                Dim datas = uow.CollectionRepository.GetList(criteria)
+                _view.DisplayList(datas)
+            End Using
         Catch ex As Exception
-            MsgBox(ex.StackTrace)
+            MsgBox("載入清單時發生錯誤：" & ex.Message)
         End Try
     End Sub
 
     Public Async Sub Add()
-        Using transaction = _colRep.BeginTransaction
+        Using uow As New UnitOfWork()
             Try
+                uow.BeginTransaction()
+
                 Dim input = _view.GetUserInput
                 Validate(input)
                 input.col_UnmatchedAmount = input.col_Amount
 
-                Dim col = Await _colRep.AddAsync(input)
+                Dim col = Await uow.CollectionRepository.AddAsync(input)
                 Dim chequeNo As String = ""
 
                 Select Case input.col_Type
@@ -74,18 +74,19 @@
                         Dim cheInput = _view.GetChequeInput
                         Validate(cheInput)
                         cheInput.che_col_Id = col.col_Id
-                        Await _chequeRep.AddAsync(cheInput)
+                        Await uow.ChequeRepository.AddAsync(cheInput)
+
                     Case "銀行存款"
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
 
                         ' 支票兌現
-                        Dim subject = _subjectRep.GetByIdAsync(col.col_s_Id).Result
+                        Dim subject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
 
                         If subject.s_name = "應收票據" Then
                             chequeNo = _view.GetChequeNumber()
 
                             If Not String.IsNullOrEmpty(chequeNo) Then
-                                Dim cheque = Await _chequeRep.GetByNumberAsync(chequeNo)
+                                Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(chequeNo)
 
                                 If cheque Is Nothing Then
                                     Throw New Exception("找不到此支票")
@@ -100,55 +101,60 @@
                                 End If
                             End If
                         End If
-
                 End Select
 
                 Dim entries = CreatePaymentEntries(input)
                 _aeSer.AddEntries(entries)
 
-                Await _colRep.SaveChangesAsync
+                Await uow.SaveChangesAsync()
 
-                transaction.Commit()
+                uow.Commit()
                 Initialize()
                 MsgBox("新增成功")
             Catch ex As Exception
-                transaction.Rollback()
+                uow.Rollback()
                 Console.WriteLine(ex.StackTrace)
-                MsgBox(ex.Message)
+                MsgBox("新增時發生錯誤：" & ex.Message)
             End Try
         End Using
     End Sub
 
     Public Sub LoadDetail(id As Integer)
         Try
-            _currentData = _colRep.GetByIdAsync(id).Result
-            _currentCheque = If(String.IsNullOrEmpty(_currentData.col_Cheque), Nothing, _chequeRep.GetByNumberAsync(_currentData.col_Cheque).Result)
-            _view.ClearInput()
-            _view.DisplayDetail(_currentData)
-            If _currentCheque IsNot Nothing Then _view.ShowCheque(_currentCheque)
+            Using uow As New UnitOfWork()
+                _currentData = uow.CollectionRepository.GetByIdAsync(id).Result
+                _currentCheque = If(String.IsNullOrEmpty(_currentData.col_Cheque), Nothing,
+                                   uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque).Result)
+                _view.ClearInput()
+                _view.DisplayDetail(_currentData)
+                If _currentCheque IsNot Nothing Then _view.ShowCheque(_currentCheque)
+            End Using
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            MessageBox.Show("載入詳細資料時發生錯誤：" & ex.Message)
         End Try
     End Sub
 
     Public Async Sub Edit()
-        Using transaction = _colRep.BeginTransaction
+        Using uow As New UnitOfWork()
             Try
+                uow.BeginTransaction()
+
                 Dim col = _view.GetUserInput
                 Validate(col)
                 '未銷帳
                 Dim paid = _ocmSer.CalculateCollectionUnmatched(col.col_Id)
                 col.col_UnmatchedAmount = col.col_Amount - paid
-                Await _colRep.UpdateAsync(_currentData, col)
+                Await uow.CollectionRepository.UpdateAsync(_currentData, col)
 
                 Select Case col.col_Type
                     Case "現金"
                         If _currentData.col_Type = "銀行存款" Then
                             Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
                         ElseIf _currentData.col_Type = "應收票據" Then
-                            Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
-                            Await _chequeRep.DeleteAsync(cheque.che_Id)
+                            Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                            Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
                         End If
+
                     Case "銀行存款"
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, _currentData.col_AccountMonth)
@@ -159,23 +165,24 @@
                         End If
 
                         If _currentData.col_Type = "應收票據" Then
-                            Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
-                            Await _chequeRep.DeleteAsync(cheque.che_Id)
+                            Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                            Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
                         End If
+
                     Case "應收票據"
                         Dim cheque = _view.GetChequeInput
 
                         If _currentData.col_Type = "應收票據" Then
-                            Dim orgCheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+                            Dim orgCheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
                             If orgCheque Is Nothing Then
                                 cheque.che_CollectionDate = col.col_Date
-                                Await _chequeRep.AddAsync(cheque)
+                                Await uow.ChequeRepository.AddAsync(cheque)
                             Else
                                 cheque.che_Id = orgCheque.che_Id
-                                Await _chequeRep.UpdateAsync(orgCheque, cheque)
+                                Await uow.ChequeRepository.UpdateAsync(orgCheque, cheque)
                             End If
                         ElseIf _currentData.col_Type = "現金" Then
-                            Await _chequeRep.AddAsync(cheque)
+                            Await uow.ChequeRepository.AddAsync(cheque)
                         ElseIf _currentData.col_Type = "銀行存款" Then
                             Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
                         End If
@@ -184,34 +191,38 @@
                 Dim entries = CreatePaymentEntries(col)
                 _aeSer.UpdateEntries(entries)
 
-                Await _colRep.SaveChangesAsync
-                transaction.Commit()
+                Await uow.SaveChangesAsync()
+                uow.Commit()
                 Initialize()
                 MsgBox("修改成功")
             Catch ex As Exception
-                transaction.Rollback()
-                MsgBox(ex.Message)
+                uow.Rollback()
+                MsgBox("修改時發生錯誤：" & ex.Message)
             End Try
         End Using
     End Sub
 
     Public Async Sub DeleteAsync()
         If MsgBox("確定要刪除?", vbYesNo, "警告") = MsgBoxResult.No Then Exit Sub
-        Using transaction = _colRep.BeginTransaction
+
+        Using uow As New UnitOfWork()
             Try
+                uow.BeginTransaction()
+
                 Dim payType = _currentData.col_Type
 
                 ' 銷帳
                 _ocmSer.DeleteCollection(_currentData.col_Id)
 
                 If payType = "應收票據" Then
-                    Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
-                    Await _chequeRep.DeleteAsync(cheque.che_Id)
+                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                    Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
+
                 ElseIf payType = "銀行存款" Then
                     Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
 
-                    ' 更新 支票資訊
-                    Dim cheque = Await _chequeRep.GetByNumberAsync(_currentData.col_Cheque)
+                    ' 更新支票資訊
+                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
 
                     If cheque IsNot Nothing Then
                         cheque.che_CashingDate = Nothing
@@ -220,16 +231,17 @@
                 End If
 
                 '刪除資料
-                Await _colRep.DeleteAsync(_currentData)
+                Await uow.CollectionRepository.DeleteAsync(_currentData)
 
                 _aeSer.DeleteEntries("收款作業", _currentData.col_Id)
 
-                transaction.Commit()
+                Await uow.SaveChangesAsync()
+                uow.Commit()
                 Initialize()
                 MsgBox("刪除成功")
             Catch ex As Exception
-                transaction.Rollback()
-                MsgBox(ex.Message)
+                uow.Rollback()
+                MsgBox("刪除時發生錯誤：" & ex.Message)
             End Try
         End Using
     End Sub
@@ -253,7 +265,14 @@
     End Sub
 
     Public Function GetCustomer(cusCode As String) As customer
-        Return _cusRep.GetByCusCode(cusCode)
+        Try
+            Using uow As New UnitOfWork()
+                Return uow.CustomerRepository.GetByCusCode(cusCode)
+            End Using
+        Catch ex As Exception
+            MsgBox("取得客戶資料時發生錯誤：" & ex.Message)
+            Return Nothing
+        End Try
     End Function
 
     ''' <summary>
@@ -263,16 +282,18 @@
     ''' <param name="type">傳票類型:現金、轉帳</param>
     Public Sub Print(selectDate As Date, type As String)
         Try
-            Select Case type
-                Case "現金"
-                    _reportSer.GeneratorCashSubpoena(selectDate, _colRep.GetCashSubpoenaData(selectDate), True)
-                Case "轉帳"
-                    _reportSer.GeneratorTransferSubpoena(selectDate, _colRep.GetTarnsferSubpoenaData(selectDate), True)
-                Case Else
-                    Throw New Exception("type 傳票類型 錯誤")
-            End Select
+            Using uow As New UnitOfWork()
+                Select Case type
+                    Case "現金"
+                        _reportSer.GeneratorCashSubpoena(selectDate, uow.CollectionRepository.GetCashSubpoenaData(selectDate), True)
+                    Case "轉帳"
+                        _reportSer.GeneratorTransferSubpoena(selectDate, uow.CollectionRepository.GetTarnsferSubpoenaData(selectDate), True)
+                    Case Else
+                        Throw New Exception("type 傳票類型錯誤")
+                End Select
+            End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MsgBox("列印時發生錯誤：" & ex.Message)
         End Try
     End Sub
 

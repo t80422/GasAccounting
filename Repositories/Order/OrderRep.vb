@@ -97,7 +97,7 @@ Public Class OrderRep
 
     Public Function GetByCusIdAndDate(cusId As Integer, day As Date) As List(Of order) Implements IOrderRep.GetByCusIdAndDate
         Try
-            Return _dbSet.Where(Function(x) x.o_date.Value.Year = day.Year AndAlso
+            Return _dbSet.AsNoTracking.Where(Function(x) x.o_date.Value.Year = day.Year AndAlso
                                             x.o_date.Value.Month = day.Month AndAlso
                                             x.o_date.Value.Day = day.Day AndAlso
                                             x.o_cus_Id = cusId).ToList
