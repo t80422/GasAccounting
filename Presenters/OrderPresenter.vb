@@ -717,14 +717,18 @@ Public Class OrderPresenter
     ''' 計算保險金額
     ''' </summary>
     Private Sub CalculateInsurance()
-        Dim input = _view.GetOrderInput
-        Dim result As Double = 0
+        Try
+            Dim input = _view.GetOrderInput
+            Dim result As Double = 0
 
-        If currentCustomer.cus_IsInsurance Then
-            result = ((input.o_gas_total + input.o_gas_c_total) + (input.o_return + input.o_return_c)) * input.o_insurance_unit_price
-        End If
+            If currentCustomer.cus_IsInsurance Then
+                result = ((input.o_gas_total + input.o_gas_c_total) + (input.o_return + input.o_return_c)) * input.o_insurance_unit_price
+            End If
 
-        _view.ShowInsurance(Math.Round(result, 2))
+            _view.ShowInsurance(Math.Round(result, 2))
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
     End Sub
 
     ''' <summary>
@@ -858,7 +862,9 @@ Public Class OrderPresenter
             _view.ClearInput()
 
             currentCustomer = currentOrder.customer
-            currentCar = If(currentOrder.o_in_out = "進場單", currentOrder.car, currentOrder.car1)
+
+            Dim isIn = currentOrder.o_in_out = "進場單"
+            currentCar = If(isIn, currentOrder.car, currentOrder.car1)
 
             RefreshCurrentEntities()
 
@@ -878,6 +884,7 @@ Public Class OrderPresenter
             _view.ShowCustomer(currentCustomer)
             _view.ShowDetail(currentOrder)
             _view.ButtonStatus(True)
+            _view.SetReturnGasReadOnly(isIn)
 
             If currentCar IsNot Nothing Then LoadCarBarrelStock(currentCar.c_id)
         Catch ex As Exception

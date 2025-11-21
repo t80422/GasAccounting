@@ -25,7 +25,7 @@ Public Class ucOrder
     Public Event CustomersGasDetailRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CustomersGasDetailRequest
     Public Event CusGetGasListRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CusGetGasListRequest
 
-    ' === 介面 ===
+#Region "實作介面"
     Private Sub ClearInput() Implements IFormView(Of order, OrderListVM).ClearInput
         ClearControls(Me)
         cmbCar.DataSource = Nothing
@@ -37,8 +37,14 @@ Public Class ucOrder
         rdoPickUp.Checked = True
         tpOut.Parent = tcInOut
         tpIn.Parent = tcInOut
-        '    txtOperator.Text = Nothing
         EditMode(False)
+
+        ' 設定退氣欄位狀態
+        If tcInOut.SelectedTab.Text = "進場單" Then
+            SetReturnGasReadOnly(True)
+        Else
+            SetReturnGasReadOnly(False)
+        End If
     End Sub
 
     Public Sub ShowList(data As List(Of OrderListVM)) Implements IFormView(Of order, OrderListVM).ShowList
@@ -202,7 +208,20 @@ Public Class ucOrder
         End Select
     End Sub
 
-    ' === 事件 ===
+    Private Sub SetReturnGasReadOnly(isReadOnly As Boolean) Implements IOrderView.SetReturnGasReadOnly
+        txto_return.ReadOnly = isReadOnly
+        txto_return_c.ReadOnly = isReadOnly
+        If isReadOnly Then
+            txto_return.BackColor = Color.LightGray
+            txto_return_c.BackColor = Color.LightGray
+        Else
+            txto_return.BackColor = Color.White
+            txto_return_c.BackColor = Color.White
+        End If
+    End Sub
+#End Region
+
+#Region "UI事件"
     Private Sub OrderUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel.PerformClick()
         SetupSalesManagementHandlers()
@@ -310,6 +329,13 @@ Public Class ucOrder
         tp.Controls.OfType(Of TextBox).Where(Function(x) Not x.ReadOnly AndAlso Not x.Name.StartsWith("txtBarralUnitPrice_")).ToList.ForEach(Sub(txt) txt.Text = 0)
 
         RaiseEvent OrderTypeChanged(sender, e)
+
+        ' 設定退氣欄位狀態
+        If isIn Then
+            SetReturnGasReadOnly(True)
+        Else
+            SetReturnGasReadOnly(False)
+        End If
     End Sub
 
     ' 新增
@@ -416,8 +442,9 @@ Public Class ucOrder
     Private Sub ReturnKeyIn()
         RaiseEvent ReturnInput(Nothing, EventArgs.Empty)
     End Sub
+#End Region
 
-    ' === 方法 ===
+#Region "方法"
     ''' <summary>
     ''' 丙氣的字體顏色設置為紅色
     ''' </summary>
@@ -597,4 +624,5 @@ Public Class ucOrder
     Private Sub dgvOrder_SelectionChanged(sender As Object, e As DataGridViewCellMouseEventArgs)
 
     End Sub
+#End Region
 End Class

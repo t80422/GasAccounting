@@ -66,6 +66,8 @@
 
     Sub SetCusBarrelStock(isIn As Boolean, data As customer)
 
+    Sub SetReturnGasReadOnly(isReadOnly As Boolean)
+
     ''' <summary>
     ''' 取得進貨單輸入
     ''' </summary>
