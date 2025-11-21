@@ -1,4 +1,6 @@
-﻿Public Class CollectionPresenter
+﻿Imports SixLabors.Fonts.Tables.General
+
+Public Class CollectionPresenter
     Private _view As ICollectionView
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
@@ -144,14 +146,18 @@
                 '未銷帳
                 Dim paid = _ocmSer.CalculateCollectionUnmatched(col.col_Id)
                 col.col_UnmatchedAmount = col.col_Amount - paid
-                Await uow.CollectionRepository.UpdateAsync(_currentData, col)
+
+                Dim orgCol = Await uow.CollectionRepository.GetByIdAsync(col.col_Id)
+                If orgCol Is Nothing Then Throw New Exception("找不到要更新的收款資料，可能已被刪除")
+
+                Await uow.CollectionRepository.UpdateAsync(orgCol, col)
 
                 Select Case col.col_Type
                     Case "現金"
-                        If _currentData.col_Type = "銀行存款" Then
-                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
-                        ElseIf _currentData.col_Type = "應收票據" Then
-                            Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                        If orgCol.col_Type = "銀行存款" Then
+                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
+                        ElseIf orgCol.col_Type = "應收票據" Then
+                            Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
                             Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
                         End If
 
@@ -159,13 +165,13 @@
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
                         Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, _currentData.col_AccountMonth)
 
-                        If _currentData.col_bank_Id.HasValue Then
-                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, col.col_AccountMonth)
-                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+                        If orgCol.col_bank_Id.HasValue Then
+                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, col.col_AccountMonth)
+                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
                         End If
 
-                        If _currentData.col_Type = "應收票據" Then
-                            Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                        If orgCol.col_Type = "應收票據" Then
+                            Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
                             Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
                         End If
 
@@ -173,7 +179,7 @@
                         Dim cheque = _view.GetChequeInput
 
                         If _currentData.col_Type = "應收票據" Then
-                            Dim orgCheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                            Dim orgCheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
                             If orgCheque Is Nothing Then
                                 cheque.che_CollectionDate = col.col_Date
                                 Await uow.ChequeRepository.AddAsync(cheque)
@@ -181,10 +187,10 @@
                                 cheque.che_Id = orgCheque.che_Id
                                 Await uow.ChequeRepository.UpdateAsync(orgCheque, cheque)
                             End If
-                        ElseIf _currentData.col_Type = "現金" Then
+                        ElseIf orgCol.col_Type = "現金" Then
                             Await uow.ChequeRepository.AddAsync(cheque)
-                        ElseIf _currentData.col_Type = "銀行存款" Then
-                            Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+                        ElseIf orgCol.col_Type = "銀行存款" Then
+                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
                         End If
                 End Select
 
@@ -209,20 +215,23 @@
             Try
                 uow.BeginTransaction()
 
-                Dim payType = _currentData.col_Type
+                Dim orgCol = Await uow.CollectionRepository.GetByIdAsync(_currentData.col_Id)
+                If orgCol Is Nothing Then Throw New Exception("找不到要更新的收款資料，可能已被刪除")
+
+                Dim payType = orgCol.col_Type
 
                 ' 銷帳
-                _ocmSer.DeleteCollection(_currentData.col_Id)
+                _ocmSer.DeleteCollection(orgCol.col_Id)
 
                 If payType = "應收票據" Then
-                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
                     Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
 
                 ElseIf payType = "銀行存款" Then
-                    Await _bmbService.UpdateMonthBalanceAsync(_currentData.col_bank_Id, _currentData.col_AccountMonth)
+                    Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
 
                     ' 更新支票資訊
-                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(_currentData.col_Cheque)
+                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
 
                     If cheque IsNot Nothing Then
                         cheque.che_CashingDate = Nothing
@@ -231,9 +240,8 @@
                 End If
 
                 '刪除資料
-                Await uow.CollectionRepository.DeleteAsync(_currentData)
-
-                _aeSer.DeleteEntries("收款作業", _currentData.col_Id)
+                _aeSer.DeleteEntries("收款作業", orgCol.col_Id)
+                Await uow.CollectionRepository.DeleteAsync(orgCol)
 
                 Await uow.SaveChangesAsync()
                 uow.Commit()

@@ -53,7 +53,8 @@ Public Class ReportRep
             Dim periodCollections = _context.collections.Where(Function(c) c.col_Date >= periodStart AndAlso
                                                                            c.col_Date < periodEnd AndAlso
                                                                            c.col_AccountMonth.Year = selectDate.Year AndAlso
-                                                                           c.col_AccountMonth.Month = selectDate.Month).
+                                                                           c.col_AccountMonth.Month = selectDate.Month AndAlso
+                                                                           c.col_cus_Id IsNot Nothing).
                                                         Select(Function(c) New With {
                                                             .客戶Id = c.col_cus_Id,
                                                             .收款 = c.col_Amount
@@ -64,7 +65,8 @@ Public Class ReportRep
                                                                           c.col_Date < periodEnd AndAlso
                                                                           c.col_cus_Id.HasValue AndAlso
                                                                           c.col_AccountMonth.Year = selectDate.Year AndAlso
-                                                                          c.col_AccountMonth.Month = selectDate.Month).
+                                                                          c.col_AccountMonth.Month = selectDate.Month AndAlso
+                                                                          c.col_cus_Id IsNot Nothing).
                                                         Select(Function(c) New With {
                                                             .客戶Id = c.col_cus_Id,
                                                             .收款 = c.col_Amount
