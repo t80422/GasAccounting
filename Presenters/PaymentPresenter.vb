@@ -190,8 +190,9 @@
             Try
                 Dim data As New payment
                 _view.GetInput(data)
+                Dim orgData = uow.PaymentRepository.GetByIdAsync(selectPayment.p_Id).Result
 
-                uow.PaymentRepository.UpdateAsync(selectPayment, data).Wait()
+                uow.PaymentRepository.UpdateAsync(orgData, data).Wait()
 
                 If data.p_Type = "應付票據" Then
                     Dim cheque = uow.ChequePayRepository.GetByChequeNumber(data.chque_pay.cp_Number)
@@ -233,10 +234,11 @@
             Try
                 Dim payType = selectPayment.p_Type
                 Dim bankId = selectPayment.p_bank_Id
+                Dim chequePay = uow.ChequePayRepository.GetByIdAsync(selectPayment.p_cp_Id).Result
 
                 '刪除支票
                 If selectPayment.p_Type = "應付票據" Then
-                    uow.ChequePayRepository.DeleteAsync(selectPayment.chque_pay).Wait()
+                    uow.ChequePayRepository.DeleteAsync(chequePay).Wait()
                 End If
 
                 '刪除付款
