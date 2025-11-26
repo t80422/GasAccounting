@@ -27,46 +27,48 @@ Public Class ReportRep
             End If
 
             ' 一次性取得所有客戶資料
-            Dim customers = _context.customers.Select(Function(c) New With {
+            Dim customers = _context.customers.AsNoTracking.Select(Function(c) New With {
                 .客戶Id = c.cus_id,
                 .客戶名稱 = c.cus_name
             }).ToList()
 
             ' 一次性取得主要期間的訂單資料（當日或當月）
-            Dim periodOrders = _context.orders.Where(Function(o) o.o_date >= periodStart AndAlso o.o_date < periodEnd).
+            Dim periodOrders = _context.orders.AsNoTracking.Where(Function(o) o.o_date >= periodStart AndAlso o.o_date < periodEnd).
                 Select(Function(o) New With {
                     .客戶Id = o.o_cus_Id,
                     .存氣 = o.o_return + o.o_return_c,
-                    .提氣量 = (o.o_gas_total + o.o_gas_c_total) - (o.o_return + o.o_return_c),
+                    .提氣量 = o.o_gas_total + o.o_gas_c_total + o.o_return + o.o_return_c,
                     .氣款 = o.o_total_amount
                 }).ToList()
 
             ' 一次性取得當月累計訂單資料（始終計算到選定期間結束）
-            Dim monthOrders = _context.orders.Where(Function(o) o.o_date >= monthStart AndAlso o.o_date < periodEnd).
+            Dim monthOrders = _context.orders.AsNoTracking.Where(Function(o) o.o_date >= monthStart AndAlso o.o_date < periodEnd).
                 Select(Function(o) New With {
                     .客戶Id = o.o_cus_Id,
-                    .提氣量 = (o.o_gas_total + o.o_gas_c_total) - (o.o_return + o.o_return_c),
+                    .提氣量 = o.o_gas_total + o.o_gas_c_total + o.o_return + o.o_return_c,
                     .氣款 = o.o_total_amount
                 }).ToList()
 
             ' 一次性取得主要期間的收款資料（當日或當月）
-            Dim periodCollections = _context.collections.Where(Function(c) c.col_Date >= periodStart AndAlso
+            Dim periodCollections = _context.collections.AsNoTracking.Where(Function(c) c.col_Date >= periodStart AndAlso
                                                                            c.col_Date < periodEnd AndAlso
                                                                            c.col_AccountMonth.Year = selectDate.Year AndAlso
                                                                            c.col_AccountMonth.Month = selectDate.Month AndAlso
-                                                                           c.col_cus_Id IsNot Nothing).
+                                                                           c.col_cus_Id IsNot Nothing AndAlso
+                                                                           c.subject.s_name = "氣款收入").
                                                         Select(Function(c) New With {
                                                             .客戶Id = c.col_cus_Id,
                                                             .收款 = c.col_Amount
                                                         }).ToList()
 
             ' 一次性取得當月收款資料（始終計算到選定期間結束）
-            Dim monthCollections = _context.collections.Where(Function(c) c.col_Date >= monthStart AndAlso
+            Dim monthCollections = _context.collections.AsNoTracking.Where(Function(c) c.col_Date >= monthStart AndAlso
                                                                           c.col_Date < periodEnd AndAlso
                                                                           c.col_cus_Id.HasValue AndAlso
                                                                           c.col_AccountMonth.Year = selectDate.Year AndAlso
                                                                           c.col_AccountMonth.Month = selectDate.Month AndAlso
-                                                                          c.col_cus_Id IsNot Nothing).
+                                                                          c.col_cus_Id IsNot Nothing AndAlso
+                                                                          c.subject.s_name = "氣款收入").
                                                         Select(Function(c) New With {
                                                             .客戶Id = c.col_cus_Id,
                                                             .收款 = c.col_Amount
@@ -115,7 +117,7 @@ Public Class ReportRep
 
         Try
             '獲取所有客戶資料
-            Dim customers = _context.customers.OrderBy(Function(x) x.cus_code).ToList
+            Dim customers = _context.customers.AsNoTracking.OrderBy(Function(x) x.cus_code).ToList
 
             '遍歷每個客戶並蒐集相關資料
             For Each cus In customers
@@ -135,7 +137,7 @@ Public Class ReportRep
                     endDay = d.Date.AddDays(1)
                 End If
 
-                Dim ordersToday = _context.orders.Where(Function(x) x.o_cus_Id = cus.cus_id And x.o_date.Value >= startDay And x.o_date.Value < endDay).ToList
+                Dim ordersToday = _context.orders.AsNoTracking.Where(Function(x) x.o_cus_Id = cus.cus_id And x.o_date.Value >= startDay And x.o_date.Value < endDay).ToList
 
                 detail.普氣50Kg = ordersToday.Sum(Function(x) x.o_gas_50)
                 detail.丙氣50Kg = ordersToday.Sum(Function(x) x.o_gas_c_50)
@@ -997,7 +999,8 @@ Public Class ReportRep
                         .RegularInvoices = New List(Of InvoiceGroup),
                         .SpecialInvoices = New SpecialInvoices
                     }
-                    Dim monthInvoices = companyInvoices.Where(Function(x) x.i_Date.Month = month)
+                    Dim month1 As Integer = month
+                    Dim monthInvoices = companyInvoices.Where(Function(x) x.i_Date.Month = month1)
 
                     '處理機開三聯
                     Dim regularInvoices = monthInvoices.Where(Function(x) x.i_InvoiceType = "機開三聯").OrderBy(Function(x) x.i_Number).ToList
