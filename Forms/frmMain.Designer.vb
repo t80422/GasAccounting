@@ -3321,7 +3321,7 @@ Partial Class frmMain
         '
         'txtCusId_ins
         '
-        Me.txtCusId_ins.Location = New System.Drawing.Point(800, 60)
+        Me.txtCusId_ins.Location = New System.Drawing.Point(312, 165)
         Me.txtCusId_ins.Name = "txtCusId_ins"
         Me.txtCusId_ins.ReadOnly = True
         Me.txtCusId_ins.Size = New System.Drawing.Size(165, 30)
@@ -3333,17 +3333,17 @@ Partial Class frmMain
         '
         Me.dgvIns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvIns.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvIns.Location = New System.Drawing.Point(3, 186)
+        Me.dgvIns.Location = New System.Drawing.Point(3, 226)
         Me.dgvIns.Name = "dgvIns"
         Me.dgvIns.ReadOnly = True
         Me.dgvIns.RowTemplate.Height = 24
-        Me.dgvIns.Size = New System.Drawing.Size(1876, 760)
+        Me.dgvIns.Size = New System.Drawing.Size(1876, 720)
         Me.dgvIns.TabIndex = 464
         '
         'btnPrint_ins
         '
         Me.btnPrint_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnPrint_ins.Location = New System.Drawing.Point(630, 124)
+        Me.btnPrint_ins.Location = New System.Drawing.Point(6, 158)
         Me.btnPrint_ins.Name = "btnPrint_ins"
         Me.btnPrint_ins.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_ins.TabIndex = 463
@@ -3353,7 +3353,7 @@ Partial Class frmMain
         'btnSearch_ins
         '
         Me.btnSearch_ins.BackColor = System.Drawing.Color.Lime
-        Me.btnSearch_ins.Location = New System.Drawing.Point(786, 124)
+        Me.btnSearch_ins.Location = New System.Drawing.Point(166, 158)
         Me.btnSearch_ins.Name = "btnSearch_ins"
         Me.btnSearch_ins.Size = New System.Drawing.Size(140, 44)
         Me.btnSearch_ins.TabIndex = 462
@@ -3363,7 +3363,7 @@ Partial Class frmMain
         'btnCancel_ins
         '
         Me.btnCancel_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_ins.Location = New System.Drawing.Point(474, 124)
+        Me.btnCancel_ins.Location = New System.Drawing.Point(478, 98)
         Me.btnCancel_ins.Name = "btnCancel_ins"
         Me.btnCancel_ins.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_ins.TabIndex = 461
@@ -3373,7 +3373,7 @@ Partial Class frmMain
         'btnDelete_ins
         '
         Me.btnDelete_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete_ins.Location = New System.Drawing.Point(318, 124)
+        Me.btnDelete_ins.Location = New System.Drawing.Point(322, 98)
         Me.btnDelete_ins.Name = "btnDelete_ins"
         Me.btnDelete_ins.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_ins.TabIndex = 460
@@ -3383,7 +3383,7 @@ Partial Class frmMain
         'btnEdit_ins
         '
         Me.btnEdit_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit_ins.Location = New System.Drawing.Point(162, 124)
+        Me.btnEdit_ins.Location = New System.Drawing.Point(166, 98)
         Me.btnEdit_ins.Name = "btnEdit_ins"
         Me.btnEdit_ins.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_ins.TabIndex = 459
@@ -3393,7 +3393,7 @@ Partial Class frmMain
         'btnCreate_ins
         '
         Me.btnCreate_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCreate_ins.Location = New System.Drawing.Point(10, 124)
+        Me.btnCreate_ins.Location = New System.Drawing.Point(6, 98)
         Me.btnCreate_ins.Name = "btnCreate_ins"
         Me.btnCreate_ins.Size = New System.Drawing.Size(140, 44)
         Me.btnCreate_ins.TabIndex = 458
@@ -3447,40 +3447,40 @@ Partial Class frmMain
         Me.grpIns.Controls.Add(Me.Label249)
         Me.grpIns.Controls.Add(Me.Label162)
         Me.grpIns.Controls.Add(Me.Label161)
-        Me.grpIns.Location = New System.Drawing.Point(1030, 6)
+        Me.grpIns.Location = New System.Drawing.Point(624, 6)
         Me.grpIns.Name = "grpIns"
-        Me.grpIns.Size = New System.Drawing.Size(630, 162)
+        Me.grpIns.Size = New System.Drawing.Size(1046, 171)
         Me.grpIns.TabIndex = 451
         Me.grpIns.TabStop = False
         '
         'txtAmount20
         '
-        Me.txtAmount20.Location = New System.Drawing.Point(119, 120)
+        Me.txtAmount20.Location = New System.Drawing.Point(161, 129)
         Me.txtAmount20.Name = "txtAmount20"
         Me.txtAmount20.ReadOnly = True
-        Me.txtAmount20.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount20.Size = New System.Drawing.Size(90, 30)
         Me.txtAmount20.TabIndex = 43
         '
         'txtAmount50
         '
-        Me.txtAmount50.Location = New System.Drawing.Point(63, 120)
+        Me.txtAmount50.Location = New System.Drawing.Point(63, 129)
         Me.txtAmount50.Name = "txtAmount50"
         Me.txtAmount50.ReadOnly = True
-        Me.txtAmount50.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount50.Size = New System.Drawing.Size(90, 30)
         Me.txtAmount50.TabIndex = 42
         '
         'txtPriceTotal
         '
-        Me.txtPriceTotal.Location = New System.Drawing.Point(567, 84)
+        Me.txtPriceTotal.Location = New System.Drawing.Point(945, 91)
         Me.txtPriceTotal.Name = "txtPriceTotal"
         Me.txtPriceTotal.ReadOnly = True
-        Me.txtPriceTotal.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceTotal.Size = New System.Drawing.Size(90, 30)
         Me.txtPriceTotal.TabIndex = 41
         '
         'Label265
         '
         Me.Label265.AutoSize = True
-        Me.Label265.Location = New System.Drawing.Point(567, 26)
+        Me.Label265.Location = New System.Drawing.Point(965, 26)
         Me.Label265.Name = "Label265"
         Me.Label265.Size = New System.Drawing.Size(51, 19)
         Me.Label265.TabIndex = 40
@@ -3488,206 +3488,206 @@ Partial Class frmMain
         '
         'txtAmountTotal
         '
-        Me.txtAmountTotal.Location = New System.Drawing.Point(567, 120)
+        Me.txtAmountTotal.Location = New System.Drawing.Point(945, 129)
         Me.txtAmountTotal.Name = "txtAmountTotal"
         Me.txtAmountTotal.ReadOnly = True
-        Me.txtAmountTotal.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountTotal.Size = New System.Drawing.Size(90, 30)
         Me.txtAmountTotal.TabIndex = 39
         '
         'txtAmountSpraying
         '
-        Me.txtAmountSpraying.Location = New System.Drawing.Point(511, 120)
+        Me.txtAmountSpraying.Location = New System.Drawing.Point(847, 129)
         Me.txtAmountSpraying.Name = "txtAmountSpraying"
         Me.txtAmountSpraying.ReadOnly = True
-        Me.txtAmountSpraying.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountSpraying.Size = New System.Drawing.Size(90, 30)
         Me.txtAmountSpraying.TabIndex = 38
         '
         'txtAmountRustProof
         '
-        Me.txtAmountRustProof.Location = New System.Drawing.Point(455, 120)
+        Me.txtAmountRustProof.Location = New System.Drawing.Point(749, 129)
         Me.txtAmountRustProof.Name = "txtAmountRustProof"
         Me.txtAmountRustProof.ReadOnly = True
-        Me.txtAmountRustProof.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountRustProof.Size = New System.Drawing.Size(90, 30)
         Me.txtAmountRustProof.TabIndex = 37
         '
         'txtAmountFreight
         '
-        Me.txtAmountFreight.Location = New System.Drawing.Point(399, 120)
+        Me.txtAmountFreight.Location = New System.Drawing.Point(651, 129)
         Me.txtAmountFreight.Name = "txtAmountFreight"
         Me.txtAmountFreight.ReadOnly = True
-        Me.txtAmountFreight.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountFreight.Size = New System.Drawing.Size(90, 30)
         Me.txtAmountFreight.TabIndex = 36
         '
         'txtAmountSwitch
         '
-        Me.txtAmountSwitch.Location = New System.Drawing.Point(343, 120)
+        Me.txtAmountSwitch.Location = New System.Drawing.Point(553, 129)
         Me.txtAmountSwitch.Name = "txtAmountSwitch"
         Me.txtAmountSwitch.ReadOnly = True
-        Me.txtAmountSwitch.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmountSwitch.Size = New System.Drawing.Size(90, 30)
         Me.txtAmountSwitch.TabIndex = 35
         '
         'txtAmount4
         '
-        Me.txtAmount4.Location = New System.Drawing.Point(287, 120)
+        Me.txtAmount4.Location = New System.Drawing.Point(455, 129)
         Me.txtAmount4.Name = "txtAmount4"
         Me.txtAmount4.ReadOnly = True
-        Me.txtAmount4.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount4.Size = New System.Drawing.Size(90, 30)
         Me.txtAmount4.TabIndex = 34
         '
         'txtAmount10
         '
-        Me.txtAmount10.Location = New System.Drawing.Point(231, 120)
+        Me.txtAmount10.Location = New System.Drawing.Point(357, 129)
         Me.txtAmount10.Name = "txtAmount10"
         Me.txtAmount10.ReadOnly = True
-        Me.txtAmount10.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount10.Size = New System.Drawing.Size(90, 30)
         Me.txtAmount10.TabIndex = 33
         '
         'txtAmount16
         '
-        Me.txtAmount16.Location = New System.Drawing.Point(175, 120)
+        Me.txtAmount16.Location = New System.Drawing.Point(259, 129)
         Me.txtAmount16.Name = "txtAmount16"
         Me.txtAmount16.ReadOnly = True
-        Me.txtAmount16.Size = New System.Drawing.Size(50, 30)
+        Me.txtAmount16.Size = New System.Drawing.Size(90, 30)
         Me.txtAmount16.TabIndex = 32
         '
         'txtQtyTotal
         '
-        Me.txtQtyTotal.Location = New System.Drawing.Point(567, 48)
+        Me.txtQtyTotal.Location = New System.Drawing.Point(945, 53)
         Me.txtQtyTotal.Name = "txtQtyTotal"
         Me.txtQtyTotal.ReadOnly = True
-        Me.txtQtyTotal.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtyTotal.Size = New System.Drawing.Size(90, 30)
         Me.txtQtyTotal.TabIndex = 31
         '
         'txtPriceSpraying
         '
-        Me.txtPriceSpraying.Location = New System.Drawing.Point(511, 84)
+        Me.txtPriceSpraying.Location = New System.Drawing.Point(847, 91)
         Me.txtPriceSpraying.Name = "txtPriceSpraying"
-        Me.txtPriceSpraying.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceSpraying.Size = New System.Drawing.Size(90, 30)
         Me.txtPriceSpraying.TabIndex = 30
         '
         'txtPriceFreight
         '
-        Me.txtPriceFreight.Location = New System.Drawing.Point(399, 84)
+        Me.txtPriceFreight.Location = New System.Drawing.Point(651, 91)
         Me.txtPriceFreight.Name = "txtPriceFreight"
-        Me.txtPriceFreight.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceFreight.Size = New System.Drawing.Size(90, 30)
         Me.txtPriceFreight.TabIndex = 29
         '
         'txtPrice10
         '
-        Me.txtPrice10.Location = New System.Drawing.Point(231, 84)
+        Me.txtPrice10.Location = New System.Drawing.Point(357, 91)
         Me.txtPrice10.Name = "txtPrice10"
-        Me.txtPrice10.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice10.Size = New System.Drawing.Size(90, 30)
         Me.txtPrice10.TabIndex = 28
         '
         'txtPrice16
         '
-        Me.txtPrice16.Location = New System.Drawing.Point(175, 84)
+        Me.txtPrice16.Location = New System.Drawing.Point(259, 91)
         Me.txtPrice16.Name = "txtPrice16"
-        Me.txtPrice16.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice16.Size = New System.Drawing.Size(90, 30)
         Me.txtPrice16.TabIndex = 27
         '
         'txtQtyFreight
         '
-        Me.txtQtyFreight.Location = New System.Drawing.Point(399, 48)
+        Me.txtQtyFreight.Location = New System.Drawing.Point(651, 53)
         Me.txtQtyFreight.Name = "txtQtyFreight"
-        Me.txtQtyFreight.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtyFreight.Size = New System.Drawing.Size(90, 30)
         Me.txtQtyFreight.TabIndex = 26
         '
         'txtQtySwitch
         '
-        Me.txtQtySwitch.Location = New System.Drawing.Point(343, 48)
+        Me.txtQtySwitch.Location = New System.Drawing.Point(553, 53)
         Me.txtQtySwitch.Name = "txtQtySwitch"
-        Me.txtQtySwitch.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtySwitch.Size = New System.Drawing.Size(90, 30)
         Me.txtQtySwitch.TabIndex = 25
         '
         'txtQty4
         '
-        Me.txtQty4.Location = New System.Drawing.Point(287, 48)
+        Me.txtQty4.Location = New System.Drawing.Point(455, 53)
         Me.txtQty4.Name = "txtQty4"
-        Me.txtQty4.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty4.Size = New System.Drawing.Size(90, 30)
         Me.txtQty4.TabIndex = 24
         '
         'txtQty10
         '
-        Me.txtQty10.Location = New System.Drawing.Point(231, 48)
+        Me.txtQty10.Location = New System.Drawing.Point(357, 53)
         Me.txtQty10.Name = "txtQty10"
-        Me.txtQty10.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty10.Size = New System.Drawing.Size(90, 30)
         Me.txtQty10.TabIndex = 23
         '
         'txtQty16
         '
-        Me.txtQty16.Location = New System.Drawing.Point(175, 48)
+        Me.txtQty16.Location = New System.Drawing.Point(259, 53)
         Me.txtQty16.Name = "txtQty16"
-        Me.txtQty16.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty16.Size = New System.Drawing.Size(90, 30)
         Me.txtQty16.TabIndex = 22
         '
         'txtPriceRustProof
         '
-        Me.txtPriceRustProof.Location = New System.Drawing.Point(455, 84)
+        Me.txtPriceRustProof.Location = New System.Drawing.Point(749, 91)
         Me.txtPriceRustProof.Name = "txtPriceRustProof"
-        Me.txtPriceRustProof.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceRustProof.Size = New System.Drawing.Size(90, 30)
         Me.txtPriceRustProof.TabIndex = 21
         '
         'txtPriceSwitch
         '
-        Me.txtPriceSwitch.Location = New System.Drawing.Point(343, 84)
+        Me.txtPriceSwitch.Location = New System.Drawing.Point(553, 91)
         Me.txtPriceSwitch.Name = "txtPriceSwitch"
-        Me.txtPriceSwitch.Size = New System.Drawing.Size(50, 30)
+        Me.txtPriceSwitch.Size = New System.Drawing.Size(90, 30)
         Me.txtPriceSwitch.TabIndex = 20
         '
         'txtPrice4
         '
-        Me.txtPrice4.Location = New System.Drawing.Point(287, 84)
+        Me.txtPrice4.Location = New System.Drawing.Point(455, 91)
         Me.txtPrice4.Name = "txtPrice4"
-        Me.txtPrice4.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice4.Size = New System.Drawing.Size(90, 30)
         Me.txtPrice4.TabIndex = 19
         '
         'txtPrice20
         '
-        Me.txtPrice20.Location = New System.Drawing.Point(119, 84)
+        Me.txtPrice20.Location = New System.Drawing.Point(161, 91)
         Me.txtPrice20.Name = "txtPrice20"
-        Me.txtPrice20.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice20.Size = New System.Drawing.Size(90, 30)
         Me.txtPrice20.TabIndex = 18
         '
         'txtPrice50
         '
-        Me.txtPrice50.Location = New System.Drawing.Point(63, 84)
+        Me.txtPrice50.Location = New System.Drawing.Point(63, 91)
         Me.txtPrice50.Name = "txtPrice50"
-        Me.txtPrice50.Size = New System.Drawing.Size(50, 30)
+        Me.txtPrice50.Size = New System.Drawing.Size(90, 30)
         Me.txtPrice50.TabIndex = 17
         '
         'txtQtySpraying
         '
-        Me.txtQtySpraying.Location = New System.Drawing.Point(511, 48)
+        Me.txtQtySpraying.Location = New System.Drawing.Point(847, 53)
         Me.txtQtySpraying.Name = "txtQtySpraying"
-        Me.txtQtySpraying.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtySpraying.Size = New System.Drawing.Size(90, 30)
         Me.txtQtySpraying.TabIndex = 16
         '
         'txtQtyRustProof
         '
-        Me.txtQtyRustProof.Location = New System.Drawing.Point(455, 48)
+        Me.txtQtyRustProof.Location = New System.Drawing.Point(749, 53)
         Me.txtQtyRustProof.Name = "txtQtyRustProof"
-        Me.txtQtyRustProof.Size = New System.Drawing.Size(50, 30)
+        Me.txtQtyRustProof.Size = New System.Drawing.Size(90, 30)
         Me.txtQtyRustProof.TabIndex = 15
         '
         'txtQty20
         '
-        Me.txtQty20.Location = New System.Drawing.Point(119, 48)
+        Me.txtQty20.Location = New System.Drawing.Point(161, 53)
         Me.txtQty20.Name = "txtQty20"
-        Me.txtQty20.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty20.Size = New System.Drawing.Size(90, 30)
         Me.txtQty20.TabIndex = 14
         '
         'txtQty50
         '
-        Me.txtQty50.Location = New System.Drawing.Point(63, 48)
+        Me.txtQty50.Location = New System.Drawing.Point(63, 53)
         Me.txtQty50.Name = "txtQty50"
-        Me.txtQty50.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty50.Size = New System.Drawing.Size(90, 30)
         Me.txtQty50.TabIndex = 13
         '
         'Label263
         '
         Me.Label263.AutoSize = True
-        Me.Label263.Location = New System.Drawing.Point(511, 26)
+        Me.Label263.Location = New System.Drawing.Point(867, 26)
         Me.Label263.Name = "Label263"
         Me.Label263.Size = New System.Drawing.Size(51, 19)
         Me.Label263.TabIndex = 12
@@ -3696,7 +3696,7 @@ Partial Class frmMain
         'Label262
         '
         Me.Label262.AutoSize = True
-        Me.Label262.Location = New System.Drawing.Point(455, 26)
+        Me.Label262.Location = New System.Drawing.Point(769, 26)
         Me.Label262.Name = "Label262"
         Me.Label262.Size = New System.Drawing.Size(51, 19)
         Me.Label262.TabIndex = 11
@@ -3705,7 +3705,7 @@ Partial Class frmMain
         'Label261
         '
         Me.Label261.AutoSize = True
-        Me.Label261.Location = New System.Drawing.Point(399, 26)
+        Me.Label261.Location = New System.Drawing.Point(671, 26)
         Me.Label261.Name = "Label261"
         Me.Label261.Size = New System.Drawing.Size(51, 19)
         Me.Label261.TabIndex = 10
@@ -3714,7 +3714,7 @@ Partial Class frmMain
         'Label260
         '
         Me.Label260.AutoSize = True
-        Me.Label260.Location = New System.Drawing.Point(332, 26)
+        Me.Label260.Location = New System.Drawing.Point(562, 26)
         Me.Label260.Name = "Label260"
         Me.Label260.Size = New System.Drawing.Size(72, 19)
         Me.Label260.TabIndex = 9
@@ -3723,7 +3723,7 @@ Partial Class frmMain
         'Label259
         '
         Me.Label259.AutoSize = True
-        Me.Label259.Location = New System.Drawing.Point(302, 26)
+        Me.Label259.Location = New System.Drawing.Point(490, 26)
         Me.Label259.Name = "Label259"
         Me.Label259.Size = New System.Drawing.Size(20, 19)
         Me.Label259.TabIndex = 8
@@ -3732,7 +3732,7 @@ Partial Class frmMain
         'Label258
         '
         Me.Label258.AutoSize = True
-        Me.Label258.Location = New System.Drawing.Point(241, 26)
+        Me.Label258.Location = New System.Drawing.Point(387, 26)
         Me.Label258.Name = "Label258"
         Me.Label258.Size = New System.Drawing.Size(31, 19)
         Me.Label258.TabIndex = 7
@@ -3741,7 +3741,7 @@ Partial Class frmMain
         'Label257
         '
         Me.Label257.AutoSize = True
-        Me.Label257.Location = New System.Drawing.Point(185, 26)
+        Me.Label257.Location = New System.Drawing.Point(289, 26)
         Me.Label257.Name = "Label257"
         Me.Label257.Size = New System.Drawing.Size(31, 19)
         Me.Label257.TabIndex = 6
@@ -3750,7 +3750,7 @@ Partial Class frmMain
         'Label256
         '
         Me.Label256.AutoSize = True
-        Me.Label256.Location = New System.Drawing.Point(129, 26)
+        Me.Label256.Location = New System.Drawing.Point(191, 26)
         Me.Label256.Name = "Label256"
         Me.Label256.Size = New System.Drawing.Size(31, 19)
         Me.Label256.TabIndex = 5
@@ -3759,7 +3759,7 @@ Partial Class frmMain
         'Label255
         '
         Me.Label255.AutoSize = True
-        Me.Label255.Location = New System.Drawing.Point(73, 26)
+        Me.Label255.Location = New System.Drawing.Point(93, 26)
         Me.Label255.Name = "Label255"
         Me.Label255.Size = New System.Drawing.Size(31, 19)
         Me.Label255.TabIndex = 4
@@ -3768,7 +3768,7 @@ Partial Class frmMain
         'Label252
         '
         Me.Label252.AutoSize = True
-        Me.Label252.Location = New System.Drawing.Point(6, 126)
+        Me.Label252.Location = New System.Drawing.Point(6, 135)
         Me.Label252.Name = "Label252"
         Me.Label252.Size = New System.Drawing.Size(51, 19)
         Me.Label252.TabIndex = 3
@@ -3777,7 +3777,7 @@ Partial Class frmMain
         'Label249
         '
         Me.Label249.AutoSize = True
-        Me.Label249.Location = New System.Drawing.Point(6, 90)
+        Me.Label249.Location = New System.Drawing.Point(6, 97)
         Me.Label249.Name = "Label249"
         Me.Label249.Size = New System.Drawing.Size(51, 19)
         Me.Label249.TabIndex = 2
@@ -3786,7 +3786,7 @@ Partial Class frmMain
         'Label162
         '
         Me.Label162.AutoSize = True
-        Me.Label162.Location = New System.Drawing.Point(6, 54)
+        Me.Label162.Location = New System.Drawing.Point(6, 59)
         Me.Label162.Name = "Label162"
         Me.Label162.Size = New System.Drawing.Size(51, 19)
         Me.Label162.TabIndex = 1
@@ -3803,15 +3803,15 @@ Partial Class frmMain
         '
         'txtCusCode_ins
         '
-        Me.txtCusCode_ins.Location = New System.Drawing.Point(288, 6)
+        Me.txtCusCode_ins.Location = New System.Drawing.Point(360, 6)
         Me.txtCusCode_ins.Name = "txtCusCode_ins"
-        Me.txtCusCode_ins.Size = New System.Drawing.Size(165, 30)
+        Me.txtCusCode_ins.Size = New System.Drawing.Size(133, 30)
         Me.txtCusCode_ins.TabIndex = 450
         Me.txtCusCode_ins.Tag = "cus_code"
         '
         'txtCusName_ins
         '
-        Me.txtCusName_ins.Location = New System.Drawing.Point(558, 6)
+        Me.txtCusName_ins.Location = New System.Drawing.Point(115, 52)
         Me.txtCusName_ins.Name = "txtCusName_ins"
         Me.txtCusName_ins.ReadOnly = True
         Me.txtCusName_ins.Size = New System.Drawing.Size(378, 30)
@@ -3823,7 +3823,7 @@ Partial Class frmMain
         Me.btnCus_ins.AutoSize = True
         Me.btnCus_ins.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.btnCus_ins.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnCus_ins.Location = New System.Drawing.Point(942, 8)
+        Me.btnCus_ins.Location = New System.Drawing.Point(499, 9)
         Me.btnCus_ins.Name = "btnCus_ins"
         Me.btnCus_ins.Size = New System.Drawing.Size(82, 26)
         Me.btnCus_ins.TabIndex = 449
@@ -3833,7 +3833,7 @@ Partial Class frmMain
         'Label102
         '
         Me.Label102.AutoSize = True
-        Me.Label102.Location = New System.Drawing.Point(459, 12)
+        Me.Label102.Location = New System.Drawing.Point(6, 58)
         Me.Label102.Name = "Label102"
         Me.Label102.Size = New System.Drawing.Size(93, 19)
         Me.Label102.TabIndex = 447
@@ -3842,7 +3842,7 @@ Partial Class frmMain
         'Label116
         '
         Me.Label116.AutoSize = True
-        Me.Label116.Location = New System.Drawing.Point(189, 12)
+        Me.Label116.Location = New System.Drawing.Point(251, 12)
         Me.Label116.Name = "Label116"
         Me.Label116.Size = New System.Drawing.Size(93, 19)
         Me.Label116.TabIndex = 446
@@ -3852,7 +3852,7 @@ Partial Class frmMain
         '
         Me.dtpIns.CustomFormat = "yyyy/MM"
         Me.dtpIns.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpIns.Location = New System.Drawing.Point(63, 6)
+        Me.dtpIns.Location = New System.Drawing.Point(115, 6)
         Me.dtpIns.Name = "dtpIns"
         Me.dtpIns.Size = New System.Drawing.Size(120, 30)
         Me.dtpIns.TabIndex = 1
@@ -4795,7 +4795,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.24.1"
+        Me.Text = "豐原瓦斯會計系統 v0.24.2"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
