@@ -347,7 +347,6 @@ Partial Class frmMain
         Me.dtpIns = New System.Windows.Forms.DateTimePicker()
         Me.Label94 = New System.Windows.Forms.Label()
         Me.tpOrder = New System.Windows.Forms.TabPage()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.tpRevenueManage = New System.Windows.Forms.TabPage()
         Me.TabControl5 = New System.Windows.Forms.TabControl()
         Me.tpCollection = New System.Windows.Forms.TabPage()
@@ -468,7 +467,6 @@ Partial Class frmMain
         Me.tpInspection.SuspendLayout()
         CType(Me.dgvIns, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpIns.SuspendLayout()
-        Me.tpOrder.SuspendLayout()
         Me.tpRevenueManage.SuspendLayout()
         Me.TabControl5.SuspendLayout()
         Me.tpAccountingManage.SuspendLayout()
@@ -3868,7 +3866,6 @@ Partial Class frmMain
         '
         'tpOrder
         '
-        Me.tpOrder.Controls.Add(Me.TextBox1)
         Me.tpOrder.Location = New System.Drawing.Point(4, 29)
         Me.tpOrder.Name = "tpOrder"
         Me.tpOrder.Padding = New System.Windows.Forms.Padding(3)
@@ -3876,17 +3873,6 @@ Partial Class frmMain
         Me.tpOrder.TabIndex = 32
         Me.tpOrder.Text = "銷售管理"
         Me.tpOrder.UseVisualStyleBackColor = True
-        '
-        'TextBox1
-        '
-        Me.TextBox1.BackColor = System.Drawing.SystemColors.Control
-        Me.TextBox1.ForeColor = System.Drawing.Color.Red
-        Me.TextBox1.Location = New System.Drawing.Point(850, 0)
-        Me.TextBox1.Multiline = True
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.TextBox1.Size = New System.Drawing.Size(180, 278)
-        Me.TextBox1.TabIndex = 0
         '
         'tpRevenueManage
         '
@@ -4795,7 +4781,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.24.2"
+        Me.Text = "豐原瓦斯會計系統 v0.24.3"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -4843,8 +4829,6 @@ Partial Class frmMain
         CType(Me.dgvIns, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpIns.ResumeLayout(False)
         Me.grpIns.PerformLayout()
-        Me.tpOrder.ResumeLayout(False)
-        Me.tpOrder.PerformLayout()
         Me.tpRevenueManage.ResumeLayout(False)
         Me.TabControl5.ResumeLayout(False)
         Me.tpAccountingManage.ResumeLayout(False)
@@ -5274,5 +5258,4 @@ Partial Class frmMain
     Friend WithEvents tpSurplusGas As TabPage
     Friend WithEvents tpBasicSet As TabPage
     Friend WithEvents Timer1 As Timer
-    Friend WithEvents TextBox1 As TextBox
 End Class
