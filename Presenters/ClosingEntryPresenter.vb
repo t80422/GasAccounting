@@ -1,4 +1,7 @@
-﻿Public Class ClosingEntryPresenter
+﻿''' <summary>
+''' 會計管理-結轉
+''' </summary>
+Public Class ClosingEntryPresenter
     Private _view As IClosingEntryView
     Private _ceRep As IClosingEntryRep
     Private _subjectRep As ISubjectRep
@@ -94,6 +97,7 @@
         Try
             _reportSer.GeneratorTransferSubpoena(selectDate, _ceRep.GetTarnsferSubpoenaData(selectDate), True)
         Catch ex As Exception
+            MessageBox.Show(ex.StackTrace)
             MsgBox(ex.Message)
         End Try
     End Sub

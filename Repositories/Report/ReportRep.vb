@@ -37,7 +37,7 @@ Public Class ReportRep
                 Select(Function(o) New With {
                     .客戶Id = o.o_cus_Id,
                     .存氣 = o.o_return + o.o_return_c,
-                    .提氣量 = o.o_gas_total + o.o_gas_c_total + o.o_return + o.o_return_c,
+                    .提氣量 = o.o_gas_total + o.o_gas_c_total,
                     .氣款 = o.o_total_amount
                 }).ToList()
 
@@ -45,7 +45,7 @@ Public Class ReportRep
             Dim monthOrders = _context.orders.AsNoTracking.Where(Function(o) o.o_date >= monthStart AndAlso o.o_date < periodEnd).
                 Select(Function(o) New With {
                     .客戶Id = o.o_cus_Id,
-                    .提氣量 = o.o_gas_total + o.o_gas_c_total + o.o_return + o.o_return_c,
+                    .提氣量 = o.o_gas_total + o.o_gas_c_total,
                     .氣款 = o.o_total_amount
                 }).ToList()
 
