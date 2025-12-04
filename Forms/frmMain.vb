@@ -165,6 +165,18 @@ Public Class frmMain
         frmLogin.Show()
     End Sub
 
+    ''' <summary>
+    ''' 開啟銀行月結餘額重整工具
+    ''' </summary>
+    Public Sub OpenBankBalanceRecalculator()
+        Try
+            Dim recalculatorForm As New frmBankBalanceRecalculator()
+            recalculatorForm.ShowDialog()
+        Catch ex As Exception
+            MessageBox.Show("開啟重整工具時發生錯誤：" & ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Private Sub InitUI()
         SetSheetColor()
         SetDataGridViewStyle(Me)
@@ -1422,4 +1434,8 @@ Public Class frmMain
         End Select
         Return MyBase.ProcessCmdKey(msg, keyData)
     End Function
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        OpenBankBalanceRecalculator()
+    End Sub
 End Class

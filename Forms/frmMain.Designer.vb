@@ -435,6 +435,7 @@ Partial Class frmMain
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tpBasic.SuspendLayout()
         Me.tcBasicInfo.SuspendLayout()
@@ -477,6 +478,7 @@ Partial Class frmMain
         Me.tpInvoice_In.SuspendLayout()
         Me.GroupBox25.SuspendLayout()
         CType(Me.dgvInvoiceIn, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tpReport.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -4729,6 +4731,7 @@ Partial Class frmMain
         '
         'tpReport
         '
+        Me.tpReport.Controls.Add(Me.Button1)
         Me.tpReport.Location = New System.Drawing.Point(4, 29)
         Me.tpReport.Name = "tpReport"
         Me.tpReport.Padding = New System.Windows.Forms.Padding(3)
@@ -4772,6 +4775,15 @@ Partial Class frmMain
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 2000
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(1214, 19)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(122, 42)
+        Me.Button1.TabIndex = 0
+        Me.Button1.Text = "重整銀行帳"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -4781,7 +4793,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.24.5"
+        Me.Text = "豐原瓦斯會計系統 v0.24.6"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -4843,6 +4855,7 @@ Partial Class frmMain
         Me.GroupBox25.ResumeLayout(False)
         Me.GroupBox25.PerformLayout()
         CType(Me.dgvInvoiceIn, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tpReport.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -5258,4 +5271,5 @@ Partial Class frmMain
     Friend WithEvents tpSurplusGas As TabPage
     Friend WithEvents tpBasicSet As TabPage
     Friend WithEvents Timer1 As Timer
+    Friend WithEvents Button1 As Button
 End Class

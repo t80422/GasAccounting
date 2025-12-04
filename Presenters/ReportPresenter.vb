@@ -262,7 +262,16 @@ Public Class ReportPresenter
     Public Sub GenerateMonthlyCustomerReceivable(d As Date, cusCode As String)
         Try
             '蒐集資料
-            Dim datas = _rep.MonthlyCustomerReceivable(d, cusCode)
+            Dim datas As List(Of DailyCustomerReceivable)
+
+            Using uow As New UnitOfWork
+                datas = uow.ReportRepository.MonthlyCustomerReceivable(d, cusCode)
+            End Using
+
+            If datas Is Nothing OrElse datas.Count = 0 Then
+                MessageBox.Show("查無資料")
+                Return
+            End If
 
             '套版
             Dim filePath = Path.Combine(Application.StartupPath, "Report", "單一客戶每月的應收帳明細表範本檔.xlsx")
@@ -314,10 +323,11 @@ Public Class ReportPresenter
                     Next
 
                     rowIndex += 1
+                    Dim deliveryGas = datas.Sum(Function(x) x.廠運總提氣).ToString
 
                     .WriteToCell("A", rowIndex, "合計")
                     .WriteToCell("B", rowIndex, datas.Sum(Function(x) x.總提氣).ToString)
-                    .WriteToCell("C", rowIndex, datas.Sum(Function(x) x.廠運總提氣).ToString)
+                    .WriteToCell("C", rowIndex, deliveryGas)
                     .WriteToCell("D", rowIndex, datas.Sum(Function(x) x.廠運普氣).ToString)
                     .WriteToCell("E", rowIndex, datas.Sum(Function(x) x.廠運普氣退氣).ToString)
                     .WriteToCell("F", rowIndex, datas.Average(Function(x) x.廠運普氣單價).ToString("N2"))
@@ -345,12 +355,15 @@ Public Class ReportPresenter
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 25, XLBorderStyleValues.Medium, XLBorderStyleValues.Medium)
 
+                    ' 若沒有廠運就隱藏
+                    If deliveryGas = 0 Then .HideColumns(3, 11)
+
                     '存檔
                     .SaveExcel($"單一客戶每月的應收帳明細表_{cusName}_{d:yyyyMM}")
                 End With
             End Using
         Catch ex As Exception
-            MsgBox("產生客戶每日應收帳明細表 錯誤:" + ex.Message)
+            MessageBox.Show("產生客戶每日應收帳明細表 錯誤:" + ex.Message)
         End Try
     End Sub
 

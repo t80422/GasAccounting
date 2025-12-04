@@ -66,4 +66,13 @@ Public Class BankMonthlyBalancesRep
             Throw
         End Try
     End Function
+
+    Public Async Function GetAllByBankAsync(bankId As Integer) As Task(Of IEnumerable(Of bank_monthly_balances)) Implements IBankMonthlyBalancesRep.GetAllByBankAsync
+        Try
+            ' 不使用 AsNoTracking，確保實體被追蹤，以便後續可以刪除
+            Return Await _dbSet.Where(Function(x) x.bm_bank_Id = bankId).ToListAsync()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

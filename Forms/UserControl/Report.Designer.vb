@@ -110,6 +110,7 @@ Partial Class Report
         Me.btnAccountBalance = New System.Windows.Forms.Button()
         Me.dtpAccountBalance = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.dtpDCR = New System.Windows.Forms.DateTimePicker()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox26.SuspendLayout()
@@ -172,6 +173,7 @@ Partial Class Report
         'GroupBox7
         '
         Me.GroupBox7.BackColor = System.Drawing.Color.White
+        Me.GroupBox7.Controls.Add(Me.dtpDCR)
         Me.GroupBox7.Controls.Add(Me.txtCusCode_dcr)
         Me.GroupBox7.Controls.Add(Me.btnMonthlyCusReceivable)
         Me.GroupBox7.Controls.Add(Me.Label133)
@@ -184,7 +186,7 @@ Partial Class Report
         '
         'txtCusCode_dcr
         '
-        Me.txtCusCode_dcr.Location = New System.Drawing.Point(105, 29)
+        Me.txtCusCode_dcr.Location = New System.Drawing.Point(105, 28)
         Me.txtCusCode_dcr.Name = "txtCusCode_dcr"
         Me.txtCusCode_dcr.Size = New System.Drawing.Size(100, 30)
         Me.txtCusCode_dcr.TabIndex = 452
@@ -194,7 +196,7 @@ Partial Class Report
         '
         Me.btnMonthlyCusReceivable.AutoSize = True
         Me.btnMonthlyCusReceivable.BackColor = System.Drawing.Color.Aqua
-        Me.btnMonthlyCusReceivable.Location = New System.Drawing.Point(387, 26)
+        Me.btnMonthlyCusReceivable.Location = New System.Drawing.Point(387, 28)
         Me.btnMonthlyCusReceivable.Name = "btnMonthlyCusReceivable"
         Me.btnMonthlyCusReceivable.Size = New System.Drawing.Size(73, 30)
         Me.btnMonthlyCusReceivable.TabIndex = 475
@@ -1015,6 +1017,15 @@ Partial Class Report
         Me.Label1.TabIndex = 22
         Me.Label1.Text = "月份"
         '
+        'dtpDCR
+        '
+        Me.dtpDCR.CustomFormat = "yyyy年MM月"
+        Me.dtpDCR.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpDCR.Location = New System.Drawing.Point(211, 28)
+        Me.dtpDCR.Name = "dtpDCR"
+        Me.dtpDCR.Size = New System.Drawing.Size(171, 30)
+        Me.dtpDCR.TabIndex = 476
+        '
         'Report
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
@@ -1169,4 +1180,5 @@ Partial Class Report
     Friend WithEvents btnAccountBalance As Button
     Friend WithEvents dtpAccountBalance As DateTimePicker
     Friend WithEvents Label1 As Label
+    Friend WithEvents dtpDCR As DateTimePicker
 End Class

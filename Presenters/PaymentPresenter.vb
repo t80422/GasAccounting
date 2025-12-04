@@ -1,4 +1,6 @@
-﻿Public Class PaymentPresenter
+﻿Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar
+
+Public Class PaymentPresenter
     Private ReadOnly _view As IPaymentView
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
@@ -130,12 +132,14 @@
         End Try
     End Sub
 
-    Private Sub Add()
+    Private Async Sub Add()
         Using uow As New UnitOfWork()
             uow.BeginTransaction()
             Try
                 Dim data As New payment
                 _view.GetInput(data)
+                Await uow.PaymentRepository.AddAsync(data)
+                Await uow.SaveChangesAsync()
 
                 If data.p_Type = "應付票據" Then
                     Dim cheque As New chque_pay
@@ -143,7 +147,7 @@
                     cheque.cp_Date = data.p_Date
                     cheque.cp_Amount = data.p_Amount
 
-                    uow.ChequePayRepository.AddAsync(cheque)
+                    Await uow.ChequePayRepository.AddAsync(cheque)
                     data.chque_pay = cheque
                 ElseIf data.p_Type = "銀行存款" Then
                     ' 支票兌現
@@ -165,16 +169,24 @@
                             End If
                         End If
                     End If
+
+                    ' ✨ 使用增量更新：新增一筆支出
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                        uow.BankMonthlyBalancesRepository,
+                        uow.BankRepository,
+                        data.p_bank_Id,
+                        data.p_Date,
+                        creditDelta:=data.p_Amount,
+                        debitDelta:=0
+                    )
                 End If
-                
-                uow.PaymentRepository.AddAsync(data)
-                
+
                 Dim entries = CreatePaymentEntries(data)
                 _aeSer.AddEntries(uow.AccountingEntryRepository, entries)
 
-                uow.SaveChangesAsync().Wait()
+                Await uow.SaveChangesAsync()
                 uow.Commit()
-                
+
                 Initialize()
                 MessageBox.Show("新增成功")
             Catch ex As Exception
@@ -184,7 +196,7 @@
         End Using
     End Sub
 
-    Private Sub Update()
+    Private Async Sub Update()
         Using uow As New UnitOfWork()
             uow.BeginTransaction()
             Try
@@ -192,8 +204,15 @@
                 _view.GetInput(data)
                 Dim orgData = uow.PaymentRepository.GetByIdAsync(selectPayment.p_Id).Result
 
-                uow.PaymentRepository.UpdateAsync(orgData, data).Wait()
+                ' 儲存舊資料用於月結更新
+                Dim oldBankId = orgData.p_bank_Id
+                Dim oldDate = orgData.p_Date
+                Dim oldAmount = orgData.p_Amount
+                Dim oldType = orgData.p_Type
 
+                Await uow.PaymentRepository.UpdateAsync(orgData, data)
+
+                ' 支票處理
                 If data.p_Type = "應付票據" Then
                     Dim cheque = uow.ChequePayRepository.GetByChequeNumber(data.chque_pay.cp_Number)
 
@@ -208,15 +227,93 @@
                             .cp_Number = data.chque_pay.cp_Number,
                             .cp_Amount = data.p_Amount
                         }
-                        uow.ChequePayRepository.AddAsync(cheque)
+                        Await uow.ChequePayRepository.AddAsync(cheque)
                     End If
+                End If
+
+                ' ✨ 智能判斷需要更新的月結餘額
+                If oldType = "銀行存款" AndAlso data.p_Type = "銀行存款" Then
+                    ' 情境 1: 都是銀行存款
+                    If oldBankId = data.p_bank_Id Then
+                        ' 1.1 同銀行
+                        If oldDate.Year = data.p_Date.Year AndAlso oldDate.Month = data.p_Date.Month Then
+                            ' 同月份 - 只調整差額
+                            Dim amountDelta = data.p_Amount - oldAmount
+                            If amountDelta <> 0 Then
+                                Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                    uow.BankMonthlyBalancesRepository,
+                                    uow.BankRepository,
+                                    data.p_bank_Id,
+                                    data.p_Date,
+                                    creditDelta:=amountDelta,
+                                    debitDelta:=0
+                                )
+                            End If
+                        Else
+                            ' 不同月份 - 舊月份減少，新月份增加
+                            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                uow.BankMonthlyBalancesRepository,
+                                uow.BankRepository,
+                                oldBankId,
+                                oldDate,
+                                creditDelta:=-oldAmount,
+                                debitDelta:=0
+                            )
+                            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                uow.BankMonthlyBalancesRepository,
+                                uow.BankRepository,
+                                data.p_bank_Id,
+                                data.p_Date,
+                                creditDelta:=data.p_Amount,
+                                debitDelta:=0
+                            )
+                        End If
+                    Else
+                        ' 1.2 不同銀行 - 舊銀行減少，新銀行增加
+                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            oldBankId,
+                            oldDate,
+                            creditDelta:=-oldAmount,
+                            debitDelta:=0
+                        )
+                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            data.p_bank_Id,
+                            data.p_Date,
+                            creditDelta:=data.p_Amount,
+                            debitDelta:=0
+                        )
+                    End If
+                ElseIf oldType = "銀行存款" AndAlso data.p_Type <> "銀行存款" Then
+                    ' 情境 2: 從銀行存款改為其他 - 舊銀行減少支出
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                        uow.BankMonthlyBalancesRepository,
+                        uow.BankRepository,
+                        oldBankId,
+                        oldDate,
+                        creditDelta:=-oldAmount,
+                        debitDelta:=0
+                    )
+                ElseIf oldType <> "銀行存款" AndAlso data.p_Type = "銀行存款" Then
+                    ' 情境 3: 從其他改為銀行存款 - 新銀行增加支出
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                        uow.BankMonthlyBalancesRepository,
+                        uow.BankRepository,
+                        data.p_bank_Id,
+                        data.p_Date,
+                        creditDelta:=data.p_Amount,
+                        debitDelta:=0
+                    )
                 End If
 
                 '更新會計分錄
                 Dim entries = CreatePaymentEntries(data)
                 _aeSer.UpdateEntries(uow.AccountingEntryRepository, entries)
 
-                uow.SaveChangesAsync().Wait()
+                Await uow.SaveChangesAsync()
                 uow.Commit()
 
                 Initialize()
@@ -228,32 +325,41 @@
         End Using
     End Sub
 
-    Private Sub Delete()
+    Private Async Sub Delete()
         Using uow As New UnitOfWork()
             uow.BeginTransaction()
             Try
                 Dim payType = selectPayment.p_Type
                 Dim bankId = selectPayment.p_bank_Id
-                Dim chequePay = uow.ChequePayRepository.GetByIdAsync(selectPayment.p_cp_Id).Result
+                Dim payDate = selectPayment.p_Date
+                Dim payAmount = selectPayment.p_Amount
 
                 '刪除支票
                 If selectPayment.p_Type = "應付票據" Then
-                    uow.ChequePayRepository.DeleteAsync(chequePay).Wait()
+                    Dim chequePay = uow.ChequePayRepository.GetByIdAsync(selectPayment.p_cp_Id).Result
+                    Await uow.ChequePayRepository.DeleteAsync(chequePay)
                 End If
 
                 '刪除付款
-                uow.PaymentRepository.DeleteAsync(selectPayment.p_Id).Wait()
+                Await uow.PaymentRepository.DeleteAsync(selectPayment.p_Id)
 
-                '更新月結餘額
-                If payType = "銀行" Then
-                    _bmbService.UpdateMonthBalanceAsync(uow.BankMonthlyBalancesRepository, uow.BankRepository, uow.PaymentRepository, uow.CollectionRepository, bankId, selectPayment.p_Date).Wait()
+                ' ✨ 使用增量更新：減少一筆支出（負數）
+                If payType = "銀行存款" Then
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                        uow.BankMonthlyBalancesRepository,
+                        uow.BankRepository,
+                        bankId,
+                        payDate,
+                        creditDelta:=-payAmount,
+                        debitDelta:=0
+                    )
                 End If
 
                 _aeSer.DeleteEntries(uow.AccountingEntryRepository, "付款作業", selectPayment.p_Id)
-                
-                uow.SaveChangesAsync().Wait()
+
+                Await uow.SaveChangesAsync()
                 uow.Commit()
-                
+
                 Initialize()
                 MessageBox.Show("刪除成功")
             Catch ex As Exception

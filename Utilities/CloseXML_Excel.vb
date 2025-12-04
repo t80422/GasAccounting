@@ -38,6 +38,23 @@ Public Class CloseXML_Excel
     End Sub
 
     ''' <summary>
+    ''' 隱藏指定欄位
+    ''' </summary>
+    ''' <param name="columnIndex">欄位索引，從 1 開始</param>
+    Public Sub HideColumn(columnIndex As Integer)
+        Worksheet.Column(columnIndex).Hide()
+    End Sub
+
+    ''' <summary>
+    ''' 隱藏指定範圍的欄位
+    ''' </summary>
+    ''' <param name="startColumn">起始欄位索引</param>
+    ''' <param name="endColumn">結束欄位索引</param>
+    Public Sub HideColumns(startColumn As Integer, endColumn As Integer)
+        Worksheet.Columns(startColumn, endColumn).Hide()
+    End Sub
+
+    ''' <summary>
     ''' 設定指定行的列高。
     ''' </summary>
     ''' <param name="rowIndex">行的索引，從 1 開始。</param>

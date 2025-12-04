@@ -38,7 +38,7 @@ Public Class ChequePayRep
                 .備註 = x.cp.cp_Memo,
                 .對方銀行 = x.p.manufacturer?.manu_account,
                 .廠商名稱 = x.p.manufacturer?.manu_name,
-                .銀行帳號 = x.p.bank.bank_Account,
+                .銀行帳號 = x.p.bank?.bank_Account,
                 .日期 = x.cp.cp_Date,
                 .編號 = x.cp.cp_Id,
                 .金額 = x.cp.cp_Amount,

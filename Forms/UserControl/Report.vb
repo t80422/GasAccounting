@@ -53,7 +53,7 @@
 
     ' 單一客戶每月的應收帳明細表
     Private Sub btnMonthlyCusReceivable_Click(sender As Object, e As EventArgs) Handles btnMonthlyCusReceivable.Click
-        _presenter.GenerateMonthlyCustomerReceivable(Now.Date, txtCusCode_dcr.Text)
+        _presenter.GenerateMonthlyCustomerReceivable(dtpDCR.Value.Date, txtCusCode_dcr.Text)
     End Sub
 
     ' 提氣支數統計

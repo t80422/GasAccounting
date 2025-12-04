@@ -233,69 +233,67 @@ Public Class ReportRep
         Dim result As New List(Of DailyCustomerReceivable)
 
         Try
-            Using db As New gas_accounting_systemEntities
-                '取得日期區間
-                Dim startMonth = New Date(d.Year, d.Month, 1)
-                Dim endDay = startMonth.AddMonths(1)
+            '取得日期區間
+            Dim startMonth = New Date(d.Year, d.Month, 1)
+            Dim endDay = startMonth.AddMonths(1)
 
-                '取得客戶名稱
-                Dim cus = db.customers.FirstOrDefault(Function(x) x.cus_code = cusCode)
+            '取得客戶名稱
+            Dim cus = _context.customers.FirstOrDefault(Function(x) x.cus_code = cusCode)
 
-                If cus Is Nothing Then
-                    Throw New Exception("查無此客戶代號")
-                End If
+            If cus Is Nothing Then
+                Throw New Exception("查無此客戶代號")
+            End If
 
-                Dim cusName = cus.cus_name
+            Dim cusName = cus.cus_name
 
-                '遍歷每天的訂單資料
-                Dim grandTotal As Integer = 0 '累計
-                Dim currentDate = startMonth
+            '遍歷每天的訂單資料
+            Dim grandTotal As Integer = 0 '累計
+            Dim currentDate = startMonth
 
-                While currentDate < endDay
-                    Dim dailyReceivable As New DailyCustomerReceivable With {
-                                            .客戶名稱 = cusName,
-                                            .日期 = currentDate.ToString("MM月dd日")
-                                        }
+            While currentDate < endDay
+                Dim dailyReceivable As New DailyCustomerReceivable With {
+                                        .客戶名稱 = cusName,
+                                        .日期 = currentDate.ToString("MM月dd日")
+                                    }
 
-                    '取得該日訂單
-                    Dim currentDateEnd = currentDate.AddDays(1)
-                    Dim ordersToday = db.orders.Where(Function(x) x.o_date.Value >= currentDate And x.o_date < currentDateEnd And x.o_cus_Id = cus.cus_id And x.o_in_out = "出場單").ToList
+                '取得該日訂單
+                Dim currentDateEnd = currentDate.AddDays(1)
+                Dim ordersToday = _context.orders.Where(Function(x) x.o_date.Value >= currentDate And x.o_date < currentDateEnd And x.o_cus_Id = cus.cus_id And x.o_in_out = "出場單").ToList
 
-                    '取得廠運數據
-                    Dim delivery = ordersToday.Where(Function(x) x.o_delivery_type = "廠運")
-                    dailyReceivable.廠運普氣 = delivery.Sum(Function(x) x.o_gas_total)
-                    dailyReceivable.廠運普氣退氣 = delivery.Sum(Function(x) x.o_return)
-                    dailyReceivable.廠運普氣單價 = If(delivery.FirstOrDefault() Is Nothing, 0, delivery.FirstOrDefault.o_UnitPrice)
-                    dailyReceivable.廠運普氣金額 = dailyReceivable.廠運普氣 * dailyReceivable.廠運普氣單價
-                    dailyReceivable.廠運丙氣 = delivery.Sum(Function(x) x.o_gas_c_total)
-                    dailyReceivable.廠運丙氣退氣 = delivery.Sum(Function(x) x.o_return_c)
-                    dailyReceivable.廠運丙氣單價 = If(delivery.FirstOrDefault() Is Nothing, 0, delivery.FirstOrDefault.o_UnitPriceC)
-                    dailyReceivable.廠運丙氣金額 = dailyReceivable.廠運丙氣 * dailyReceivable.廠運丙氣單價
-                    dailyReceivable.廠運總提氣 = dailyReceivable.廠運普氣 + dailyReceivable.廠運丙氣
+                '取得廠運數據
+                Dim delivery = ordersToday.Where(Function(x) x.o_delivery_type = "廠運")
+                dailyReceivable.廠運普氣退氣 = delivery.Sum(Function(x) x.o_return)
+                dailyReceivable.廠運普氣 = delivery.Sum(Function(x) x.o_gas_total) + dailyReceivable.廠運普氣退氣
+                dailyReceivable.廠運普氣單價 = If(delivery.FirstOrDefault() Is Nothing, 0, delivery.FirstOrDefault.o_UnitPrice)
+                dailyReceivable.廠運普氣金額 = dailyReceivable.廠運普氣 * dailyReceivable.廠運普氣單價
+                dailyReceivable.廠運丙氣退氣 = delivery.Sum(Function(x) x.o_return_c)
+                dailyReceivable.廠運丙氣 = delivery.Sum(Function(x) x.o_gas_c_total) + dailyReceivable.廠運丙氣退氣
+                dailyReceivable.廠運丙氣單價 = If(delivery.FirstOrDefault() Is Nothing, 0, delivery.FirstOrDefault.o_UnitPriceC)
+                dailyReceivable.廠運丙氣金額 = dailyReceivable.廠運丙氣 * dailyReceivable.廠運丙氣單價
+                dailyReceivable.廠運總提氣 = dailyReceivable.廠運普氣 + dailyReceivable.廠運丙氣
 
-                    '取得自運數據
-                    Dim pickUp = ordersToday.Where(Function(x) x.o_delivery_type = "自運")
-                    dailyReceivable.自運普氣 = pickUp.Sum(Function(x) x.o_gas_total)
-                    dailyReceivable.自運普氣退氣 = pickUp.Sum(Function(x) x.o_return)
-                    dailyReceivable.自運普氣單價 = If(pickUp.FirstOrDefault() Is Nothing, 0, pickUp.FirstOrDefault().o_UnitPrice)
-                    dailyReceivable.自運普氣金額 = dailyReceivable.自運普氣 * dailyReceivable.自運普氣單價
-                    dailyReceivable.自運丙氣 = pickUp.Sum(Function(x) x.o_gas_c_total)
-                    dailyReceivable.自運丙氣退氣 = pickUp.Sum(Function(x) x.o_return_c)
-                    dailyReceivable.自運丙氣單價 = If(pickUp.FirstOrDefault() Is Nothing, 0, pickUp.FirstOrDefault().o_UnitPriceC)
-                    dailyReceivable.自運丙氣金額 = dailyReceivable.自運丙氣 * dailyReceivable.自運丙氣單價
-                    dailyReceivable.自運總提氣 = dailyReceivable.自運普氣 + dailyReceivable.自運丙氣
+                '取得自運數據
+                Dim pickUp = ordersToday.Where(Function(x) x.o_delivery_type = "自運")
+                dailyReceivable.自運普氣退氣 = pickUp.Sum(Function(x) x.o_return)
+                dailyReceivable.自運普氣 = pickUp.Sum(Function(x) x.o_gas_total) + dailyReceivable.自運普氣退氣
+                dailyReceivable.自運普氣單價 = If(pickUp.FirstOrDefault() Is Nothing, 0, pickUp.FirstOrDefault().o_UnitPrice)
+                dailyReceivable.自運普氣金額 = dailyReceivable.自運普氣 * dailyReceivable.自運普氣單價
+                dailyReceivable.自運丙氣退氣 = pickUp.Sum(Function(x) x.o_return_c)
+                dailyReceivable.自運丙氣 = pickUp.Sum(Function(x) x.o_gas_c_total) + dailyReceivable.自運丙氣退氣
+                dailyReceivable.自運丙氣單價 = If(pickUp.FirstOrDefault() Is Nothing, 0, pickUp.FirstOrDefault().o_UnitPriceC)
+                dailyReceivable.自運丙氣金額 = dailyReceivable.自運丙氣 * dailyReceivable.自運丙氣單價
+                dailyReceivable.自運總提氣 = dailyReceivable.自運普氣 + dailyReceivable.自運丙氣
 
-                    dailyReceivable.總提氣 = dailyReceivable.廠運總提氣 + dailyReceivable.自運總提氣
-                    dailyReceivable.總額 = dailyReceivable.廠運丙氣金額 + dailyReceivable.廠運普氣金額 + dailyReceivable.自運丙氣金額 + dailyReceivable.自運普氣金額
-                    dailyReceivable.掛帳 = dailyReceivable.總額
+                dailyReceivable.總提氣 = dailyReceivable.廠運總提氣 + dailyReceivable.自運總提氣
+                dailyReceivable.總額 = dailyReceivable.廠運丙氣金額 + dailyReceivable.廠運普氣金額 + dailyReceivable.自運丙氣金額 + dailyReceivable.自運普氣金額
+                dailyReceivable.掛帳 = dailyReceivable.總額
 
-                    grandTotal += dailyReceivable.總額
-                    dailyReceivable.累計 = grandTotal
-                    result.Add(dailyReceivable)
+                grandTotal += dailyReceivable.總額
+                dailyReceivable.累計 = grandTotal
+                result.Add(dailyReceivable)
 
-                    currentDate = currentDate.AddDays(1)
-                End While
-            End Using
+                currentDate = currentDate.AddDays(1)
+            End While
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             Throw
@@ -416,31 +414,33 @@ Public Class ReportRep
             result.日期 = $"{month:yyyy年MM月}"
 
             '獲取收入數據
-            Dim collections = _context.collections.Where(Function(x) x.col_Date.Year = month.Year AndAlso
-                                                                   x.col_Date.Month = month.Month AndAlso
-                                                                   x.col_Type = "銀行存款" AndAlso
-                                                                   x.col_bank_Id = bankId).
-                                             Select(Function(x) New With {
-                                                .Date = x.col_Date,
-                                                .Subject = x.subject.s_name,
-                                                .Memo = x.col_Memo,
-                                                .Amount = x.col_Amount,
-                                                .IsIncome = True,
-                                                .Target = x.customer.cus_code
-                                             })
+            Dim collections = _context.collections.AsNoTracking.
+                                                   Where(Function(x) x.col_Date.Year = month.Year AndAlso
+                                                                     x.col_Date.Month = month.Month AndAlso
+                                                                     x.col_Type = "銀行存款" AndAlso
+                                                                     x.col_bank_Id = bankId).
+                                                   Select(Function(x) New With {
+                                                        .Date = x.col_Date,
+                                                        .Subject = x.subject.s_name,
+                                                        .Memo = x.col_Memo,
+                                                        .Amount = x.col_Amount,
+                                                        .IsIncome = True,
+                                                        .Target = x.customer.cus_code
+                                                   })
             '獲取支出數據
-            Dim payments = _context.payments.Where(Function(x) x.p_Date.Year = month.Year AndAlso
-                                                             x.p_Date.Month = month.Month AndAlso
-                                                             x.p_Type = "銀行存款" AndAlso
-                                                             x.p_bank_Id = bankId).
-                                       Select(Function(x) New With {
-                                            .Date = x.p_Date,
-                                            .Subject = x.subject.s_name,
-                                            .Memo = x.p_Memo,
-                                            .Amount = x.p_Amount,
-                                            .IsIncome = False,
-                                            .Target = x.company.comp_name
-                                       })
+            Dim payments = _context.payments.AsNoTracking.
+                                             Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                               x.p_Date.Month = month.Month AndAlso
+                                                               x.p_Type = "銀行存款" AndAlso
+                                                               x.p_bank_Id = bankId).
+                                             Select(Function(x) New With {
+                                                .Date = x.p_Date,
+                                                .Subject = x.subject.s_name,
+                                                .Memo = x.p_Memo,
+                                                .Amount = x.p_Amount,
+                                                .IsIncome = False,
+                                                .Target = x.company.comp_name
+                                             })
             '合併並排列數據
             Dim allTransactions = collections.Union(payments) _
                                              .OrderBy(Function(x) x.Date) _
@@ -449,9 +449,11 @@ Public Class ReportRep
             '取得上期餘額
             '1. 先取得上期月結餘額
             Dim startMonth = New Date(month.Year, month.Month, 1)
-            Dim lastMonthlyBalance = _context.bank_monthly_balances.Where(Function(x) x.bm_Month < startMonth) _
-                                                                  .OrderByDescending(Function(x) x.bm_Month) _
-                                                                  .FirstOrDefault()
+            Dim lastMonthlyBalance = _context.bank_monthly_balances.AsNoTracking.
+                                                                    Where(Function(x) x.bm_Month < startMonth AndAlso
+                                                                                      x.bm_bank_Id = bankId).
+                                                                    OrderByDescending(Function(x) x.bm_Month).
+                                                                    FirstOrDefault()
             Dim lastClosingBalance As Integer = If(lastMonthlyBalance Is Nothing,
                                                  _context.banks.Find(bankId)?.bank_InitialBalance,
                                                  lastMonthlyBalance.bm_ClosingBalance)

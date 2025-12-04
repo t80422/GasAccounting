@@ -1,6 +1,4 @@
-﻿Imports SixLabors.Fonts.Tables.General
-
-Public Class CollectionPresenter
+﻿Public Class CollectionPresenter
     Private _view As ICollectionView
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
@@ -79,7 +77,15 @@ Public Class CollectionPresenter
                         Await uow.ChequeRepository.AddAsync(cheInput)
 
                     Case "銀行存款"
-                        Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
+                        ' ✨ 使用增量更新：新增一筆收入
+                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            col.col_bank_Id,
+                            col.col_AccountMonth,
+                            creditDelta:=0,
+                            debitDelta:=col.col_Amount
+                        )
 
                         ' 支票兌現
                         Dim subject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
@@ -152,27 +158,109 @@ Public Class CollectionPresenter
 
                 Await uow.CollectionRepository.UpdateAsync(orgCol, col)
 
+                ' 儲存舊資料用於月結更新
+                Dim oldBankId = orgCol.col_bank_Id
+                Dim oldMonth = orgCol.col_AccountMonth
+                Dim oldAmount = orgCol.col_Amount
+                Dim oldType = orgCol.col_Type
+
                 Select Case col.col_Type
                     Case "現金"
+                        ' 從銀行存款改為現金 - 減少舊銀行收入
                         If orgCol.col_Type = "銀行存款" Then
-                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
+                            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                uow.BankMonthlyBalancesRepository,
+                                uow.BankRepository,
+                                orgCol.col_bank_Id,
+                                orgCol.col_AccountMonth,
+                                creditDelta:=0,
+                                debitDelta:=-oldAmount
+                            )
                         ElseIf orgCol.col_Type = "應收票據" Then
                             Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
                             Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
                         End If
 
                     Case "銀行存款"
-                        Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, col.col_AccountMonth)
-                        Await _bmbService.UpdateMonthBalanceAsync(col.col_bank_Id, _currentData.col_AccountMonth)
-
-                        If orgCol.col_bank_Id.HasValue Then
-                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, col.col_AccountMonth)
-                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
-                        End If
-
-                        If orgCol.col_Type = "應收票據" Then
+                        ' ✨ 智能判斷需要更新的月結餘額
+                        If oldType = "銀行存款" Then
+                            ' 都是銀行存款
+                            If oldBankId = col.col_bank_Id Then
+                                ' 同銀行
+                                If oldMonth.Year = col.col_AccountMonth.Year AndAlso oldMonth.Month = col.col_AccountMonth.Month Then
+                                    ' 同月份 - 只調整差額
+                                    Dim amountDelta = col.col_Amount - oldAmount
+                                    If amountDelta <> 0 Then
+                                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                            uow.BankMonthlyBalancesRepository,
+                                            uow.BankRepository,
+                                            col.col_bank_Id,
+                                            col.col_AccountMonth,
+                                            creditDelta:=0,
+                                            debitDelta:=amountDelta
+                                        )
+                                    End If
+                                Else
+                                    ' 不同月份 - 舊月份減少，新月份增加
+                                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                        uow.BankMonthlyBalancesRepository,
+                                        uow.BankRepository,
+                                        oldBankId,
+                                        oldMonth,
+                                        creditDelta:=0,
+                                        debitDelta:=-oldAmount
+                                    )
+                                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                        uow.BankMonthlyBalancesRepository,
+                                        uow.BankRepository,
+                                        col.col_bank_Id,
+                                        col.col_AccountMonth,
+                                        creditDelta:=0,
+                                        debitDelta:=col.col_Amount
+                                    )
+                                End If
+                            Else
+                                ' 不同銀行 - 舊銀行減少，新銀行增加
+                                Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                    uow.BankMonthlyBalancesRepository,
+                                    uow.BankRepository,
+                                    oldBankId,
+                                    oldMonth,
+                                    creditDelta:=0,
+                                    debitDelta:=-oldAmount
+                                )
+                                Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                    uow.BankMonthlyBalancesRepository,
+                                    uow.BankRepository,
+                                    col.col_bank_Id,
+                                    col.col_AccountMonth,
+                                    creditDelta:=0,
+                                    debitDelta:=col.col_Amount
+                                )
+                            End If
+                        ElseIf oldType = "應收票據" Then
+                            ' 從應收票據改為銀行存款 - 新銀行增加收入，刪除舊支票
                             Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
                             Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
+                            
+                            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                uow.BankMonthlyBalancesRepository,
+                                uow.BankRepository,
+                                col.col_bank_Id,
+                                col.col_AccountMonth,
+                                creditDelta:=0,
+                                debitDelta:=col.col_Amount
+                            )
+                        Else
+                            ' 從現金改為銀行存款 - 新銀行增加收入
+                            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                uow.BankMonthlyBalancesRepository,
+                                uow.BankRepository,
+                                col.col_bank_Id,
+                                col.col_AccountMonth,
+                                creditDelta:=0,
+                                debitDelta:=col.col_Amount
+                            )
                         End If
 
                     Case "應收票據"
@@ -190,7 +278,15 @@ Public Class CollectionPresenter
                         ElseIf orgCol.col_Type = "現金" Then
                             Await uow.ChequeRepository.AddAsync(cheque)
                         ElseIf orgCol.col_Type = "銀行存款" Then
-                            Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
+                            ' 從銀行存款改為應收票據 - 減少舊銀行收入
+                            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                                uow.BankMonthlyBalancesRepository,
+                                uow.BankRepository,
+                                orgCol.col_bank_Id,
+                                orgCol.col_AccountMonth,
+                                creditDelta:=0,
+                                debitDelta:=-oldAmount
+                            )
                         End If
                 End Select
 
@@ -219,6 +315,9 @@ Public Class CollectionPresenter
                 If orgCol Is Nothing Then Throw New Exception("找不到要更新的收款資料，可能已被刪除")
 
                 Dim payType = orgCol.col_Type
+                Dim bankId = orgCol.col_bank_Id
+                Dim accountMonth = orgCol.col_AccountMonth
+                Dim amount = orgCol.col_Amount
 
                 ' 銷帳
                 _ocmSer.DeleteCollection(orgCol.col_Id)
@@ -228,7 +327,15 @@ Public Class CollectionPresenter
                     Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
 
                 ElseIf payType = "銀行存款" Then
-                    Await _bmbService.UpdateMonthBalanceAsync(orgCol.col_bank_Id, orgCol.col_AccountMonth)
+                    ' ✨ 使用增量更新：減少一筆收入（負數）
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                        uow.BankMonthlyBalancesRepository,
+                        uow.BankRepository,
+                        bankId,
+                        accountMonth,
+                        creditDelta:=0,
+                        debitDelta:=-amount
+                    )
 
                     ' 更新支票資訊
                     Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)

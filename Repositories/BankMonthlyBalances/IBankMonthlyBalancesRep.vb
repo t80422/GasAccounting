@@ -20,4 +20,11 @@
     ''' <param name="bankId"></param>
     ''' <returns></returns>
     Function GetLastBalanceBeforeMonthAsync(startMonth As Date, bankId As Integer) As Task(Of bank_monthly_balances)
+
+    ''' <summary>
+    ''' 取得指定銀行的所有月結餘額記錄
+    ''' </summary>
+    ''' <param name="bankId"></param>
+    ''' <returns></returns>
+    Function GetAllByBankAsync(bankId As Integer) As Task(Of IEnumerable(Of bank_monthly_balances))
 End Interface
