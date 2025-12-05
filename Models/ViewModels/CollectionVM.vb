@@ -20,7 +20,7 @@
         借方科目 = data.col_Type
         支票號碼 = data.col_Cheque
         客戶名稱 = data.customer?.cus_name
-        貸方科目 = data.subject.s_name
+        貸方科目 = data.subject?.s_name
         銀行名稱 = data.bank?.bank_name
         公司 = data.company?.comp_name
         備註 = data.col_Memo

@@ -31,6 +31,9 @@ Public Class CollectionRep
 
                 ' 支票號碼
                 If Not String.IsNullOrEmpty(criteria.ChequeNum) Then query = query.Where(Function(x) x.col_Cheque = criteria.ChequeNum)
+
+                ' 銀行編號
+                If Not String.IsNullOrEmpty(criteria.BankId) Then query = query.Where(Function(x) x.col_bank_Id = criteria.BankId)
             End If
 
             Return query.OrderByDescending(Function(x) x.col_Date).

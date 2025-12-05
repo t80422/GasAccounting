@@ -430,12 +430,12 @@ Partial Class frmMain
         Me.Label189 = New System.Windows.Forms.Label()
         Me.tpClosingEntry = New System.Windows.Forms.TabPage()
         Me.tpReport = New System.Windows.Forms.TabPage()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.tpCheque_col = New System.Windows.Forms.TabPage()
         Me.tpChequePay = New System.Windows.Forms.TabPage()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tpBasic.SuspendLayout()
         Me.tcBasicInfo.SuspendLayout()
@@ -4740,6 +4740,15 @@ Partial Class frmMain
         Me.tpReport.Text = "報表"
         Me.tpReport.UseVisualStyleBackColor = True
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(1214, 19)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(122, 42)
+        Me.Button1.TabIndex = 0
+        Me.Button1.Text = "重整銀行帳"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'tpCheque_col
         '
         Me.tpCheque_col.Location = New System.Drawing.Point(4, 29)
@@ -4775,15 +4784,6 @@ Partial Class frmMain
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 2000
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(1214, 19)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(122, 42)
-        Me.Button1.TabIndex = 0
-        Me.Button1.Text = "重整銀行帳"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -4793,7 +4793,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.24.6"
+        Me.Text = "豐原瓦斯會計系統 v0.25.0"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)

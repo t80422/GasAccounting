@@ -255,7 +255,7 @@ Public Class ReportPresenter
     End Sub
 
     ''' <summary>
-    ''' 產生客戶每日應收帳明細表
+    ''' 產生單一客戶每月應收帳明細表
     ''' </summary>
     ''' <param name="d"></param>
     ''' <param name="cusCode"></param>

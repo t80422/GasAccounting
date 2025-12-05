@@ -40,4 +40,6 @@
     ''' </summary>
     ''' <returns></returns>
     Public Property EndDate As Date?
+
+    Public Property BankId As Integer?
 End Class

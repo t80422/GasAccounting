@@ -1,19 +1,23 @@
 ﻿Public Class frmSearch_Collection
     Private ReadOnly _subjectRep As ISubjectRep
     Private ReadOnly _cusRep As ICustomerRep
+    Private ReadOnly _bankRep As IBankRep
+
     Public Criteria As New CollectionSearchCriteria
 
-    Public Sub New(subjectRep As ISubjectRep, cusRep As ICustomerRep)
+    Public Sub New(subjectRep As ISubjectRep, cusRep As ICustomerRep, bankRep As IBankRep)
 
         ' 設計工具需要此呼叫。
         InitializeComponent()
 
         _subjectRep = subjectRep
         _cusRep = cusRep
+        _bankRep = bankRep
     End Sub
 
     Private Async Sub frmSearch_Collection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetComboBox(cmbSubject, Await _subjectRep.GetSubjectDropdownAsync)
+        SetComboBox(cmbBank, Await _bankRep.GetBankDropdownAsync)
     End Sub
 
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
@@ -25,6 +29,7 @@
             .IsDate = chkDate.Checked
             .StartDate = dtpStart.Value
             .EndDate = dtpEnd.Value
+            .BankId = If(cmbBank.SelectedValue, Nothing)
         End With
 
         DialogResult = DialogResult.OK

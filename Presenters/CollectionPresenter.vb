@@ -111,18 +111,17 @@
                         End If
                 End Select
 
-                Dim entries = CreatePaymentEntries(input)
-                _aeSer.AddEntries(entries)
+                'Dim entries = CreatePaymentEntries(input)
+                '_aeSer.AddEntries(entries)
 
                 Await uow.SaveChangesAsync()
 
                 uow.Commit()
                 Initialize()
-                MsgBox("新增成功")
+                MessageBox.Show("新增成功")
             Catch ex As Exception
                 uow.Rollback()
-                Console.WriteLine(ex.StackTrace)
-                MsgBox("新增時發生錯誤：" & ex.Message)
+                MessageBox.Show("新增時發生錯誤：" & ex.Message)
             End Try
         End Using
     End Sub
@@ -149,14 +148,13 @@
 
                 Dim col = _view.GetUserInput
                 Validate(col)
+
                 '未銷帳
                 Dim paid = _ocmSer.CalculateCollectionUnmatched(col.col_Id)
                 col.col_UnmatchedAmount = col.col_Amount - paid
 
                 Dim orgCol = Await uow.CollectionRepository.GetByIdAsync(col.col_Id)
                 If orgCol Is Nothing Then Throw New Exception("找不到要更新的收款資料，可能已被刪除")
-
-                Await uow.CollectionRepository.UpdateAsync(orgCol, col)
 
                 ' 儲存舊資料用於月結更新
                 Dim oldBankId = orgCol.col_bank_Id
@@ -242,7 +240,7 @@
                             ' 從應收票據改為銀行存款 - 新銀行增加收入，刪除舊支票
                             Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
                             Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
-                            
+
                             Await _bmbService.UpdateMonthBalanceIncrementalAsync(
                                 uow.BankMonthlyBalancesRepository,
                                 uow.BankRepository,
@@ -290,16 +288,17 @@
                         End If
                 End Select
 
-                Dim entries = CreatePaymentEntries(col)
-                _aeSer.UpdateEntries(entries)
+                Await uow.CollectionRepository.UpdateAsync(orgCol, col)
+                'Dim entries = CreatePaymentEntries(col)
+                '_aeSer.UpdateEntries(entries)
 
                 Await uow.SaveChangesAsync()
                 uow.Commit()
                 Initialize()
-                MsgBox("修改成功")
+                MessageBox.Show("修改成功")
             Catch ex As Exception
                 uow.Rollback()
-                MsgBox("修改時發生錯誤：" & ex.Message)
+                MessageBox.Show("修改時發生錯誤：" & ex.Message)
             End Try
         End Using
     End Sub

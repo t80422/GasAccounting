@@ -262,26 +262,32 @@ Public Class ReportRep
 
                 '取得廠運數據
                 Dim delivery = ordersToday.Where(Function(x) x.o_delivery_type = "廠運")
+                Dim gasTotal_delivery = delivery.Sum(Function(x) x.o_gas_total)
+                Dim gasCTotal_delivery = delivery.Sum(Function(x) x.o_gas_c_total)
+
                 dailyReceivable.廠運普氣退氣 = delivery.Sum(Function(x) x.o_return)
-                dailyReceivable.廠運普氣 = delivery.Sum(Function(x) x.o_gas_total) + dailyReceivable.廠運普氣退氣
+                dailyReceivable.廠運普氣 = gasTotal_delivery + dailyReceivable.廠運普氣退氣
                 dailyReceivable.廠運普氣單價 = If(delivery.FirstOrDefault() Is Nothing, 0, delivery.FirstOrDefault.o_UnitPrice)
-                dailyReceivable.廠運普氣金額 = dailyReceivable.廠運普氣 * dailyReceivable.廠運普氣單價
+                dailyReceivable.廠運普氣金額 = gasTotal_delivery * dailyReceivable.廠運普氣單價
                 dailyReceivable.廠運丙氣退氣 = delivery.Sum(Function(x) x.o_return_c)
-                dailyReceivable.廠運丙氣 = delivery.Sum(Function(x) x.o_gas_c_total) + dailyReceivable.廠運丙氣退氣
+                dailyReceivable.廠運丙氣 = gasCTotal_delivery + dailyReceivable.廠運丙氣退氣
                 dailyReceivable.廠運丙氣單價 = If(delivery.FirstOrDefault() Is Nothing, 0, delivery.FirstOrDefault.o_UnitPriceC)
-                dailyReceivable.廠運丙氣金額 = dailyReceivable.廠運丙氣 * dailyReceivable.廠運丙氣單價
+                dailyReceivable.廠運丙氣金額 = gasCTotal_delivery * dailyReceivable.廠運丙氣單價
                 dailyReceivable.廠運總提氣 = dailyReceivable.廠運普氣 + dailyReceivable.廠運丙氣
 
                 '取得自運數據
                 Dim pickUp = ordersToday.Where(Function(x) x.o_delivery_type = "自運")
+                Dim gasTotal_pickUp = pickUp.Sum(Function(x) x.o_gas_total)
+                Dim gasCTotal_pickUp = pickUp.Sum(Function(x) x.o_gas_c_total)
+
                 dailyReceivable.自運普氣退氣 = pickUp.Sum(Function(x) x.o_return)
-                dailyReceivable.自運普氣 = pickUp.Sum(Function(x) x.o_gas_total) + dailyReceivable.自運普氣退氣
+                dailyReceivable.自運普氣 = gasTotal_pickUp + dailyReceivable.自運普氣退氣
                 dailyReceivable.自運普氣單價 = If(pickUp.FirstOrDefault() Is Nothing, 0, pickUp.FirstOrDefault().o_UnitPrice)
-                dailyReceivable.自運普氣金額 = dailyReceivable.自運普氣 * dailyReceivable.自運普氣單價
+                dailyReceivable.自運普氣金額 = gasTotal_pickUp * dailyReceivable.自運普氣單價
                 dailyReceivable.自運丙氣退氣 = pickUp.Sum(Function(x) x.o_return_c)
-                dailyReceivable.自運丙氣 = pickUp.Sum(Function(x) x.o_gas_c_total) + dailyReceivable.自運丙氣退氣
+                dailyReceivable.自運丙氣 = gasCTotal_pickUp + dailyReceivable.自運丙氣退氣
                 dailyReceivable.自運丙氣單價 = If(pickUp.FirstOrDefault() Is Nothing, 0, pickUp.FirstOrDefault().o_UnitPriceC)
-                dailyReceivable.自運丙氣金額 = dailyReceivable.自運丙氣 * dailyReceivable.自運丙氣單價
+                dailyReceivable.自運丙氣金額 = gasCTotal_pickUp * dailyReceivable.自運丙氣單價
                 dailyReceivable.自運總提氣 = dailyReceivable.自運普氣 + dailyReceivable.自運丙氣
 
                 dailyReceivable.總提氣 = dailyReceivable.廠運總提氣 + dailyReceivable.自運總提氣

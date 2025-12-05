@@ -39,12 +39,14 @@ Partial Class frmSearch_Collection
         Me.btnOk = New System.Windows.Forms.Button()
         Me.chkDate = New System.Windows.Forms.CheckBox()
         Me.txtCusId = New System.Windows.Forms.TextBox()
+        Me.cmbBank = New System.Windows.Forms.ComboBox()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(362, 17)
+        Me.Label2.Location = New System.Drawing.Point(370, 17)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(41, 12)
         Me.Label2.TabIndex = 2
@@ -53,7 +55,7 @@ Partial Class frmSearch_Collection
         'cmbSubject
         '
         Me.cmbSubject.FormattingEnabled = True
-        Me.cmbSubject.Location = New System.Drawing.Point(409, 13)
+        Me.cmbSubject.Location = New System.Drawing.Point(419, 13)
         Me.cmbSubject.Name = "cmbSubject"
         Me.cmbSubject.Size = New System.Drawing.Size(110, 20)
         Me.cmbSubject.TabIndex = 3
@@ -61,7 +63,7 @@ Partial Class frmSearch_Collection
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 53)
+        Me.Label3.Location = New System.Drawing.Point(537, 17)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(53, 12)
         Me.Label3.TabIndex = 4
@@ -71,7 +73,7 @@ Partial Class frmSearch_Collection
         '
         Me.cmbType.FormattingEnabled = True
         Me.cmbType.Items.AddRange(New Object() {"現金", "銀行存款", "應收票據"})
-        Me.cmbType.Location = New System.Drawing.Point(71, 49)
+        Me.cmbType.Location = New System.Drawing.Point(598, 13)
         Me.cmbType.Name = "cmbType"
         Me.cmbType.Size = New System.Drawing.Size(110, 20)
         Me.cmbType.TabIndex = 5
@@ -79,7 +81,7 @@ Partial Class frmSearch_Collection
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(187, 53)
+        Me.Label4.Location = New System.Drawing.Point(12, 55)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(41, 12)
         Me.Label4.TabIndex = 6
@@ -88,7 +90,7 @@ Partial Class frmSearch_Collection
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(362, 53)
+        Me.Label5.Location = New System.Drawing.Point(191, 55)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(41, 12)
         Me.Label5.TabIndex = 7
@@ -96,14 +98,14 @@ Partial Class frmSearch_Collection
         '
         'dtpStart
         '
-        Me.dtpStart.Location = New System.Drawing.Point(246, 48)
+        Me.dtpStart.Location = New System.Drawing.Point(73, 50)
         Me.dtpStart.Name = "dtpStart"
         Me.dtpStart.Size = New System.Drawing.Size(110, 22)
         Me.dtpStart.TabIndex = 8
         '
         'dtpEnd
         '
-        Me.dtpEnd.Location = New System.Drawing.Point(409, 48)
+        Me.dtpEnd.Location = New System.Drawing.Point(252, 50)
         Me.dtpEnd.Name = "dtpEnd"
         Me.dtpEnd.Size = New System.Drawing.Size(110, 22)
         Me.dtpEnd.TabIndex = 9
@@ -111,7 +113,7 @@ Partial Class frmSearch_Collection
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 89)
+        Me.Label6.Location = New System.Drawing.Point(12, 93)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(53, 12)
         Me.Label6.TabIndex = 10
@@ -119,7 +121,7 @@ Partial Class frmSearch_Collection
         '
         'txtChequeNum
         '
-        Me.txtChequeNum.Location = New System.Drawing.Point(71, 84)
+        Me.txtChequeNum.Location = New System.Drawing.Point(73, 88)
         Me.txtChequeNum.Name = "txtChequeNum"
         Me.txtChequeNum.Size = New System.Drawing.Size(110, 22)
         Me.txtChequeNum.TabIndex = 11
@@ -135,14 +137,14 @@ Partial Class frmSearch_Collection
         '
         'txtCusCode
         '
-        Me.txtCusCode.Location = New System.Drawing.Point(71, 12)
+        Me.txtCusCode.Location = New System.Drawing.Point(73, 12)
         Me.txtCusCode.Name = "txtCusCode"
         Me.txtCusCode.Size = New System.Drawing.Size(110, 22)
         Me.txtCusCode.TabIndex = 1
         '
         'txtCusName
         '
-        Me.txtCusName.Location = New System.Drawing.Point(246, 12)
+        Me.txtCusName.Location = New System.Drawing.Point(252, 12)
         Me.txtCusName.Name = "txtCusName"
         Me.txtCusName.ReadOnly = True
         Me.txtCusName.Size = New System.Drawing.Size(110, 22)
@@ -152,7 +154,7 @@ Partial Class frmSearch_Collection
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(187, 17)
+        Me.Label7.Location = New System.Drawing.Point(191, 17)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(53, 12)
         Me.Label7.TabIndex = 12
@@ -161,7 +163,7 @@ Partial Class frmSearch_Collection
         'btnOk
         '
         Me.btnOk.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnOk.Location = New System.Drawing.Point(444, 84)
+        Me.btnOk.Location = New System.Drawing.Point(633, 87)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(75, 23)
         Me.btnOk.TabIndex = 14
@@ -171,7 +173,7 @@ Partial Class frmSearch_Collection
         'chkDate
         '
         Me.chkDate.AutoSize = True
-        Me.chkDate.Location = New System.Drawing.Point(189, 87)
+        Me.chkDate.Location = New System.Drawing.Point(419, 53)
         Me.chkDate.Name = "chkDate"
         Me.chkDate.Size = New System.Drawing.Size(96, 16)
         Me.chkDate.TabIndex = 15
@@ -180,17 +182,37 @@ Partial Class frmSearch_Collection
         '
         'txtCusId
         '
-        Me.txtCusId.Location = New System.Drawing.Point(291, 84)
+        Me.txtCusId.Location = New System.Drawing.Point(252, 86)
         Me.txtCusId.Name = "txtCusId"
         Me.txtCusId.Size = New System.Drawing.Size(100, 22)
         Me.txtCusId.TabIndex = 16
         Me.txtCusId.Visible = False
         '
+        'cmbBank
+        '
+        Me.cmbBank.FormattingEnabled = True
+        Me.cmbBank.Items.AddRange(New Object() {"現金", "銀行存款", "應收票據"})
+        Me.cmbBank.Location = New System.Drawing.Point(598, 51)
+        Me.cmbBank.Name = "cmbBank"
+        Me.cmbBank.Size = New System.Drawing.Size(110, 20)
+        Me.cmbBank.TabIndex = 18
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(537, 55)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(29, 12)
+        Me.Label8.TabIndex = 17
+        Me.Label8.Text = "銀行"
+        '
         'frmSearch_Collection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(534, 124)
+        Me.ClientSize = New System.Drawing.Size(722, 124)
+        Me.Controls.Add(Me.cmbBank)
+        Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.txtCusId)
         Me.Controls.Add(Me.chkDate)
         Me.Controls.Add(Me.btnOk)
@@ -235,4 +257,6 @@ Partial Class frmSearch_Collection
     Friend WithEvents btnOk As Button
     Friend WithEvents chkDate As CheckBox
     Friend WithEvents txtCusId As TextBox
+    Friend WithEvents cmbBank As ComboBox
+    Friend WithEvents Label8 As Label
 End Class

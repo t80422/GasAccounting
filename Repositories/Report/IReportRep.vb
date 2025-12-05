@@ -2,7 +2,8 @@
     ''' <summary>
     ''' 取得所有客戶當日氣量氣款收付明細表
     ''' </summary>
-    ''' <param name="d"></param>
+    ''' <param name="selectDate"></param>
+    ''' <param name="isMonth"></param>
     ''' <returns></returns>
     Function CustomersGasDetailByDay(selectDate As Date, isMonth As Boolean) As List(Of CustomersGasDetailByDay)
 
@@ -21,7 +22,7 @@
     Function GasPayableDetailList(d As Date, manuId As Integer) As List(Of GasPayableDetail)
 
     ''' <summary>
-    ''' 客戶每月應收帳明細
+    ''' 單一客戶每月應收帳明細表
     ''' </summary>
     ''' <param name="d"></param>
     ''' <param name="cusId"></param>
@@ -82,8 +83,9 @@
     ''' <summary>
     ''' 取得進銷存明細
     ''' </summary>
-    ''' <param name="month"></param>
+    ''' <param name="year"></param>
     ''' <param name="compId"></param>
+    ''' <param name="empId"></param>
     ''' <returns></returns>
     Function GetInventoryTransactionDetail(year As Date, compId As Integer, empId As Integer) As InventoryTransactionDetail
 

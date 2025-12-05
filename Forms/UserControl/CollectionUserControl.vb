@@ -177,11 +177,10 @@
 
     ' 查詢
     Private Sub btnQuery_col_Click(sender As Object, e As EventArgs) Handles btnQuery_col.Click
-        Dim db As New gas_accounting_systemEntities
-        Using frm As New frmSearch_Collection(New SubjectRep(db), New CustomerRep(db))
-            If frm.ShowDialog = DialogResult.OK Then
-                _presenter.LoadList(frm.Criteria)
-            End If
+        Using uow As New UnitOfWork()
+            Using frm As New frmSearch_Collection(uow.SubjectRepository, uow.CustomerRepository, uow.BankRepository)
+                If frm.ShowDialog = DialogResult.OK Then _presenter.LoadList(frm.Criteria)
+            End Using
         End Using
     End Sub
 
