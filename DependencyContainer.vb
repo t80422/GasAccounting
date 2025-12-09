@@ -58,6 +58,8 @@ Public Class DependencyContainer
             .RegisterType(Of IManufacturerService, ManufacturerService)
             .RegisterType(Of IGasMonthlyBalanceService, GasMonthlyBalanceService)
             .RegisterType(Of IGasPurchaseService, GasPurchaseService)
+            .RegisterType(Of IUnitOfWorkFactory, UnitOfWorkFactory)()
+            .RegisterType(Of ICollectionService, CollectionService)()
             
             ' 註冊 CurrentUserService 為 Singleton（整個應用程式共用同一個實例）
             .RegisterType(Of ICurrentUserService, CurrentUserService)(New ContainerControlledLifetimeManager())

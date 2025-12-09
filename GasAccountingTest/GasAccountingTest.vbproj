@@ -97,6 +97,8 @@
     <Import Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestCollectionPresenter.vb" />
+    <Compile Include="TestCollectionService.vb" />
     <Compile Include="TestReportRep.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

@@ -34,6 +34,8 @@ Public Class CollectionRep
 
                 ' 銀行編號
                 If Not String.IsNullOrEmpty(criteria.BankId) Then query = query.Where(Function(x) x.col_bank_Id = criteria.BankId)
+            Else
+                query = query.Where(Function(x) x.col_Date.Year = Now.Year AndAlso x.col_Date.Month = Now.Month)
             End If
 
             Return query.OrderByDescending(Function(x) x.col_Date).

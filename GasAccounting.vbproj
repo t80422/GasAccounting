@@ -583,7 +583,13 @@
     <Compile Include="Models\closing_entry.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\collection_detail.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GasBarrelDTO.vb" />
+    <Compile Include="Models\payment_cheque.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ViewModels\GasBarrelQtyVM.vb" />
     <Compile Include="Models\gas_barrel.vb">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -665,6 +671,7 @@
     <Compile Include="Models\ViewModels\PurchaseFreightTradeSummaryListVM.vb" />
     <Compile Include="Models\ViewModels\ScrapBarrelDetailVM.vb" />
     <Compile Include="Models\ViewModels\ScrapBarrelVM.vb" />
+    <Compile Include="Models\ViewModels\SelectChequeVM.vb" />
     <Compile Include="Models\ViewModels\SurplusGasListVM.vb" />
     <Compile Include="Models\write_off.vb">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -696,6 +703,8 @@
     <Compile Include="Repositories\Inspection\InspectionRep.vb" />
     <Compile Include="Repositories\OrderCollectionMapping\IOrderCollectionMappingRep.vb" />
     <Compile Include="Repositories\OrderCollectionMapping\OrderCollectionMappingRep.vb" />
+    <Compile Include="Repositories\Payment_Cheque\IPaymentChequeRep.vb" />
+    <Compile Include="Repositories\Payment_Cheque\PaymentChequeRep.vb" />
     <Compile Include="Repositories\ScrapBarrelDetail\IScrapBarrelDetailRep.vb" />
     <Compile Include="Repositories\ScrapBarrelDetail\ScrapBarrelDetailRep.vb" />
     <Compile Include="Repositories\ScrapBarrel\IScrapBarrelRep.vb" />
@@ -753,6 +762,8 @@
     <Compile Include="Repositories\Repository\Repository.vb" />
     <Compile Include="Repositories\Subject\ISubjectRep.vb" />
     <Compile Include="Repositories\Subject\SubjectRep.vb" />
+    <Compile Include="Repositories\UnitOfWork\IUnitOfWorkFactory.vb" />
+    <Compile Include="Repositories\UnitOfWork\UnitOfWorkFactory.vb" />
     <Compile Include="Models\rolepermission.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -774,6 +785,8 @@
     <Compile Include="Services\MonthlyAccount\IMonthlyAccountService.vb" />
     <Compile Include="Services\MonthlyAccount\MonthlyAccountService.vb" />
     <Compile Include="Services\OrderCollectionMapping\OrderCollectionMappingService.vb" />
+    <Compile Include="Services\Collection\CollectionService.vb" />
+    <Compile Include="Services\Collection\ICollectionService.vb" />
     <Compile Include="Services\Printer\IPrinterService.vb" />
     <Compile Include="Services\PriceCalculation\IPriceCalculationService.vb" />
     <Compile Include="Services\PriceCalculation\PriceCalculationService.vb" />

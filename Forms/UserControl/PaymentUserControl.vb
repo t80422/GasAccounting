@@ -1,4 +1,6 @@
 ﻿' 付款作業
+Imports System.ComponentModel
+
 Public Class PaymentUserControl
     Implements IPaymentView
 
@@ -12,7 +14,7 @@ Public Class PaymentUserControl
     Public Event CancelRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).CancelRequest
     Public Event SearchRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).SearchRequest
 
-    ' === 介面 ===
+    ' === 介面實作 ===
     Public Sub PopulateVendorDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateVendorDropdown
         SetComboBox(cmbManu_payment, data)
     End Sub
@@ -63,10 +65,6 @@ Public Class PaymentUserControl
 
     Public Function GetInput(ByRef model As payment) As Boolean Implements IFormView(Of payment, PaymentListVM).GetInput
         AutoMapControlsToEntity(model, Me)
-        If model.p_Type = "應付票據" AndAlso model.chque_pay Is Nothing Then
-            model.chque_pay = New chque_pay
-            AutoMapControlsToEntity(model.chque_pay, Me)
-        End If
 
         If Not model.p_comp_Id.HasValue Then Throw New Exception("請選擇公司")
 
@@ -74,8 +72,6 @@ Public Class PaymentUserControl
             Throw New Exception("請選擇付款類型")
         ElseIf model.p_Type = "銀行存款" AndAlso Not model.p_bank_Id.HasValue Then
             Throw New Exception("請選擇銀行帳號")
-        ElseIf model.p_Type = "應付票據" AndAlso String.IsNullOrEmpty(model.chque_pay.cp_Number) Then
-            Throw New Exception("請選擇支票號碼")
         End If
 
         If Not model.p_s_Id.HasValue Then Throw New Exception("請選擇科目")
@@ -95,10 +91,22 @@ Public Class PaymentUserControl
         SetButtonState(Me, isSelectedRow)
     End Sub
 
-    ' === 事件 ===
+    Public Function GetChequeNumbers() As BindingList(Of SelectChequeVM) Implements IPaymentView.GetChequeNumbers
+        Return dgvCheque.DataSource
+    End Function
+
+    Public Sub ShowChequeList(data As BindingList(Of SelectChequeVM)) Implements IPaymentView.ShowChequeList
+        dgvCheque.DataSource = New BindingList(Of SelectChequeVM)(data)
+    End Sub
+
+    ' === 控制項事件 ===
     Private Sub PaymentUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel_payment.PerformClick()
         ReadDataGridWidth(dgvPayment)
+        Dim list As New BindingList(Of SelectChequeVM)
+        dgvCheque.DataSource = list
+        dgvCheque.Columns("編號").Visible = False
+        ReadDataGridWidth(dgvCheque)
     End Sub
 
     Private Sub btnCancel_payment_Click(sender As Object, e As EventArgs) Handles btnCancel_payment.Click
@@ -130,6 +138,7 @@ Public Class PaymentUserControl
 
     Private Sub cmbPayType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPayType.SelectedIndexChanged
         ControlColumns()
+        ShowDgvCheque()
     End Sub
 
     Private Sub cmbManu_payment_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbManu_payment.SelectionChangeCommitted
@@ -156,6 +165,11 @@ Public Class PaymentUserControl
 
     Private Sub cmbSubjects_payment_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSubjects_payment.SelectedIndexChanged
         ControlColumns()
+        ShowDgvCheque()
+    End Sub
+
+    Private Sub dgvCheque_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvCheque.ColumnWidthChanged
+        SaveDataGridWidth(sender, e)
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
@@ -203,5 +217,9 @@ Public Class PaymentUserControl
             lblBank.Visible = True
             cmbBank.Visible = True
         End If
+    End Sub
+
+    Private Sub ShowDgvCheque()
+        dgvCheque.Visible = cmbSubjects_payment.Text = "應付票據" AndAlso cmbPayType.Text = "銀行存款"
     End Sub
 End Class

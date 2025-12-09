@@ -19,6 +19,7 @@ Public Class PaymentRep
                 If Not String.IsNullOrEmpty(criteria.ChequeNo) Then query = query.Where(Function(x) x.chque_pay.cp_Number = criteria.ChequeNo)
                 If criteria.SubjectId.HasValue Then query = query.Where(Function(x) x.p_s_Id = criteria.SubjectId)
                 If criteria.VendorId.HasValue Then query = query.Where(Function(x) x.p_m_Id = criteria.VendorId)
+                If Not String.IsNullOrEmpty(criteria.Cridit) Then query = query.Where(Function(x) x.p_Type = criteria.Cridit)
             End If
 
             Return Await query.OrderByDescending(Function(x) x.p_Date).ToListAsync

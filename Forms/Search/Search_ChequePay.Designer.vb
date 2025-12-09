@@ -33,32 +33,37 @@ Partial Class Search_ChequePay
         Me.Label2 = New System.Windows.Forms.Label()
         Me.dtpStart = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.txtChequeNum = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
         '
         'cmbCompany
         '
         Me.cmbCompany.FormattingEnabled = True
         Me.cmbCompany.Items.AddRange(New Object() {"已代收", "已兌現"})
-        Me.cmbCompany.Location = New System.Drawing.Point(76, 96)
+        Me.cmbCompany.Location = New System.Drawing.Point(100, 105)
+        Me.cmbCompany.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.cmbCompany.Name = "cmbCompany"
-        Me.cmbCompany.Size = New System.Drawing.Size(337, 24)
+        Me.cmbCompany.Size = New System.Drawing.Size(462, 27)
         Me.cmbCompany.TabIndex = 21
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(14, 100)
+        Me.Label4.Location = New System.Drawing.Point(20, 109)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(39, 16)
+        Me.Label4.Size = New System.Drawing.Size(51, 19)
         Me.Label4.TabIndex = 20
         Me.Label4.Text = "公司"
         '
         'chkStatus
         '
         Me.chkStatus.AutoSize = True
-        Me.chkStatus.Location = New System.Drawing.Point(216, 58)
+        Me.chkStatus.Location = New System.Drawing.Point(368, 64)
+        Me.chkStatus.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.chkStatus.Name = "chkStatus"
-        Me.chkStatus.Size = New System.Drawing.Size(122, 20)
+        Me.chkStatus.Size = New System.Drawing.Size(154, 23)
         Me.chkStatus.TabIndex = 19
         Me.chkStatus.Text = "使用狀態查詢"
         Me.chkStatus.UseVisualStyleBackColor = True
@@ -66,9 +71,10 @@ Partial Class Search_ChequePay
         'btnOK
         '
         Me.btnOK.BackColor = System.Drawing.Color.Lime
-        Me.btnOK.Location = New System.Drawing.Point(474, 95)
+        Me.btnOK.Location = New System.Drawing.Point(907, 98)
+        Me.btnOK.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.btnOK.Name = "btnOK"
-        Me.btnOK.Size = New System.Drawing.Size(67, 25)
+        Me.btnOK.Size = New System.Drawing.Size(92, 30)
         Me.btnOK.TabIndex = 18
         Me.btnOK.Text = "OK"
         Me.btnOK.UseVisualStyleBackColor = False
@@ -77,69 +83,92 @@ Partial Class Search_ChequePay
         '
         Me.cmbStatus.FormattingEnabled = True
         Me.cmbStatus.Items.AddRange(New Object() {"已代收", "已兌現"})
-        Me.cmbStatus.Location = New System.Drawing.Point(76, 56)
+        Me.cmbStatus.Location = New System.Drawing.Point(100, 62)
+        Me.cmbStatus.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.cmbStatus.Name = "cmbStatus"
-        Me.cmbStatus.Size = New System.Drawing.Size(134, 24)
+        Me.cmbStatus.Size = New System.Drawing.Size(180, 27)
         Me.cmbStatus.TabIndex = 17
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(14, 60)
+        Me.Label3.Location = New System.Drawing.Point(20, 66)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(39, 16)
+        Me.Label3.Size = New System.Drawing.Size(51, 19)
         Me.Label3.TabIndex = 16
         Me.Label3.Text = "狀態"
         '
         'chkDate
         '
         Me.chkDate.AutoSize = True
-        Me.chkDate.Location = New System.Drawing.Point(419, 16)
+        Me.chkDate.Location = New System.Drawing.Point(556, 20)
+        Me.chkDate.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.chkDate.Name = "chkDate"
-        Me.chkDate.Size = New System.Drawing.Size(122, 20)
+        Me.chkDate.Size = New System.Drawing.Size(154, 23)
         Me.chkDate.TabIndex = 15
         Me.chkDate.Text = "使用日期查詢"
         Me.chkDate.UseVisualStyleBackColor = True
         '
         'dtpEnd
         '
-        Me.dtpEnd.Location = New System.Drawing.Point(279, 13)
+        Me.dtpEnd.Location = New System.Drawing.Point(368, 16)
+        Me.dtpEnd.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.dtpEnd.Name = "dtpEnd"
-        Me.dtpEnd.Size = New System.Drawing.Size(134, 27)
+        Me.dtpEnd.Size = New System.Drawing.Size(180, 30)
         Me.dtpEnd.TabIndex = 14
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(217, 18)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label2.Location = New System.Drawing.Point(288, 22)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(55, 16)
+        Me.Label2.Size = New System.Drawing.Size(72, 19)
         Me.Label2.TabIndex = 13
         Me.Label2.Text = "日期迄"
         '
         'dtpStart
         '
-        Me.dtpStart.Location = New System.Drawing.Point(76, 13)
+        Me.dtpStart.Location = New System.Drawing.Point(100, 16)
+        Me.dtpStart.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.dtpStart.Name = "dtpStart"
-        Me.dtpStart.Size = New System.Drawing.Size(134, 27)
+        Me.dtpStart.Size = New System.Drawing.Size(180, 30)
         Me.dtpStart.TabIndex = 12
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(14, 18)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label1.Location = New System.Drawing.Point(20, 22)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(55, 16)
+        Me.Label1.Size = New System.Drawing.Size(72, 19)
         Me.Label1.TabIndex = 11
         Me.Label1.Text = "日期起"
         '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(718, 22)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(93, 19)
+        Me.Label5.TabIndex = 22
+        Me.Label5.Text = "支票號碼"
+        '
+        'txtChequeNum
+        '
+        Me.txtChequeNum.Location = New System.Drawing.Point(819, 16)
+        Me.txtChequeNum.Name = "txtChequeNum"
+        Me.txtChequeNum.Size = New System.Drawing.Size(180, 30)
+        Me.txtChequeNum.TabIndex = 23
+        '
         'Search_ChequePay
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(556, 137)
+        Me.ClientSize = New System.Drawing.Size(1017, 145)
+        Me.Controls.Add(Me.txtChequeNum)
+        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.cmbCompany)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.chkStatus)
@@ -151,11 +180,11 @@ Partial Class Search_ChequePay
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.dtpStart)
         Me.Controls.Add(Me.Label1)
-        Me.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.MaximizeBox = False
         Me.Name = "Search_ChequePay"
-        Me.Padding = New System.Windows.Forms.Padding(10)
+        Me.Padding = New System.Windows.Forms.Padding(14, 12, 14, 12)
         Me.ShowIcon = False
         Me.Text = "應付支票管理查詢"
         Me.ResumeLayout(False)
@@ -174,4 +203,6 @@ Partial Class Search_ChequePay
     Friend WithEvents Label2 As Label
     Friend WithEvents dtpStart As DateTimePicker
     Friend WithEvents Label1 As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents txtChequeNum As TextBox
 End Class

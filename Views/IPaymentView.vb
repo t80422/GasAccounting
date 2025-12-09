@@ -1,4 +1,6 @@
-﻿Public Interface IPaymentView
+﻿Imports System.ComponentModel
+
+Public Interface IPaymentView
     Inherits IFormView(Of payment, PaymentListVM)
 
     ' 事件
@@ -35,6 +37,15 @@
     Sub DisplayAmountDueList(data As IReadOnlyList(Of AmountDueVM))
 
     ''' <summary>
+    ''' 顯示廠商帳號
+    ''' </summary>
+    ''' <param name="data"></param>
+    ''' <returns></returns>
+    Sub ShowVendorAccount(data As String)
+
+    Sub ShowChequeList(data As BindingList(Of SelectChequeVM))
+
+    ''' <summary>
     ''' 取得搜尋條件
     ''' </summary>
     ''' <returns></returns>
@@ -42,10 +53,5 @@
 
     Sub GetChequeInput(ByRef model As chque_pay)
 
-    ''' <summary>
-    ''' 顯示廠商帳號
-    ''' </summary>
-    ''' <param name="data"></param>
-    ''' <returns></returns>
-    Sub ShowVendorAccount(data As String)
+    Function GetChequeNumbers() As BindingList(Of SelectChequeVM)
 End Interface

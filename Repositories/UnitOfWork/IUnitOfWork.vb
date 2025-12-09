@@ -20,6 +20,7 @@ Public Interface IUnitOfWork
     ReadOnly Property CollectionRepository As ICollectionRep
     ReadOnly Property CustomerRepository As ICustomerRep
     ReadOnly Property ChequeRepository As IChequeRep
+    ReadOnly Property PaymentChequeRepository As IPaymentChequeRep
 
     Sub BeginTransaction()
     Sub Commit()

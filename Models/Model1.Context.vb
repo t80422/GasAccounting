@@ -58,5 +58,7 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property surplus_gas() As DbSet(Of surplus_gas)
     Public Overridable Property write_off() As DbSet(Of write_off)
     Public Overridable Property orders() As DbSet(Of order)
+    Public Overridable Property collection_detail() As DbSet(Of collection_detail)
+    Public Overridable Property payment_cheque() As DbSet(Of payment_cheque)
 
 End Class

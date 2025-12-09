@@ -1,6 +1,7 @@
 ﻿Public Class PaymentListVM
     Public Property 編號 As Integer
     Public Property 日期 As Date
+    Public Property 帳款月份 As String
     Public Property 金額 As Integer
     Public Property 貸方科目 As String
     Public Property 廠商名稱 As String
@@ -19,5 +20,6 @@
         科目 = payment.subject?.s_name
         支票號碼 = payment.chque_pay?.cp_Number
         備註 = payment.p_Memo
+        帳款月份 = payment.p_AccountMonth?.ToString("yyyy年MM月")
     End Sub
 End Class

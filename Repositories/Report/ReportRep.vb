@@ -433,6 +433,22 @@ Public Class ReportRep
                                                         .IsIncome = True,
                                                         .Target = x.customer.cus_code
                                                    })
+
+            '現金存入銀行：獨立撈取現金類型且科目為銀行存款
+            Dim cashToBankCollections = _context.collections.AsNoTracking.
+                                                         Where(Function(x) x.col_Date.Year = month.Year AndAlso
+                                                                           x.col_Date.Month = month.Month AndAlso
+                                                                           x.col_Type = "現金" AndAlso
+                                                                           x.col_bank_Id = bankId AndAlso
+                                                                           x.subject.s_name = "銀行存款").
+                                                         Select(Function(x) New With {
+                                                              .Date = x.col_Date,
+                                                              .Subject = x.col_Type,
+                                                              .Memo = x.col_Memo,
+                                                              .Amount = x.col_Amount,
+                                                              .IsIncome = True,
+                                                              .Target = x.customer.cus_code
+                                                         })
             '獲取支出數據
             Dim payments = _context.payments.AsNoTracking.
                                              Where(Function(x) x.p_Date.Year = month.Year AndAlso
@@ -448,7 +464,7 @@ Public Class ReportRep
                                                 .Target = x.company.comp_name
                                              })
             '合併並排列數據
-            Dim allTransactions = collections.Union(payments) _
+            Dim allTransactions = collections.Union(cashToBankCollections).Union(payments) _
                                              .OrderBy(Function(x) x.Date) _
                                              .ThenBy(Function(x) x.IsIncome)
 

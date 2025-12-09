@@ -46,26 +46,29 @@ Partial Class frmSearch_Collection
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(370, 17)
+        Me.Label2.Location = New System.Drawing.Point(661, 20)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(41, 12)
+        Me.Label2.Size = New System.Drawing.Size(95, 19)
         Me.Label2.TabIndex = 2
         Me.Label2.Text = "科    目"
         '
         'cmbSubject
         '
         Me.cmbSubject.FormattingEnabled = True
-        Me.cmbSubject.Location = New System.Drawing.Point(419, 13)
+        Me.cmbSubject.Location = New System.Drawing.Point(772, 16)
+        Me.cmbSubject.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.cmbSubject.Name = "cmbSubject"
-        Me.cmbSubject.Size = New System.Drawing.Size(110, 20)
+        Me.cmbSubject.Size = New System.Drawing.Size(198, 27)
         Me.cmbSubject.TabIndex = 3
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(537, 17)
+        Me.Label3.Location = New System.Drawing.Point(338, 112)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(53, 12)
+        Me.Label3.Size = New System.Drawing.Size(93, 19)
         Me.Label3.TabIndex = 4
         Me.Label3.Text = "收款類型"
         '
@@ -73,99 +76,111 @@ Partial Class frmSearch_Collection
         '
         Me.cmbType.FormattingEnabled = True
         Me.cmbType.Items.AddRange(New Object() {"現金", "銀行存款", "應收票據"})
-        Me.cmbType.Location = New System.Drawing.Point(598, 13)
+        Me.cmbType.Location = New System.Drawing.Point(447, 108)
+        Me.cmbType.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.cmbType.Name = "cmbType"
-        Me.cmbType.Size = New System.Drawing.Size(110, 20)
+        Me.cmbType.Size = New System.Drawing.Size(198, 27)
         Me.cmbType.TabIndex = 5
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(12, 55)
+        Me.Label4.Location = New System.Drawing.Point(15, 66)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(41, 12)
+        Me.Label4.Size = New System.Drawing.Size(72, 19)
         Me.Label4.TabIndex = 6
         Me.Label4.Text = "日期起"
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(191, 55)
+        Me.Label5.Location = New System.Drawing.Point(338, 66)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(41, 12)
+        Me.Label5.Size = New System.Drawing.Size(72, 19)
         Me.Label5.TabIndex = 7
         Me.Label5.Text = "日期迄"
         '
         'dtpStart
         '
-        Me.dtpStart.Location = New System.Drawing.Point(73, 50)
+        Me.dtpStart.Location = New System.Drawing.Point(124, 60)
+        Me.dtpStart.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.dtpStart.Name = "dtpStart"
-        Me.dtpStart.Size = New System.Drawing.Size(110, 22)
+        Me.dtpStart.Size = New System.Drawing.Size(198, 30)
         Me.dtpStart.TabIndex = 8
         '
         'dtpEnd
         '
-        Me.dtpEnd.Location = New System.Drawing.Point(252, 50)
+        Me.dtpEnd.Location = New System.Drawing.Point(447, 60)
+        Me.dtpEnd.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.dtpEnd.Name = "dtpEnd"
-        Me.dtpEnd.Size = New System.Drawing.Size(110, 22)
+        Me.dtpEnd.Size = New System.Drawing.Size(198, 30)
         Me.dtpEnd.TabIndex = 9
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 93)
+        Me.Label6.Location = New System.Drawing.Point(15, 112)
+        Me.Label6.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(53, 12)
+        Me.Label6.Size = New System.Drawing.Size(93, 19)
         Me.Label6.TabIndex = 10
         Me.Label6.Text = "支票號碼"
         '
         'txtChequeNum
         '
-        Me.txtChequeNum.Location = New System.Drawing.Point(73, 88)
+        Me.txtChequeNum.Location = New System.Drawing.Point(124, 106)
+        Me.txtChequeNum.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtChequeNum.Name = "txtChequeNum"
-        Me.txtChequeNum.Size = New System.Drawing.Size(110, 22)
+        Me.txtChequeNum.Size = New System.Drawing.Size(198, 30)
         Me.txtChequeNum.TabIndex = 11
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 17)
+        Me.Label1.Location = New System.Drawing.Point(15, 20)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(53, 12)
+        Me.Label1.Size = New System.Drawing.Size(93, 19)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "客戶代號"
         '
         'txtCusCode
         '
-        Me.txtCusCode.Location = New System.Drawing.Point(73, 12)
+        Me.txtCusCode.Location = New System.Drawing.Point(124, 14)
+        Me.txtCusCode.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCusCode.Name = "txtCusCode"
-        Me.txtCusCode.Size = New System.Drawing.Size(110, 22)
+        Me.txtCusCode.Size = New System.Drawing.Size(198, 30)
         Me.txtCusCode.TabIndex = 1
         '
         'txtCusName
         '
-        Me.txtCusName.Location = New System.Drawing.Point(252, 12)
+        Me.txtCusName.Location = New System.Drawing.Point(447, 14)
+        Me.txtCusName.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCusName.Name = "txtCusName"
         Me.txtCusName.ReadOnly = True
-        Me.txtCusName.Size = New System.Drawing.Size(110, 22)
+        Me.txtCusName.Size = New System.Drawing.Size(198, 30)
         Me.txtCusName.TabIndex = 13
         Me.txtCusName.TabStop = False
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(191, 17)
+        Me.Label7.Location = New System.Drawing.Point(338, 20)
+        Me.Label7.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(53, 12)
+        Me.Label7.Size = New System.Drawing.Size(93, 19)
         Me.Label7.TabIndex = 12
         Me.Label7.Text = "客戶名稱"
         '
         'btnOk
         '
         Me.btnOk.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnOk.Location = New System.Drawing.Point(633, 87)
+        Me.btnOk.Location = New System.Drawing.Point(832, 151)
+        Me.btnOk.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.btnOk.Name = "btnOk"
-        Me.btnOk.Size = New System.Drawing.Size(75, 23)
+        Me.btnOk.Size = New System.Drawing.Size(138, 36)
         Me.btnOk.TabIndex = 14
         Me.btnOk.Text = "搜尋"
         Me.btnOk.UseVisualStyleBackColor = False
@@ -173,18 +188,20 @@ Partial Class frmSearch_Collection
         'chkDate
         '
         Me.chkDate.AutoSize = True
-        Me.chkDate.Location = New System.Drawing.Point(419, 53)
+        Me.chkDate.Location = New System.Drawing.Point(661, 64)
+        Me.chkDate.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.chkDate.Name = "chkDate"
-        Me.chkDate.Size = New System.Drawing.Size(96, 16)
+        Me.chkDate.Size = New System.Drawing.Size(154, 23)
         Me.chkDate.TabIndex = 15
         Me.chkDate.Text = "使用日期查詢"
         Me.chkDate.UseVisualStyleBackColor = True
         '
         'txtCusId
         '
-        Me.txtCusId.Location = New System.Drawing.Point(252, 86)
+        Me.txtCusId.Location = New System.Drawing.Point(827, 55)
+        Me.txtCusId.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCusId.Name = "txtCusId"
-        Me.txtCusId.Size = New System.Drawing.Size(100, 22)
+        Me.txtCusId.Size = New System.Drawing.Size(180, 30)
         Me.txtCusId.TabIndex = 16
         Me.txtCusId.Visible = False
         '
@@ -192,25 +209,27 @@ Partial Class frmSearch_Collection
         '
         Me.cmbBank.FormattingEnabled = True
         Me.cmbBank.Items.AddRange(New Object() {"現金", "銀行存款", "應收票據"})
-        Me.cmbBank.Location = New System.Drawing.Point(598, 51)
+        Me.cmbBank.Location = New System.Drawing.Point(772, 108)
+        Me.cmbBank.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.cmbBank.Name = "cmbBank"
-        Me.cmbBank.Size = New System.Drawing.Size(110, 20)
+        Me.cmbBank.Size = New System.Drawing.Size(198, 27)
         Me.cmbBank.TabIndex = 18
         '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(537, 55)
+        Me.Label8.Location = New System.Drawing.Point(661, 112)
+        Me.Label8.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(29, 12)
+        Me.Label8.Size = New System.Drawing.Size(51, 19)
         Me.Label8.TabIndex = 17
         Me.Label8.Text = "銀行"
         '
         'frmSearch_Collection
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(722, 124)
+        Me.ClientSize = New System.Drawing.Size(988, 196)
         Me.Controls.Add(Me.cmbBank)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.txtCusId)
@@ -230,6 +249,8 @@ Partial Class frmSearch_Collection
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtCusCode)
         Me.Controls.Add(Me.Label1)
+        Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.MaximizeBox = False
         Me.Name = "frmSearch_Collection"
         Me.ShowIcon = False

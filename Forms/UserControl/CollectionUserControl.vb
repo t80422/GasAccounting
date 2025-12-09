@@ -37,7 +37,7 @@
     End Sub
 
     Public Sub ClearInput() Implements IBaseView(Of collection, CollectionVM).ClearInput
-        ClearControls(Me)
+        ClearControls(Me, New List(Of String)({"dtpDate_col", "dtpAccountMonth"}))
     End Sub
 
     Public Function GetChequeInput() As cheque Implements ICollectionView.GetChequeInput
@@ -64,7 +64,8 @@
     Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
         Try
             _presenter.Initialize()
-            SetButtonState_old(btnCancel_col, True)
+            'SetButtonState_old(btnCancel_col, True)
+            SetButtonState(Me, False)
 
             ' 公司預設 "豐合"
             Dim index As Integer = cmbCompany_col.FindString("豐合")
@@ -72,9 +73,6 @@
 
             ' 解鎖"收款類型"
             cmbType_col.Enabled = True
-
-            dtpDate_col.Value = Now.Date
-            DateTimePicker14.Value = Now.Date
         Catch ex As Exception
             MsgBox(ex.StackTrace)
         End Try

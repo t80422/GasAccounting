@@ -30,14 +30,17 @@ Partial Class frmSearch_Payment
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cmbVendor = New System.Windows.Forms.ComboBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.cmbCredit = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'chkDate
         '
         Me.chkDate.AutoSize = True
-        Me.chkDate.Location = New System.Drawing.Point(339, 16)
+        Me.chkDate.Location = New System.Drawing.Point(560, 25)
+        Me.chkDate.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.chkDate.Name = "chkDate"
-        Me.chkDate.Size = New System.Drawing.Size(96, 16)
+        Me.chkDate.Size = New System.Drawing.Size(154, 23)
         Me.chkDate.TabIndex = 32
         Me.chkDate.Text = "使用日期查詢"
         Me.chkDate.UseVisualStyleBackColor = True
@@ -45,68 +48,95 @@ Partial Class frmSearch_Payment
         'btnOk
         '
         Me.btnOk.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnOk.Location = New System.Drawing.Point(360, 50)
+        Me.btnOk.Location = New System.Drawing.Point(703, 110)
+        Me.btnOk.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.btnOk.Name = "btnOk"
-        Me.btnOk.Size = New System.Drawing.Size(75, 23)
+        Me.btnOk.Size = New System.Drawing.Size(138, 36)
         Me.btnOk.TabIndex = 31
         Me.btnOk.Text = "搜尋"
         Me.btnOk.UseVisualStyleBackColor = False
         '
         'dtpEnd
         '
-        Me.dtpEnd.Location = New System.Drawing.Point(223, 13)
+        Me.dtpEnd.Location = New System.Drawing.Point(372, 21)
+        Me.dtpEnd.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.dtpEnd.Name = "dtpEnd"
-        Me.dtpEnd.Size = New System.Drawing.Size(110, 22)
+        Me.dtpEnd.Size = New System.Drawing.Size(180, 30)
         Me.dtpEnd.TabIndex = 26
         '
         'dtpStart
         '
-        Me.dtpStart.Location = New System.Drawing.Point(60, 13)
+        Me.dtpStart.Location = New System.Drawing.Point(104, 21)
+        Me.dtpStart.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.dtpStart.Name = "dtpStart"
-        Me.dtpStart.Size = New System.Drawing.Size(110, 22)
+        Me.dtpStart.Size = New System.Drawing.Size(180, 30)
         Me.dtpStart.TabIndex = 25
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(176, 18)
+        Me.Label5.Location = New System.Drawing.Point(292, 27)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(41, 12)
+        Me.Label5.Size = New System.Drawing.Size(72, 19)
         Me.Label5.TabIndex = 24
         Me.Label5.Text = "日期迄"
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(13, 18)
+        Me.Label4.Location = New System.Drawing.Point(24, 27)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(41, 12)
+        Me.Label4.Size = New System.Drawing.Size(72, 19)
         Me.Label4.TabIndex = 23
         Me.Label4.Text = "日期起"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 55)
+        Me.Label1.Location = New System.Drawing.Point(24, 71)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(29, 12)
+        Me.Label1.Size = New System.Drawing.Size(51, 19)
         Me.Label1.TabIndex = 34
         Me.Label1.Text = "廠商"
         '
         'cmbVendor
         '
         Me.cmbVendor.FormattingEnabled = True
-        Me.cmbVendor.Location = New System.Drawing.Point(60, 51)
+        Me.cmbVendor.Location = New System.Drawing.Point(104, 67)
+        Me.cmbVendor.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.cmbVendor.Name = "cmbVendor"
-        Me.cmbVendor.Size = New System.Drawing.Size(273, 20)
+        Me.cmbVendor.Size = New System.Drawing.Size(448, 27)
         Me.cmbVendor.TabIndex = 35
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(560, 71)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(93, 19)
+        Me.Label2.TabIndex = 36
+        Me.Label2.Text = "貸方科目"
+        '
+        'cmbCredit
+        '
+        Me.cmbCredit.FormattingEnabled = True
+        Me.cmbCredit.Items.AddRange(New Object() {"現金", "銀行存款", "應付票據"})
+        Me.cmbCredit.Location = New System.Drawing.Point(661, 67)
+        Me.cmbCredit.Name = "cmbCredit"
+        Me.cmbCredit.Size = New System.Drawing.Size(180, 27)
+        Me.cmbCredit.TabIndex = 37
         '
         'frmSearch_Payment
         '
         Me.AcceptButton = Me.btnOk
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(449, 87)
+        Me.ClientSize = New System.Drawing.Size(860, 166)
+        Me.Controls.Add(Me.cmbCredit)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.cmbVendor)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.chkDate)
@@ -115,9 +145,11 @@ Partial Class frmSearch_Payment
         Me.Controls.Add(Me.dtpStart)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
+        Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.MaximizeBox = False
         Me.Name = "frmSearch_Payment"
-        Me.Padding = New System.Windows.Forms.Padding(10)
+        Me.Padding = New System.Windows.Forms.Padding(18, 16, 18, 16)
         Me.ShowIcon = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "付款作業查詢"
@@ -134,4 +166,6 @@ Partial Class frmSearch_Payment
     Friend WithEvents Label4 As Label
     Friend WithEvents Label1 As Label
     Friend WithEvents cmbVendor As ComboBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents cmbCredit As ComboBox
 End Class

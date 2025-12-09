@@ -31,5 +31,6 @@ Partial Public Class collection
     Public Overridable Property company As company
     Public Overridable Property order_collection_mapping As ICollection(Of order_collection_mapping) = New HashSet(Of order_collection_mapping)
     Public Overridable Property write_off As ICollection(Of write_off) = New HashSet(Of write_off)
+    Public Overridable Property collection_detail As ICollection(Of collection_detail) = New HashSet(Of collection_detail)
 
 End Class

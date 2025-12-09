@@ -27,6 +27,7 @@ Public Class UnitOfWork
     Private _collectionRepository As ICollectionRep
     Private _customerRepository As ICustomerRep
     Private _chequeRepository As IChequeRep
+    Private _paymentChequeRepository As IPaymentChequeRep
 
     ''' <summary>
     ''' 預設建構子 - 給正式環境使用（自己創建新的 DbContext）
@@ -187,6 +188,13 @@ Public Class UnitOfWork
                 _chequeRepository = New ChequeRep(_context)
             End If
             Return _chequeRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property PaymentChequeRepository As IPaymentChequeRep Implements IUnitOfWork.PaymentChequeRepository
+        Get
+            If _paymentChequeRepository Is Nothing Then _paymentChequeRepository = New PaymentChequeRep(_context)
+            Return _paymentChequeRepository
         End Get
     End Property
 

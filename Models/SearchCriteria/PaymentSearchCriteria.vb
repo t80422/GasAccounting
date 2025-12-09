@@ -7,4 +7,5 @@
     Public Property StartDate As Date? = Nothing
     Public Property EndDate As Date? = Nothing
     Public Property IsSearchDate As Boolean
+    Public Property Cridit As String
 End Class

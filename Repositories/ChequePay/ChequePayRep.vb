@@ -30,6 +30,7 @@ Public Class ChequePayRep
                     End If
                 End If
                 If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.p.p_comp_Id = criteria.CompanyId.Value)
+                If Not String.IsNullOrEmpty(criteria.ChequeNumber) Then query = query.Where(Function(x) x.cp.cp_Number = criteria.ChequeNumber)
             End If
 
             Dim result = query.OrderByDescending(Function(x) x.cp.cp_Id).ToList

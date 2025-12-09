@@ -1,10 +1,11 @@
-﻿Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar
+﻿Imports System.ComponentModel
 
 Public Class PaymentPresenter
     Private ReadOnly _view As IPaymentView
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _reportSer As IReportService
+    Private ReadOnly _uowFactory As IUnitOfWorkFactory
     Private selectPayment As payment
 
     Public ReadOnly Property View As IPaymentView
@@ -13,11 +14,16 @@ Public Class PaymentPresenter
         End Get
     End Property
 
-    Public Sub New(view As IPaymentView, bmbService As IBankMonthlyBalanceService, aeSer As IAccountingEntryService, reportSer As IReportService)
+    Public Sub New(view As IPaymentView,
+                   bmbService As IBankMonthlyBalanceService,
+                   aeSer As IAccountingEntryService,
+                   reportSer As IReportService,
+                   uowFactory As IUnitOfWorkFactory)
         _view = view
         _bmbService = bmbService
         _aeSer = aeSer
         _reportSer = reportSer
+        _uowFactory = uowFactory
 
         SubscribeToViewEvents()
     End Sub
@@ -50,13 +56,13 @@ Public Class PaymentPresenter
 
             _view.ButtonStatus(False)
         Catch ex As Exception
-            MsgBox("付款作業初始化發生錯誤:" + ex.Message)
+            MessageBox.Show("付款作業初始化發生錯誤:" + ex.Message)
         End Try
     End Sub
 
     Private Sub LoadList(Optional criteria As PaymentSearchCriteria = Nothing)
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Dim payments = uow.PaymentRepository.SearchPaymentAsync(criteria).Result
                 _view.ShowList(payments.Select(Function(x) New PaymentListVM(x)).ToList)
             End Using
@@ -67,7 +73,7 @@ Public Class PaymentPresenter
 
     Private Sub LoadVendorDropdown()
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Dim vendors = uow.ManufacturerRepository.GetVendorDropdownAsync.Result
                 _view.PopulateVendorDropdown(vendors)
             End Using
@@ -78,7 +84,7 @@ Public Class PaymentPresenter
 
     Private Sub LoadSubjectDropdown()
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Dim subjects = uow.SubjectRepository.GetSubjectDropdownAsync.Result
                 _view.PopulateSubjectDropdown(subjects)
             End Using
@@ -89,7 +95,7 @@ Public Class PaymentPresenter
 
     Private Sub LoadCompanyDropdown()
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Dim companies = uow.CompanyRepository.GetCompanyDropdownAsync.Result
                 _view.PopulateCompanyDropdown(companies)
             End Using
@@ -100,7 +106,7 @@ Public Class PaymentPresenter
 
     Private Sub LoadBankDropdown(sender As Object, companyId As Integer)
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Dim data = uow.BankRepository.GetBankDropdownAsync(companyId).Result
                 _view.PopulateBankDropdown(data)
             End Using
@@ -111,7 +117,7 @@ Public Class PaymentPresenter
 
     Private Sub ManufacturerSelected(sender As Object, vendorId As Integer)
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Dim vendor = uow.ManufacturerRepository.GetByIdAsync(vendorId).Result
                 _view.ShowVendorAccount(vendor.manu_account)
                 LoadVendorAmountDue(vendorId)
@@ -123,7 +129,7 @@ Public Class PaymentPresenter
 
     Private Sub LoadVendorAmountDue(vendorId As Integer)
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Dim amountDue = uow.PaymentRepository.GetVendorAmountDue(vendorId)
                 _view.DisplayAmountDueList(amountDue)
             End Using
@@ -133,7 +139,7 @@ Public Class PaymentPresenter
     End Sub
 
     Private Async Sub Add()
-        Using uow As New UnitOfWork()
+        Using uow = _uowFactory.Create()
             uow.BeginTransaction()
             Try
                 Dim data As New payment
@@ -154,19 +160,34 @@ Public Class PaymentPresenter
                     Dim subject = uow.SubjectRepository.GetByIdAsync(data.p_s_Id).Result
 
                     If subject.s_name = "應付票據" Then
-                        Dim chequeNo = InputBox("請輸入支票號碼")
+                        Dim chequeNums = _view.GetChequeNumbers?.
+                            Select(Function(x) x.支票編號).
+                            Where(Function(n) Not String.IsNullOrWhiteSpace(n)).
+                            ToList()
+                        If chequeNums Is Nothing Then chequeNums = New List(Of String)
 
-                        If Not String.IsNullOrEmpty(chequeNo) Then
-                            Dim cheque = uow.ChequePayRepository.GetByChequeNumber(chequeNo)
+                        If chequeNums.Count <> 0 Then
+                            Dim pcList As New List(Of payment_cheque)
 
-                            If cheque Is Nothing Then
-                                Throw New Exception("找不到此支票")
-                            ElseIf cheque.cp_IsCashing Then
-                                Throw New Exception("此支票已兌現")
-                            Else
-                                cheque.cp_IsCashing = True
-                                cheque.cp_BankCashing = data.p_Date
-                            End If
+                            For Each chequeNum In chequeNums
+                                Dim cheque = uow.ChequePayRepository.GetByChequeNumber(chequeNum)
+
+                                If cheque Is Nothing Then
+                                    Throw New Exception($"{chequeNum}找不到此支票")
+                                ElseIf cheque.cp_IsCashing Then
+                                    Throw New Exception($"{chequeNum}此支票已兌現")
+                                Else
+                                    cheque.cp_IsCashing = True
+                                    cheque.cp_BankCashing = data.p_Date
+                                End If
+
+                                pcList.Add(New payment_cheque With {
+                                    .pc_p_id = data.p_Id,
+                                    .pc_cp_id = cheque.cp_Id
+                                })
+                            Next
+
+                            uow.PaymentChequeRepository.AddBatch(pcList)
                         End If
                     End If
 
@@ -181,8 +202,8 @@ Public Class PaymentPresenter
                     )
                 End If
 
-                Dim entries = CreatePaymentEntries(data)
-                _aeSer.AddEntries(uow.AccountingEntryRepository, entries)
+                'Dim entries = CreatePaymentEntries(data)
+                '_aeSer.AddEntries(uow.AccountingEntryRepository, entries)
 
                 Await uow.SaveChangesAsync()
                 uow.Commit()
@@ -197,12 +218,17 @@ Public Class PaymentPresenter
     End Sub
 
     Private Async Sub Update()
-        Using uow As New UnitOfWork()
+        If selectPayment Is Nothing Then
+            MessageBox.Show("請先選擇要更新的資料")
+            Return
+        End If
+
+        Using uow = _uowFactory.Create()
             uow.BeginTransaction()
             Try
+                Dim orgData = uow.PaymentRepository.GetByIdAsync(selectPayment.p_Id).Result
                 Dim data As New payment
                 _view.GetInput(data)
-                Dim orgData = uow.PaymentRepository.GetByIdAsync(selectPayment.p_Id).Result
 
                 ' 儲存舊資料用於月結更新
                 Dim oldBankId = orgData.p_bank_Id
@@ -210,24 +236,99 @@ Public Class PaymentPresenter
                 Dim oldAmount = orgData.p_Amount
                 Dim oldType = orgData.p_Type
 
-                Await uow.PaymentRepository.UpdateAsync(orgData, data)
-
-                ' 支票處理
+                ' 支票處理（付款型態 = 應付票據）
                 If data.p_Type = "應付票據" Then
-                    Dim cheque = uow.ChequePayRepository.GetByChequeNumber(data.chque_pay.cp_Number)
+                    Dim chequePay = orgData.chque_pay
 
-                    If cheque IsNot Nothing Then
-                        cheque.cp_Date = data.p_Date
-                        cheque.cp_Number = data.chque_pay.cp_Number
-                        cheque.cp_Amount = data.p_Amount
+                    If chequePay IsNot Nothing Then
+                        _view.GetChequeInput(chequePay)
+                        chequePay.cp_Date = data.p_Date
+                        chequePay.cp_Amount = data.p_Amount
+                        data.p_cp_Id = chequePay.cp_Id
                     Else
                         '如果支票不存在，則新增一個新的支票記錄
-                        cheque = New chque_pay With {
-                            .cp_Date = data.p_Date,
-                            .cp_Number = data.chque_pay.cp_Number,
-                            .cp_Amount = data.p_Amount
-                        }
-                        Await uow.ChequePayRepository.AddAsync(cheque)
+                        Dim chequeInput As New chque_pay
+                        _view.GetChequeInput(chequeInput)
+                        chequeInput.cp_Date = data.p_Date
+                        chequeInput.cp_Amount = data.p_Amount
+
+                        Await uow.ChequePayRepository.AddAsync(chequeInput)
+                        data.p_cp_Id = chequeInput.cp_Id
+                    End If
+
+                ElseIf oldType = "應付票據" AndAlso data.p_Type <> "應付票據" Then
+                    ' 從支票改為其他付款型態時清理舊支票紀錄
+                    If orgData.p_cp_Id.HasValue Then
+                        Dim oldCheque = Await uow.ChequePayRepository.GetByIdAsync(orgData.p_cp_Id.Value)
+                        If oldCheque IsNot Nothing Then Await uow.ChequePayRepository.DeleteAsync(oldCheque)
+                        orgData.p_cp_Id = Nothing
+                    End If
+                End If
+
+                ' 銀行存款且科目為應付票據：處理兌現支票關聯
+                If data.p_Type = "銀行存款" Then
+                    Dim subject = uow.SubjectRepository.GetByIdAsync(data.p_s_Id).Result
+                    If subject IsNot Nothing AndAlso subject.s_name = "應付票據" Then
+                        Dim newChequeNums = _view.GetChequeNumbers?.
+                            Select(Function(x) x.支票編號).
+                            Where(Function(n) Not String.IsNullOrWhiteSpace(n)).
+                            ToList()
+                        If newChequeNums Is Nothing Then newChequeNums = New List(Of String)
+                        Dim oldPcList = uow.PaymentChequeRepository.GetByPaymentId(orgData.p_Id)
+
+                        ' 需移除的連結（舊有但這次未選的）
+                        Dim removeList = oldPcList.Where(Function(pc) Not newChequeNums.Contains(pc.chque_pay?.cp_Number)).ToList()
+                        For Each pc In removeList
+                            If pc.chque_pay IsNot Nothing Then
+                                pc.chque_pay.cp_IsCashing = False
+                                pc.chque_pay.cp_BankCashing = Nothing
+                            End If
+                            Await uow.PaymentChequeRepository.DeleteAsync(pc)
+                        Next
+
+                        ' 需新增的連結（新選的號碼）
+                        Dim existingNums = oldPcList.Select(Function(pc) pc.chque_pay?.cp_Number).Where(Function(n) n IsNot Nothing).ToList()
+                        Dim addNums = newChequeNums.Where(Function(n) Not existingNums.Contains(n)).ToList()
+
+                        For Each chequeNum In addNums
+                            Dim cheque = uow.ChequePayRepository.GetByChequeNumber(chequeNum)
+                            If cheque Is Nothing Then
+                                Throw New Exception($"{chequeNum}找不到此支票")
+                            ElseIf cheque.cp_IsCashing Then
+                                Throw New Exception($"{chequeNum}此支票已兌現")
+                            Else
+                                cheque.cp_IsCashing = True
+                                cheque.cp_BankCashing = data.p_Date
+                            End If
+
+                            Await uow.PaymentChequeRepository.AddAsync(New payment_cheque With {
+                                .pc_p_id = orgData.p_Id,
+                                .pc_cp_id = cheque.cp_Id
+                            })
+                        Next
+                    ElseIf subject IsNot Nothing AndAlso subject.s_name <> "應付票據" Then
+                        ' 科目改為非應付票據時，清理舊的 payment_cheque 關聯
+                        Dim oldPcList = uow.PaymentChequeRepository.GetByPaymentId(orgData.p_Id)
+                        For Each pc In oldPcList
+                            If pc.chque_pay IsNot Nothing Then
+                                pc.chque_pay.cp_IsCashing = False
+                                pc.chque_pay.cp_BankCashing = Nothing
+                            End If
+                            Await uow.PaymentChequeRepository.DeleteAsync(pc)
+                        Next
+                    End If
+                ElseIf oldType = "銀行存款" AndAlso data.p_Type <> "銀行存款" Then
+                    ' 由銀行存款改為其他：若原科目為應付票據，需清除 payment_cheque 關聯並復原兌現狀態
+                    Dim subject = uow.SubjectRepository.GetByIdAsync(orgData.p_s_Id).Result
+                    If subject IsNot Nothing AndAlso subject.s_name = "應付票據" Then
+                        Dim oldPcList = uow.PaymentChequeRepository.GetByPaymentId(orgData.p_Id)
+                        For Each pc In oldPcList
+                            If pc.chque_pay IsNot Nothing Then
+                                pc.chque_pay.cp_IsCashing = False
+                                pc.chque_pay.cp_BankCashing = Nothing
+                            End If
+                            Await uow.PaymentChequeRepository.DeleteAsync(pc)
+                        Next
                     End If
                 End If
 
@@ -309,10 +410,8 @@ Public Class PaymentPresenter
                     )
                 End If
 
-                '更新會計分錄
-                Dim entries = CreatePaymentEntries(data)
-                _aeSer.UpdateEntries(uow.AccountingEntryRepository, entries)
-
+                ' 更新付款主檔
+                Await uow.PaymentRepository.UpdateAsync(orgData, data)
                 Await uow.SaveChangesAsync()
                 uow.Commit()
 
@@ -326,7 +425,7 @@ Public Class PaymentPresenter
     End Sub
 
     Private Async Sub Delete()
-        Using uow As New UnitOfWork()
+        Using uow = _uowFactory.Create()
             uow.BeginTransaction()
             Try
                 Dim payType = selectPayment.p_Type
@@ -334,10 +433,24 @@ Public Class PaymentPresenter
                 Dim payDate = selectPayment.p_Date
                 Dim payAmount = selectPayment.p_Amount
 
-                '刪除支票
+                ' 刪除支票或還原兌現狀態
                 If selectPayment.p_Type = "應付票據" Then
                     Dim chequePay = uow.ChequePayRepository.GetByIdAsync(selectPayment.p_cp_Id).Result
-                    Await uow.ChequePayRepository.DeleteAsync(chequePay)
+                    If chequePay IsNot Nothing Then
+                        Await uow.ChequePayRepository.DeleteAsync(chequePay)
+                    End If
+                ElseIf selectPayment.p_Type = "銀行存款" Then
+                    Dim subject = uow.SubjectRepository.GetByIdAsync(selectPayment.p_s_Id).Result
+                    If subject IsNot Nothing AndAlso subject.s_name = "應付票據" Then
+                        Dim pcList = uow.PaymentChequeRepository.GetByPaymentId(selectPayment.p_Id)
+                        For Each pc In pcList
+                            If pc.chque_pay IsNot Nothing Then
+                                pc.chque_pay.cp_IsCashing = False
+                                pc.chque_pay.cp_BankCashing = Nothing
+                            End If
+                            Await uow.PaymentChequeRepository.DeleteAsync(pc)
+                        Next
+                    End If
                 End If
 
                 '刪除付款
@@ -371,7 +484,7 @@ Public Class PaymentPresenter
 
     Private Sub LoadPaymentDetail(sender As Object, id As Integer)
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 _view.ClearInput()
                 selectPayment = uow.PaymentRepository.GetByIdAsync(id).Result
                 uow.PaymentRepository.Reload(selectPayment)
@@ -379,15 +492,19 @@ Public Class PaymentPresenter
                 _view.ShowDetail(selectPayment)
                 If selectPayment.p_m_Id.HasValue Then ManufacturerSelected(sender, selectPayment.p_m_Id)
                 _view.ButtonStatus(True)
+                Dim chequeListVM = uow.PaymentChequeRepository.GetByPaymentId(selectPayment.p_Id).
+                                                               Select(Function(x) New SelectChequeVM(x)).ToList()
+                Dim bindingList = New BindingList(Of SelectChequeVM)(chequeListVM)
+                _view.ShowChequeList(bindingList)
             End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
     Private Sub Print(sender As Object, data As Tuple(Of Date, String))
         Try
-            Using uow As New UnitOfWork()
+            Using uow = _uowFactory.Create()
                 Select Case data.Item2
                     Case "現金"
                         _reportSer.GeneratorCashSubpoena(data.Item1, uow.PaymentRepository.GetCashSubpoenaData(data.Item1), False)
@@ -402,70 +519,70 @@ Public Class PaymentPresenter
         End Try
     End Sub
 
-    Private Function CreatePaymentEntries(payment As payment) As List(Of accounting_entry)
-        Dim entries = New List(Of accounting_entry)
+    'Private Function CreatePaymentEntries(payment As payment) As List(Of accounting_entry)
+    '    Dim entries = New List(Of accounting_entry)
 
-        Select Case payment.p_Type
-            Case "現金"
-                entries.Add(New accounting_entry With {
-                    .ae_TransactionId = payment.p_Id,
-                    .ae_Date = payment.p_Date,
-                    .ae_TransactionType = "付款作業",
-                    .ae_s_Id = payment.p_s_Id,
-                    .ae_Debit = payment.p_Amount,
-                    .ae_Credit = 0
-                })
+    '    Select Case payment.p_Type
+    '        Case "現金"
+    '            entries.Add(New accounting_entry With {
+    '                .ae_TransactionId = payment.p_Id,
+    '                .ae_Date = payment.p_Date,
+    '                .ae_TransactionType = "付款作業",
+    '                .ae_s_Id = payment.p_s_Id,
+    '                .ae_Debit = payment.p_Amount,
+    '                .ae_Credit = 0
+    '            })
 
-                entries.Add(New accounting_entry With {
-                    .ae_TransactionId = payment.p_Id,
-                    .ae_Date = payment.p_Date,
-                    .ae_TransactionType = "付款作業",
-                    .ae_s_Id = 5,
-                    .ae_Debit = 0,
-                    .ae_Credit = payment.p_Amount
-                })
+    '            entries.Add(New accounting_entry With {
+    '                .ae_TransactionId = payment.p_Id,
+    '                .ae_Date = payment.p_Date,
+    '                .ae_TransactionType = "付款作業",
+    '                .ae_s_Id = 5,
+    '                .ae_Debit = 0,
+    '                .ae_Credit = payment.p_Amount
+    '            })
 
-            Case "銀行存款"
-                entries.Add(New accounting_entry With {
-                    .ae_TransactionId = payment.p_Id,
-                    .ae_Date = payment.p_Date,
-                    .ae_TransactionType = "付款作業",
-                    .ae_s_Id = payment.p_s_Id,
-                    .ae_Debit = payment.p_Amount,
-                    .ae_Credit = 0
-                })
+    '        Case "銀行存款"
+    '            entries.Add(New accounting_entry With {
+    '                .ae_TransactionId = payment.p_Id,
+    '                .ae_Date = payment.p_Date,
+    '                .ae_TransactionType = "付款作業",
+    '                .ae_s_Id = payment.p_s_Id,
+    '                .ae_Debit = payment.p_Amount,
+    '                .ae_Credit = 0
+    '            })
 
-                entries.Add(New accounting_entry With {
-                    .ae_TransactionId = payment.p_Id,
-                    .ae_Date = payment.p_Date,
-                    .ae_TransactionType = "付款作業",
-                    .ae_s_Id = 6,
-                    .ae_Debit = 0,
-                    .ae_Credit = payment.p_Amount
-                })
+    '            entries.Add(New accounting_entry With {
+    '                .ae_TransactionId = payment.p_Id,
+    '                .ae_Date = payment.p_Date,
+    '                .ae_TransactionType = "付款作業",
+    '                .ae_s_Id = 6,
+    '                .ae_Debit = 0,
+    '                .ae_Credit = payment.p_Amount
+    '            })
 
-            Case "應付票據", "應收票據"
-                entries.Add(New accounting_entry With {
-                    .ae_TransactionId = payment.p_Id,
-                    .ae_Date = payment.p_Date,
-                    .ae_TransactionType = "付款作業",
-                    .ae_s_Id = payment.p_s_Id,
-                    .ae_Debit = payment.p_Amount,
-                    .ae_Credit = 0
-                })
+    '        Case "應付票據", "應收票據"
+    '            entries.Add(New accounting_entry With {
+    '                .ae_TransactionId = payment.p_Id,
+    '                .ae_Date = payment.p_Date,
+    '                .ae_TransactionType = "付款作業",
+    '                .ae_s_Id = payment.p_s_Id,
+    '                .ae_Debit = payment.p_Amount,
+    '                .ae_Credit = 0
+    '            })
 
-                entries.Add(New accounting_entry With {
-                    .ae_TransactionId = payment.p_Id,
-                    .ae_Date = payment.p_Date,
-                    .ae_TransactionType = "付款作業",
-                    .ae_s_Id = 7,
-                    .ae_Debit = 0,
-                    .ae_Credit = payment.p_Amount
-                })
-        End Select
+    '            entries.Add(New accounting_entry With {
+    '                .ae_TransactionId = payment.p_Id,
+    '                .ae_Date = payment.p_Date,
+    '                .ae_TransactionType = "付款作業",
+    '                .ae_s_Id = 7,
+    '                .ae_Debit = 0,
+    '                .ae_Credit = payment.p_Amount
+    '            })
+    '    End Select
 
-        Return entries
-    End Function
+    '    Return entries
+    'End Function
 
     Private Sub Search()
         Try

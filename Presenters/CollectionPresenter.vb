@@ -4,6 +4,7 @@
     Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
     Private ReadOnly _reportSer As IReportService
+    Private ReadOnly _collectionSer As ICollectionService
     Private _currentData As collection
     Private _currentCheque As cheque
 
@@ -11,11 +12,13 @@
     ''' 建構子：使用 UnitOfWork 模式，只需注入 Service 層依賴
     ''' </summary>
     Public Sub New(bmbService As IBankMonthlyBalanceService, aeSer As IAccountingEntryService,
-                   ocmSer As IOrderCollectionMappingService, reportSer As IReportService)
+                   ocmSer As IOrderCollectionMappingService, reportSer As IReportService,
+                   collectionSer As ICollectionService)
         _bmbService = bmbService
         _aeSer = aeSer
         _ocmSer = ocmSer
         _reportSer = reportSer
+        _collectionSer = collectionSer
     End Sub
 
     Public Sub SetView(view As ICollectionView)
@@ -110,6 +113,19 @@
                             End If
                         End If
                 End Select
+
+                Dim inputSubject = Await uow.SubjectRepository.GetByIdAsync(input.col_s_Id)
+                If inputSubject.s_name = "銀行存款" Then
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            col.col_bank_Id,
+                            col.col_AccountMonth,
+                            creditDelta:=0,
+                            debitDelta:=col.col_Amount
+                        )
+
+                End If
 
                 'Dim entries = CreatePaymentEntries(input)
                 '_aeSer.AddEntries(entries)
@@ -288,6 +304,22 @@
                         End If
                 End Select
 
+                ' 科目為銀行存款的特殊處理（同 Add）：依科目增量調整
+                Dim oldSubject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
+                Dim newSubject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
+
+                Await AdjustBankMonthlyBalanceForBankSubjectAsync(
+                    uow,
+                    oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款",
+                    newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款",
+                    oldBankId,
+                    oldMonth,
+                    oldAmount,
+                    col.col_bank_Id,
+                    col.col_AccountMonth,
+                    col.col_Amount
+                )
+
                 Await uow.CollectionRepository.UpdateAsync(orgCol, col)
                 'Dim entries = CreatePaymentEntries(col)
                 '_aeSer.UpdateEntries(entries)
@@ -306,59 +338,77 @@
     Public Async Sub DeleteAsync()
         If MsgBox("確定要刪除?", vbYesNo, "警告") = MsgBoxResult.No Then Exit Sub
 
-        Using uow As New UnitOfWork()
-            Try
-                uow.BeginTransaction()
+        Try
+            Await _collectionSer.DeleteAsync(_currentData.col_Id)
+            Initialize()
+            MsgBox("刪除成功")
+        Catch ex As Exception
+            MsgBox("刪除時發生錯誤：" & ex.Message)
+        End Try
+    End Sub
 
-                Dim orgCol = Await uow.CollectionRepository.GetByIdAsync(_currentData.col_Id)
-                If orgCol Is Nothing Then Throw New Exception("找不到要更新的收款資料，可能已被刪除")
+    Private Async Function AdjustBankMonthlyBalanceForBankSubjectAsync(uow As IUnitOfWork,
+                                                                       oldIsBankSubject As Boolean,
+                                                                       newIsBankSubject As Boolean,
+                                                                       oldBankId As Integer,
+                                                                       oldMonth As Date,
+                                                                       oldAmount As Decimal,
+                                                                       newBankId As Integer,
+                                                                       newMonth As Date,
+                                                                       newAmount As Decimal) As Task
+        If Not oldIsBankSubject AndAlso Not newIsBankSubject Then Exit Function
 
-                Dim payType = orgCol.col_Type
-                Dim bankId = orgCol.col_bank_Id
-                Dim accountMonth = orgCol.col_AccountMonth
-                Dim amount = orgCol.col_Amount
-
-                ' 銷帳
-                _ocmSer.DeleteCollection(orgCol.col_Id)
-
-                If payType = "應收票據" Then
-                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
-                    Await uow.ChequeRepository.DeleteAsync(cheque.che_Id)
-
-                ElseIf payType = "銀行存款" Then
-                    ' ✨ 使用增量更新：減少一筆收入（負數）
+        If oldIsBankSubject AndAlso newIsBankSubject Then
+            If oldBankId = newBankId AndAlso oldMonth.Year = newMonth.Year AndAlso oldMonth.Month = newMonth.Month Then
+                Dim amountDelta = newAmount - oldAmount
+                If amountDelta <> 0 Then
                     Await _bmbService.UpdateMonthBalanceIncrementalAsync(
                         uow.BankMonthlyBalancesRepository,
                         uow.BankRepository,
-                        bankId,
-                        accountMonth,
+                        newBankId,
+                        newMonth,
                         creditDelta:=0,
-                        debitDelta:=-amount
+                        debitDelta:=amountDelta
                     )
-
-                    ' 更新支票資訊
-                    Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(orgCol.col_Cheque)
-
-                    If cheque IsNot Nothing Then
-                        cheque.che_CashingDate = Nothing
-                        cheque.chu_State = "已代收"
-                    End If
                 End If
-
-                '刪除資料
-                _aeSer.DeleteEntries("收款作業", orgCol.col_Id)
-                Await uow.CollectionRepository.DeleteAsync(orgCol)
-
-                Await uow.SaveChangesAsync()
-                uow.Commit()
-                Initialize()
-                MsgBox("刪除成功")
-            Catch ex As Exception
-                uow.Rollback()
-                MsgBox("刪除時發生錯誤：" & ex.Message)
-            End Try
-        End Using
-    End Sub
+            Else
+                Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                    uow.BankMonthlyBalancesRepository,
+                    uow.BankRepository,
+                    oldBankId,
+                    oldMonth,
+                    creditDelta:=0,
+                    debitDelta:=-oldAmount
+                )
+                Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                    uow.BankMonthlyBalancesRepository,
+                    uow.BankRepository,
+                    newBankId,
+                    newMonth,
+                    creditDelta:=0,
+                    debitDelta:=newAmount
+                )
+            End If
+        ElseIf oldIsBankSubject Then
+            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                uow.BankMonthlyBalancesRepository,
+                uow.BankRepository,
+                oldBankId,
+                oldMonth,
+                creditDelta:=0,
+                debitDelta:=-oldAmount
+            )
+        ElseIf newIsBankSubject Then
+            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                uow.BankMonthlyBalancesRepository,
+                uow.BankRepository,
+                newBankId,
+                newMonth,
+                creditDelta:=0,
+                debitDelta:=newAmount
+            )
+        End If
+    End Function
 
     Private Sub Validate(data As collection)
         If data.col_Amount = 0 Then Throw New Exception("請輸入金額")

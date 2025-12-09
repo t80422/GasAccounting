@@ -34,9 +34,6 @@ Module modFormControl
 
                 Case TypeOf ctrl Is ComboBox
                     CType(ctrl, ComboBox).SelectedIndex = -1
-
-                Case TypeOf ctrl Is DateTimePicker
-                    CType(ctrl, DateTimePicker).Value = Now
             End Select
         Next
     End Sub
@@ -209,8 +206,6 @@ Module modFormControl
                 .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224)
                 .EnableHeadersVisualStyles = False
                 .ColumnHeadersDefaultCellStyle.BackColor = Color.MediumTurquoise
-                .AllowUserToAddRows = False
-                .AllowUserToDeleteRows = False
                 .AllowUserToResizeColumns = True
             End With
         Next

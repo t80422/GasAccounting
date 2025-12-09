@@ -56,7 +56,7 @@ Partial Class CollectionUserControl
         Me.btnQueryCus_col = New System.Windows.Forms.Button()
         Me.Label93 = New System.Windows.Forms.Label()
         Me.lblCusCode_col = New System.Windows.Forms.Label()
-        Me.DateTimePicker14 = New System.Windows.Forms.DateTimePicker()
+        Me.dtpAccountMonth = New System.Windows.Forms.DateTimePicker()
         Me.Label156 = New System.Windows.Forms.Label()
         Me.txtCheque_col = New System.Windows.Forms.TextBox()
         Me.txtMemo_col = New System.Windows.Forms.TextBox()
@@ -425,16 +425,16 @@ Partial Class CollectionUserControl
         Me.lblCusCode_col.TabIndex = 476
         Me.lblCusCode_col.Text = "客戶代號"
         '
-        'DateTimePicker14
+        'dtpAccountMonth
         '
-        Me.DateTimePicker14.CustomFormat = "yyyy年MM月"
-        Me.DateTimePicker14.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.DateTimePicker14.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.DateTimePicker14.Location = New System.Drawing.Point(405, 5)
-        Me.DateTimePicker14.Name = "DateTimePicker14"
-        Me.DateTimePicker14.Size = New System.Drawing.Size(165, 30)
-        Me.DateTimePicker14.TabIndex = 475
-        Me.DateTimePicker14.Tag = "col_AccountMonth"
+        Me.dtpAccountMonth.CustomFormat = "yyyy年MM月"
+        Me.dtpAccountMonth.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.dtpAccountMonth.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpAccountMonth.Location = New System.Drawing.Point(405, 5)
+        Me.dtpAccountMonth.Name = "dtpAccountMonth"
+        Me.dtpAccountMonth.Size = New System.Drawing.Size(165, 30)
+        Me.dtpAccountMonth.TabIndex = 475
+        Me.dtpAccountMonth.Tag = "col_AccountMonth"
         '
         'Label156
         '
@@ -649,7 +649,7 @@ Partial Class CollectionUserControl
         Me.Controls.Add(Me.btnQueryCus_col)
         Me.Controls.Add(Me.Label93)
         Me.Controls.Add(Me.lblCusCode_col)
-        Me.Controls.Add(Me.DateTimePicker14)
+        Me.Controls.Add(Me.dtpAccountMonth)
         Me.Controls.Add(Me.Label156)
         Me.Controls.Add(Me.txtCheque_col)
         Me.Controls.Add(Me.txtMemo_col)
@@ -711,7 +711,7 @@ Partial Class CollectionUserControl
     Friend WithEvents btnQueryCus_col As Button
     Friend WithEvents Label93 As Label
     Friend WithEvents lblCusCode_col As Label
-    Friend WithEvents DateTimePicker14 As DateTimePicker
+    Friend WithEvents dtpAccountMonth As DateTimePicker
     Friend WithEvents Label156 As Label
     Friend WithEvents txtCheque_col As TextBox
     Friend WithEvents txtMemo_col As TextBox

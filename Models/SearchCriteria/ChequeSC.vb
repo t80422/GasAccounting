@@ -6,4 +6,5 @@
     Public Property IsStatus As Boolean
     Public Property BankId As Integer? = Nothing
     Public Property CompanyId As Integer? = Nothing
+    Public Property ChequeNumber As String
 End Class

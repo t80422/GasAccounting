@@ -26,5 +26,6 @@ Partial Public Class cheque
     Public Property che_col_Id As Nullable(Of Integer)
 
     Public Overridable Property collection As collection
+    Public Overridable Property collection_detail As ICollection(Of collection_detail) = New HashSet(Of collection_detail)
 
 End Class

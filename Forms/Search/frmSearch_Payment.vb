@@ -7,6 +7,7 @@
             .StartDate = dtpStart.Value.Date
             .EndDate = dtpEnd.Value.Date.AddDays(1)
             .VendorId = If(cmbVendor.SelectedValue, Nothing)
+            .Cridit = cmbCredit.SelectedItem
         End With
 
         DialogResult = DialogResult.OK

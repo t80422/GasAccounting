@@ -16,6 +16,7 @@
             .Status = cmbStatus.SelectedItem
             .IsStatus = chkStatus.Checked
             .CompanyId = cmbCompany.SelectedValue
+            .ChequeNumber = txtChequeNum.Text
         End With
 
         DialogResult = DialogResult.OK
