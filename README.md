@@ -1,9 +1,11 @@
 # 豐原瓦斯會計軟體系統
 
 ## 專案簡介
+
 瓦斯會計軟體系統，使用 WinForms 開發的桌面應用程式，採用 MVP 架構設計。
 
 ## 技術架構
+
 - 開發環境：.NET Framework 4.7.2
 - UI 框架：Windows Forms
 - 設計模式：MVP (Model-View-Presenter)
@@ -12,6 +14,7 @@
 - 相依性注入：Unity 5.11.10
 
 ## 目錄結構
+
 ```plaintext
 ├── Forms/          # WinForm 視圖檔案
 ├── Presenters/     # Presenter 類別
@@ -86,12 +89,14 @@
    - 使用 VB.NET 官方建議的程式碼風格指南
 
 ## 開發環境需求
+
 - Visual Studio 2019 或更新版本
 - .NET Framework 4.7.2 SDK
 - MySQL 8.0
 - Git
 
 ## 建置說明
+
 1. Clone 專案
 2. 還原 NuGet 套件
 3. 更新資料庫連線字串
@@ -99,6 +104,7 @@
 5. 編譯並執行
 
 ## 注意事項
+
 - 提交前必須通過所有單元測試
 - 遵循 Git Flow 工作流程
-- 定期更新 NuGet 套件 
+- 定期更新 NuGet 套件

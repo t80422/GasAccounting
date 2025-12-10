@@ -1,7 +1,6 @@
 ﻿Public Class CollectionPresenter
     Private _view As ICollectionView
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
-    Private ReadOnly _aeSer As IAccountingEntryService
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
     Private ReadOnly _reportSer As IReportService
     Private ReadOnly _collectionSer As ICollectionService
@@ -11,11 +10,8 @@
     ''' <summary>
     ''' 建構子：使用 UnitOfWork 模式，只需注入 Service 層依賴
     ''' </summary>
-    Public Sub New(bmbService As IBankMonthlyBalanceService, aeSer As IAccountingEntryService,
-                   ocmSer As IOrderCollectionMappingService, reportSer As IReportService,
-                   collectionSer As ICollectionService)
+    Public Sub New(bmbService As IBankMonthlyBalanceService, ocmSer As IOrderCollectionMappingService, reportSer As IReportService, collectionSer As ICollectionService)
         _bmbService = bmbService
-        _aeSer = aeSer
         _ocmSer = ocmSer
         _reportSer = reportSer
         _collectionSer = collectionSer
@@ -61,85 +57,27 @@
     End Sub
 
     Public Async Sub Add()
-        Using uow As New UnitOfWork()
-            Try
-                uow.BeginTransaction()
+        Try
+            Dim input = _view.GetUserInput
+            Validate(input)
 
-                Dim input = _view.GetUserInput
-                Validate(input)
-                input.col_UnmatchedAmount = input.col_Amount
+            Dim chequeInput As cheque = Nothing
+            Dim chequeNo As String = Nothing
 
-                Dim col = Await uow.CollectionRepository.AddAsync(input)
-                Dim chequeNo As String = ""
+            If input.col_Type = "應收票據" Then
+                chequeInput = _view.GetChequeInput
+                Validate(chequeInput)
+            ElseIf input.col_Type = "銀行存款" Then
+                chequeNo = _view.GetChequeNumber()
+            End If
 
-                Select Case input.col_Type
-                    Case "應收票據"
-                        Dim cheInput = _view.GetChequeInput
-                        Validate(cheInput)
-                        cheInput.che_col_Id = col.col_Id
-                        Await uow.ChequeRepository.AddAsync(cheInput)
+            Await _collectionSer.AddAsync(input, chequeInput, chequeNo)
 
-                    Case "銀行存款"
-                        ' ✨ 使用增量更新：新增一筆收入
-                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
-                            uow.BankMonthlyBalancesRepository,
-                            uow.BankRepository,
-                            col.col_bank_Id,
-                            col.col_AccountMonth,
-                            creditDelta:=0,
-                            debitDelta:=col.col_Amount
-                        )
-
-                        ' 支票兌現
-                        Dim subject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
-
-                        If subject.s_name = "應收票據" Then
-                            chequeNo = _view.GetChequeNumber()
-
-                            If Not String.IsNullOrEmpty(chequeNo) Then
-                                Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(chequeNo)
-
-                                If cheque Is Nothing Then
-                                    Throw New Exception("找不到此支票")
-                                ElseIf cheque.chu_State = "已兌現" Then
-                                    Throw New Exception("此支票已兌現")
-                                ElseIf cheque.chu_State = Nothing Then
-                                    Throw New Exception("此支票未代收")
-                                Else
-                                    cheque.chu_State = "已兌現"
-                                    cheque.che_CashingDate = col.col_Date
-                                    col.col_Cheque = chequeNo
-                                End If
-                            End If
-                        End If
-                End Select
-
-                Dim inputSubject = Await uow.SubjectRepository.GetByIdAsync(input.col_s_Id)
-                If inputSubject.s_name = "銀行存款" Then
-                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
-                            uow.BankMonthlyBalancesRepository,
-                            uow.BankRepository,
-                            col.col_bank_Id,
-                            col.col_AccountMonth,
-                            creditDelta:=0,
-                            debitDelta:=col.col_Amount
-                        )
-
-                End If
-
-                'Dim entries = CreatePaymentEntries(input)
-                '_aeSer.AddEntries(entries)
-
-                Await uow.SaveChangesAsync()
-
-                uow.Commit()
-                Initialize()
-                MessageBox.Show("新增成功")
-            Catch ex As Exception
-                uow.Rollback()
-                MessageBox.Show("新增時發生錯誤：" & ex.Message)
-            End Try
-        End Using
+            Initialize()
+            MessageBox.Show("新增成功")
+        Catch ex As Exception
+            MessageBox.Show("新增時發生錯誤：" & ex.Message)
+        End Try
     End Sub
 
     Public Sub LoadDetail(id As Integer)

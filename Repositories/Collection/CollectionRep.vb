@@ -33,7 +33,7 @@ Public Class CollectionRep
                 If Not String.IsNullOrEmpty(criteria.ChequeNum) Then query = query.Where(Function(x) x.col_Cheque = criteria.ChequeNum)
 
                 ' 銀行編號
-                If Not String.IsNullOrEmpty(criteria.BankId) Then query = query.Where(Function(x) x.col_bank_Id = criteria.BankId)
+                If criteria.BankId IsNot Nothing Then query = query.Where(Function(x) x.col_bank_Id = criteria.BankId)
             Else
                 query = query.Where(Function(x) x.col_Date.Year = Now.Year AndAlso x.col_Date.Month = Now.Month)
             End If
@@ -68,6 +68,33 @@ Public Class CollectionRep
                 }).ToList
 
             Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Async Function GetBankDepositsByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of collection)) Implements ICollectionRep.GetBankDepositsByDateRangeAsync
+        Try
+            Return Await _dbSet.AsNoTracking.
+                Where(Function(x) x.col_Date >= startDate AndAlso
+                                  x.col_Date < endDate AndAlso
+                                  x.col_Type = "銀行存款" AndAlso
+                                  x.col_bank_Id = bankId).
+                ToListAsync()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Async Function GetCashToBankTransfersByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of collection)) Implements ICollectionRep.GetCashToBankTransfersByDateRangeAsync
+        Try
+            Return Await _dbSet.AsNoTracking.
+                Where(Function(x) x.col_Date >= startDate AndAlso
+                                  x.col_Date < endDate AndAlso
+                                  x.col_Type = "現金" AndAlso
+                                  x.col_bank_Id = bankId AndAlso
+                                  x.subject.s_name = "銀行存款").
+                ToListAsync()
         Catch ex As Exception
             Throw
         End Try

@@ -52,10 +52,7 @@ Public Class frmMain
 
         Dim context As New gas_accounting_systemEntities
 
-        Dim bankRep As New BankRep(context)
-        Dim bmbRep As New BankMonthlyBalancesRep(context)
         Dim carRep As New CarRep(context)
-        Dim cheRep As New ChequeRep(context)
         Dim compRep As New CompanyRep(context)
         Dim colRep As New CollectionRep(context)
         Dim cusRep As New CustomerRep(context)
@@ -65,12 +62,10 @@ Public Class frmMain
         Dim ordRep As New OrderRep(context)
         Dim ocmRep As New OrderCollectionMappingRep(context)
         Dim bpRep As New BasicPriceRep(context)
-        Dim paymentRep As New PaymentRep(context)
         Dim permissionRep As New PermissionRep(context)
         Dim subjectRep As New SubjectRep(context)
         Dim inspectionRep As New InspectionRep(context)
 
-        Dim bmbService As IBankMonthlyBalanceService = New BankMonthlyBalanceService(bmbRep, bankRep, paymentRep, colRep)
         Dim ocmSer As IOrderCollectionMappingService = New OrderCollectionMappingService(ocmRep, ordRep, colRep)
         Dim priceCalSer As IPriceCalculationService = New PriceCalculationService(bpRep)
         Dim printerSer As IPrinterService = New PrinterService()

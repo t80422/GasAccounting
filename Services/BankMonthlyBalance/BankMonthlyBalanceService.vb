@@ -1,84 +1,54 @@
 ﻿Public Class BankMonthlyBalanceService
     Implements IBankMonthlyBalanceService
 
-    Private ReadOnly _bmbRep As IBankMonthlyBalancesRep
-    Private ReadOnly _bankRep As IBankRep
-    Private ReadOnly _paymentRep As IPaymentRep
-    Private ReadOnly _collectionRep As ICollectionRep
-
-    Public Sub New(bmbRep As IBankMonthlyBalancesRep, bankRep As IBankRep, paymentRep As IPaymentRep, collectionRep As ICollectionRep)
-        _bmbRep = bmbRep
-        _bankRep = bankRep
-        _paymentRep = paymentRep
-        _collectionRep = collectionRep
-    End Sub
-
-    Private Async Function UpdateMonthBalanceAsync(bankId As Integer, inputMonth As Date) As Task Implements IBankMonthlyBalanceService.UpdateMonthBalanceAsync
-        Dim month = New Date(inputMonth.Year, inputMonth.Month, 1)
-
-        '取得payment該銀行帳戶這個月的支付金額
-        Dim thisMonthPayments = Await _paymentRep.GetByBankAndMonthAsync(bankId, month)
-        Dim totalCredit = thisMonthPayments.Sum(Function(x) x.p_Amount)
-
-        '取得collection該銀行帳戶這個月的收取金額
-        Dim thisMonthCollection = Await _collectionRep.GetByBankAndMonthAsync(bankId, month)
-        Dim totalDebit = thisMonthCollection.Sum(Function(x) x.col_Amount)
-
-        '取得上期結餘,若沒有則取得該銀行帳戶的初始金額
-        Dim lastClosingBalance As Integer
-        Dim lastBalance = Await _bmbRep.GetLastBalanceBeforeMonthAsync(month, bankId)
-
-        If lastBalance IsNot Nothing Then
-            lastClosingBalance = lastBalance.bm_ClosingBalance
-        Else
-            Dim bank = Await _bankRep.GetByIdAsync(bankId)
-            lastClosingBalance = bank.bank_InitialBalance
-        End If
-
-        '更新月結餘額資料表
-        Dim newBmb = New bank_monthly_balances With {
-            .bm_bank_Id = bankId,
-            .bm_Month = month,
-            .bm_TotalCredit = totalCredit,
-            .bm_TotalDebit = totalDebit,
-            .bm_OpeningBalance = lastClosingBalance,
-            .bm_ClosingBalance = lastClosingBalance + totalDebit - totalCredit
-        }
-        Await _bmbRep.UpdateBankMonthlyBalancesAsync(newBmb)
-    End Function
-
-    ' === 新方法（接受 Repository 參數，給 UnitOfWork 使用） ===
-
     Public Async Function UpdateMonthBalanceAsync(bmbRep As IBankMonthlyBalancesRep, bankRep As IBankRep, paymentRep As IPaymentRep, collectionRep As ICollectionRep, bankId As Integer, inputMonth As Date) As Task Implements IBankMonthlyBalanceService.UpdateMonthBalanceAsync
-        Dim month = New Date(inputMonth.Year, inputMonth.Month, 1)
+        Dim monthStart = New Date(inputMonth.Year, inputMonth.Month, 1)
+        Dim monthEnd = monthStart.AddMonths(1)
 
-        '取得payment該銀行帳戶這個月的支付金額
-        Dim thisMonthPayments = Await paymentRep.GetByBankAndMonthAsync(bankId, month)
-        Dim totalCredit = thisMonthPayments.Sum(Function(x) x.p_Amount)
+        ' 當月借方：銀行存款收入
+        Dim monthDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, monthStart, monthEnd)
+        Dim totalDebit As Decimal = monthDeposits.Sum(Function(x) x.col_Amount)
 
-        '取得collection該銀行帳戶這個月的收取金額
-        Dim thisMonthCollection = Await collectionRep.GetByBankAndMonthAsync(bankId, month)
-        Dim totalDebit = thisMonthCollection.Sum(Function(x) x.col_Amount)
+        ' 當月貸方：現金轉銀行 + 銀行存款付款
+        Dim monthCashToBank = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, monthStart, monthEnd)
+        Dim monthPayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, monthStart, monthEnd)
+        Dim totalCredit As Decimal = monthCashToBank.Sum(Function(x) x.col_Amount) + monthPayments.Sum(Function(x) x.p_Amount)
 
-        '取得上期結餘,若沒有則取得該銀行帳戶的初始金額
-        Dim lastClosingBalance As Integer
-        Dim lastBalance = Await bmbRep.GetLastBalanceBeforeMonthAsync(month, bankId)
+        ' 取得期初餘額（上期結餘 + 上期結餘日後至本月初的交易）
+        Dim openingBalance As Decimal
+        Dim lastBalance = Await bmbRep.GetLastBalanceBeforeMonthAsync(monthStart, bankId)
 
         If lastBalance IsNot Nothing Then
-            lastClosingBalance = lastBalance.bm_ClosingBalance
+            openingBalance = lastBalance.bm_ClosingBalance
+
+            Dim lastMonthEnd = New Date(lastBalance.bm_Month.Year,
+                                       lastBalance.bm_Month.Month,
+                                       Date.DaysInMonth(lastBalance.bm_Month.Year, lastBalance.bm_Month.Month))
+            Dim preStart = lastMonthEnd.AddDays(1)
+            Dim preEnd = monthStart
+
+            If preStart < preEnd Then
+                Dim preDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, preStart, preEnd)
+                Dim preCashToBank = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, preStart, preEnd)
+                Dim prePayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, preStart, preEnd)
+
+                Dim preDebit = preDeposits.Sum(Function(x) x.col_Amount)
+                Dim preCredit = preCashToBank.Sum(Function(x) x.col_Amount) + prePayments.Sum(Function(x) x.p_Amount)
+                openingBalance += preDebit - preCredit
+            End If
         Else
             Dim bank = Await bankRep.GetByIdAsync(bankId)
-            lastClosingBalance = bank.bank_InitialBalance
+            openingBalance = bank.bank_InitialBalance
         End If
 
-        '更新月結餘額資料表
+        ' 更新月結餘額資料表
         Dim newBmb = New bank_monthly_balances With {
             .bm_bank_Id = bankId,
-            .bm_Month = month,
+            .bm_Month = monthStart,
             .bm_TotalCredit = totalCredit,
             .bm_TotalDebit = totalDebit,
-            .bm_OpeningBalance = lastClosingBalance,
-            .bm_ClosingBalance = lastClosingBalance + totalDebit - totalCredit
+            .bm_OpeningBalance = openingBalance,
+            .bm_ClosingBalance = openingBalance + totalDebit - totalCredit
         }
         Await bmbRep.UpdateBankMonthlyBalancesAsync(newBmb)
     End Function

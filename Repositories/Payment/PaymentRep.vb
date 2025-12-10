@@ -73,7 +73,25 @@ Public Class PaymentRep
     Public Async Function GetByBankAndMonthAsync(bankId As Integer, month As Date) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.GetByBankAndMonthAsync
         Try
 
-            Return Await _dbSet.AsNoTracking.Where(Function(x) x.p_Date = month AndAlso x.p_bank_Id = bankId).ToListAsync
+            Dim startMonth = New Date(month.Year, month.Month, 1)
+            Dim endMonth = startMonth.AddMonths(1)
+
+            Return Await _dbSet.AsNoTracking.
+                Where(Function(x) x.p_Date >= startMonth AndAlso x.p_Date < endMonth AndAlso x.p_bank_Id = bankId).
+                ToListAsync()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Async Function GetBankPaymentsByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.GetBankPaymentsByDateRangeAsync
+        Try
+            Return Await _dbSet.AsNoTracking.
+                Where(Function(x) x.p_Date >= startDate AndAlso
+                                  x.p_Date < endDate AndAlso
+                                  x.p_Type = "銀行存款" AndAlso
+                                  x.p_bank_Id = bankId).
+                ToListAsync()
         Catch ex As Exception
             Throw
         End Try

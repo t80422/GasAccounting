@@ -1,5 +1,3 @@
-Imports System.Windows.Forms
-
 ''' <summary>
 ''' 銀行月結餘額重整工具
 ''' </summary>

@@ -434,7 +434,7 @@ Public Class ReportRep
                                                         .Target = x.customer.cus_code
                                                    })
 
-            '現金存入銀行：獨立撈取現金類型且科目為銀行存款
+            '銀行取出現金：獨立撈取現金類型且科目為銀行存款
             Dim cashToBankCollections = _context.collections.AsNoTracking.
                                                          Where(Function(x) x.col_Date.Year = month.Year AndAlso
                                                                            x.col_Date.Month = month.Month AndAlso
@@ -446,7 +446,7 @@ Public Class ReportRep
                                                               .Subject = x.col_Type,
                                                               .Memo = x.col_Memo,
                                                               .Amount = x.col_Amount,
-                                                              .IsIncome = True,
+                                                              .IsIncome = False,
                                                               .Target = x.customer.cus_code
                                                          })
             '獲取支出數據

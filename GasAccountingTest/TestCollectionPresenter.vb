@@ -4,7 +4,6 @@ Imports Moq
 <TestClass>
 Public Class TestCollectionPresenter
     Private _mockBmbService As Mock(Of IBankMonthlyBalanceService)
-    Private _mockAeService As Mock(Of IAccountingEntryService)
     Private _mockOcmService As Mock(Of IOrderCollectionMappingService)
     Private _mockReportService As Mock(Of IReportService)
     Private _mockCollectionService As Mock(Of ICollectionService)
@@ -12,7 +11,6 @@ Public Class TestCollectionPresenter
     <TestInitialize>
     Public Sub Setup()
         _mockBmbService = New Mock(Of IBankMonthlyBalanceService)(MockBehavior.Strict)
-        _mockAeService = New Mock(Of IAccountingEntryService)(MockBehavior.Strict)
         _mockOcmService = New Mock(Of IOrderCollectionMappingService)(MockBehavior.Strict)
         _mockReportService = New Mock(Of IReportService)(MockBehavior.Strict)
         _mockCollectionService = New Mock(Of ICollectionService)(MockBehavior.Strict)
@@ -21,7 +19,6 @@ Public Class TestCollectionPresenter
     Private Function CreatePresenter() As CollectionPresenter
         Return New CollectionPresenter(
             _mockBmbService.Object,
-            _mockAeService.Object,
             _mockOcmService.Object,
             _mockReportService.Object,
             _mockCollectionService.Object

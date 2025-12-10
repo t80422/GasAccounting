@@ -16,6 +16,78 @@ Public Class CollectionService
         _ocmSer = ocmSer
     End Sub
 
+    Public Async Function AddAsync(input As collection,
+                                   Optional chequeInput As cheque = Nothing,
+                                   Optional chequeNumber As String = Nothing) As Task(Of collection) Implements ICollectionService.AddAsync
+        Using uow = _uowFactory.Create()
+            Try
+                uow.BeginTransaction()
+
+                input.col_UnmatchedAmount = input.col_Amount
+
+                Dim col = Await uow.CollectionRepository.AddAsync(input)
+
+                Select Case input.col_Type
+                    Case "應收票據"
+                        If chequeInput Is Nothing Then Throw New Exception("缺少支票資料")
+                        chequeInput.che_col_Id = col.col_Id
+                        Await uow.ChequeRepository.AddAsync(chequeInput)
+
+                    Case "銀行存款"
+                        ' 增量更新：新增銀行收入
+                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            col.col_bank_Id,
+                            col.col_AccountMonth,
+                            creditDelta:=0,
+                            debitDelta:=col.col_Amount
+                        )
+
+                        ' 支票兌現：科目為應收票據時，根據支票號碼做兌現
+                        Dim subject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
+                        If subject IsNot Nothing AndAlso subject.s_name = "應收票據" Then
+                            If Not String.IsNullOrEmpty(chequeNumber) Then
+                                Dim cheque = Await uow.ChequeRepository.GetByNumberAsync(chequeNumber)
+
+                                If cheque Is Nothing Then
+                                    Throw New Exception("找不到此支票")
+                                ElseIf cheque.chu_State = "已兌現" Then
+                                    Throw New Exception("此支票已兌現")
+                                ElseIf cheque.chu_State Is Nothing Then
+                                    Throw New Exception("此支票未代收")
+                                Else
+                                    cheque.chu_State = "已兌現"
+                                    cheque.che_CashingDate = col.col_Date
+                                    col.col_Cheque = chequeNumber
+                                End If
+                            End If
+                        End If
+                End Select
+
+                ' 科目為銀行存款時，視為貸方，需增加銀行月結的 Credit
+                Dim inputSubject = Await uow.SubjectRepository.GetByIdAsync(input.col_s_Id)
+                If inputSubject IsNot Nothing AndAlso inputSubject.s_name = "銀行存款" Then
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                        uow.BankMonthlyBalancesRepository,
+                        uow.BankRepository,
+                        col.col_bank_Id,
+                        col.col_AccountMonth,
+                        creditDelta:=col.col_Amount,
+                        debitDelta:=0
+                    )
+                End If
+
+                Await uow.SaveChangesAsync()
+                uow.Commit()
+                Return col
+            Catch
+                uow.Rollback()
+                Throw
+            End Try
+        End Using
+    End Function
+
     Public Async Function DeleteAsync(collectionId As Integer) As Task Implements ICollectionService.DeleteAsync
         Using uow = _uowFactory.Create()
             Try

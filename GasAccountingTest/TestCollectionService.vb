@@ -150,5 +150,41 @@ Public Class TestCollectionService
                 -orgCol.col_Amount),
             Times.Once)
     End Function
+
+    <TestMethod("新增-借方現金貸方銀行存款：應記入銀行貸方")>
+    Public Async Function Add_CashType_BankSubject_ShouldCreditBank() As Task
+        ' Arrange
+        Dim input = New collection With {
+            .col_Id = 3,
+            .col_Type = "現金",
+            .col_bank_Id = 2,
+            .col_AccountMonth = New Date(2024, 7, 1),
+            .col_Amount = 800D,
+            .col_s_Id = 30
+        }
+
+        Dim subject = New subject With {.s_id = 30, .s_name = "銀行存款"}
+
+        _mockCollectionRep.Setup(Function(r) r.AddAsync(input)).ReturnsAsync(input)
+        _mockSubjectRep.Setup(Function(r) r.GetByIdAsync(input.col_s_Id)).ReturnsAsync(subject)
+
+        _mockBmbService.Setup(
+            Function(s) s.UpdateMonthBalanceIncrementalAsync(
+                _mockBmbRep.Object,
+                _mockBankRep.Object,
+                input.col_bank_Id,
+                input.col_AccountMonth,
+                creditDelta:=input.col_Amount,
+                debitDelta:=0)
+        ).Returns(Task.CompletedTask).Verifiable()
+
+        Dim service = CreateService()
+
+        ' Act
+        Await service.AddAsync(input)
+
+        ' Assert
+        _mockBmbService.Verify()
+    End Function
 End Class
 
