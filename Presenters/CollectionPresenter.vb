@@ -242,25 +242,25 @@
                         End If
                 End Select
 
-                ' 科目為銀行存款的特殊處理（同 Add）：依科目增量調整
-                Dim oldSubject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
-                Dim newSubject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
+                If oldBankId.HasValue AndAlso col.col_bank_Id.HasValue Then
+                    ' 科目為銀行存款的特殊處理（同 Add）：依科目增量調整
+                    Dim oldSubject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
+                    Dim newSubject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
 
-                Await AdjustBankMonthlyBalanceForBankSubjectAsync(
-                    uow,
-                    oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款",
-                    newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款",
-                    oldBankId,
-                    oldMonth,
-                    oldAmount,
-                    col.col_bank_Id,
-                    col.col_AccountMonth,
-                    col.col_Amount
-                )
+                    Await AdjustBankMonthlyBalanceForBankSubjectAsync(
+                        uow,
+                        oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款",
+                        newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款",
+                        oldBankId,
+                        oldMonth,
+                        oldAmount,
+                        col.col_bank_Id,
+                        col.col_AccountMonth,
+                        col.col_Amount
+                    )
+                End If
 
                 Await uow.CollectionRepository.UpdateAsync(orgCol, col)
-                'Dim entries = CreatePaymentEntries(col)
-                '_aeSer.UpdateEntries(entries)
 
                 Await uow.SaveChangesAsync()
                 uow.Commit()

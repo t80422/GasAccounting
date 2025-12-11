@@ -770,9 +770,12 @@
     <Compile Include="Models\ViewModels\RoleVM.vb" />
     <Compile Include="Services\BankMonthlyBalance\BankMonthlyBalanceService.vb" />
     <Compile Include="Services\BankMonthlyBalance\IBankMonthlyBalanceService.vb" />
+    <Compile Include="Services\BarrelInventory\BarrelInventoryService.vb" />
+    <Compile Include="Services\BarrelInventory\IBarrelInventoryService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\BarrelMonthlyBalanceService.vb" />
     <Compile Include="Services\ChequeService.vb" />
     <Compile Include="Services\CurrentUserService.vb" />
+    <Compile Include="Services\GasInventoryService.vb" />
     <Compile Include="Services\GasMonthlyBalance\GasMonthlyBalanceService.vb" />
     <Compile Include="Services\BarrelMonthlyBalance\IBarrelMonthlyBalanceService.vb" />
     <Compile Include="Services\GasMonthlyBalance\IGasMonthlyBalanceService.vb" />

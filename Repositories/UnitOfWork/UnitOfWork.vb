@@ -16,6 +16,7 @@ Public Class UnitOfWork
     Private _manufacturerRepository As IManufacturerRep
     Private _subjectRepository As ISubjectRep
     Private _accountingEntryRepository As IAccountingEntryRep
+    Private _gasBarrelRep As IGasBarrelRep
     Private _gasMonthlyBalanceRepository As IGasMonthlyBalanceRep
     Private _orderRepository As IOrderRep
     Private _basicSetRepository As IBasicSetRep
@@ -28,6 +29,8 @@ Public Class UnitOfWork
     Private _customerRepository As ICustomerRep
     Private _chequeRepository As IChequeRep
     Private _paymentChequeRepository As IPaymentChequeRep
+    Private _purchaseBarrelRep As IPurchaseBarrelRep
+    Private _barrelMonthlyBalanceRep As IBarrelMonthlyBalancesRep
 
     ''' <summary>
     ''' 預設建構子 - 給正式環境使用（自己創建新的 DbContext）
@@ -195,6 +198,27 @@ Public Class UnitOfWork
         Get
             If _paymentChequeRepository Is Nothing Then _paymentChequeRepository = New PaymentChequeRep(_context)
             Return _paymentChequeRepository
+        End Get
+    End Property
+
+    Public ReadOnly Property GasBarrelRepository As IGasBarrelRep Implements IUnitOfWork.GasBarrelRepository
+        Get
+            If _gasBarrelRep Is Nothing Then _gasBarrelRep = New GasBarrelRep(_context)
+            Return _gasBarrelRep
+        End Get
+    End Property
+
+    Public ReadOnly Property PurchaseBarrelRep As IPurchaseBarrelRep Implements IUnitOfWork.PurchaseBarrelRep
+        Get
+            If _purchaseBarrelRep Is Nothing Then _purchaseBarrelRep = New PurchaseBarrelRep(_context)
+            Return _purchaseBarrelRep
+        End Get
+    End Property
+
+    Public ReadOnly Property BarrelMonthlyBalanceRep As IBarrelMonthlyBalancesRep Implements IUnitOfWork.BarrelMonthlyBalanceRep
+        Get
+            If _barrelMonthlyBalanceRep Is Nothing Then _barrelMonthlyBalanceRep = New BarrelMonthlyBalancesRep(_context)
+            Return _barrelMonthlyBalanceRep
         End Get
     End Property
 

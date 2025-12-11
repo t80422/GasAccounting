@@ -50,6 +50,7 @@ Public Class DependencyContainer
             .RegisterType(Of IAccountingEntryService, AccountingEntryService)()
             .RegisterType(Of IBankMonthlyBalanceService, BankMonthlyBalanceService)()
             .RegisterType(Of IBarrelMonthlyBalanceService, BarrelMonthlyBalanceService)()
+            .RegisterType(Of IBarrelInventoryService, BarrelInventoryService)()
             .RegisterType(Of IMonthlyAccountService, MonthlyAccountService)
             .RegisterType(Of IPriceCalculationService, PriceCalculationService)()
             .RegisterType(Of IPrinterService, PrinterService)()

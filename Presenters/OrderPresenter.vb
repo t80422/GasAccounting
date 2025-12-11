@@ -26,6 +26,7 @@ Public Class OrderPresenter
     Private ReadOnly _unitOfWork As IUnitOfWork
     Private ReadOnly _logger As ILoggerService
     Private ReadOnly _currentUserService As ICurrentUserService
+    Private ReadOnly _barrelInvSer As IBarrelInventoryService
 
     Private currentCustomer As customer
     Private currentOrder As New order
@@ -63,7 +64,8 @@ Public Class OrderPresenter
 
     Public Sub New(view As IOrderView, cusRep As ICustomerRep, carRep As ICarRep, ordRep As IOrderRep, gbRep As IGasBarrelRep, barMBService As IBarrelMonthlyBalanceService,
                    priceCalSer As IPriceCalculationService, aeSer As IAccountingEntryService, printerSer As IPrinterService, ocmSer As IOrderCollectionMappingService,
-                   reportRep As IReportRep, maService As IMonthlyAccountService, unitOfWork As IUnitOfWork, logger As ILoggerService, currentUserService As ICurrentUserService)
+                   reportRep As IReportRep, maService As IMonthlyAccountService, unitOfWork As IUnitOfWork, logger As ILoggerService, currentUserService As ICurrentUserService,
+                   barrelInvSer As IBarrelInventoryService)
         _view = view
         _cusRep = cusRep
         _carRep = carRep
@@ -79,6 +81,7 @@ Public Class OrderPresenter
         _unitOfWork = unitOfWork
         _logger = logger
         _currentUserService = currentUserService
+        _barrelInvSer = barrelInvSer
 
         SubscribeToViewEvents()
     End Sub
@@ -804,6 +807,8 @@ Public Class OrderPresenter
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
 
                 Dim order = _ordRep.AddAsync(orderInput).Result
+                Dim gbRep As New GasBarrelRep(CType(_ordRep.Context, gas_accounting_systemEntities))
+                _barrelInvSer.ApplyOrderIssueAsync(gbRep, orderInput).Wait()
 
                 _service.UpdateOrAddAsync(orderInput.o_date)
 
@@ -907,6 +912,18 @@ Public Class OrderPresenter
                 _logger.LogInfo($"[Update] 修改開始 | 訂單ID:{orderId} | 客戶[{cusCode}] | 修改前結存:{beforeStock} | 訂單快照:{FormatInitStock()}")
 
                 ' === 取得新的訂單資料 ===
+                Dim originOrderSnapshot As New order With {
+                    .o_new_in_50 = currentOrder.o_new_in_50,
+                    .o_new_in_20 = currentOrder.o_new_in_20,
+                    .o_new_in_16 = currentOrder.o_new_in_16,
+                    .o_new_in_10 = currentOrder.o_new_in_10,
+                    .o_new_in_4 = currentOrder.o_new_in_4,
+                    .o_new_in_18 = currentOrder.o_new_in_18,
+                    .o_new_in_14 = currentOrder.o_new_in_14,
+                    .o_new_in_5 = currentOrder.o_new_in_5,
+                    .o_new_in_2 = currentOrder.o_new_in_2
+                }
+
                 _view.GetInput(currentOrder)
 
                 ' 記錄修改後的訂單數量
@@ -924,6 +941,9 @@ Public Class OrderPresenter
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
 
                 _service.UpdateOrAddAsync(currentOrder.o_date)
+
+                Dim gbRep As New GasBarrelRep(CType(_ordRep.Context, gas_accounting_systemEntities))
+                _barrelInvSer.ApplyOrderIssueUpdateAsync(gbRep, originOrderSnapshot, currentOrder).Wait()
 
                 ' 同步更新月度帳單資料
                 _maService.SyncOrderToMonthlyAccount(currentOrder.o_id, False, False)
@@ -997,6 +1017,9 @@ Public Class OrderPresenter
 
                 ' 刪除訂單
                 _ordRep.DeleteAsync(currentOrder)
+
+                Dim gbRep As New GasBarrelRep(CType(_ordRep.Context, gas_accounting_systemEntities))
+                _barrelInvSer.ApplyOrderIssueDeleteAsync(gbRep, currentOrder).Wait()
 
                 _service.UpdateOrAddAsync(currentOrder.o_date)
 

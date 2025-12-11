@@ -290,22 +290,31 @@ Public Class PaymentPresenter
                         Dim existingNums = oldPcList.Select(Function(pc) pc.chque_pay?.cp_Number).Where(Function(n) n IsNot Nothing).ToList()
                         Dim addNums = newChequeNums.Where(Function(n) Not existingNums.Contains(n)).ToList()
 
-                        For Each chequeNum In addNums
-                            Dim cheque = uow.ChequePayRepository.GetByChequeNumber(chequeNum)
-                            If cheque Is Nothing Then
-                                Throw New Exception($"{chequeNum}找不到此支票")
-                            ElseIf cheque.cp_IsCashing Then
-                                Throw New Exception($"{chequeNum}此支票已兌現")
-                            Else
-                                cheque.cp_IsCashing = True
-                                cheque.cp_BankCashing = data.p_Date
-                            End If
+                        If addNums.Count > 0 Then
+                            Dim pcList As New List(Of payment_cheque)
 
-                            Await uow.PaymentChequeRepository.AddAsync(New payment_cheque With {
-                                .pc_p_id = orgData.p_Id,
-                                .pc_cp_id = cheque.cp_Id
-                            })
-                        Next
+                            For Each chequeNum In addNums
+                                Dim cheque = uow.ChequePayRepository.GetByChequeNumber(chequeNum)
+                                If cheque Is Nothing Then
+                                    Throw New Exception($"{chequeNum}找不到此支票")
+                                ElseIf cheque.cp_IsCashing Then
+                                    Throw New Exception($"{chequeNum}此支票已兌現")
+                                Else
+                                    cheque.cp_IsCashing = True
+                                    cheque.cp_BankCashing = data.p_Date
+                                End If
+
+                                pcList.Add(New payment_cheque With {
+                                    .pc_p_id = orgData.p_Id,
+                                    .pc_cp_id = cheque.cp_Id
+                                })
+                            Next
+
+                            ' 批次新增所有 payment_cheque
+                            uow.PaymentChequeRepository.AddBatch(pcList)
+                        End If
+                        ' 批次完成後一次儲存，避免只更新部分支票
+                        Await uow.SaveChangesAsync()
                     ElseIf subject IsNot Nothing AndAlso subject.s_name <> "應付票據" Then
                         ' 科目改為非應付票據時，清理舊的 payment_cheque 關聯
                         Dim oldPcList = uow.PaymentChequeRepository.GetByPaymentId(orgData.p_Id)

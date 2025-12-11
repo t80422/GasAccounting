@@ -68,14 +68,35 @@ Partial Class PurchaseBarrelUserControl
         Me.cmbVendor = New System.Windows.Forms.ComboBox()
         Me.txtId_pb = New System.Windows.Forms.TextBox()
         Me.lblVendor_pb = New System.Windows.Forms.Label()
+        Me.grpBarrelInventory = New System.Windows.Forms.GroupBox()
+        Me.txtBarrel_2 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_5 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_14 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_18 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_4 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_10 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_16 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_20 = New System.Windows.Forms.TextBox()
+        Me.txtBarrel_50 = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
         CType(Me.dgvPurchaseBarrel, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpBarrel.SuspendLayout()
+        Me.grpBarrelInventory.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnPrint
         '
         Me.btnPrint.BackColor = System.Drawing.Color.Cyan
-        Me.btnPrint.Location = New System.Drawing.Point(793, 160)
+        Me.btnPrint.Location = New System.Drawing.Point(793, 212)
         Me.btnPrint.Name = "btnPrint"
         Me.btnPrint.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint.TabIndex = 446
@@ -85,7 +106,7 @@ Partial Class PurchaseBarrelUserControl
         'cmbCompany
         '
         Me.cmbCompany.FormattingEnabled = True
-        Me.cmbCompany.Location = New System.Drawing.Point(114, 56)
+        Me.cmbCompany.Location = New System.Drawing.Point(1012, 15)
         Me.cmbCompany.Name = "cmbCompany"
         Me.cmbCompany.Size = New System.Drawing.Size(485, 27)
         Me.cmbCompany.TabIndex = 445
@@ -94,7 +115,7 @@ Partial Class PurchaseBarrelUserControl
         'Label248
         '
         Me.Label248.AutoSize = True
-        Me.Label248.Location = New System.Drawing.Point(13, 60)
+        Me.Label248.Location = New System.Drawing.Point(909, 19)
         Me.Label248.Name = "Label248"
         Me.Label248.Size = New System.Drawing.Size(95, 19)
         Me.Label248.TabIndex = 444
@@ -102,7 +123,7 @@ Partial Class PurchaseBarrelUserControl
         '
         'dtpDate_pb
         '
-        Me.dtpDate_pb.Location = New System.Drawing.Point(114, 99)
+        Me.dtpDate_pb.Location = New System.Drawing.Point(116, 13)
         Me.dtpDate_pb.Name = "dtpDate_pb"
         Me.dtpDate_pb.Size = New System.Drawing.Size(189, 30)
         Me.dtpDate_pb.TabIndex = 442
@@ -111,7 +132,7 @@ Partial Class PurchaseBarrelUserControl
         'Label178
         '
         Me.Label178.AutoSize = True
-        Me.Label178.Location = New System.Drawing.Point(13, 105)
+        Me.Label178.Location = New System.Drawing.Point(13, 19)
         Me.Label178.Name = "Label178"
         Me.Label178.Size = New System.Drawing.Size(95, 19)
         Me.Label178.TabIndex = 441
@@ -123,17 +144,17 @@ Partial Class PurchaseBarrelUserControl
         Me.dgvPurchaseBarrel.AllowUserToDeleteRows = False
         Me.dgvPurchaseBarrel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPurchaseBarrel.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvPurchaseBarrel.Location = New System.Drawing.Point(10, 229)
+        Me.dgvPurchaseBarrel.Location = New System.Drawing.Point(10, 279)
         Me.dgvPurchaseBarrel.Name = "dgvPurchaseBarrel"
         Me.dgvPurchaseBarrel.ReadOnly = True
         Me.dgvPurchaseBarrel.RowTemplate.Height = 24
-        Me.dgvPurchaseBarrel.Size = New System.Drawing.Size(1862, 710)
+        Me.dgvPurchaseBarrel.Size = New System.Drawing.Size(1862, 660)
         Me.dgvPurchaseBarrel.TabIndex = 440
         '
         'btnQuery_pb
         '
         Me.btnQuery_pb.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_pb.Location = New System.Drawing.Point(637, 160)
+        Me.btnQuery_pb.Location = New System.Drawing.Point(637, 212)
         Me.btnQuery_pb.Name = "btnQuery_pb"
         Me.btnQuery_pb.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_pb.TabIndex = 439
@@ -143,7 +164,7 @@ Partial Class PurchaseBarrelUserControl
         'btnCancel
         '
         Me.btnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel.Location = New System.Drawing.Point(481, 160)
+        Me.btnCancel.Location = New System.Drawing.Point(481, 212)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel.TabIndex = 438
@@ -153,7 +174,7 @@ Partial Class PurchaseBarrelUserControl
         'btnDelete
         '
         Me.btnDelete.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDelete.Location = New System.Drawing.Point(325, 160)
+        Me.btnDelete.Location = New System.Drawing.Point(325, 212)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete.TabIndex = 437
@@ -163,7 +184,7 @@ Partial Class PurchaseBarrelUserControl
         'btnEdit
         '
         Me.btnEdit.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnEdit.Location = New System.Drawing.Point(169, 160)
+        Me.btnEdit.Location = New System.Drawing.Point(169, 212)
         Me.btnEdit.Name = "btnEdit"
         Me.btnEdit.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit.TabIndex = 436
@@ -173,7 +194,7 @@ Partial Class PurchaseBarrelUserControl
         'btnAdd
         '
         Me.btnAdd.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnAdd.Location = New System.Drawing.Point(13, 160)
+        Me.btnAdd.Location = New System.Drawing.Point(13, 212)
         Me.btnAdd.Name = "btnAdd"
         Me.btnAdd.Size = New System.Drawing.Size(140, 44)
         Me.btnAdd.TabIndex = 435
@@ -183,7 +204,7 @@ Partial Class PurchaseBarrelUserControl
         '
         'txtAmount_pb
         '
-        Me.txtAmount_pb.Location = New System.Drawing.Point(410, 99)
+        Me.txtAmount_pb.Location = New System.Drawing.Point(1608, 13)
         Me.txtAmount_pb.Name = "txtAmount_pb"
         Me.txtAmount_pb.ReadOnly = True
         Me.txtAmount_pb.Size = New System.Drawing.Size(189, 30)
@@ -193,7 +214,7 @@ Partial Class PurchaseBarrelUserControl
         'Label177
         '
         Me.Label177.AutoSize = True
-        Me.Label177.Location = New System.Drawing.Point(309, 105)
+        Me.Label177.Location = New System.Drawing.Point(1505, 19)
         Me.Label177.Name = "Label177"
         Me.Label177.Size = New System.Drawing.Size(95, 19)
         Me.Label177.TabIndex = 433
@@ -230,11 +251,11 @@ Partial Class PurchaseBarrelUserControl
         Me.grpBarrel.Controls.Add(Me.Label168)
         Me.grpBarrel.Controls.Add(Me.Label167)
         Me.grpBarrel.Controls.Add(Me.Label163)
-        Me.grpBarrel.Location = New System.Drawing.Point(607, 15)
+        Me.grpBarrel.Location = New System.Drawing.Point(15, 59)
         Me.grpBarrel.Margin = New System.Windows.Forms.Padding(5)
         Me.grpBarrel.Name = "grpBarrel"
         Me.grpBarrel.Padding = New System.Windows.Forms.Padding(5)
-        Me.grpBarrel.Size = New System.Drawing.Size(657, 137)
+        Me.grpBarrel.Size = New System.Drawing.Size(648, 137)
         Me.grpBarrel.TabIndex = 432
         Me.grpBarrel.TabStop = False
         Me.grpBarrel.Text = "瓦斯桶"
@@ -485,7 +506,7 @@ Partial Class PurchaseBarrelUserControl
         'cmbVendor
         '
         Me.cmbVendor.FormattingEnabled = True
-        Me.cmbVendor.Location = New System.Drawing.Point(114, 13)
+        Me.cmbVendor.Location = New System.Drawing.Point(416, 15)
         Me.cmbVendor.Name = "cmbVendor"
         Me.cmbVendor.Size = New System.Drawing.Size(485, 27)
         Me.cmbVendor.TabIndex = 431
@@ -493,7 +514,7 @@ Partial Class PurchaseBarrelUserControl
         '
         'txtId_pb
         '
-        Me.txtId_pb.Location = New System.Drawing.Point(1272, 122)
+        Me.txtId_pb.Location = New System.Drawing.Point(939, 219)
         Me.txtId_pb.Name = "txtId_pb"
         Me.txtId_pb.ReadOnly = True
         Me.txtId_pb.Size = New System.Drawing.Size(121, 30)
@@ -504,16 +525,218 @@ Partial Class PurchaseBarrelUserControl
         'lblVendor_pb
         '
         Me.lblVendor_pb.AutoSize = True
-        Me.lblVendor_pb.Location = New System.Drawing.Point(13, 17)
+        Me.lblVendor_pb.Location = New System.Drawing.Point(313, 19)
         Me.lblVendor_pb.Name = "lblVendor_pb"
         Me.lblVendor_pb.Size = New System.Drawing.Size(95, 19)
         Me.lblVendor_pb.TabIndex = 429
         Me.lblVendor_pb.Text = "廠    商"
         '
+        'grpBarrelInventory
+        '
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_2)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_5)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_14)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_18)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_4)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_10)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_16)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_20)
+        Me.grpBarrelInventory.Controls.Add(Me.txtBarrel_50)
+        Me.grpBarrelInventory.Controls.Add(Me.Label1)
+        Me.grpBarrelInventory.Controls.Add(Me.Label2)
+        Me.grpBarrelInventory.Controls.Add(Me.Label3)
+        Me.grpBarrelInventory.Controls.Add(Me.Label4)
+        Me.grpBarrelInventory.Controls.Add(Me.Label5)
+        Me.grpBarrelInventory.Controls.Add(Me.Label6)
+        Me.grpBarrelInventory.Controls.Add(Me.Label7)
+        Me.grpBarrelInventory.Controls.Add(Me.Label8)
+        Me.grpBarrelInventory.Controls.Add(Me.Label9)
+        Me.grpBarrelInventory.Controls.Add(Me.Label11)
+        Me.grpBarrelInventory.Location = New System.Drawing.Point(673, 59)
+        Me.grpBarrelInventory.Margin = New System.Windows.Forms.Padding(5)
+        Me.grpBarrelInventory.Name = "grpBarrelInventory"
+        Me.grpBarrelInventory.Padding = New System.Windows.Forms.Padding(5)
+        Me.grpBarrelInventory.Size = New System.Drawing.Size(657, 94)
+        Me.grpBarrelInventory.TabIndex = 433
+        Me.grpBarrelInventory.TabStop = False
+        Me.grpBarrelInventory.Text = "瓦斯桶庫存"
+        '
+        'txtBarrel_2
+        '
+        Me.txtBarrel_2.Location = New System.Drawing.Point(585, 50)
+        Me.txtBarrel_2.Name = "txtBarrel_2"
+        Me.txtBarrel_2.ReadOnly = True
+        Me.txtBarrel_2.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_2.TabIndex = 20
+        Me.txtBarrel_2.Tag = ""
+        '
+        'txtBarrel_5
+        '
+        Me.txtBarrel_5.Location = New System.Drawing.Point(520, 50)
+        Me.txtBarrel_5.Name = "txtBarrel_5"
+        Me.txtBarrel_5.ReadOnly = True
+        Me.txtBarrel_5.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_5.TabIndex = 19
+        Me.txtBarrel_5.Tag = ""
+        '
+        'txtBarrel_14
+        '
+        Me.txtBarrel_14.Location = New System.Drawing.Point(455, 50)
+        Me.txtBarrel_14.Name = "txtBarrel_14"
+        Me.txtBarrel_14.ReadOnly = True
+        Me.txtBarrel_14.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_14.TabIndex = 18
+        Me.txtBarrel_14.Tag = ""
+        '
+        'txtBarrel_18
+        '
+        Me.txtBarrel_18.Location = New System.Drawing.Point(390, 50)
+        Me.txtBarrel_18.Name = "txtBarrel_18"
+        Me.txtBarrel_18.ReadOnly = True
+        Me.txtBarrel_18.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_18.TabIndex = 17
+        Me.txtBarrel_18.Tag = ""
+        '
+        'txtBarrel_4
+        '
+        Me.txtBarrel_4.Location = New System.Drawing.Point(325, 50)
+        Me.txtBarrel_4.Name = "txtBarrel_4"
+        Me.txtBarrel_4.ReadOnly = True
+        Me.txtBarrel_4.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_4.TabIndex = 16
+        Me.txtBarrel_4.Tag = ""
+        '
+        'txtBarrel_10
+        '
+        Me.txtBarrel_10.Location = New System.Drawing.Point(260, 50)
+        Me.txtBarrel_10.Name = "txtBarrel_10"
+        Me.txtBarrel_10.ReadOnly = True
+        Me.txtBarrel_10.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_10.TabIndex = 15
+        Me.txtBarrel_10.Tag = ""
+        '
+        'txtBarrel_16
+        '
+        Me.txtBarrel_16.Location = New System.Drawing.Point(195, 50)
+        Me.txtBarrel_16.Name = "txtBarrel_16"
+        Me.txtBarrel_16.ReadOnly = True
+        Me.txtBarrel_16.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_16.TabIndex = 14
+        Me.txtBarrel_16.Tag = ""
+        '
+        'txtBarrel_20
+        '
+        Me.txtBarrel_20.Location = New System.Drawing.Point(130, 50)
+        Me.txtBarrel_20.Name = "txtBarrel_20"
+        Me.txtBarrel_20.ReadOnly = True
+        Me.txtBarrel_20.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_20.TabIndex = 13
+        Me.txtBarrel_20.Tag = ""
+        '
+        'txtBarrel_50
+        '
+        Me.txtBarrel_50.Location = New System.Drawing.Point(65, 50)
+        Me.txtBarrel_50.Name = "txtBarrel_50"
+        Me.txtBarrel_50.ReadOnly = True
+        Me.txtBarrel_50.Size = New System.Drawing.Size(49, 30)
+        Me.txtBarrel_50.TabIndex = 12
+        Me.txtBarrel_50.Tag = ""
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(581, 28)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(53, 19)
+        Me.Label1.TabIndex = 11
+        Me.Label1.Text = "2Kg"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(516, 28)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(53, 19)
+        Me.Label2.TabIndex = 10
+        Me.Label2.Text = "5Kg"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(451, 28)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(53, 19)
+        Me.Label3.TabIndex = 9
+        Me.Label3.Text = "14Kg"
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label4
+        '
+        Me.Label4.Location = New System.Drawing.Point(386, 28)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(53, 19)
+        Me.Label4.TabIndex = 8
+        Me.Label4.Text = "18Kg"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label5
+        '
+        Me.Label5.Location = New System.Drawing.Point(321, 28)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(53, 19)
+        Me.Label5.TabIndex = 7
+        Me.Label5.Text = "4Kg"
+        Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label6
+        '
+        Me.Label6.Location = New System.Drawing.Point(256, 28)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(53, 19)
+        Me.Label6.TabIndex = 6
+        Me.Label6.Text = "10Kg"
+        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label7
+        '
+        Me.Label7.Location = New System.Drawing.Point(191, 28)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(53, 19)
+        Me.Label7.TabIndex = 5
+        Me.Label7.Text = "16Kg"
+        Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label8
+        '
+        Me.Label8.Location = New System.Drawing.Point(126, 28)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(53, 19)
+        Me.Label8.TabIndex = 4
+        Me.Label8.Text = "20Kg"
+        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label9
+        '
+        Me.Label9.Location = New System.Drawing.Point(61, 28)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(53, 19)
+        Me.Label9.TabIndex = 3
+        Me.Label9.Text = "50Kg"
+        Me.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(8, 53)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(51, 19)
+        Me.Label11.TabIndex = 1
+        Me.Label11.Text = "數量"
+        '
         'PurchaseBarrelUserControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.grpBarrelInventory)
         Me.Controls.Add(Me.btnPrint)
         Me.Controls.Add(Me.cmbCompany)
         Me.Controls.Add(Me.Label248)
@@ -539,6 +762,8 @@ Partial Class PurchaseBarrelUserControl
         CType(Me.dgvPurchaseBarrel, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpBarrel.ResumeLayout(False)
         Me.grpBarrel.PerformLayout()
+        Me.grpBarrelInventory.ResumeLayout(False)
+        Me.grpBarrelInventory.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -590,4 +815,24 @@ Partial Class PurchaseBarrelUserControl
     Friend WithEvents cmbVendor As ComboBox
     Friend WithEvents txtId_pb As TextBox
     Friend WithEvents lblVendor_pb As Label
+    Friend WithEvents grpBarrelInventory As GroupBox
+    Friend WithEvents txtBarrel_2 As TextBox
+    Friend WithEvents txtBarrel_5 As TextBox
+    Friend WithEvents txtBarrel_14 As TextBox
+    Friend WithEvents txtBarrel_18 As TextBox
+    Friend WithEvents txtBarrel_4 As TextBox
+    Friend WithEvents txtBarrel_10 As TextBox
+    Friend WithEvents txtBarrel_16 As TextBox
+    Friend WithEvents txtBarrel_20 As TextBox
+    Friend WithEvents txtBarrel_50 As TextBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents Label6 As Label
+    Friend WithEvents Label7 As Label
+    Friend WithEvents Label8 As Label
+    Friend WithEvents Label9 As Label
+    Friend WithEvents Label11 As Label
 End Class

@@ -4,11 +4,14 @@
 Public Interface IUnitOfWork
     Inherits IDisposable
 
+    ReadOnly Property BarrelMonthlyBalanceRep As IBarrelMonthlyBalancesRep
     ReadOnly Property PurchaseRepository As IPurchaseRep
+    ReadOnly Property PurchaseBarrelRep As IPurchaseBarrelRep
     ReadOnly Property CompanyRepository As ICompanyRep
     ReadOnly Property ManufacturerRepository As IManufacturerRep
     ReadOnly Property SubjectRepository As ISubjectRep
     ReadOnly Property AccountingEntryRepository As IAccountingEntryRep
+    ReadOnly Property GasBarrelRepository As IGasBarrelRep
     ReadOnly Property GasMonthlyBalanceRepository As IGasMonthlyBalanceRep
     ReadOnly Property OrderRepository As IOrderRep
     ReadOnly Property BasicSetRepository As IBasicSetRep

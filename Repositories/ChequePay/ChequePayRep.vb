@@ -18,7 +18,10 @@ Public Class ChequePayRep
 
     Public Function GetList(Optional criteria As ChequeSC = Nothing) As List(Of ChequePayVM) Implements IChequePayRep.GetList
         Try
-            Dim query = _dbSet.Join(_context.payments, Function(cp) cp.cp_Id, Function(p) p.p_cp_Id, Function(cp, p) New With {cp, p}).
+            Dim query = (From cp In _dbSet
+                         Group Join p In _context.payments On cp.cp_Id Equals p.p_cp_Id Into gp = Group
+                         From p In gp.DefaultIfEmpty() ' left join
+                         Select New With {cp, p}).
                 AsNoTracking().
                 AsQueryable()
 
@@ -37,9 +40,9 @@ Public Class ChequePayRep
 
             Return result.Select(Function(x) New ChequePayVM With {
                 .備註 = x.cp.cp_Memo,
-                .對方銀行 = x.p.manufacturer?.manu_account,
-                .廠商名稱 = x.p.manufacturer?.manu_name,
-                .銀行帳號 = x.p.bank?.bank_Account,
+                .對方銀行 = x.p?.manufacturer?.manu_account,
+                .廠商名稱 = x.p?.manufacturer?.manu_name,
+                .銀行帳號 = x.p?.bank?.bank_Account,
                 .日期 = x.cp.cp_Date,
                 .編號 = x.cp.cp_Id,
                 .金額 = x.cp.cp_Amount,
