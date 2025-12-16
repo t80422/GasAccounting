@@ -52,7 +52,7 @@
                 _view.DisplayList(datas)
             End Using
         Catch ex As Exception
-            MsgBox("載入清單時發生錯誤：" & ex.Message)
+            MessageBox.Show("載入清單時發生錯誤：" & ex.Message)
         End Try
     End Sub
 
@@ -67,7 +67,7 @@
             If input.col_Type = "應收票據" Then
                 chequeInput = _view.GetChequeInput
                 Validate(chequeInput)
-            ElseIf input.col_Type = "銀行存款" Then
+            ElseIf input.col_Type = "銀行存款" AndAlso input.subject.s_name = "應收票據" Then
                 chequeNo = _view.GetChequeNumber()
             End If
 
@@ -274,14 +274,14 @@
     End Sub
 
     Public Async Sub DeleteAsync()
-        If MsgBox("確定要刪除?", vbYesNo, "警告") = MsgBoxResult.No Then Exit Sub
+        If MessageBox.Show("確定要刪除?", "警告", MessageBoxButtons.OKCancel) = MsgBoxResult.No Then Exit Sub
 
         Try
             Await _collectionSer.DeleteAsync(_currentData.col_Id)
             Initialize()
-            MsgBox("刪除成功")
+            MessageBox.Show("刪除成功")
         Catch ex As Exception
-            MsgBox("刪除時發生錯誤：" & ex.Message)
+            MessageBox.Show("刪除時發生錯誤：" & ex.Message)
         End Try
     End Sub
 

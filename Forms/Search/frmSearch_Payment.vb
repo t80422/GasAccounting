@@ -8,6 +8,7 @@
             .EndDate = dtpEnd.Value.Date.AddDays(1)
             .VendorId = If(cmbVendor.SelectedValue, Nothing)
             .Cridit = cmbCredit.SelectedItem
+            .BankId = If(cmbBank.SelectedValue, Nothing)
         End With
 
         DialogResult = DialogResult.OK
@@ -17,6 +18,9 @@
         Using db As New gas_accounting_systemEntities
             Dim manuRep As New ManufacturerRep(db)
             SetComboBox(cmbVendor, manuRep.GetVendorDropdownAsync().Result)
+
+            Dim bankRep As New BankRep(db)
+            SetComboBox(cmbBank, bankRep.GetBankDropdownAsync().Result)
         End Using
     End Sub
 End Class

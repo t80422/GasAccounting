@@ -42,4 +42,8 @@
     Public Property EndDate As Date?
 
     Public Property BankId As Integer?
+
+    Public Property AccountMonth As Date
+
+    Public Property IsAccountMonth As Boolean
 End Class

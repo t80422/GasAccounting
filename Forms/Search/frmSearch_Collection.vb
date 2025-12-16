@@ -30,6 +30,8 @@
             .StartDate = dtpStart.Value
             .EndDate = dtpEnd.Value
             .BankId = If(cmbBank.SelectedValue, Nothing)
+            .AccountMonth = dtpAccountMonth.Value
+            .IsAccountMonth = chkAccountMonth.Checked
         End With
 
         DialogResult = DialogResult.OK

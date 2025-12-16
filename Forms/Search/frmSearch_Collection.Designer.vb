@@ -41,6 +41,9 @@ Partial Class frmSearch_Collection
         Me.txtCusId = New System.Windows.Forms.TextBox()
         Me.cmbBank = New System.Windows.Forms.ComboBox()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.dtpAccountMonth = New System.Windows.Forms.DateTimePicker()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.chkAccountMonth = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'Label2
@@ -225,11 +228,45 @@ Partial Class frmSearch_Collection
         Me.Label8.TabIndex = 17
         Me.Label8.Text = "銀行"
         '
+        'dtpAccountMonth
+        '
+        Me.dtpAccountMonth.CustomFormat = "yyyy年MM月"
+        Me.dtpAccountMonth.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpAccountMonth.Location = New System.Drawing.Point(124, 152)
+        Me.dtpAccountMonth.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.dtpAccountMonth.Name = "dtpAccountMonth"
+        Me.dtpAccountMonth.Size = New System.Drawing.Size(198, 30)
+        Me.dtpAccountMonth.TabIndex = 20
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(15, 158)
+        Me.Label9.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(93, 19)
+        Me.Label9.TabIndex = 19
+        Me.Label9.Text = "帳款月份"
+        '
+        'chkAccountMonth
+        '
+        Me.chkAccountMonth.AutoSize = True
+        Me.chkAccountMonth.Location = New System.Drawing.Point(338, 156)
+        Me.chkAccountMonth.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.chkAccountMonth.Name = "chkAccountMonth"
+        Me.chkAccountMonth.Size = New System.Drawing.Size(196, 23)
+        Me.chkAccountMonth.TabIndex = 21
+        Me.chkAccountMonth.Text = "使用帳款月份查詢"
+        Me.chkAccountMonth.UseVisualStyleBackColor = True
+        '
         'frmSearch_Collection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(988, 196)
+        Me.Controls.Add(Me.chkAccountMonth)
+        Me.Controls.Add(Me.dtpAccountMonth)
+        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.cmbBank)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.txtCusId)
@@ -280,4 +317,7 @@ Partial Class frmSearch_Collection
     Friend WithEvents txtCusId As TextBox
     Friend WithEvents cmbBank As ComboBox
     Friend WithEvents Label8 As Label
+    Friend WithEvents dtpAccountMonth As DateTimePicker
+    Friend WithEvents Label9 As Label
+    Friend WithEvents chkAccountMonth As CheckBox
 End Class

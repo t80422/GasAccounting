@@ -32,12 +32,14 @@ Partial Class frmSearch_Payment
         Me.cmbVendor = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cmbCredit = New System.Windows.Forms.ComboBox()
+        Me.cmbBank = New System.Windows.Forms.ComboBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'chkDate
         '
         Me.chkDate.AutoSize = True
-        Me.chkDate.Location = New System.Drawing.Point(560, 25)
+        Me.chkDate.Location = New System.Drawing.Point(581, 25)
         Me.chkDate.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.chkDate.Name = "chkDate"
         Me.chkDate.Size = New System.Drawing.Size(154, 23)
@@ -48,7 +50,7 @@ Partial Class frmSearch_Payment
         'btnOk
         '
         Me.btnOk.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnOk.Location = New System.Drawing.Point(703, 110)
+        Me.btnOk.Location = New System.Drawing.Point(585, 101)
         Me.btnOk.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(138, 36)
@@ -58,7 +60,7 @@ Partial Class frmSearch_Payment
         '
         'dtpEnd
         '
-        Me.dtpEnd.Location = New System.Drawing.Point(372, 21)
+        Me.dtpEnd.Location = New System.Drawing.Point(393, 21)
         Me.dtpEnd.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.dtpEnd.Name = "dtpEnd"
         Me.dtpEnd.Size = New System.Drawing.Size(180, 30)
@@ -66,7 +68,7 @@ Partial Class frmSearch_Payment
         '
         'dtpStart
         '
-        Me.dtpStart.Location = New System.Drawing.Point(104, 21)
+        Me.dtpStart.Location = New System.Drawing.Point(105, 21)
         Me.dtpStart.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.dtpStart.Name = "dtpStart"
         Me.dtpStart.Size = New System.Drawing.Size(180, 30)
@@ -85,7 +87,7 @@ Partial Class frmSearch_Payment
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(24, 27)
+        Me.Label4.Location = New System.Drawing.Point(21, 27)
         Me.Label4.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(72, 19)
@@ -95,7 +97,7 @@ Partial Class frmSearch_Payment
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(24, 71)
+        Me.Label1.Location = New System.Drawing.Point(21, 114)
         Me.Label1.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(51, 19)
@@ -105,16 +107,16 @@ Partial Class frmSearch_Payment
         'cmbVendor
         '
         Me.cmbVendor.FormattingEnabled = True
-        Me.cmbVendor.Location = New System.Drawing.Point(104, 67)
+        Me.cmbVendor.Location = New System.Drawing.Point(105, 110)
         Me.cmbVendor.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.cmbVendor.Name = "cmbVendor"
-        Me.cmbVendor.Size = New System.Drawing.Size(448, 27)
+        Me.cmbVendor.Size = New System.Drawing.Size(468, 27)
         Me.cmbVendor.TabIndex = 35
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(560, 71)
+        Me.Label2.Location = New System.Drawing.Point(292, 71)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(93, 19)
         Me.Label2.TabIndex = 36
@@ -124,17 +126,37 @@ Partial Class frmSearch_Payment
         '
         Me.cmbCredit.FormattingEnabled = True
         Me.cmbCredit.Items.AddRange(New Object() {"現金", "銀行存款", "應付票據"})
-        Me.cmbCredit.Location = New System.Drawing.Point(661, 67)
+        Me.cmbCredit.Location = New System.Drawing.Point(393, 67)
         Me.cmbCredit.Name = "cmbCredit"
         Me.cmbCredit.Size = New System.Drawing.Size(180, 27)
         Me.cmbCredit.TabIndex = 37
+        '
+        'cmbBank
+        '
+        Me.cmbBank.FormattingEnabled = True
+        Me.cmbBank.Items.AddRange(New Object() {"現金", "銀行存款", "應付票據"})
+        Me.cmbBank.Location = New System.Drawing.Point(105, 67)
+        Me.cmbBank.Name = "cmbBank"
+        Me.cmbBank.Size = New System.Drawing.Size(180, 27)
+        Me.cmbBank.TabIndex = 39
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(21, 71)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(51, 19)
+        Me.Label3.TabIndex = 38
+        Me.Label3.Text = "銀行"
         '
         'frmSearch_Payment
         '
         Me.AcceptButton = Me.btnOk
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(860, 166)
+        Me.ClientSize = New System.Drawing.Size(742, 155)
+        Me.Controls.Add(Me.cmbBank)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.cmbCredit)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.cmbVendor)
@@ -168,4 +190,6 @@ Partial Class frmSearch_Payment
     Friend WithEvents cmbVendor As ComboBox
     Friend WithEvents Label2 As Label
     Friend WithEvents cmbCredit As ComboBox
+    Friend WithEvents cmbBank As ComboBox
+    Friend WithEvents Label3 As Label
 End Class

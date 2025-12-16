@@ -34,6 +34,10 @@ Public Class CollectionRep
 
                 ' 銀行編號
                 If criteria.BankId IsNot Nothing Then query = query.Where(Function(x) x.col_bank_Id = criteria.BankId)
+
+                ' 帳款月份
+                If criteria.IsAccountMonth Then query = query.Where(Function(x) x.col_AccountMonth.Year = criteria.AccountMonth.Year AndAlso
+                                                                                    x.col_AccountMonth.Month = criteria.AccountMonth.Month)
             Else
                 query = query.Where(Function(x) x.col_Date.Year = Now.Year AndAlso x.col_Date.Month = Now.Month)
             End If

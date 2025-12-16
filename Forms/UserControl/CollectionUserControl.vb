@@ -149,6 +149,7 @@
     ' 刪除
     Private Sub btnDelete_col_Click(sender As Object, e As EventArgs) Handles btnDelete_col.Click
         _presenter.DeleteAsync()
+        SetButtonState(Me, False)
     End Sub
 
     ' 銷帳

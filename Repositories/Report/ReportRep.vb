@@ -371,7 +371,7 @@ Public Class ReportRep
                 Select(Function(x) New With {
                     .Date = x.col_Date,
                     .Subject = x.subject.s_name,
-                    .Memo = x.col_Memo,
+                    .Memo = If(x.customer IsNot Nothing, x.customer.cus_code + " ", "") + x.col_Memo,
                     .Amount = x.col_Amount,
                     .IsIncome = True
                 }).ToList
@@ -463,10 +463,27 @@ Public Class ReportRep
                                                 .IsIncome = False,
                                                 .Target = x.company.comp_name
                                              })
+
+            ' 銀行存入現金: 獨立撈取現金類型且科目為銀行存款
+            Dim cashToBankPayments = _context.payments.AsNoTracking.
+                                                 Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                                   x.p_Date.Month = month.Month AndAlso
+                                                                   x.p_Type = "現金" AndAlso
+                                                                   x.p_bank_Id = bankId AndAlso
+                                                                   x.subject.s_name = "銀行存款").
+                                                 Select(Function(x) New With {
+                                                      .Date = x.p_Date,
+                                                      .Subject = x.p_Type,
+                                                      .Memo = x.p_Memo,
+                                                      .Amount = x.p_Amount,
+                                                      .IsIncome = True,
+                                                      .Target = x.company.comp_name
+                                                 })
+
             '合併並排列數據
-            Dim allTransactions = collections.Union(cashToBankCollections).Union(payments) _
-                                             .OrderBy(Function(x) x.Date) _
-                                             .ThenBy(Function(x) x.IsIncome)
+            Dim allTransactions = collections.Union(cashToBankCollections).Union(payments).Union(cashToBankPayments).
+                                              OrderBy(Function(x) x.Date).
+                                              ThenBy(Function(x) x.IsIncome)
 
             '取得上期餘額
             '1. 先取得上期月結餘額
