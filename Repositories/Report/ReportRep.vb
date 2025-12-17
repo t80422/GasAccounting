@@ -844,47 +844,42 @@ Public Class ReportRep
     Public Function GetMonthlyStatement(cusCode As String, month As Date) As MonthlyStatement Implements IReportRep.GetMonthlyStatement
         Try
             Dim result = New MonthlyStatement
+
+            ' 取得客戶該月訂單
             Dim orderByCusAndMonth = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
                                                                        x.o_date.Value.Month = month.Month AndAlso
                                                                        x.customer.cus_code = cusCode).ToList
 
             If orderByCusAndMonth.Count = 0 Then Throw New Exception($"該客戶 {month:yyyy/MM} 無訂購資料")
 
+            ' 取得客戶資訊
             Dim cus = orderByCusAndMonth.FirstOrDefault.customer
             result.CusCode = cus.cus_code
             result.CompanyName = cus.company?.comp_name
             result.CusName = cus.cus_name
 
-            Dim firstDate = New Date(month.Year, month.Month, 1)
-            Dim orderByFirstDate = orderByCusAndMonth.Where(Function(x) x.o_date.Value.Date = firstDate)
+            ' 分類運送方式
+            Dim orderGroup = orderByCusAndMonth.GroupBy(Function(x) x.o_delivery_type).ToList
 
-            If orderByFirstDate.Count <> 0 Then
-                '家用瓦斯(變動前)
-                result.GasNormalQuantity_First = orderByFirstDate.Sum(Function(x) x.o_gas_total)
-                result.GasNormalUnitPrice_First = If(orderByFirstDate.FirstOrDefault.o_UnitPrice, 0)
-
-                '工業氣(變動前)
-                result.GasCQuantity_First = orderByFirstDate.Sum(Function(x) x.o_gas_c_total)
-                result.GasCUnitPrice_First = If(orderByFirstDate.FirstOrDefault.o_UnitPriceC, 0)
-            End If
-
-            Dim orderByOtherDate = orderByCusAndMonth.Where(Function(x) x.o_date.Value.Date <> firstDate)
-
-            If orderByOtherDate.Count <> 0 Then
-                '家用瓦斯(變動後)
-                result.GasNormalQuantity = orderByOtherDate.Sum(Function(x) x.o_gas_total)
-                result.GasNormalUnitPrice = If(orderByOtherDate.FirstOrDefault.o_UnitPrice, 0)
-
-                '工業氣(變動後)
-                result.GasCQuantity = orderByOtherDate.Sum(Function(x) x.o_gas_c_total)
-                result.GasCUnitPrice = If(orderByOtherDate.FirstOrDefault.o_UnitPriceC, 0)
-            End If
+            For Each group In orderGroup
+                Select Case group.Key
+                    Case "自運"
+                        result.ToGo = New MonthlyStatementDetail
+                        SetMonthlyStatementDetail(result.ToGo, group.ToList(), month)
+                    Case "廠運"
+                        result.Delivery = New MonthlyStatementDetail
+                        SetMonthlyStatementDetail(result.Delivery, group.ToList(), month)
+                End Select
+            Next
 
             '保險
             result.InsuranceUnitPrice = cus.cus_InsurancePrice
 
             '本月已收氣款
-            Dim col = _context.collections.Where(Function(x) x.col_Date.Year = month.Year AndAlso x.col_Date.Month = month.Month AndAlso x.col_cus_Id = cus.cus_id)
+            Dim col = _context.collections.Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso
+                                                             x.col_AccountMonth.Month = month.Month AndAlso
+                                                             x.col_cus_Id = cus.cus_id)
+
             If col.Count <> 0 Then result.GasAccountsReceived = col.Sum(Function(x) x.col_Amount)
 
             '新桶
@@ -907,7 +902,6 @@ Public Class ReportRep
                                    x.sbd.sbd_Qty4 * x.sb.sb_Buy4).
                 DefaultIfEmpty(0).
                 Sum()
-
 
             '註新桶
             Dim newBarrelCounts = New Dictionary(Of String, Integer) From {{"50", 0}, {"20", 0}, {"16", 0}, {"10", 0}, {"4", 0}, {"18", 0}, {"14", 0}, {"5", 0}, {"2", 0}}
@@ -1456,4 +1450,31 @@ Public Class ReportRep
             Throw
         End Try
     End Function
+
+    Private Sub SetMonthlyStatementDetail(ByRef result As MonthlyStatementDetail, data As List(Of order), month As Date)
+        Dim firstDate = New Date(month.Year, month.Month, 1)
+        Dim orderByFirstDate = data.Where(Function(x) x.o_date.Value.Date = firstDate)
+
+        If orderByFirstDate.Count <> 0 Then
+            '家用瓦斯(變動前)
+            result.GasNormalQuantity_First = orderByFirstDate.Sum(Function(x) x.o_gas_total)
+            result.GasNormalUnitPrice_First = If(orderByFirstDate.FirstOrDefault.o_UnitPrice, 0)
+
+            '工業氣(變動前)
+            result.GasCQuantity_First = orderByFirstDate.Sum(Function(x) x.o_gas_c_total)
+            result.GasCUnitPrice_First = If(orderByFirstDate.FirstOrDefault.o_UnitPriceC, 0)
+        End If
+
+        Dim orderByOtherDate = data.Where(Function(x) x.o_date.Value.Date <> firstDate)
+
+        If orderByOtherDate.Count <> 0 Then
+            '家用瓦斯(變動後)
+            result.GasNormalQuantity = orderByOtherDate.Sum(Function(x) x.o_gas_total)
+            result.GasNormalUnitPrice = If(orderByOtherDate.FirstOrDefault.o_UnitPrice, 0)
+
+            '工業氣(變動後)
+            result.GasCQuantity = orderByOtherDate.Sum(Function(x) x.o_gas_c_total)
+            result.GasCUnitPrice = If(orderByOtherDate.FirstOrDefault.o_UnitPriceC, 0)
+        End If
+    End Sub
 End Class

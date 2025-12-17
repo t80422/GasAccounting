@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.ComponentModel
+Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Windows.Interop
 Imports ClosedXML.Excel
@@ -1103,78 +1104,184 @@ Public Class ReportPresenter
     Public Sub GenerateMonthlyStatement(cusCode As String, month As Date)
         Try
             '取得資料
-            Dim data As MonthlyStatement = _rep.GetMonthlyStatement(cusCode, month)
+            Using uow As New UnitOfWork
+                Dim data As MonthlyStatement = uow.ReportRepository.GetMonthlyStatement(cusCode, month)
 
-            '取得範本檔
-            Dim filePath = Path.Combine(Application.StartupPath, "Report", "月對帳單範本檔.xlsx")
-
-            '套版
-            Using xml As New CloseXML_Excel(filePath)
-                With xml
-                    .SelectWorksheet("Sheet1")
-
-                    '標題
-                    .WriteToCell("A1", $" {month.Year}年{month.Month}月對帳單:")
-                    .WriteToCell("B1", data.CusName)
-                    .WriteToCell("D1", data.CusCode)
-
-                    '家用瓦斯(變動前)
-                    .WriteToCell("B3", data.GasNormalQuantity_First.ToString)
-                    .WriteToCell("C3", data.GasNormalUnitPrice_First.ToString)
-
-                    Dim gasAmount_1 = data.GasNormalQuantity_First * data.GasNormalUnitPrice_First
-                    .WriteToCell("D3", gasAmount_1.ToString)
-
-                    '工業氣(變動前)
-                    .WriteToCell("B4", data.GasCQuantity_First.ToString)
-                    .WriteToCell("C4", data.GasCUnitPrice_First.ToString)
-
-                    Dim gasCAmount_1 = data.GasCQuantity_First * data.GasCUnitPrice_First
-                    .WriteToCell("D4", gasCAmount_1.ToString)
-
-                    '家用瓦斯(變動後)
-                    .WriteToCell("B5", data.GasNormalQuantity.ToString)
-                    .WriteToCell("C5", data.GasNormalUnitPrice.ToString)
-
-                    Dim gasAmount = data.GasNormalQuantity * data.GasNormalUnitPrice
-                    .WriteToCell("D5", gasAmount.ToString)
-
-                    '工業氣(變動後)
-                    .WriteToCell("B6", data.GasCQuantity.ToString)
-                    .WriteToCell("C6", data.GasCUnitPrice.ToString)
-
-                    Dim gasCAmount = data.GasCQuantity * data.GasCUnitPrice
-                    .WriteToCell("D6", gasCAmount.ToString)
-
-                    '保險
-                    Dim totalQty = data.GasNormalQuantity_First + data.GasCQuantity_First + data.GasNormalQuantity + data.GasCQuantity
-                    .WriteToCell("B7", totalQty.ToString)
-                    .WriteToCell("C7", data.InsuranceUnitPrice.ToString)
-
-                    Dim insuranceAmount = totalQty * data.InsuranceUnitPrice
-                    .WriteToCell("D7", insuranceAmount.ToString)
-
-                    ' 本月應收氣款
-                    Dim gasAccountsRecievable = gasAmount_1 + gasCAmount_1 + gasAmount + gasCAmount
-                    If Not data.IsInsurance Then gasAccountsRecievable += insuranceAmount
-                    .WriteToCell("B8", gasAccountsRecievable.ToString)
-
-                    ' 本月已收氣款
-                    .WriteToCell("B9", data.GasAccountsReceived.ToString)
-                    ' 新桶
-                    .WriteToCell("B10", data.NewBerralAccountsReceivable.ToString)
-                    ' 報廢桶
-                    .WriteToCell("B11", data.ScrapBarrel.ToString)
-                    ' 本月欠款
-                    .WriteToCell("B12", (gasAccountsRecievable + data.NewBerralAccountsReceivable - data.GasAccountsReceived).ToString)
-
-                    '存檔
-                    .SaveExcel($"月對帳單_{data.CusCode}_{month:yyyyMM}")
-                End With
+                If data.Delivery Is Nothing Then
+                    '取得範本檔
+                    Dim filePath = Path.Combine(Application.StartupPath, "Report", "月對帳單範本檔.xlsx")
+                    MonthlyStatementWithoutDelivery(filePath, data, month)
+                Else
+                    '取得範本檔
+                    Dim filePath = Path.Combine(Application.StartupPath, "Report", "月對帳單範本檔_廠運.xlsx")
+                    MonthlyStatementWithDelivery(filePath, data, month)
+                End If
             End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
+    End Sub
+
+    Private Sub MonthlyStatementWithoutDelivery(filePath As String, data As MonthlyStatement, month As Date)
+        '套版
+        Using xml As New CloseXML_Excel(filePath)
+            With xml
+                .SelectWorksheet("Sheet1")
+
+                '標題
+                .WriteToCell("A1", $" {month.Year}年{month.Month}月對帳單:")
+                .WriteToCell("B1", data.CusName)
+                .WriteToCell("D1", data.CusCode)
+
+                '家用瓦斯(變動前)
+                .WriteToCell("B3", data.ToGo.GasNormalQuantity_First.ToString)
+                .WriteToCell("C3", data.ToGo.GasNormalUnitPrice_First.ToString)
+
+                Dim gasAmount_1 = CInt(data.ToGo.GasNormalQuantity_First * data.ToGo.GasNormalUnitPrice_First)
+                .WriteToCell("D3", gasAmount_1.ToString)
+
+                '工業氣(變動前)
+                .WriteToCell("B4", data.ToGo.GasCQuantity_First.ToString)
+                .WriteToCell("C4", data.ToGo.GasCUnitPrice_First.ToString)
+
+                Dim gasCAmount_1 = CInt(data.ToGo.GasCQuantity_First * data.ToGo.GasCUnitPrice_First)
+                .WriteToCell("D4", gasCAmount_1.ToString())
+
+                '家用瓦斯(變動後)
+                .WriteToCell("B5", data.ToGo.GasNormalQuantity.ToString)
+                .WriteToCell("C5", data.ToGo.GasNormalUnitPrice.ToString)
+
+                Dim gasAmount = CInt(data.ToGo.GasNormalQuantity * data.ToGo.GasNormalUnitPrice)
+                .WriteToCell("D5", gasAmount.ToString)
+
+                '工業氣(變動後)
+                .WriteToCell("B6", data.ToGo.GasCQuantity.ToString)
+                .WriteToCell("C6", data.ToGo.GasCUnitPrice.ToString)
+
+                Dim gasCAmount = CInt(data.ToGo.GasCQuantity * data.ToGo.GasCUnitPrice)
+                .WriteToCell("D6", gasCAmount.ToString)
+
+                '保險
+                Dim totalQty = data.ToGo.GasNormalQuantity_First + data.ToGo.GasCQuantity_First + data.ToGo.GasNormalQuantity + data.ToGo.GasCQuantity
+                .WriteToCell("B7", totalQty.ToString)
+                .WriteToCell("C7", data.InsuranceUnitPrice.ToString)
+
+                Dim insuranceAmount = CInt(totalQty * data.InsuranceUnitPrice)
+                .WriteToCell("D7", insuranceAmount.ToString)
+
+                ' 本月應收氣款
+                Dim gasAccountsRecievable = gasAmount_1 + gasCAmount_1 + gasAmount + gasCAmount
+                If Not data.IsInsurance Then gasAccountsRecievable += insuranceAmount
+                .WriteToCell("B8", gasAccountsRecievable.ToString)
+
+                ' 本月已收氣款
+                .WriteToCell("B9", data.GasAccountsReceived.ToString)
+                ' 新桶
+                .WriteToCell("B10", data.NewBerralAccountsReceivable.ToString)
+                ' 報廢桶
+                .WriteToCell("B11", data.ScrapBarrel.ToString)
+                ' 本月欠款
+                .WriteToCell("B12", (gasAccountsRecievable + data.NewBerralAccountsReceivable - data.GasAccountsReceived).ToString)
+
+                '存檔
+                .SaveExcel($"月對帳單_{data.CusCode}_{month:yyyyMM}")
+            End With
+        End Using
+    End Sub
+
+    Private Sub MonthlyStatementWithDelivery(filePath As String, data As MonthlyStatement, month As Date)
+        '套版
+        Using xml As New CloseXML_Excel(filePath)
+            With xml
+                .SelectWorksheet("Sheet1")
+
+                '標題
+                .WriteToCell("A1", $" {month.Year}年{month.Month}月對帳單:")
+                .WriteToCell("B1", data.CusName)
+                .WriteToCell("E1", data.CusCode)
+
+                '家用瓦斯-廠運(變動前)
+                .WriteToCell("C3", data.Delivery.GasNormalQuantity_First.ToString)
+                .WriteToCell("D3", data.Delivery.GasNormalUnitPrice_First.ToString)
+
+                Dim gasAmount_del_1 = CInt(data.Delivery.GasNormalQuantity_First * data.Delivery.GasNormalUnitPrice_First)
+                .WriteToCell("E3", gasAmount_del_1.ToString)
+
+                '家用瓦斯-自運(變動前)
+                .WriteToCell("C4", data.ToGo.GasNormalQuantity_First.ToString)
+                .WriteToCell("D4", data.ToGo.GasNormalUnitPrice_First.ToString)
+
+                Dim gasAmount_1 = CInt(data.ToGo.GasNormalQuantity_First * data.ToGo.GasNormalUnitPrice_First)
+                .WriteToCell("E4", gasAmount_1.ToString)
+
+                '工業氣-廠運(變動前)
+                .WriteToCell("C5", data.Delivery.GasCQuantity_First.ToString)
+                .WriteToCell("D5", data.Delivery.GasCUnitPrice_First.ToString)
+
+                Dim gasCAmount_del_1 = CInt(data.Delivery.GasCQuantity_First * data.Delivery.GasCUnitPrice_First)
+                .WriteToCell("E5", gasCAmount_del_1.ToString())
+
+                '工業氣-自運(變動前)
+                .WriteToCell("C6", data.ToGo.GasCQuantity_First.ToString)
+                .WriteToCell("D6", data.ToGo.GasCUnitPrice_First.ToString)
+
+                Dim gasCAmount_1 = CInt(data.ToGo.GasCQuantity_First * data.ToGo.GasCUnitPrice_First)
+                .WriteToCell("E6", gasCAmount_1.ToString())
+
+                '家用瓦斯-廠運(變動後)
+                .WriteToCell("C7", data.Delivery.GasNormalQuantity.ToString)
+                .WriteToCell("D7", data.Delivery.GasNormalUnitPrice.ToString)
+
+                Dim gasAmount_del = CInt(data.Delivery.GasNormalQuantity * data.Delivery.GasNormalUnitPrice)
+                .WriteToCell("E7", gasAmount_del.ToString)
+
+                '家用瓦斯-自運(變動後)
+                .WriteToCell("C8", data.ToGo.GasNormalQuantity.ToString)
+                .WriteToCell("D8", data.ToGo.GasNormalUnitPrice.ToString)
+
+                Dim gasAmount = CInt(data.ToGo.GasNormalQuantity * data.ToGo.GasNormalUnitPrice)
+                .WriteToCell("E8", gasAmount.ToString)
+
+                '工業氣-廠運(變動後)
+                .WriteToCell("C9", data.Delivery.GasCQuantity.ToString)
+                .WriteToCell("D9", data.Delivery.GasCUnitPrice.ToString)
+
+                Dim gasCAmount_del = CInt(data.Delivery.GasCQuantity * data.Delivery.GasCUnitPrice)
+                .WriteToCell("E9", gasCAmount_del.ToString)
+
+                '工業氣-自運(變動後)
+                .WriteToCell("C10", data.ToGo.GasCQuantity.ToString)
+                .WriteToCell("D10", data.ToGo.GasCUnitPrice.ToString)
+
+                Dim gasCAmount = CInt(data.ToGo.GasCQuantity * data.ToGo.GasCUnitPrice)
+                .WriteToCell("E10", gasCAmount.ToString)
+
+                '保險
+                Dim totalQty = data.ToGo.GasNormalQuantity_First + data.ToGo.GasCQuantity_First + data.ToGo.GasNormalQuantity + data.ToGo.GasCQuantity
+                .WriteToCell("B11", totalQty.ToString)
+                .WriteToCell("D11", data.InsuranceUnitPrice.ToString)
+
+                Dim insuranceAmount = CInt(totalQty * data.InsuranceUnitPrice)
+                .WriteToCell("E11", insuranceAmount.ToString)
+
+                ' 本月應收氣款
+                Dim gasAccountsRecievable = gasAmount_del + gasAmount_1 + gasCAmount_del_1 + gasCAmount_1 + gasAmount_del + gasAmount + gasCAmount_del + gasCAmount
+                If Not data.IsInsurance Then gasAccountsRecievable += insuranceAmount
+                .WriteToCell("B12", gasAccountsRecievable.ToString)
+
+                ' 本月已收氣款
+                .WriteToCell("B13", data.GasAccountsReceived.ToString)
+                ' 新桶
+                .WriteToCell("B14", data.NewBerralAccountsReceivable.ToString)
+                ' 報廢桶
+                .WriteToCell("B15", data.ScrapBarrel.ToString)
+                ' 本月欠款
+                .WriteToCell("B16", (gasAccountsRecievable + data.NewBerralAccountsReceivable - data.GasAccountsReceived).ToString)
+
+                '存檔
+                .SaveExcel($"月對帳單_{data.CusCode}_{month:yyyyMM}")
+            End With
+        End Using
     End Sub
 
     ''' <summary>

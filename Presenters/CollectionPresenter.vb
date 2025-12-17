@@ -67,8 +67,13 @@
             If input.col_Type = "應收票據" Then
                 chequeInput = _view.GetChequeInput
                 Validate(chequeInput)
-            ElseIf input.col_Type = "銀行存款" AndAlso input.subject.s_name = "應收票據" Then
-                chequeNo = _view.GetChequeNumber()
+            ElseIf input.col_Type = "銀行存款" Then
+                If input.col_s_Id.HasValue Then
+                    Using uow As New UnitOfWork
+                        Dim subject = uow.SubjectRepository.GetByIdAsync(input.col_s_Id).Result
+                        If subject.s_name = "應收票據" Then chequeNo = _view.GetChequeNumber()
+                    End Using
+                End If
             End If
 
             Await _collectionSer.AddAsync(input, chequeInput, chequeNo)

@@ -1,4 +1,5 @@
 ﻿Imports System.Data.Entity
+Imports System.Runtime.InteropServices
 Imports GasAccounting
 Imports Moq
 
@@ -363,6 +364,79 @@ Public Class TestReportRep
         For Each item In result.List
             Console.WriteLine($"日期: {item.日期}, 摘要: {item.摘要}, 借貸: {item.借方}/{item.貸方}, 餘額: {item.餘額}")
         Next
+    End Sub
+
+    <TestMethod("月對帳單-資料正確性")>
+    Public Sub GetMonthlyStatement_DataCorrect()
+        ' Arrange
+        Dim testDate = New Date(2025, 12, 17)
+        Dim testCusCode = "C001"
+
+        Dim cus1 As New customer With {
+            .cus_id = 1,
+            .cus_code = "C001",
+            .cus_name = "測試客戶一",
+            .cus_InsurancePrice = 1
+        }
+
+        Dim orders = New List(Of order) From {
+             New order With {
+                .o_date = New Date(2025, 12, 1),
+                .o_gas_total = 100,
+                .o_UnitPrice = 10,
+                .o_gas_c_total = 200,
+                .o_UnitPriceC = 20,
+                .o_BarrelPrice = 10,
+                .o_delivery_type = "自運",
+                .customer = cus1
+             },
+            New order With {
+                .o_date = New Date(2025, 12, 1),
+                .o_gas_total = 100,
+                .o_UnitPrice = 10,
+                .o_gas_c_total = 200,
+                .o_UnitPriceC = 20,
+                .o_BarrelPrice = 10,
+                .o_delivery_type = "廠運",
+                .customer = cus1
+             }
+        }
+
+        Dim collections = New List(Of collection) From {
+            New collection With { ' 當月帳款
+                .col_AccountMonth = New Date(2025, 12, 1),
+                .col_cus_Id = 1,
+                .col_Amount = 100
+            },
+            New collection With { ' 非當月帳款
+                .col_AccountMonth = New Date(2025, 11, 1),
+                .col_cus_Id = 1,
+                .col_Amount = 100
+            }
+        }
+
+        Dim scrapBarrels = New List(Of scrap_barrel)
+        Dim scrapBarrelDetails = New List(Of scrap_barrel_detail)
+
+        Dim mockOrders = CreateMockDbSet(orders)
+        Dim mockCollections = CreateMockDbSet(collections)
+        Dim mockSBs = CreateMockDbSet(scrapBarrels)
+        Dim mockSBDs = CreateMockDbSet(scrapBarrelDetails)
+
+        SetupAsNoTracking(mockOrders)
+        SetupAsNoTracking(mockCollections)
+
+        _mockContext.Setup(Function(x) x.collections).Returns(mockCollections.Object)
+        _mockContext.Setup(Function(x) x.orders).Returns(mockOrders.Object)
+        _mockContext.Setup(Function(x) x.scrap_barrel).Returns(mockSBs.Object)
+        _mockContext.Setup(Function(x) x.scrap_barrel_detail).Returns(mockSBDs.Object)
+
+        ' Act
+        Dim result = _reportRep.GetMonthlyStatement(testCusCode, testDate)
+
+        ' Assert
+        ' 期待結果為 100，因為只應包含當月帳款。若包含非當月帳款，總額會變成 200。
+        Assert.AreEqual(100, result.GasAccountsReceived, "應只包含指定帳款月份的收款")
     End Sub
 
     <TestCleanup()>
