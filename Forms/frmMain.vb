@@ -486,19 +486,20 @@ Public Class frmMain
 
     '基本資料-科目管理-取消
     Private Sub btnCancel_subjects_Click(sender As Object, e As EventArgs) Handles btnCancel_subjects.Click
-        SetButtonState_old(sender, True)
+        SetButtonState(tpSubjects, False)
         _subjects.LoadList()
     End Sub
 
     '基本資料-科目管理-子科目-新增
     Private Sub btnAdd_subjects_Click(sender As Object, e As EventArgs) Handles btnAdd_subjects.Click
         _subjects.Add()
+        SetButtonState(tpSubjects, False)
     End Sub
 
     '基本資料-科目管理-dgv
     Private Sub dgvSubject_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSubject.SelectionChanged, dgvSubject.CellMouseClick
         If Not sender.focused Then Return
-        SetButtonState_old(sender, False)
+        SetButtonState(tpSubjects, True)
         Dim id As Integer = dgvSubject.SelectedRows(0).Cells("編號").Value
         _subjects.LoadDetail(id)
     End Sub
@@ -506,12 +507,16 @@ Public Class frmMain
     '基本資料-科目管理-修改
     Private Sub btnEdit_subjects_Click(sender As Object, e As EventArgs) Handles btnEdit_subjects.Click
         _subjects.Update()
+        SetButtonState(tpSubjects, False)
     End Sub
 
     '基本資料-科目管理-刪除
     Private Sub btnDelete_subjects_Click(sender As Object, e As EventArgs) Handles btnDelete_subjects.Click
         Dim id As Integer = txtId_subjects.Text
-        If MsgBox("確定要刪除?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then _subjects.Delete(id)
+        If MsgBox("確定要刪除?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            _subjects.Delete(id)
+            SetButtonState(tpSubjects, False)
+        End If
     End Sub
 
     Public Sub DisplayList(data As List(Of GasBarrelVM)) Implements IBaseView(Of gas_barrel, GasBarrelVM).DisplayList

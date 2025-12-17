@@ -290,11 +290,29 @@ Public Class ReportRep
                 dailyReceivable.自運丙氣金額 = gasCTotal_pickUp * dailyReceivable.自運丙氣單價
                 dailyReceivable.自運總提氣 = dailyReceivable.自運普氣 + dailyReceivable.自運丙氣
 
+                ' 收錢
+                Dim collectionsToday = _context.collections.Where(Function(x) x.col_Date >= currentDate And
+                                                                              x.col_Date < currentDateEnd And
+                                                                              x.col_cus_Id = cus.cus_id And
+                                                                              x.subject.s_name = "氣款收入").
+                                                            GroupBy(Function(x) x.col_Type).ToList
+
+                For Each group In collectionsToday
+                    Select Case group.Key
+                        Case "現金"
+                            dailyReceivable.現金 = group.Sum(Function(x) x.col_Amount)
+                        Case "銀行存款"
+                            dailyReceivable.銀行 = group.Sum(Function(x) x.col_Amount)
+                        Case "應收票據"
+                            dailyReceivable.票據 = group.Sum(Function(x) x.col_Amount)
+                    End Select
+                Next
+                ' 總計
                 dailyReceivable.總提氣 = dailyReceivable.廠運總提氣 + dailyReceivable.自運總提氣
                 dailyReceivable.總額 = dailyReceivable.廠運丙氣金額 + dailyReceivable.廠運普氣金額 + dailyReceivable.自運丙氣金額 + dailyReceivable.自運普氣金額
-                dailyReceivable.掛帳 = dailyReceivable.總額
+                dailyReceivable.掛帳 = dailyReceivable.總額 - dailyReceivable.現金 - dailyReceivable.銀行 - dailyReceivable.票據
 
-                grandTotal += dailyReceivable.總額
+                grandTotal += dailyReceivable.掛帳
                 dailyReceivable.累計 = grandTotal
                 result.Add(dailyReceivable)
 
@@ -461,7 +479,7 @@ Public Class ReportRep
                                                 .Memo = x.p_Memo,
                                                 .Amount = x.p_Amount,
                                                 .IsIncome = False,
-                                                .Target = x.company.comp_name
+                                                .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
                                              })
 
             ' 銀行存入現金: 獨立撈取現金類型且科目為銀行存款
@@ -477,13 +495,14 @@ Public Class ReportRep
                                                       .Memo = x.p_Memo,
                                                       .Amount = x.p_Amount,
                                                       .IsIncome = True,
-                                                      .Target = x.company.comp_name
+                                                      .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
                                                  })
 
             '合併並排列數據
-            Dim allTransactions = collections.Union(cashToBankCollections).Union(payments).Union(cashToBankPayments).
+            Dim allTransactions = collections.Concat(cashToBankCollections).Concat(payments).Concat(cashToBankPayments).
                                               OrderBy(Function(x) x.Date).
-                                              ThenBy(Function(x) x.IsIncome)
+                                              ThenBy(Function(x) x.IsIncome).
+                                              ToList
 
             '取得上期餘額
             '1. 先取得上期月結餘額

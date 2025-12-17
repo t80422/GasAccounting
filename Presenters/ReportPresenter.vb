@@ -317,9 +317,10 @@ Public Class ReportPresenter
 
                         .WriteToCell(rowIndex, 21, datas(i).總額.ToString)
                         .WriteToCell(rowIndex, 22, datas(i).現金.ToString)
-                        .WriteToCell(rowIndex, 23, datas(i).票據.ToString)
-                        .WriteToCell(rowIndex, 24, datas(i).掛帳.ToString)
-                        .WriteToCell(rowIndex, 25, datas(i).累計.ToString)
+                        .WriteToCell(rowIndex, 23, datas(i).銀行.ToString)
+                        .WriteToCell(rowIndex, 24, datas(i).票據.ToString)
+                        .WriteToCell(rowIndex, 25, datas(i).掛帳.ToString)
+                        .WriteToCell(rowIndex, 26, datas(i).累計.ToString)
                     Next
 
                     rowIndex += 1
@@ -330,28 +331,25 @@ Public Class ReportPresenter
                     .WriteToCell("C", rowIndex, deliveryGas)
                     .WriteToCell("D", rowIndex, datas.Sum(Function(x) x.廠運普氣).ToString)
                     .WriteToCell("E", rowIndex, datas.Sum(Function(x) x.廠運普氣退氣).ToString)
-                    .WriteToCell("F", rowIndex, datas.Average(Function(x) x.廠運普氣單價).ToString("N2"))
                     .WriteToCell("G", rowIndex, datas.Sum(Function(x) x.廠運普氣金額).ToString)
                     .WriteToCell("H", rowIndex, datas.Sum(Function(x) x.廠運丙氣).ToString)
                     .WriteToCell("I", rowIndex, datas.Sum(Function(x) x.廠運丙氣退氣).ToString)
-                    .WriteToCell("J", rowIndex, datas.Average(Function(x) x.廠運丙氣單價).ToString("N2"))
                     .WriteToCell("K", rowIndex, datas.Sum(Function(x) x.廠運丙氣金額).ToString)
 
                     .WriteToCell("L", rowIndex, datas.Sum(Function(x) x.自運總提氣).ToString)
                     .WriteToCell("M", rowIndex, datas.Sum(Function(x) x.自運普氣).ToString)
                     .WriteToCell("N", rowIndex, datas.Sum(Function(x) x.自運普氣退氣).ToString)
-                    .WriteToCell("O", rowIndex, datas.Average(Function(x) x.自運普氣單價).ToString("N2"))
                     .WriteToCell("P", rowIndex, datas.Sum(Function(x) x.自運普氣金額).ToString)
                     .WriteToCell("Q", rowIndex, datas.Sum(Function(x) x.自運丙氣).ToString)
                     .WriteToCell("R", rowIndex, datas.Sum(Function(x) x.自運丙氣退氣).ToString)
-                    .WriteToCell("S", rowIndex, datas.Average(Function(x) x.自運丙氣單價).ToString("N2"))
                     .WriteToCell("T", rowIndex, datas.Sum(Function(x) x.自運丙氣金額).ToString)
 
                     .WriteToCell("U", rowIndex, datas.Sum(Function(x) x.總額).ToString)
                     .WriteToCell("V", rowIndex, datas.Sum(Function(x) x.現金).ToString)
-                    .WriteToCell("W", rowIndex, datas.Sum(Function(x) x.票據).ToString)
-                    .WriteToCell("X", rowIndex, datas.Sum(Function(x) x.掛帳).ToString)
-                    .WriteToCell("Y", rowIndex, datas.Sum(Function(x) x.累計).ToString)
+                    .WriteToCell("W", rowIndex, datas.Sum(Function(x) x.銀行).ToString)
+                    .WriteToCell("X", rowIndex, datas.Sum(Function(x) x.票據).ToString)
+                    .WriteToCell("Y", rowIndex, datas.Sum(Function(x) x.掛帳).ToString)
+                    .WriteToCell("Z", rowIndex, datas.Sum(Function(x) x.累計).ToString)
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 25, XLBorderStyleValues.Medium, XLBorderStyleValues.Medium)
 
@@ -1175,7 +1173,7 @@ Public Class ReportPresenter
                 End With
             End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 

@@ -22,6 +22,7 @@
     Public Property 自運丙氣金額 As Integer
     Public Property 總額 As Integer
     Public Property 現金 As Integer
+    Public Property 銀行 As Integer
     Public Property 票據 As Integer
     Public Property 掛帳 As Integer
     Public Property 累計 As Integer

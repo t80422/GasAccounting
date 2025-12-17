@@ -11,6 +11,7 @@ Public Class UnitOfWork
     Private _disposed As Boolean = False
 
     ' Repository 延遲初始化
+    Private _closingEntryRepository As IClosingEntryRep
     Private _purchaseRepository As IPurchaseRep
     Private _companyRepository As ICompanyRep
     Private _manufacturerRepository As IManufacturerRep
@@ -219,6 +220,13 @@ Public Class UnitOfWork
         Get
             If _barrelMonthlyBalanceRep Is Nothing Then _barrelMonthlyBalanceRep = New BarrelMonthlyBalancesRep(_context)
             Return _barrelMonthlyBalanceRep
+        End Get
+    End Property
+
+    Public ReadOnly Property ClosingEntryRepository As IClosingEntryRep Implements IUnitOfWork.ClosingEntryRepository
+        Get
+            If _closingEntryRepository Is Nothing Then _closingEntryRepository = New ClosingEntryRep(_context)
+            Return _closingEntryRepository
         End Get
     End Property
 

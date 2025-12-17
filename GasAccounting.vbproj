@@ -484,6 +484,12 @@
     <Compile Include="Forms\UserControl\GasCheckoutUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Forms\UserControl\ucClosingEntry.Designer.vb">
+      <DependentUpon>ucClosingEntry.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl\ucClosingEntry.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\UserControl\ucPurchase.Designer.vb">
       <DependentUpon>ucPurchase.vb</DependentUpon>
     </Compile>
@@ -554,12 +560,6 @@
       <DependentUpon>SurplusGasUserControl.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\UserControl\SurplusGasUserControl.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\UserControl\ucClosingEntry.Designer.vb">
-      <DependentUpon>ucClosingEntry.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\UserControl\ucClosingEntry.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Models\accounting_entry.vb">
@@ -1032,6 +1032,9 @@
     <EmbeddedResource Include="Forms\UserControl\GasCheckoutUserControl.resx">
       <DependentUpon>GasCheckoutUserControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl\ucClosingEntry.resx">
+      <DependentUpon>ucClosingEntry.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\ucPurchase.resx">
       <DependentUpon>ucPurchase.vb</DependentUpon>
     </EmbeddedResource>
@@ -1070,9 +1073,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControl\SurplusGasUserControl.resx">
       <DependentUpon>SurplusGasUserControl.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControl\ucClosingEntry.resx">
-      <DependentUpon>ucClosingEntry.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

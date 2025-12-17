@@ -32,13 +32,13 @@
             Await _subjectRep.SaveChangesAsync
             _view.ClearInput()
             LoadList()
-            MsgBox("新增成功")
+            MessageBox.Show("新增成功")
         Catch ex As Exception
             Dim innerEx = ex
             While innerEx.InnerException IsNot Nothing
                 innerEx = innerEx.InnerException
             End While
-            MsgBox(innerEx)
+            MessageBox.Show(innerEx.ToString)
         End Try
     End Sub
 

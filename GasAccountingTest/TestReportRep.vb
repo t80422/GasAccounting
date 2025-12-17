@@ -257,6 +257,114 @@ Public Class TestReportRep
         Assert.AreEqual(1350, payment1.餘額, "支出應扣減餘額")
     End Sub
 
+    <TestMethod("銀行帳-自訂測試資料")>
+    Public Sub GetBankAccount_CustomData()
+        ' Arrange
+        Dim targetMonth = New Date(2024, 5, 1) ' 請設定測試月份
+        Dim bankId = 1 ' 請設定銀行 ID
+
+        ' 1. 準備科目與客戶/廠商資料 (視需要自行修改)
+        Dim bankSubject = New subject With {.s_name = "銀行存款"}
+        Dim incomeSubject = New subject With {.s_name = "銷貨收入"}
+        Dim paymentSubject1 = New subject With {.s_name = "進貨"}
+        Dim paymentSubject2 = New subject With {.s_name = "郵電費"}
+        Dim customer1 = New customer With {.cus_id = 1, .cus_code = "C001", .cus_name = "測試客戶"}
+        Dim company1 = New company With {.comp_id = 1, .comp_name = "台灣中油股份有限公司"}
+
+
+        ' 2. 準備上期銀行月結餘額 (若無則維持 List 為空)
+        Dim bankMonthlyBalances = New List(Of bank_monthly_balances) From {
+             New bank_monthly_balances With {
+                 .bm_Id = 1,
+                 .bm_bank_Id = bankId,
+                 .bm_Month = New Date(2024, 4, 1),
+                 .bm_ClosingBalance = 10000
+             }
+        }
+
+        ' 3. 準備收款資料 (Collections)
+        Dim collections = New List(Of collection) From {
+             New collection With {
+                 .col_Id = 1,
+                 .col_Date = New Date(2024, 5, 5),
+                 .col_Type = "銀行存款",
+                 .col_bank_Id = bankId,
+                 .col_Amount = 5000,
+                 .col_Memo = "收到貨款",
+                 .subject = incomeSubject,
+                 .customer = customer1
+             }
+        }
+
+        ' 4. 準備付款資料 (Payments)
+        Dim payments = New List(Of payment) From {
+             New payment With {
+                 .p_Id = 1,
+                 .p_Date = New Date(2024, 5, 10),
+                 .p_Type = "銀行存款",
+                 .p_bank_Id = bankId,
+                 .p_Amount = 1095000,
+                 .subject = paymentSubject1,
+                 .company = company1,
+                 .p_Memo = ""
+             },
+             New payment With {
+                 .p_Id = 1,
+                 .p_Date = New Date(2024, 5, 10),
+                 .p_Type = "銀行存款",
+                 .p_bank_Id = bankId,
+                 .p_Amount = 456250,
+                 .subject = paymentSubject1,
+                 .company = company1,
+                 .p_Memo = ""
+             },
+             New payment With {
+                 .p_Id = 1,
+                 .p_Date = New Date(2024, 5, 10),
+                 .p_Type = "銀行存款",
+                 .p_bank_Id = bankId,
+                 .p_Amount = 30,
+                 .subject = paymentSubject2,
+                 .company = company1,
+                 .p_Memo = ""
+             },
+             New payment With {
+                 .p_Id = 1,
+                 .p_Date = New Date(2024, 5, 10),
+                 .p_Type = "銀行存款",
+                 .p_bank_Id = bankId,
+                 .p_Amount = 30,
+                 .subject = paymentSubject2,
+                 .company = company1,
+                 .p_Memo = ""
+             }
+        }
+
+        ' 建立 Mock (不用修改)
+        Dim mockCollections = CreateMockDbSet(collections)
+        Dim mockPayments = CreateMockDbSet(payments)
+        Dim mockBankMonthlyBalances = CreateMockDbSet(bankMonthlyBalances)
+
+        SetupAsNoTracking(mockCollections)
+        SetupAsNoTracking(mockPayments)
+        SetupAsNoTracking(mockBankMonthlyBalances)
+
+        _mockContext.Setup(Function(c) c.collections).Returns(mockCollections.Object)
+        _mockContext.Setup(Function(c) c.payments).Returns(mockPayments.Object)
+        _mockContext.Setup(Function(c) c.bank_monthly_balances).Returns(mockBankMonthlyBalances.Object)
+
+        ' Act
+        Dim result = _reportRep.GetBankAccount(targetMonth, bankId)
+
+        ' Assert
+        ' 您可以在此加入斷言來驗證結果，或使用中斷點查看 result
+        Assert.IsNotNull(result)
+        Console.WriteLine($"日期: {result.日期}")
+        For Each item In result.List
+            Console.WriteLine($"日期: {item.日期}, 摘要: {item.摘要}, 借貸: {item.借方}/{item.貸方}, 餘額: {item.餘額}")
+        Next
+    End Sub
+
     <TestCleanup()>
     Public Sub Cleanup()
         _mockContext = Nothing

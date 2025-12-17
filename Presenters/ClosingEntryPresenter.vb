@@ -95,10 +95,12 @@ Public Class ClosingEntryPresenter
 
     Public Sub Print(selectDate As Date)
         Try
-            _reportSer.GeneratorTransferSubpoena(selectDate, _ceRep.GetTarnsferSubpoenaData(selectDate), True)
+            Using uow As New UnitOfWork()
+                Dim datas = uow.ClosingEntryRepository.GetTarnsferSubpoenaData(selectDate)
+                _reportSer.GeneratorTransferSubpoena(selectDate, datas, True)
+            End Using
         Catch ex As Exception
-            MessageBox.Show(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
