@@ -45,6 +45,9 @@ Public Class ucOrder
         Else
             SetReturnGasReadOnly(False)
         End If
+
+        ' 日期刷新為當下
+        dtpOrder.Value = Now
     End Sub
 
     Public Sub ShowList(data As List(Of OrderListVM)) Implements IFormView(Of order, OrderListVM).ShowList
