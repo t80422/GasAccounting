@@ -144,4 +144,18 @@ Public Class PaymentRep
             Throw
         End Try
     End Function
+
+    Public Async Function GetCashToBankTransfersByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.GetCashToBankTransfersByDateRangeAsync
+        Try
+            Return Await _dbSet.AsNoTracking.
+                Where(Function(x) x.p_Date >= startDate AndAlso
+                                  x.p_Date < endDate AndAlso
+                                  x.p_Type = "現金" AndAlso
+                                  x.p_bank_Id = bankId AndAlso
+                                  x.subject.s_name = "銀行存款").
+                ToListAsync()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

@@ -15,4 +15,5 @@
     Function GetCashSubpoenaData(selectDate As Date) As List(Of CashSubpoenaDTO)
     Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO)
     Function GetBankPaymentsByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment))
+    Function GetCashToBankTransfersByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment))
 End Interface

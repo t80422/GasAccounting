@@ -751,14 +751,15 @@ Public Class OrderPresenter
 
     Private Sub Add()
         Using transaction = _ordRep.BeginTransaction
+            Dim sw As New Stopwatch
+            sw.Start()
+
             Try
                 RefreshCurrentEntities()
 
                 ' 記錄交易前的客戶庫存
                 Dim cusCode = currentCustomer?.cus_code
                 Dim orderType = _view.GetOrderType
-
-                _logger.LogInfo($"[Add] 交易開始 | 客戶[{cusCode}] | 訂單類型:{orderType} | 初始庫存:{FormatInitStock()}")
 
                 Dim orderInput As New order
                 _view.GetInput(orderInput)
@@ -767,8 +768,6 @@ Public Class OrderPresenter
 
                 ' === 檢查庫存是否被其他使用者改變 ===
                 If Not IsCustomerStockMatchInit() Then
-                    _logger.LogInfo($"[Add] 偵測到庫存已變更 | 客戶[{cusCode}] | 重新計算庫存")
-
                     ' 重新載入客戶資料
                     RefreshCurrentEntities()
 
@@ -792,16 +791,8 @@ Public Class OrderPresenter
                     Throw New Exception("庫存已被其他使用者更新，請重新確認數量後再儲存")
                 End If
 
-                ' 記錄輸入的瓦斯桶數量
-                Dim inputQty = FormatOrderBarrelQty(orderInput, orderType = "進場單")
-                _logger.LogInfo($"[Add] 輸入數量 | 客戶[{cusCode}] | {inputQty}")
-
                 ' === 計算並更新客戶庫存（用差值法）===
                 UpdateCustomerStockByDiff(orderInput)
-
-                ' 記錄交易後的客戶庫存到日誌
-                Dim afterStock = FormatBarrelStock(currentCustomer)
-                _logger.LogInfo($"[Add] 交易後結存 | 客戶[{cusCode}] | {afterStock}")
 
                 ' 更新車輛寄桶庫存
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
@@ -840,10 +831,9 @@ Public Class OrderPresenter
 
                 transaction.Commit()
 
-                _logger.LogInfo($"[Add] 交易成功 | 訂單ID:{order.o_id} | 客戶[{cusCode}]")
-
                 Initialize()
                 MessageBox.Show("新增成功")
+                _logger.LogInfo($"新增 {orderInput.o_id}")
                 LoadDetail(Nothing, order.o_id)
             Catch ex As Exception
                 transaction.Rollback()
@@ -854,11 +844,17 @@ Public Class OrderPresenter
                 End While
 
                 MessageBox.Show(innerEx.Message)
+            Finally
+                sw.Stop()
+                _logger.LogInfo($"Add 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
             End Try
         End Using
     End Sub
 
     Private Sub LoadDetail(sender As Object, id As Integer)
+        Dim sw As New Stopwatch
+        sw.Start()
+
         Try
             currentOrder = _ordRep.GetByIdAsync(id).Result
 
@@ -894,6 +890,9 @@ Public Class OrderPresenter
             If currentCar IsNot Nothing Then LoadCarBarrelStock(currentCar.c_id)
         Catch ex As Exception
             MessageBox.Show(ex.Message)
+        Finally
+            sw.Stop()
+            _logger.LogInfo($"LoadDetail 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
         End Try
     End Sub
 
@@ -1049,6 +1048,9 @@ Public Class OrderPresenter
         Dim templatePath As String = ""
         Dim pdfPath As String = ""
 
+        Dim sw As New Stopwatch
+        sw.Start()
+
         Try
             Dim data = _ordRep.GetOrderVoucherData(orderId)
             templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
@@ -1092,6 +1094,9 @@ Public Class OrderPresenter
                              $"堆疊追蹤：{vbCrLf}{ex.StackTrace}"
 
             MessageBox.Show(errorDetails, "PDF轉換錯誤診斷", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            sw.Stop()
+            _logger.LogInfo($"Print 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
         End Try
     End Sub
 
@@ -1559,7 +1564,7 @@ Public Class OrderPresenter
             Dim d As Date = tu.Item1
             Dim isMonth As Boolean = tu.Item2
 
-            Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
+            Using uow As New UnitOfWork
                 '蒐集資料
                 Dim datas = uow.ReportRepository.CustomersGetGasList(d, isMonth)
 

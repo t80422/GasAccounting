@@ -72,12 +72,15 @@ Public Class TestReportRep
 
         Dim customers = New List(Of customer) From {testCustomer}
         Dim orders = New List(Of order)() ' 空訂單
+        Dim collections As New List(Of collection)
 
         Dim mockCustomers = CreateMockDbSet(customers)
         Dim mockOrders = CreateMockDbSet(orders)
+        Dim mockCollections = CreateMockDbSet(collections)
 
         _mockContext.Setup(Function(c) c.customers).Returns(mockCustomers.Object)
         _mockContext.Setup(Function(c) c.orders).Returns(mockOrders.Object)
+        _mockContext.Setup(Function(x) x.collections).Returns(mockCollections.Object)
 
         ' Act
         Dim result = _reportRep.MonthlyCustomerReceivable(testDate, cusCode)
@@ -124,12 +127,15 @@ Public Class TestReportRep
                 .customer = testCustomer
             }
         }
+        Dim collections As New List(Of collection)
 
         Dim mockCustomers = CreateMockDbSet(customers)
         Dim mockOrders = CreateMockDbSet(orders)
+        Dim mockCollections = CreateMockDbSet(collections)
 
         _mockContext.Setup(Function(c) c.customers).Returns(mockCustomers.Object)
         _mockContext.Setup(Function(c) c.orders).Returns(mockOrders.Object)
+        _mockContext.Setup(Function(x) x.collections).Returns(mockCollections.Object)
 
         ' Act
         Dim result = _reportRep.MonthlyCustomerReceivable(testDate, cusCode)
@@ -150,112 +156,6 @@ Public Class TestReportRep
         Assert.AreEqual(315, day10.廠運總提氣, "廠運總提氣 = 210 + 105")
         Assert.AreEqual(4800, day10.總額, "總額 = 3000 + 1800")
         Assert.AreEqual(4800, day10.掛帳, "掛帳應該等於總額")
-    End Sub
-
-    <TestMethod("銀行帳-包含現金轉入銀行")>
-    Public Sub GetBankAccount_ShouldIncludeCashToBank()
-        ' Arrange
-        Dim targetMonth = New Date(2024, 5, 1)
-        Dim bankId = 1
-
-        ' 科目與相關資料
-        Dim bankSubject = New subject With {.s_name = "銀行存款"}
-        Dim incomeSubject = New subject With {.s_name = "銷貨收入"}
-        Dim paymentSubject = New subject With {.s_name = "進貨支出"}
-        Dim customer1 = New customer With {.cus_id = 1, .cus_code = "C001", .cus_name = "客戶A"}
-        Dim company1 = New company With {.comp_id = 1, .comp_name = "廠商A"}
-
-        ' 上期月結餘額
-        Dim lastMonthlyBalance = New bank_monthly_balances With {
-            .bm_Id = 1,
-            .bm_bank_Id = bankId,
-            .bm_Month = New Date(2024, 4, 1),
-            .bm_ClosingBalance = 1000
-        }
-
-        ' 本期交易
-        Dim collections = New List(Of collection) From {
-            New collection With {
-                .col_Id = 1,
-                .col_Date = New Date(2024, 5, 5),
-                .col_Type = "銀行存款",
-                .col_bank_Id = bankId,
-                .col_Amount = 200,
-                .col_Memo = "銀行收入",
-                .subject = incomeSubject,
-                .customer = customer1
-            },
-            New collection With {' 現金轉入銀行：col_Type=現金，subject=銀行存款
-                .col_Id = 2,
-                .col_Date = New Date(2024, 5, 10),
-                .col_Type = "現金",
-                .col_bank_Id = bankId,
-                .col_Amount = 300,
-                .col_Memo = "現金轉存",
-                .subject = bankSubject,
-                .customer = customer1
-            }
-        }
-
-        Dim payments = New List(Of payment) From {
-            New payment With {
-                .p_Id = 1,
-                .p_Date = New Date(2024, 5, 15),
-                .p_Type = "銀行存款",
-                .p_bank_Id = bankId,
-                .p_Amount = 150,
-                .p_Memo = "銀行支出",
-                .subject = paymentSubject,
-                .company = company1
-            }
-        }
-
-        Dim bankMonthlyBalances = New List(Of bank_monthly_balances) From {lastMonthlyBalance}
-
-        ' Mock DbSet
-        Dim mockCollections = CreateMockDbSet(collections)
-        Dim mockPayments = CreateMockDbSet(payments)
-        Dim mockBankMonthlyBalances = CreateMockDbSet(bankMonthlyBalances)
-
-        SetupAsNoTracking(mockCollections)
-        SetupAsNoTracking(mockPayments)
-        SetupAsNoTracking(mockBankMonthlyBalances)
-
-        _mockContext.Setup(Function(c) c.collections).Returns(mockCollections.Object)
-        _mockContext.Setup(Function(c) c.payments).Returns(mockPayments.Object)
-        _mockContext.Setup(Function(c) c.bank_monthly_balances).Returns(mockBankMonthlyBalances.Object)
-
-        ' Act
-        Dim result = _reportRep.GetBankAccount(targetMonth, bankId)
-
-        ' Assert
-        Assert.IsNotNull(result)
-        Assert.AreEqual("2024年05月", result.日期)
-        Assert.IsNotNull(result.List)
-        Assert.AreEqual(4, result.List.Count, "上期結餘 + 2 收入 + 1 支出")
-
-        ' 逐筆檢查
-        Dim initial = result.List(0)
-        Assert.AreEqual("上期結餘", initial.摘要)
-        Assert.AreEqual(1000, initial.餘額)
-
-        Dim income1 = result.List(1)
-        Assert.AreEqual("銷貨收入", income1.科目)
-        Assert.AreEqual(200, income1.借方)
-        Assert.AreEqual(0, income1.貸方)
-        Assert.AreEqual(1200, income1.餘額)
-
-        Dim cashToBank = result.List(2)
-        Assert.AreEqual("現金", cashToBank.科目, "現金轉入銀行時科目應為 col_Type")
-        Assert.AreEqual(300, cashToBank.借方)
-        Assert.AreEqual(0, cashToBank.貸方)
-        Assert.AreEqual(1500, cashToBank.餘額, "應累加借方金額")
-
-        Dim payment1 = result.List(3)
-        Assert.AreEqual("進貨支出", payment1.科目)
-        Assert.AreEqual(0, payment1.借方)
-        Assert.AreEqual(150, payment1.貸方)
-        Assert.AreEqual(1350, payment1.餘額, "支出應扣減餘額")
     End Sub
 
     <TestMethod("銀行帳-自訂測試資料")>

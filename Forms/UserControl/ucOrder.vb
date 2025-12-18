@@ -328,6 +328,13 @@ Public Class ucOrder
 
         tp.Controls.OfType(Of TextBox).Where(Function(x) Not x.ReadOnly AndAlso Not x.Name.StartsWith("txtBarralUnitPrice_")).ToList.ForEach(Sub(txt) txt.Text = 0)
 
+        ' 切到進場單 總普氣、丙氣、保險金額要清空
+        If isIn Then
+            txtTotalGas.Clear()
+            txtTotalGas_c.Clear()
+            txtInsurance.Clear()
+        End If
+
         RaiseEvent OrderTypeChanged(sender, e)
 
         ' 設定退氣欄位狀態
