@@ -486,7 +486,7 @@ Public Class ReportPresenter
                     .WriteToCell(rowIndex, 5, totalCredit.ToString)
 
                     '存檔
-                    .SaveExcel($"銀行帳_{month:yyyy年MM月}")
+                    .SaveExcel($"{data.銀行名稱} 銀行帳_{month:yyyy年MM月}")
 
                 End With
             End Using

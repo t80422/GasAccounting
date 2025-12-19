@@ -437,6 +437,9 @@ Public Class ReportRep
         Try
             result.日期 = $"{month:yyyy年MM月}"
 
+            ' 取得銀行名稱
+            result.銀行名稱 = _context.banks.Find(bankId).bank_name
+
             '獲取收入數據
             Dim collections = _context.collections.AsNoTracking.
                                                    Where(Function(x) x.col_Date.Year = month.Year AndAlso

@@ -70,20 +70,6 @@ Public Class PaymentRep
         End Try
     End Function
 
-    Public Async Function GetByBankAndMonthAsync(bankId As Integer, month As Date) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.GetByBankAndMonthAsync
-        Try
-
-            Dim startMonth = New Date(month.Year, month.Month, 1)
-            Dim endMonth = startMonth.AddMonths(1)
-
-            Return Await _dbSet.AsNoTracking.
-                Where(Function(x) x.p_Date >= startMonth AndAlso x.p_Date < endMonth AndAlso x.p_bank_Id = bankId).
-                ToListAsync()
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
     Public Async Function GetBankPaymentsByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.GetBankPaymentsByDateRangeAsync
         Try
             Return Await _dbSet.AsNoTracking.
@@ -154,6 +140,14 @@ Public Class PaymentRep
                                   x.p_bank_Id = bankId AndAlso
                                   x.subject.s_name = "銀行存款").
                 ToListAsync()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetBankAccount(bankId As Integer) As IEnumerable(Of payment) Implements IPaymentRep.GetBankAccount
+        Try
+            Return _dbSet.Where(Function(x) x.p_bank_Id = bankId AndAlso (x.p_Type = "銀行存款" OrElse x.subject.s_name = "銀行存款"))
         Catch ex As Exception
             Throw
         End Try

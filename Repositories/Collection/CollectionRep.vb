@@ -50,15 +50,6 @@ Public Class CollectionRep
         End Try
     End Function
 
-    Public Async Function GetByBankAndMonthAsync(bankId As Integer, month As Date) As Task(Of IEnumerable(Of collection)) Implements ICollectionRep.GetByBankAndMonthAsync
-        Try
-            Return Await _dbSet.AsNoTracking.Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso x.col_AccountMonth.Month = month.Month AndAlso x.col_bank_Id = bankId).
-                                             ToListAsync
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
     Public Function GetCashSubpoenaData(day As Date) As List(Of CashSubpoenaDTO) Implements ICollectionRep.GetCashSubpoenaData
         Try
             Dim query = _dbSet.Where(Function(x) x.col_Date = day)
@@ -118,6 +109,14 @@ Public Class CollectionRep
                 }).ToList
 
             Return result
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetBankAccount(bankId As Integer) As IEnumerable(Of collection) Implements ICollectionRep.GetBankAccount
+        Try
+            Return _dbSet.Where(Function(x) x.col_bank_Id = bankId AndAlso (x.col_Type = "銀行存款" OrElse x.subject.s_name = "銀行存款"))
         Catch ex As Exception
             Throw
         End Try

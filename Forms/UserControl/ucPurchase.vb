@@ -136,7 +136,7 @@ Public Class ucPurchase
     Private Sub CalculateFreight() Handles txtWeight_pur.TextChanged, txtDeliUnitPrice.TextChanged
         Dim unitPrice As Single = If(String.IsNullOrEmpty(txtDeliUnitPrice.Text), 0, txtDeliUnitPrice.Text)
         Dim weight As Integer = If(String.IsNullOrEmpty(txtWeight_pur.Text), 0, txtWeight_pur.Text)
-        txtFreight.Text = unitPrice * weight
+        txtFreight.Text = Math.Round(unitPrice * weight)
     End Sub
 
     ''' <summary>

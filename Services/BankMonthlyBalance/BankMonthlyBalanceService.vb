@@ -144,22 +144,28 @@
             Dim allMonths As New HashSet(Of Date)
 
             ' 從 payment 取得月份
-            Dim allPayments = Await paymentRep.GetAllAsync()
-            Dim paymentMonths = allPayments.
-                Where(Function(p) p.p_bank_Id = bankId AndAlso p.p_Type = "銀行存款").
-                Select(Function(p) New Date(p.p_Date.Year, p.p_Date.Month, 1)).
-                Distinct()
+            'Dim allPayments = Await paymentRep.GetAllAsync()
+            'Dim paymentMonths = allPayments.
+            '    Where(Function(p) p.p_bank_Id = bankId AndAlso p.p_Type = "銀行存款").
+            '    Select(Function(p) New Date(p.p_Date.Year, p.p_Date.Month, 1)).
+            '    Distinct()
+            Dim paymentMonths = paymentRep.GetBankAccount(bankId).Select(Function(x) New Date(x.p_Date.Year, x.p_Date.Month, 1)).
+                                                                  Distinct.
+                                                                  ToList
 
             For Each m In paymentMonths
                 allMonths.Add(m)
             Next
 
             ' 從 collection 取得月份
-            Dim allCollections = Await collectionRep.GetAllAsync()
-            Dim collectionMonths = allCollections.
-                Where(Function(c) c.col_bank_Id = bankId AndAlso c.col_Type = "銀行存款").
-                Select(Function(c) New Date(c.col_AccountMonth.Year, c.col_AccountMonth.Month, 1)).
-                Distinct()
+            'Dim allCollections = Await collectionRep.GetAllAsync()
+            'Dim collectionMonths = allCollections.
+            '    Where(Function(c) c.col_bank_Id = bankId AndAlso c.col_Type = "銀行存款").
+            '    Select(Function(c) New Date(c.col_AccountMonth.Year, c.col_AccountMonth.Month, 1)).
+            '    Distinct()
+            Dim collectionMonths = collectionRep.GetBankAccount(bankId).Select(Function(c) New Date(c.col_Date.Year, c.col_Date.Month, 1)).
+                                                                        Distinct.
+                                                                        ToList
 
             For Each m In collectionMonths
                 allMonths.Add(m)

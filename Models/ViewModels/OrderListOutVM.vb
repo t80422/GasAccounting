@@ -1,6 +1,6 @@
 ﻿Public Class OrderListOutVM
     Public Property 編號 As Integer
-    Public Property 時間 As Date
+    Public Property 時間 As String
     Public Property 客戶名稱 As String
     Public Property 車號 As String
     Public Property 進出場 As String
@@ -52,7 +52,7 @@
     Public Sub New(data As order)
         Try
             編號 = data.o_id
-            時間 = data.o_date
+            時間 = data.o_date.Value.ToString("yyyy年MM月dd日 HH:mm")
             客戶名稱 = data.customer.cus_name
             車號 = data.car?.c_no
             進出場 = data.o_in_out

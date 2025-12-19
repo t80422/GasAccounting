@@ -1,5 +1,6 @@
 ﻿Public Class BankAccount
     Public Property 日期 As String
+    Public Property 銀行名稱 As String
     Public Property List As List(Of BankAccountList)
 End Class
 
