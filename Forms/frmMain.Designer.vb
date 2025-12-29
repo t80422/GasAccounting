@@ -435,7 +435,6 @@ Partial Class frmMain
         Me.tpChequePay = New System.Windows.Forms.TabPage()
         Me.tpLogOut = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.TabControl1.SuspendLayout()
         Me.tpBasic.SuspendLayout()
         Me.tcBasicInfo.SuspendLayout()
@@ -4779,11 +4778,6 @@ Partial Class frmMain
         Me.tpLogOut.Text = "登  出"
         Me.tpLogOut.UseVisualStyleBackColor = True
         '
-        'Timer1
-        '
-        Me.Timer1.Enabled = True
-        Me.Timer1.Interval = 2000
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -4793,7 +4787,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.29.3"
+        Me.Text = "豐原瓦斯會計系統 v0.29.4"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)
@@ -5270,6 +5264,5 @@ Partial Class frmMain
     Friend WithEvents tpCompany As TabPage
     Friend WithEvents tpSurplusGas As TabPage
     Friend WithEvents tpBasicSet As TabPage
-    Friend WithEvents Timer1 As Timer
     Friend WithEvents Button1 As Button
 End Class

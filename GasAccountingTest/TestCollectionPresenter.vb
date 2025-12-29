@@ -63,7 +63,7 @@ Public Class TestCollectionPresenter
         Await task
     End Function
 
-    <TestMethod("科目由非銀行轉為銀行：應增加新銀行當月金額")>
+    <TestMethod("科目由非銀行轉為銀行：應增加新銀行當月金額(增加貸方/支出)")>
     Public Async Function AdjustBankBalance_NonBankToBank() As Task
         ' Arrange
         Dim presenter = CreatePresenter()
@@ -71,14 +71,15 @@ Public Class TestCollectionPresenter
         Dim targetMonth = New Date(2024, 5, 1)
         Dim newAmount As Decimal = 500
 
+        ' Expect increasing CREDIT side (Expense/Decrease Balance)
         _mockBmbService.Setup(
             Function(s) s.UpdateMonthBalanceIncrementalAsync(
                 mockUow.Object.BankMonthlyBalancesRepository,
                 mockUow.Object.BankRepository,
                 2,
                 targetMonth,
-                0,
-                newAmount)
+                newAmount,
+                0)
         ).Returns(Task.CompletedTask).Verifiable()
 
         ' Act
@@ -96,7 +97,7 @@ Public Class TestCollectionPresenter
         _mockBmbService.Verify()
     End Function
 
-    <TestMethod("科目由銀行轉為非銀行：應回沖舊銀行金額")>
+    <TestMethod("科目由銀行轉為非銀行：應回沖舊銀行金額(減少貸方/支出)")>
     Public Async Function AdjustBankBalance_BankToNonBank() As Task
         ' Arrange
         Dim presenter = CreatePresenter()
@@ -104,14 +105,15 @@ Public Class TestCollectionPresenter
         Dim oldMonth = New Date(2024, 6, 1)
         Dim oldAmount As Decimal = 300
 
+        ' Expect decreasing CREDIT side (Expense Decrease / Balance Restore)
         _mockBmbService.Setup(
             Function(s) s.UpdateMonthBalanceIncrementalAsync(
                 mockUow.Object.BankMonthlyBalancesRepository,
                 mockUow.Object.BankRepository,
                 1,
                 oldMonth,
-                0,
-                -oldAmount)
+                -oldAmount,
+                0)
         ).Returns(Task.CompletedTask).Verifiable()
 
         ' Act
@@ -129,7 +131,7 @@ Public Class TestCollectionPresenter
         _mockBmbService.Verify()
     End Function
 
-    <TestMethod("銀行科目同銀行同月份：只調整差額")>
+    <TestMethod("銀行科目同銀行同月份：只調整差額(調整貸方)")>
     Public Async Function AdjustBankBalance_SameBankSameMonth() As Task
         ' Arrange
         Dim presenter = CreatePresenter()
@@ -145,8 +147,8 @@ Public Class TestCollectionPresenter
                 mockUow.Object.BankRepository,
                 3,
                 month,
-                0,
-                delta)
+                delta,
+                0)
         ).Returns(Task.CompletedTask).Verifiable()
 
         ' Act
@@ -164,7 +166,7 @@ Public Class TestCollectionPresenter
         _mockBmbService.Verify()
     End Function
 
-    <TestMethod("銀行科目跨銀行或跨月份：舊減新加各一筆")>
+    <TestMethod("銀行科目跨銀行或跨月份：舊減新加各一筆(皆為貸方)")>
     Public Async Function AdjustBankBalance_CrossBankOrMonth() As Task
         ' Arrange
         Dim presenter = CreatePresenter()
@@ -174,24 +176,26 @@ Public Class TestCollectionPresenter
         Dim oldAmount As Decimal = 400
         Dim newAmount As Decimal = 250
 
+        ' Old: Decrease Credit
         _mockBmbService.Setup(
             Function(s) s.UpdateMonthBalanceIncrementalAsync(
                 mockUow.Object.BankMonthlyBalancesRepository,
                 mockUow.Object.BankRepository,
                 4,
                 oldMonth,
-                0,
-                -oldAmount)
+                -oldAmount,
+                0)
         ).Returns(Task.CompletedTask).Verifiable()
 
+        ' New: Increase Credit
         _mockBmbService.Setup(
             Function(s) s.UpdateMonthBalanceIncrementalAsync(
                 mockUow.Object.BankMonthlyBalancesRepository,
                 mockUow.Object.BankRepository,
                 5,
                 newMonth,
-                0,
-                newAmount)
+                newAmount,
+                0)
         ).Returns(Task.CompletedTask).Verifiable()
 
         ' Act
@@ -212,8 +216,8 @@ Public Class TestCollectionPresenter
                 mockUow.Object.BankRepository,
                 4,
                 oldMonth,
-                0,
-                -oldAmount),
+                -oldAmount,
+                0),
             Times.Once)
 
         _mockBmbService.Verify(
@@ -222,8 +226,8 @@ Public Class TestCollectionPresenter
                 mockUow.Object.BankRepository,
                 5,
                 newMonth,
-                0,
-                newAmount),
+                newAmount,
+                0),
             Times.Once)
     End Function
 End Class

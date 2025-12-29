@@ -1,4 +1,6 @@
 ﻿Imports System.Data.Entity
+Imports System.Globalization
+Imports Irony.Parsing
 
 Public Class PaymentRep
     Inherits Repository(Of payment)
@@ -120,12 +122,26 @@ Public Class PaymentRep
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
 
-            If criteria.IsSearchDate Then query = query.Where(Function(x) x.p_Date >= criteria.StartDate AndAlso x.p_Date < criteria.EndDate)
+            If criteria.IsSearchDate Then query = query.Where(Function(x) x.p_AccountMonth >= criteria.StartDate AndAlso x.p_AccountMonth < criteria.EndDate)
             If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.p_comp_Id = criteria.CompanyId)
 
             query = query.Where(Function(x) vendorIds.Contains(x.p_m_Id))
 
             Return query.ToList
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetByAccountMonth_VendorId_CompanyId(accountMonth As String, vendorId As Integer, companyId As Integer) As List(Of payment)
+        Try
+            Dim month As Date
+            Date.TryParseExact(accountMonth, "yyyy/MM", CultureInfo.InvariantCulture, DateTimeStyles.None, month)
+
+            Return _dbSet.AsNoTracking().Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
+                                                           x.p_AccountMonth.Value.Month = month.Month AndAlso
+                                                           x.p_comp_Id = companyId AndAlso
+                                                           x.p_m_Id = vendorId)
         Catch ex As Exception
             Throw
         End Try

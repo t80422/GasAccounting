@@ -247,19 +247,21 @@
                         End If
                 End Select
 
-                If oldBankId.HasValue AndAlso col.col_bank_Id.HasValue Then
-                    ' 科目為銀行存款的特殊處理（同 Add）：依科目增量調整
-                    Dim oldSubject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
-                    Dim newSubject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
+                ' 科目為銀行存款的特殊處理：依科目增量調整（作為貸方/支出）
+                Dim oldSubject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
+                Dim newSubject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
+                Dim oldIsBankSubject = oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款"
+                Dim newIsBankSubject = newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款"
 
+                If oldIsBankSubject Or newIsBankSubject Then
                     Await AdjustBankMonthlyBalanceForBankSubjectAsync(
                         uow,
-                        oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款",
-                        newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款",
-                        oldBankId,
+                        oldIsBankSubject,
+                        newIsBankSubject,
+                        oldBankId.GetValueOrDefault(),
                         oldMonth,
                         oldAmount,
-                        col.col_bank_Id,
+                        col.col_bank_Id.GetValueOrDefault(),
                         col.col_AccountMonth,
                         col.col_Amount
                     )
@@ -299,10 +301,15 @@
                                                                        newBankId As Integer,
                                                                        newMonth As Date,
                                                                        newAmount As Decimal) As Task
+        ' 注意：此處處理的是「科目」，即貸方(Credit)/資金來源。
+        ' 增加貸方金額 = 增加 Credit (餘額減少)
+        ' 減少貸方金額 = 減少 Credit (餘額增加)
+
         If Not oldIsBankSubject AndAlso Not newIsBankSubject Then Exit Function
 
         If oldIsBankSubject AndAlso newIsBankSubject Then
             If oldBankId = newBankId AndAlso oldMonth.Year = newMonth.Year AndAlso oldMonth.Month = newMonth.Month Then
+                ' 同銀行同月份：調整差額
                 Dim amountDelta = newAmount - oldAmount
                 If amountDelta <> 0 Then
                     Await _bmbService.UpdateMonthBalanceIncrementalAsync(
@@ -310,45 +317,50 @@
                         uow.BankRepository,
                         newBankId,
                         newMonth,
-                        creditDelta:=0,
-                        debitDelta:=amountDelta
+                        creditDelta:=amountDelta,
+                        debitDelta:=0
                     )
                 End If
             Else
+                ' 不同銀行或月份：
+                ' 1. 舊的減少 Credit (回補餘額) -> creditDelta 用負數
                 Await _bmbService.UpdateMonthBalanceIncrementalAsync(
                     uow.BankMonthlyBalancesRepository,
                     uow.BankRepository,
                     oldBankId,
                     oldMonth,
-                    creditDelta:=0,
-                    debitDelta:=-oldAmount
+                    creditDelta:=-oldAmount,
+                    debitDelta:=0
                 )
+                ' 2. 新的增加 Credit (扣除餘額) -> creditDelta 用正數
                 Await _bmbService.UpdateMonthBalanceIncrementalAsync(
                     uow.BankMonthlyBalancesRepository,
                     uow.BankRepository,
                     newBankId,
                     newMonth,
-                    creditDelta:=0,
-                    debitDelta:=newAmount
+                    creditDelta:=newAmount,
+                    debitDelta:=0
                 )
             End If
         ElseIf oldIsBankSubject Then
+            ' 舊的是銀行（現在不是）：減少 Credit (回補餘額)
             Await _bmbService.UpdateMonthBalanceIncrementalAsync(
                 uow.BankMonthlyBalancesRepository,
                 uow.BankRepository,
                 oldBankId,
                 oldMonth,
-                creditDelta:=0,
-                debitDelta:=-oldAmount
+                creditDelta:=-oldAmount,
+                debitDelta:=0
             )
         ElseIf newIsBankSubject Then
+            ' 新的是銀行（以前不是）：增加 Credit (扣除餘額)
             Await _bmbService.UpdateMonthBalanceIncrementalAsync(
                 uow.BankMonthlyBalancesRepository,
                 uow.BankRepository,
                 newBankId,
                 newMonth,
-                creditDelta:=0,
-                debitDelta:=newAmount
+                creditDelta:=newAmount,
+                debitDelta:=0
             )
         End If
     End Function

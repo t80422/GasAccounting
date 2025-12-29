@@ -144,11 +144,6 @@
             Dim allMonths As New HashSet(Of Date)
 
             ' 從 payment 取得月份
-            'Dim allPayments = Await paymentRep.GetAllAsync()
-            'Dim paymentMonths = allPayments.
-            '    Where(Function(p) p.p_bank_Id = bankId AndAlso p.p_Type = "銀行存款").
-            '    Select(Function(p) New Date(p.p_Date.Year, p.p_Date.Month, 1)).
-            '    Distinct()
             Dim paymentMonths = paymentRep.GetBankAccount(bankId).Select(Function(x) New Date(x.p_Date.Year, x.p_Date.Month, 1)).
                                                                   Distinct.
                                                                   ToList
@@ -158,37 +153,23 @@
             Next
 
             ' 從 collection 取得月份
-            'Dim allCollections = Await collectionRep.GetAllAsync()
-            'Dim collectionMonths = allCollections.
-            '    Where(Function(c) c.col_bank_Id = bankId AndAlso c.col_Type = "銀行存款").
-            '    Select(Function(c) New Date(c.col_AccountMonth.Year, c.col_AccountMonth.Month, 1)).
-            '    Distinct()
             Dim collectionMonths = collectionRep.GetBankAccount(bankId).Select(Function(c) New Date(c.col_Date.Year, c.col_Date.Month, 1)).
                                                                         Distinct.
                                                                         ToList
-
-            For Each m In collectionMonths
-                allMonths.Add(m)
-            Next
+            collectionMonths.ForEach(Sub(x) allMonths.Add(x))
 
             ' 如果沒有任何交易，直接返回
-            If allMonths.Count = 0 Then
-                Return
-            End If
+            If allMonths.Count = 0 Then Return
 
             ' 按月份排序
             Dim sortedMonths = allMonths.OrderBy(Function(m) m).ToList()
 
             ' 刪除該銀行的所有舊月結記錄
             Dim bankOldBalances = Await bmbRep.GetAllByBankAsync(bankId)
-            For Each oldBalance In bankOldBalances
-                Await bmbRep.DeleteAsync(oldBalance)
-            Next
+            bankOldBalances.ToList.ForEach(Sub(x) bmbRep.DeleteAsync(x))
 
             ' 逐月重新計算
-            For Each m In sortedMonths
-                Await UpdateMonthBalanceAsync(bmbRep, bankRep, paymentRep, collectionRep, bankId, m)
-            Next
+            sortedMonths.ForEach(Async Sub(x) Await UpdateMonthBalanceAsync(bmbRep, bankRep, paymentRep, collectionRep, bankId, x))
         Catch ex As Exception
             Throw New Exception($"重新計算銀行 {bankId} 月結餘額時發生錯誤", ex)
         End Try

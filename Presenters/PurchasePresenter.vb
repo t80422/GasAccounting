@@ -72,6 +72,7 @@ Public Class PurchasePresenter
             Using uow As IUnitOfWork = DependencyContainer.Resolve(Of IUnitOfWork)()
                 Dim purchases = Await uow.PurchaseRepository.SearchPurchasesAsync(criteria)
 
+                ' 搜尋才出現"大氣應付未付"、"運費應付未付"
                 If criteria IsNot Nothing Then
                     Dim summary = _purchaseSer.GetPurchaseTradeSummary(purchases.ToList, criteria)
                     _view.ShowGasUnpaidSummary(summary.Item1)
@@ -217,7 +218,7 @@ Public Class PurchasePresenter
                 ' 使用新版本的 Service 方法（傳入 Repository）
                 _aeSer.DeleteEntries(uow.AccountingEntryRepository, "大氣進貨", currentData.pur_id)
 
-                Await uow.PurchaseRepository.DeleteAsync(currentData)
+                Await uow.PurchaseRepository.DeleteAsync(currentData.pur_id)
 
                 ' 使用新版本的 Service 方法（傳入 Repository）
                 _gmbSer.UpdateOrAdd(uow.GasMonthlyBalanceRepository, uow.OrderRepository,

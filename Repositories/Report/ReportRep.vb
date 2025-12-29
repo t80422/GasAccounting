@@ -438,7 +438,8 @@ Public Class ReportRep
             result.日期 = $"{month:yyyy年MM月}"
 
             ' 取得銀行名稱
-            result.銀行名稱 = _context.banks.Find(bankId).bank_name
+            ' 取得銀行名稱
+            result.銀行名稱 = If(_context.banks.Find(bankId)?.bank_name, "未知銀行")
 
             '獲取收入數據
             Dim collections = _context.collections.AsNoTracking.

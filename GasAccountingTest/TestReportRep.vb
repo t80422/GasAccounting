@@ -27,6 +27,31 @@ Public Class TestReportRep
         mockSet.As(Of IQueryable(Of T))().Setup(Function(m) m.ElementType).Returns(queryable.ElementType)
         mockSet.As(Of IQueryable(Of T))().Setup(Function(m) m.GetEnumerator()).Returns(queryable.GetEnumerator())
 
+        ' 模擬 Find 方法 (支援單一主鍵的情況)
+        mockSet.Setup(Function(m) m.Find(It.IsAny(Of Object()))).Returns(
+            Function(keyValues As Object())
+                Dim targetId = keyValues(0)
+                Dim className = GetType(T).Name.ToLower()
+                ' 優先尋找 [類名]_id 或 id，若找不到才找結尾為 id 的屬性
+                Dim idProp = GetType(T).GetProperties().FirstOrDefault(Function(p)
+                                                                           Dim pName = p.Name.ToLower()
+                                                                           Return pName = className & "_id" OrElse pName = className & "id" OrElse pName = "id"
+                                                                       End Function)
+
+                If idProp Is Nothing Then
+                    idProp = GetType(T).GetProperties().FirstOrDefault(Function(p) p.Name.ToLower().EndsWith("id"))
+                End If
+
+                If idProp IsNot Nothing Then
+                    ' 使用字串比較以避免 Integer/Object 類型不匹配問題
+                    Return data.FirstOrDefault(Function(x)
+                                                   Dim val = idProp.GetValue(x)
+                                                   Return val IsNot Nothing AndAlso val.ToString() = targetId.ToString()
+                                               End Function)
+                End If
+                Return Nothing
+            End Function)
+
         Return mockSet
     End Function
 
@@ -162,7 +187,6 @@ Public Class TestReportRep
     Public Sub GetBankAccount_CustomData()
         ' Arrange
         Dim targetMonth = New Date(2024, 5, 1) ' 請設定測試月份
-        Dim bankId = 1 ' 請設定銀行 ID
 
         ' 1. 準備科目與客戶/廠商資料 (視需要自行修改)
         Dim bankSubject = New subject With {.s_name = "銀行存款"}
@@ -171,15 +195,20 @@ Public Class TestReportRep
         Dim paymentSubject2 = New subject With {.s_name = "郵電費"}
         Dim customer1 = New customer With {.cus_id = 1, .cus_code = "C001", .cus_name = "測試客戶"}
         Dim company1 = New company With {.comp_id = 1, .comp_name = "台灣中油股份有限公司"}
+        Dim bank = New bank With {.bank_id = 1, .bank_name = "測試銀行"}
+        Dim banks As New List(Of bank) From {
+            bank
+        }
 
 
         ' 2. 準備上期銀行月結餘額 (若無則維持 List 為空)
         Dim bankMonthlyBalances = New List(Of bank_monthly_balances) From {
              New bank_monthly_balances With {
                  .bm_Id = 1,
-                 .bm_bank_Id = bankId,
+                 .bm_bank_Id = bank.bank_id,
                  .bm_Month = New Date(2024, 4, 1),
-                 .bm_ClosingBalance = 10000
+                 .bm_ClosingBalance = 10000,
+                 .bank = bank
              }
         }
 
@@ -189,11 +218,12 @@ Public Class TestReportRep
                  .col_Id = 1,
                  .col_Date = New Date(2024, 5, 5),
                  .col_Type = "銀行存款",
-                 .col_bank_Id = bankId,
+                 .col_bank_Id = bank.bank_id,
                  .col_Amount = 5000,
                  .col_Memo = "收到貨款",
                  .subject = incomeSubject,
-                 .customer = customer1
+                 .customer = customer1,
+                 .bank = bank
              }
         }
 
@@ -203,40 +233,44 @@ Public Class TestReportRep
                  .p_Id = 1,
                  .p_Date = New Date(2024, 5, 10),
                  .p_Type = "銀行存款",
-                 .p_bank_Id = bankId,
+                 .p_bank_Id = bank.bank_id,
                  .p_Amount = 1095000,
                  .subject = paymentSubject1,
                  .company = company1,
+                 .bank = bank,
                  .p_Memo = ""
              },
              New payment With {
                  .p_Id = 1,
                  .p_Date = New Date(2024, 5, 10),
                  .p_Type = "銀行存款",
-                 .p_bank_Id = bankId,
+                 .p_bank_Id = bank.bank_id,
                  .p_Amount = 456250,
                  .subject = paymentSubject1,
                  .company = company1,
+                 .bank = bank,
                  .p_Memo = ""
              },
              New payment With {
                  .p_Id = 1,
                  .p_Date = New Date(2024, 5, 10),
                  .p_Type = "銀行存款",
-                 .p_bank_Id = bankId,
+                 .p_bank_Id = bank.bank_id,
                  .p_Amount = 30,
                  .subject = paymentSubject2,
                  .company = company1,
+                 .bank = bank,
                  .p_Memo = ""
              },
              New payment With {
                  .p_Id = 1,
                  .p_Date = New Date(2024, 5, 10),
                  .p_Type = "銀行存款",
-                 .p_bank_Id = bankId,
+                 .p_bank_Id = bank.bank_id,
                  .p_Amount = 30,
                  .subject = paymentSubject2,
                  .company = company1,
+                 .bank = bank,
                  .p_Memo = ""
              }
         }
@@ -245,17 +279,28 @@ Public Class TestReportRep
         Dim mockCollections = CreateMockDbSet(collections)
         Dim mockPayments = CreateMockDbSet(payments)
         Dim mockBankMonthlyBalances = CreateMockDbSet(bankMonthlyBalances)
+        Dim mockBank = CreateMockDbSet(banks)
 
         SetupAsNoTracking(mockCollections)
         SetupAsNoTracking(mockPayments)
         SetupAsNoTracking(mockBankMonthlyBalances)
+        SetupAsNoTracking(mockBank)
 
         _mockContext.Setup(Function(c) c.collections).Returns(mockCollections.Object)
         _mockContext.Setup(Function(c) c.payments).Returns(mockPayments.Object)
         _mockContext.Setup(Function(c) c.bank_monthly_balances).Returns(mockBankMonthlyBalances.Object)
+        _mockContext.Setup(Function(x) x.banks).Returns(mockBank.Object)
+
+        ' 補足其他必要的實體 Mock
+        Dim mockCustomers = CreateMockDbSet(New List(Of customer) From {customer1})
+        Dim mockCompanies = CreateMockDbSet(New List(Of company) From {company1})
+        Dim mockSubjects = CreateMockDbSet(New List(Of subject) From {bankSubject, incomeSubject, paymentSubject1, paymentSubject2})
+        _mockContext.Setup(Function(c) c.customers).Returns(mockCustomers.Object)
+        _mockContext.Setup(Function(c) c.companies).Returns(mockCompanies.Object)
+        _mockContext.Setup(Function(c) c.subjects).Returns(mockSubjects.Object)
 
         ' Act
-        Dim result = _reportRep.GetBankAccount(targetMonth, bankId)
+        Dim result = _reportRep.GetBankAccount(targetMonth, bank.bank_id)
 
         ' Assert
         ' 您可以在此加入斷言來驗證結果，或使用中斷點查看 result

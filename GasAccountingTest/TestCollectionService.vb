@@ -1,5 +1,4 @@
 Imports GasAccounting
-Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports Moq
 
 <TestClass>
@@ -51,7 +50,7 @@ Public Class TestCollectionService
         )
     End Function
 
-    <TestMethod("刪除-銀行存款類型且科目為銀行：應呼叫增量回沖兩次")>
+    <TestMethod("刪除-銀行存款類型且科目為銀行：應呼叫增量回沖兩次(一次借方減少，一次貸方減少)")>
     Public Async Function Delete_BankTypeAndSubject_ShouldCallBmbTwice() As Task
         ' Arrange
         Dim orgCol = New collection With {
@@ -72,6 +71,7 @@ Public Class TestCollectionService
         _mockChequeRep.Setup(Function(r) r.GetByNumberAsync(orgCol.col_Cheque)).ReturnsAsync(cheque)
         _mockChequeRep.Setup(Function(r) r.DeleteAsync(cheque.che_Id)).Returns(Task.CompletedTask)
 
+        ' Setup for Type=BankDeposit (Revenue/Debit Side) -> Decrease Debit
         _mockBmbService.Setup(
             Function(s) s.UpdateMonthBalanceIncrementalAsync(
                 _mockBmbRep.Object,
@@ -80,6 +80,17 @@ Public Class TestCollectionService
                 orgCol.col_AccountMonth,
                 0,
                 -orgCol.col_Amount)
+        ).Returns(Task.CompletedTask).Verifiable()
+
+        ' Setup for Subject=BankDeposit (Expense/Credit Side) -> Decrease Credit
+        _mockBmbService.Setup(
+            Function(s) s.UpdateMonthBalanceIncrementalAsync(
+                _mockBmbRep.Object,
+                _mockBankRep.Object,
+                orgCol.col_bank_Id,
+                orgCol.col_AccountMonth,
+                -orgCol.col_Amount,
+                0)
         ).Returns(Task.CompletedTask).Verifiable()
 
         _mockOcmService.Setup(Sub(s) s.DeleteCollection(orgCol.col_Id))
@@ -92,6 +103,7 @@ Public Class TestCollectionService
         Await service.DeleteAsync(orgCol.col_Id)
 
         ' Assert
+        ' Verify Type Adjustment (Debit)
         _mockBmbService.Verify(
             Function(s) s.UpdateMonthBalanceIncrementalAsync(
                 _mockBmbRep.Object,
@@ -100,10 +112,21 @@ Public Class TestCollectionService
                 orgCol.col_AccountMonth,
                 0,
                 -orgCol.col_Amount),
-            Times.Exactly(2))
+            Times.Once)
+
+        ' Verify Subject Adjustment (Credit)
+        _mockBmbService.Verify(
+            Function(s) s.UpdateMonthBalanceIncrementalAsync(
+                _mockBmbRep.Object,
+                _mockBankRep.Object,
+                orgCol.col_bank_Id,
+                orgCol.col_AccountMonth,
+                -orgCol.col_Amount,
+                0),
+            Times.Once)
     End Function
 
-    <TestMethod("刪除-現金但科目為銀行：應呼叫增量回沖一次")>
+    <TestMethod("刪除-現金但科目為銀行：應呼叫增量回沖一次(貸方減少)")>
     Public Async Function Delete_CashTypeButBankSubject_ShouldCallBmbOnce() As Task
         ' Arrange
         Dim orgCol = New collection With {
@@ -126,8 +149,8 @@ Public Class TestCollectionService
                 _mockBankRep.Object,
                 orgCol.col_bank_Id,
                 orgCol.col_AccountMonth,
-                0,
-                -orgCol.col_Amount)
+                -orgCol.col_Amount,
+                0)
         ).Returns(Task.CompletedTask).Verifiable()
 
         _mockOcmService.Setup(Sub(s) s.DeleteCollection(orgCol.col_Id))
@@ -146,8 +169,8 @@ Public Class TestCollectionService
                 _mockBankRep.Object,
                 orgCol.col_bank_Id,
                 orgCol.col_AccountMonth,
-                0,
-                -orgCol.col_Amount),
+                -orgCol.col_Amount,
+                0),
             Times.Once)
     End Function
 

@@ -130,7 +130,7 @@ Public Class CollectionService
                     End If
                 End If
 
-                ' 科目為銀行存款時也需回沖（對應新增時的增量增加）
+                ' 科目為銀行存款時也需回沖（對應新增時的增量增加，即減少 Credit）
                 Dim subject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
                 If subject IsNot Nothing AndAlso subject.s_name = "銀行存款" Then
                     Await _bmbService.UpdateMonthBalanceIncrementalAsync(
@@ -138,8 +138,8 @@ Public Class CollectionService
                         uow.BankRepository,
                         bankId,
                         accountMonth,
-                        creditDelta:=0,
-                        debitDelta:=-amount
+                        creditDelta:=-amount,
+                        debitDelta:=0
                     )
                 End If
 
