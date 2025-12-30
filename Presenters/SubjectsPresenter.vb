@@ -66,12 +66,14 @@
 
     Public Async Sub Delete(id As Integer)
         Try
+            If id = 22 Then Throw New Exception("不可刪除，這會影響月對帳單的新桶已付")
+
             Await _subjectRep.DeleteAsync(id)
             _view.ClearInput()
             LoadList()
-            MsgBox("刪除成功")
+            MessageBox.Show("刪除成功")
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 End Class

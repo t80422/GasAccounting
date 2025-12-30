@@ -1,6 +1,4 @@
 ﻿Imports System.Data.Entity
-Imports System.Globalization
-Imports Irony.Parsing
 
 Public Class PaymentRep
     Inherits Repository(Of payment)
@@ -133,20 +131,6 @@ Public Class PaymentRep
         End Try
     End Function
 
-    Public Function GetByAccountMonth_VendorId_CompanyId(accountMonth As String, vendorId As Integer, companyId As Integer) As List(Of payment)
-        Try
-            Dim month As Date
-            Date.TryParseExact(accountMonth, "yyyy/MM", CultureInfo.InvariantCulture, DateTimeStyles.None, month)
-
-            Return _dbSet.AsNoTracking().Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
-                                                           x.p_AccountMonth.Value.Month = month.Month AndAlso
-                                                           x.p_comp_Id = companyId AndAlso
-                                                           x.p_m_Id = vendorId)
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
     Public Async Function GetCashToBankTransfersByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment)) Implements IPaymentRep.GetCashToBankTransfersByDateRangeAsync
         Try
             Return Await _dbSet.AsNoTracking.
@@ -164,6 +148,29 @@ Public Class PaymentRep
     Public Function GetBankAccount(bankId As Integer) As IEnumerable(Of payment) Implements IPaymentRep.GetBankAccount
         Try
             Return _dbSet.Where(Function(x) x.p_bank_Id = bankId AndAlso (x.p_Type = "銀行存款" OrElse x.subject.s_name = "銀行存款"))
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetCashToBankTransfersByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of payment) Implements IPaymentRep.GetCashToBankTransfersByAccountMonth
+        Try
+            Return _dbSet.AsNoTracking.Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
+                                                         x.p_AccountMonth.Value.Month = month.Month AndAlso
+                                                         x.p_bank_Id = bankId AndAlso
+                                                         x.p_Type = "現金" AndAlso
+                                                         x.subject.s_name = "銀行存款")
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
+
+    Public Function GetBankPaymentsByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of payment) Implements IPaymentRep.GetBankPaymentsByAccountMonth
+        Try
+            Return _dbSet.AsNoTracking.Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
+                                                         x.p_AccountMonth.Value.Month = month.Month AndAlso
+                                                         x.p_bank_Id = bankId AndAlso
+                                                         x.p_Type = "銀行存款")
         Catch ex As Exception
             Throw
         End Try
