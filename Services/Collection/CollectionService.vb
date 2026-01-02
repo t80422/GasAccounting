@@ -71,7 +71,7 @@ Public Class CollectionService
                     Await _bmbService.UpdateMonthBalanceIncrementalAsync(
                         uow.BankMonthlyBalancesRepository,
                         uow.BankRepository,
-                        col.col_bank_Id,
+                        col.col_credit_bank_id,
                         col.col_AccountMonth,
                         creditDelta:=col.col_Amount,
                         debitDelta:=0

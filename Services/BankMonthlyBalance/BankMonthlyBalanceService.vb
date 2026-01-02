@@ -16,31 +16,32 @@
         Dim totalCredit As Decimal = monthBankToCash.Sum(Function(x) x.col_Amount) + monthPayments.Sum(Function(x) x.p_Amount)
 
         ' 取得期初餘額（上期結餘 + 上期結餘日後至本月初的交易）
-        Dim openingBalance As Decimal
+
         Dim lastBalance = Await bmbRep.GetLastBalanceBeforeMonthAsync(monthStart, bankId)
+        Dim openingBalance = If(lastBalance IsNot Nothing, lastBalance.bm_ClosingBalance, bankRep.GetByIdAsync(bankId).Result.bank_InitialBalance)
 
-        If lastBalance IsNot Nothing Then
-            openingBalance = lastBalance.bm_ClosingBalance
+        'If lastBalance IsNot Nothing Then
+        '    openingBalance = lastBalance.bm_ClosingBalance
 
-            Dim lastMonthEnd = New Date(lastBalance.bm_Month.Year,
-                                       lastBalance.bm_Month.Month,
-                                       Date.DaysInMonth(lastBalance.bm_Month.Year, lastBalance.bm_Month.Month))
-            Dim preStart = lastMonthEnd.AddDays(1)
-            Dim preEnd = monthStart
+        '    Dim lastMonthEnd = New Date(lastBalance.bm_Month.Year,
+        '                               lastBalance.bm_Month.Month,
+        '                               Date.DaysInMonth(lastBalance.bm_Month.Year, lastBalance.bm_Month.Month))
+        '    Dim preStart = lastMonthEnd.AddDays(1)
+        '    Dim preEnd = monthStart
 
-            If preStart < preEnd Then
-                Dim preDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, preStart, preEnd)
-                Dim preCashToBank = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, preStart, preEnd)
-                Dim prePayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, preStart, preEnd)
+        '    If preStart < preEnd Then
+        '        Dim preDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, preStart, preEnd)
+        '        Dim preCashToBank = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, preStart, preEnd)
+        '        Dim prePayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, preStart, preEnd)
 
-                Dim preDebit = preDeposits.Sum(Function(x) x.col_Amount)
-                Dim preCredit = preCashToBank.Sum(Function(x) x.col_Amount) + prePayments.Sum(Function(x) x.p_Amount)
-                openingBalance += preDebit - preCredit
-            End If
-        Else
-            Dim bank = Await bankRep.GetByIdAsync(bankId)
-            openingBalance = bank.bank_InitialBalance
-        End If
+        '        Dim preDebit = preDeposits.Sum(Function(x) x.col_Amount)
+        '        Dim preCredit = preCashToBank.Sum(Function(x) x.col_Amount) + prePayments.Sum(Function(x) x.p_Amount)
+        '        openingBalance += preDebit - preCredit
+        '    End If
+        'Else
+        '    Dim bank = Await bankRep.GetByIdAsync(bankId)
+        '    openingBalance = bank.bank_InitialBalance
+        'End If
 
         ' 更新月結餘額資料表
         Dim newBmb = New bank_monthly_balances With {
@@ -193,18 +194,18 @@
 
             For Each bank In allBanks
                 Try
-                    Await RecalculateBankBalancesAsync(bmbRep, bankRep, paymentRep, collectionRep, bank.bank_Id)
+                    Await RecalculateBankBalancesAsync(bmbRep, bankRep, paymentRep, collectionRep, bank.bank_id)
                     processedCount += 1
                 Catch ex As Exception
                     errorCount += 1
-                    errorMessages.Add($"銀行 {bank.bank_Name}({bank.bank_Id}): {ex.Message}")
+                    errorMessages.Add($"銀行 {bank.bank_name}({bank.bank_id}): {ex.Message}")
                 End Try
             Next
 
             ' 建立結果訊息
             Dim resultMessage As String = $"重整完成！{vbCrLf}"
             resultMessage &= $"成功處理: {processedCount} 個銀行{vbCrLf}"
-            
+
             If errorCount > 0 Then
                 resultMessage &= $"失敗: {errorCount} 個銀行{vbCrLf}{vbCrLf}"
                 resultMessage &= "錯誤詳情:{vbCrLf}"

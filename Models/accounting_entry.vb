@@ -19,6 +19,4 @@ Partial Public Class accounting_entry
     Public Property ae_Debit As Nullable(Of Double)
     Public Property ae_Credit As Nullable(Of Double)
 
-    Public Overridable Property subject As subject
-
 End Class

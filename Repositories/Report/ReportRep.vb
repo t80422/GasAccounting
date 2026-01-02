@@ -438,7 +438,6 @@ Public Class ReportRep
             result.日期 = $"{month:yyyy年MM月}"
 
             ' 取得銀行名稱
-            ' 取得銀行名稱
             result.銀行名稱 = If(_context.banks.Find(bankId)?.bank_name, "未知銀行")
 
             '獲取收入數據
@@ -460,8 +459,7 @@ Public Class ReportRep
             Dim cashToBankCollections = _context.collections.AsNoTracking.
                                                          Where(Function(x) x.col_Date.Year = month.Year AndAlso
                                                                            x.col_Date.Month = month.Month AndAlso
-                                                                           x.col_Type = "現金" AndAlso
-                                                                           x.col_bank_Id = bankId AndAlso
+                                                                           x.col_credit_bank_id = bankId AndAlso
                                                                            x.subject.s_name = "銀行存款").
                                                          Select(Function(x) New With {
                                                               .Date = x.col_Date,
@@ -520,28 +518,28 @@ Public Class ReportRep
                                                  _context.banks.Find(bankId)?.bank_InitialBalance,
                                                  lastMonthlyBalance.bm_ClosingBalance)
 
-            '2. 計算從上期月結到開始日期前的交易金額
-            If lastMonthlyBalance IsNot Nothing Then
-                '將上期月結日期轉換到該月的最後一天
-                Dim lastMonthEndDate = New Date(lastMonthlyBalance.bm_Month.Year,
-                                              lastMonthlyBalance.bm_Month.Month,
-                                              Date.DaysInMonth(lastMonthlyBalance.bm_Month.Year, lastMonthlyBalance.bm_Month.Month))
+            ''2. 計算從上期月結到開始日期前的交易金額
+            'If lastMonthlyBalance IsNot Nothing Then
+            '    '將上期月結日期轉換到該月的最後一天
+            '    Dim lastMonthEndDate = New Date(lastMonthlyBalance.bm_Month.Year,
+            '                                  lastMonthlyBalance.bm_Month.Month,
+            '                                  Date.DaysInMonth(lastMonthlyBalance.bm_Month.Year, lastMonthlyBalance.bm_Month.Month))
 
-                Dim collectionsQuery = _context.collections.Where(Function(x) x.col_Date > lastMonthEndDate AndAlso
-                                                                             x.col_Date < startMonth AndAlso
-                                                                             x.col_Type = "銀行" AndAlso
-                                                                             x.col_bank_Id = bankId)
-                Dim paymentsQuery = _context.payments.Where(Function(x) x.p_Date > lastMonthEndDate AndAlso
-                                                                       x.p_Date < startMonth AndAlso
-                                                                       x.p_Type = "銀行" AndAlso
-                                                                       x.p_bank_Id = bankId)
+            '    Dim collectionsQuery = _context.collections.Where(Function(x) x.col_Date > lastMonthEndDate AndAlso
+            '                                                                 x.col_Date < startMonth AndAlso
+            '                                                                 x.col_Type = "銀行" AndAlso
+            '                                                                 x.col_bank_Id = bankId)
+            '    Dim paymentsQuery = _context.payments.Where(Function(x) x.p_Date > lastMonthEndDate AndAlso
+            '                                                           x.p_Date < startMonth AndAlso
+            '                                                           x.p_Type = "銀行" AndAlso
+            '                                                           x.p_bank_Id = bankId)
 
-                Dim collectionsSum As Integer = If(collectionsQuery.Any(), collectionsQuery.Sum(Function(x) x.col_Amount), 0)
-                Dim paymentsSum As Integer = If(paymentsQuery.Any(), paymentsQuery.Sum(Function(x) x.p_Amount), 0)
+            '    Dim collectionsSum As Integer = If(collectionsQuery.Any(), collectionsQuery.Sum(Function(x) x.col_Amount), 0)
+            '    Dim paymentsSum As Integer = If(paymentsQuery.Any(), paymentsQuery.Sum(Function(x) x.p_Amount), 0)
 
-                Dim transactionsBeforeStart = collectionsSum - paymentsSum
-                lastClosingBalance += transactionsBeforeStart
-            End If
+            '    Dim transactionsBeforeStart = collectionsSum - paymentsSum
+            '    lastClosingBalance += transactionsBeforeStart
+            'End If
 
             result.List = New List(Of BankAccountList) From {
                 New BankAccountList With {
@@ -887,7 +885,7 @@ Public Class ReportRep
             If col.Count <> 0 Then result.GasAccountsReceived = col.Sum(Function(x) x.col_Amount)
 
             '新桶
-            result.NewBerralAccountsReceivable = orderByCusAndMonth.Sum(Function(x) x.o_BarrelPrice)
+            result.NewBerralAccountsReceivable = col.Where(Function(x) x.col_s_Id.Value = 22).Sum(Function(x) CType(x.col_Amount, Integer?)).GetValueOrDefault()
 
             ' 報廢桶
             result.ScrapBarrel = _context.scrap_barrel.

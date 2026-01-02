@@ -28,7 +28,7 @@ Partial Public Class payment
     Public Overridable Property chque_pay As chque_pay
     Public Overridable Property company As company
     Public Overridable Property manufacturer As manufacturer
-    Public Overridable Property subject As subject
     Public Overridable Property payment_cheque As ICollection(Of payment_cheque) = New HashSet(Of payment_cheque)
+    Public Overridable Property subject As subject
 
 End Class

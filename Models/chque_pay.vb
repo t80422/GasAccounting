@@ -20,7 +20,7 @@ Partial Public Class chque_pay
     Public Property cp_IsCashing As Nullable(Of Boolean)
     Public Property cp_BankCashing As Nullable(Of Date)
 
-    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property payment_cheque As ICollection(Of payment_cheque) = New HashSet(Of payment_cheque)
+    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class

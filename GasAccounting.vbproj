@@ -583,10 +583,13 @@
     <Compile Include="Models\closing_entry.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\collection_detail.vb">
+    <Compile Include="Models\customer_20251104.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GasBarrelDTO.vb" />
+    <Compile Include="Models\orders_20251104.vb">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\payment_cheque.vb">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

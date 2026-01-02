@@ -20,10 +20,12 @@
 
     Public Sub SetCompanyCmb(datas As List(Of SelectListItem)) Implements ICollectionView.SetCompanyCmb
         SetComboBox(cmbCompany_col, datas)
+        SetComboBox(cmbCreditCompany, datas)
     End Sub
 
     Public Sub SetBankCmb(datas As List(Of SelectListItem)) Implements ICollectionView.SetBankCmb
         SetComboBox(cmbBank_col, datas)
+        SetComboBox(cmbCreditBank, datas)
     End Sub
 
     Public Sub DisplayList(data As List(Of CollectionVM)) Implements IBaseView(Of collection, CollectionVM).DisplayList

@@ -23,14 +23,17 @@ Partial Public Class collection
     Public Property col_bank_Id As Nullable(Of Integer)
     Public Property col_comp_Id As Nullable(Of Integer)
     Public Property col_UnmatchedAmount As Integer
+    Public Property col_credit_bank_id As Nullable(Of Integer)
+    Public Property col_credit_company_id As Nullable(Of Integer)
 
     Public Overridable Property bank As bank
+    Public Overridable Property bank1 As bank
     Public Overridable Property cheques As ICollection(Of cheque) = New HashSet(Of cheque)
     Public Overridable Property customer As customer
     Public Overridable Property subject As subject
     Public Overridable Property company As company
+    Public Overridable Property company1 As company
     Public Overridable Property order_collection_mapping As ICollection(Of order_collection_mapping) = New HashSet(Of order_collection_mapping)
     Public Overridable Property write_off As ICollection(Of write_off) = New HashSet(Of write_off)
-    Public Overridable Property collection_detail As ICollection(Of collection_detail) = New HashSet(Of collection_detail)
 
 End Class

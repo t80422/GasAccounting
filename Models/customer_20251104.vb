@@ -10,7 +10,7 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class customer
+Partial Public Class customer_20251104
     Public Property cus_id As Integer
     Public Property cus_code As String
     Public Property cus_name As String
@@ -36,16 +36,5 @@ Partial Public Class customer
     Public Property cus_InsurancePrice As Single
     Public Property cus_comp_Id As Nullable(Of Integer)
     Public Property cus_InvoiceMemo As String
-
-    Public Overridable Property cars As ICollection(Of car) = New HashSet(Of car)
-    Public Overridable Property cars1 As ICollection(Of car) = New HashSet(Of car)
-    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
-    Public Overridable Property company As company
-    Public Overridable Property priceplan As priceplan
-    Public Overridable Property inspections As ICollection(Of inspection) = New HashSet(Of inspection)
-    Public Overridable Property invoices As ICollection(Of invoice) = New HashSet(Of invoice)
-    Public Overridable Property monthly_account As ICollection(Of monthly_account) = New HashSet(Of monthly_account)
-    Public Overridable Property orders As ICollection(Of order) = New HashSet(Of order)
-    Public Overridable Property scrap_barrel_detail As ICollection(Of scrap_barrel_detail) = New HashSet(Of scrap_barrel_detail)
 
 End Class
