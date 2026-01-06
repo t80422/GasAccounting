@@ -22,4 +22,20 @@
     ''' <param name="bankId"></param>
     ''' <returns></returns>
     Function GetBankAccount(bankId As Integer) As IEnumerable(Of payment)
+
+    ''' <summary>
+    ''' 取得該帳款月份的現金存入銀行
+    ''' </summary>
+    ''' <param name="bankId"></param>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetCashToBankTransfersByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of payment)
+
+    ''' <summary>
+    ''' 取得該帳款月份的銀行存款
+    ''' </summary>
+    ''' <param name="bankId"></param>
+    ''' <param name="month"></param>
+    ''' <returns></returns>
+    Function GetBankPaymentsByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of payment)
 End Interface

@@ -442,8 +442,8 @@ Public Class ReportRep
 
             '獲取收入數據
             Dim collections = _context.collections.AsNoTracking.
-                                                   Where(Function(x) x.col_Date.Year = month.Year AndAlso
-                                                                     x.col_Date.Month = month.Month AndAlso
+                                                   Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso
+                                                                     x.col_AccountMonth.Month = month.Month AndAlso
                                                                      x.col_Type = "銀行存款" AndAlso
                                                                      x.col_bank_Id = bankId).
                                                    Select(Function(x) New With {
@@ -471,8 +471,8 @@ Public Class ReportRep
                                                          })
             '獲取支出數據
             Dim payments = _context.payments.AsNoTracking.
-                                             Where(Function(x) x.p_Date.Year = month.Year AndAlso
-                                                               x.p_Date.Month = month.Month AndAlso
+                                             Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
+                                                               x.p_AccountMonth.Value.Month = month.Month AndAlso
                                                                x.p_Type = "銀行存款" AndAlso
                                                                x.p_bank_Id = bankId).
                                              Select(Function(x) New With {
@@ -486,8 +486,8 @@ Public Class ReportRep
 
             ' 銀行存入現金: 獨立撈取現金類型且科目為銀行存款
             Dim cashToBankPayments = _context.payments.AsNoTracking.
-                                                 Where(Function(x) x.p_Date.Year = month.Year AndAlso
-                                                                   x.p_Date.Month = month.Month AndAlso
+                                                 Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
+                                                                   x.p_AccountMonth.Value.Month = month.Month AndAlso
                                                                    x.p_Type = "現金" AndAlso
                                                                    x.p_bank_Id = bankId AndAlso
                                                                    x.subject.s_name = "銀行存款").
@@ -729,7 +729,7 @@ Public Class ReportRep
     Public Function GetMonthlyAccountsReceivable(month As Date) As MonthlyAccountsReceivable Implements IReportRep.GetMonthlyAccountsReceivable
         Try
             Dim result = New MonthlyAccountsReceivable With {
-                .Month = $"{month:yyyy年MM月} 應收帳明細表"
+                .month = $"{month:yyyy年MM月} 應收帳明細表"
             }
 
             result.List = (From o In _context.orders
@@ -756,10 +756,10 @@ Public Class ReportRep
         Try
             Dim company = _context.companies.Find(compId)
             Dim result = New InventoryTransactionDetail With {
-                .Company = company.comp_name,
+                .company = company.comp_name,
                 .OperatorName = _context.employees.Find(empId).emp_name,
                 .Phone = company.comp_Phone,
-                .Year = year.Year.ToString() & " 年度",
+                .year = year.Year.ToString() & " 年度",
                 .List = New List(Of InventoryTransactionDetailList)
             }
 
@@ -798,7 +798,7 @@ Public Class ReportRep
                     .OpeningBalance = item.gmb_OpeningBalance,
                     .Sale = item.gmb_SaleTotal,
                     .CloseingBalance = item.gmb_ClosingBalance,
-                    .PurchasesByVendor = purchasesByVendor
+                    .purchasesByVendor = purchasesByVendor
                 })
             Next
 
@@ -810,7 +810,7 @@ Public Class ReportRep
 
     Public Function GetTax(month As Date) As Tax Implements IReportRep.GetTax
         Try
-            Dim result = New Tax With {.Month = month}
+            Dim result = New Tax With {.month = month}
 
             result.List = _context.invoices.Where(Function(x) x.i_Date.Year = month.Year AndAlso x.i_Date.Month = month.Month).
                                             Select(Function(x) New TaxList With {
@@ -933,7 +933,7 @@ Public Class ReportRep
         Try
             Dim result = New Insurance With {
                 .CompanyName = _context.companies.Find(compId).comp_name,
-                .Month = month.Date
+                .month = month.Date
             }
 
             result.List = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
@@ -1044,15 +1044,15 @@ Public Class ReportRep
                 If Not companyInvoices.Any Then Continue For
 
                 Dim companyData As New CompanyInvoiceData With {
-                    .CompanyName = companyName,
+                    .companyName = companyName,
                     .MonthlyData = New List(Of MonthInvoiceData)
                 }
 
                 '依月分處理發票
                 For month As Integer = startMonth To endMonth
                     Dim monthData As New MonthInvoiceData With {
-                        .Month = month,
-                        .RegularInvoices = New List(Of InvoiceGroup),
+                        .month = month,
+                        .regularInvoices = New List(Of InvoiceGroup),
                         .SpecialInvoices = New SpecialInvoices
                     }
                     Dim month1 As Integer = month
@@ -1184,7 +1184,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.col_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Debit += amount
             Next
@@ -1195,7 +1195,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.col_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Credit += amount
             Next
@@ -1209,7 +1209,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.p_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Credit += amount
             Next
@@ -1220,7 +1220,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.p_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Debit += amount
             Next
@@ -1234,7 +1234,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.ce_CreditAmount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Credit += amount
             Next
@@ -1245,7 +1245,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.ce_DebitAmount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Debit += amount
             Next
