@@ -15,6 +15,7 @@
     Event PrintCusStkRequest As EventHandler(Of Boolean)
     Event CustomersGasDetailRequest As EventHandler(Of Tuple(Of Date, Boolean))
     Event CusGetGasListRequest As EventHandler(Of Tuple(Of Date, Boolean))
+    Event DateChanged As EventHandler
 
     ''' <summary>
     ''' 顯示客戶資訊

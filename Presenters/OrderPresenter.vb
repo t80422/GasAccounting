@@ -109,6 +109,7 @@ Public Class OrderPresenter
         AddHandler _view.CustomersGasDetailRequest, AddressOf GenerateCustomersGasDetailByDay
         AddHandler _view.CusGetGasListRequest, AddressOf GenerateCustomersGetGasList
         AddHandler _view.SearchRequest, AddressOf OnSearch
+        AddHandler _view.DateChanged, AddressOf LoadUnitPrice
     End Sub
 
     Private Sub Initialize()

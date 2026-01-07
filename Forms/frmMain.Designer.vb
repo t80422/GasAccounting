@@ -2958,7 +2958,7 @@ Partial Class frmMain
         Me.tpGasBarrel.Padding = New System.Windows.Forms.Padding(5)
         Me.tpGasBarrel.Size = New System.Drawing.Size(1882, 949)
         Me.tpGasBarrel.TabIndex = 39
-        Me.tpGasBarrel.Text = "瓦斯桶管理"
+        Me.tpGasBarrel.Text = "新桶管理"
         Me.tpGasBarrel.UseVisualStyleBackColor = True
         '
         'dgvGB
@@ -4787,7 +4787,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "frmMain"
-        Me.Text = "豐原瓦斯會計系統 v0.29.5"
+        Me.Text = "豐原瓦斯會計系統 v0.29.6"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.TabControl1.ResumeLayout(False)
         Me.tpBasic.ResumeLayout(False)

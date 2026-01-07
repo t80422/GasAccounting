@@ -350,7 +350,7 @@ Public Class ReportPresenter
                     .WriteToCell("W", rowIndex, datas.Sum(Function(x) x.銀行).ToString)
                     .WriteToCell("X", rowIndex, datas.Sum(Function(x) x.票據).ToString)
                     .WriteToCell("Y", rowIndex, datas.Sum(Function(x) x.掛帳).ToString)
-                    .WriteToCell("Z", rowIndex, datas.Sum(Function(x) x.累計).ToString)
+                    .WriteToCell("Z", rowIndex, datas.LastOrDefault.累計.ToString)
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 25, XLBorderStyleValues.Medium, XLBorderStyleValues.Medium)
 

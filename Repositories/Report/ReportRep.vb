@@ -42,11 +42,13 @@ Public Class ReportRep
                 }).ToList()
 
             ' 一次性取得當月累計訂單資料（始終計算到選定期間結束）
-            Dim monthOrders = _context.orders.AsNoTracking.Where(Function(o) o.o_date >= monthStart AndAlso o.o_date < periodEnd).
+            Dim monthOrders = _context.orders.AsNoTracking.Where(Function(o) o.o_date >= monthStart AndAlso
+                                                                             o.o_date < periodEnd AndAlso
+                                                                             o.o_in_out = "出場單").
                 Select(Function(o) New With {
                     .客戶Id = o.o_cus_Id,
                     .提氣量 = o.o_gas_total + o.o_gas_c_total,
-                    .氣款 = o.o_total_amount
+                    .氣款 = (o.o_gas_total - o.o_return) * o.o_UnitPrice + (o.o_gas_c_total - o.o_return_c) * o.o_UnitPriceC
                 }).ToList()
 
             ' 一次性取得主要期間的收款資料（當日或當月）
@@ -63,47 +65,47 @@ Public Class ReportRep
 
             ' 一次性取得當月收款資料（始終計算到選定期間結束）
             Dim monthCollections = _context.collections.AsNoTracking.Where(Function(c) c.col_Date >= monthStart AndAlso
-                                                                          c.col_Date < periodEnd AndAlso
-                                                                          c.col_cus_Id.HasValue AndAlso
-                                                                          c.col_AccountMonth.Year = selectDate.Year AndAlso
-                                                                          c.col_AccountMonth.Month = selectDate.Month AndAlso
-                                                                          c.col_cus_Id IsNot Nothing AndAlso
-                                                                          c.subject.s_name = "氣款收入").
-                                                        Select(Function(c) New With {
-                                                            .客戶Id = c.col_cus_Id,
-                                                            .收款 = c.col_Amount
-                                                        }).ToList()
+                                                                                       c.col_Date < periodEnd AndAlso
+                                                                                       c.col_cus_Id.HasValue AndAlso
+                                                                                       c.col_AccountMonth.Year = selectDate.Year AndAlso
+                                                                                       c.col_AccountMonth.Month = selectDate.Month AndAlso
+                                                                                       c.col_cus_Id IsNot Nothing AndAlso
+                                                                                       c.subject.s_name = "氣款收入").
+                                                                     Select(Function(c) New With {
+                                                                        .客戶Id = c.col_cus_Id,
+                                                                        .收款 = c.col_Amount
+                                                                     }).ToList()
 
             ' 將資料按客戶分組
             Dim periodOrdersByCustomer = periodOrders.GroupBy(Function(o) o.客戶Id).
-                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
+                                                      ToDictionary(Function(g) g.Key, Function(g) g.ToList())
 
             Dim monthOrdersByCustomer = monthOrders.GroupBy(Function(o) o.客戶Id).
-                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
+                                                    ToDictionary(Function(g) g.Key, Function(g) g.ToList())
 
             Dim periodCollectionsByCustomer = periodCollections.GroupBy(Function(c) c.客戶Id).
-                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
+                                                                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
 
             Dim monthCollectionsByCustomer = monthCollections.GroupBy(Function(c) c.客戶Id).
-                ToDictionary(Function(g) g.Key, Function(g) g.ToList())
+                                                              ToDictionary(Function(g) g.Key, Function(g) g.ToList())
 
             ' 組合結果
             Dim result = customers.Select(Function(cus) New CustomersGasDetailByDay With {
                 .客戶名稱 = cus.客戶名稱,
                 .存氣 = If(periodOrdersByCustomer.ContainsKey(cus.客戶Id),
-                           periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.存氣), 0),
+                            periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.存氣), 0),
                 .本日提量 = If(periodOrdersByCustomer.ContainsKey(cus.客戶Id),
-                              periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.提氣量), 0),
+                                periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.提氣量), 0),
                 .本日氣款 = If(periodOrdersByCustomer.ContainsKey(cus.客戶Id),
-                              periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.氣款), 0),
+                                periodOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.氣款), 0),
                 .當月累計提量 = If(monthOrdersByCustomer.ContainsKey(cus.客戶Id),
-                                monthOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.提氣量), 0),
+                                    monthOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.提氣量), 0),
                 .本日收款 = If(periodCollectionsByCustomer.ContainsKey(cus.客戶Id),
-                              periodCollectionsByCustomer(cus.客戶Id).Sum(Function(c) c.收款), 0),
+                                periodCollectionsByCustomer(cus.客戶Id).Sum(Function(c) c.收款), 0),
                 .結欠 = If(monthOrdersByCustomer.ContainsKey(cus.客戶Id),
-                          monthOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.氣款), 0) -
-                       If(monthCollectionsByCustomer.ContainsKey(cus.客戶Id),
-                          monthCollectionsByCustomer(cus.客戶Id).Sum(Function(c) c.收款), 0)
+                            monthOrdersByCustomer(cus.客戶Id).Sum(Function(o) o.氣款), 0) -
+                        If(monthCollectionsByCustomer.ContainsKey(cus.客戶Id),
+                           monthCollectionsByCustomer(cus.客戶Id).Sum(Function(c) c.收款), 0)
             }).ToList()
 
             Return result
@@ -240,9 +242,7 @@ Public Class ReportRep
             '取得客戶名稱
             Dim cus = _context.customers.FirstOrDefault(Function(x) x.cus_code = cusCode)
 
-            If cus Is Nothing Then
-                Throw New Exception("查無此客戶代號")
-            End If
+            If cus Is Nothing Then Throw New Exception("查無此客戶代號")
 
             Dim cusName = cus.cus_name
 
@@ -319,7 +319,6 @@ Public Class ReportRep
                 currentDate = currentDate.AddDays(1)
             End While
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
             Throw
         End Try
 
@@ -729,7 +728,7 @@ Public Class ReportRep
     Public Function GetMonthlyAccountsReceivable(month As Date) As MonthlyAccountsReceivable Implements IReportRep.GetMonthlyAccountsReceivable
         Try
             Dim result = New MonthlyAccountsReceivable With {
-                .month = $"{month:yyyy年MM月} 應收帳明細表"
+                .Month = $"{month:yyyy年MM月} 應收帳明細表"
             }
 
             result.List = (From o In _context.orders
@@ -756,10 +755,10 @@ Public Class ReportRep
         Try
             Dim company = _context.companies.Find(compId)
             Dim result = New InventoryTransactionDetail With {
-                .company = company.comp_name,
+                .Company = company.comp_name,
                 .OperatorName = _context.employees.Find(empId).emp_name,
                 .Phone = company.comp_Phone,
-                .year = year.Year.ToString() & " 年度",
+                .Year = year.Year.ToString() & " 年度",
                 .List = New List(Of InventoryTransactionDetailList)
             }
 
@@ -798,7 +797,7 @@ Public Class ReportRep
                     .OpeningBalance = item.gmb_OpeningBalance,
                     .Sale = item.gmb_SaleTotal,
                     .CloseingBalance = item.gmb_ClosingBalance,
-                    .purchasesByVendor = purchasesByVendor
+                    .PurchasesByVendor = purchasesByVendor
                 })
             Next
 
@@ -810,7 +809,7 @@ Public Class ReportRep
 
     Public Function GetTax(month As Date) As Tax Implements IReportRep.GetTax
         Try
-            Dim result = New Tax With {.month = month}
+            Dim result = New Tax With {.Month = month}
 
             result.List = _context.invoices.Where(Function(x) x.i_Date.Year = month.Year AndAlso x.i_Date.Month = month.Month).
                                             Select(Function(x) New TaxList With {
@@ -933,7 +932,7 @@ Public Class ReportRep
         Try
             Dim result = New Insurance With {
                 .CompanyName = _context.companies.Find(compId).comp_name,
-                .month = month.Date
+                .Month = month.Date
             }
 
             result.List = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
@@ -1044,15 +1043,15 @@ Public Class ReportRep
                 If Not companyInvoices.Any Then Continue For
 
                 Dim companyData As New CompanyInvoiceData With {
-                    .companyName = companyName,
+                    .CompanyName = companyName,
                     .MonthlyData = New List(Of MonthInvoiceData)
                 }
 
                 '依月分處理發票
                 For month As Integer = startMonth To endMonth
                     Dim monthData As New MonthInvoiceData With {
-                        .month = month,
-                        .regularInvoices = New List(Of InvoiceGroup),
+                        .Month = month,
+                        .RegularInvoices = New List(Of InvoiceGroup),
                         .SpecialInvoices = New SpecialInvoices
                     }
                     Dim month1 As Integer = month
@@ -1184,7 +1183,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.col_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Debit += amount
             Next
@@ -1195,7 +1194,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.col_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Credit += amount
             Next
@@ -1209,7 +1208,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.p_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Credit += amount
             Next
@@ -1220,7 +1219,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.p_Amount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Debit += amount
             Next
@@ -1234,7 +1233,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.ce_CreditAmount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Credit += amount
             Next
@@ -1245,7 +1244,7 @@ Public Class ReportRep
                 Dim amount = group.Sum(Function(x) x.ce_DebitAmount)
 
                 If Not subjectSummary.ContainsKey(subject) Then
-                    subjectSummary(subject) = New DailySubjectSummary With {.subject = subject, .Debit = 0, .Credit = 0}
+                    subjectSummary(subject) = New DailySubjectSummary With {.Subject = subject, .Debit = 0, .Credit = 0}
                 End If
                 subjectSummary(subject).Debit += amount
             Next

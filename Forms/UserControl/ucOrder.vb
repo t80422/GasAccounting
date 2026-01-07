@@ -24,6 +24,7 @@ Public Class ucOrder
     Public Event PrintCusStkRequest As EventHandler(Of Boolean) Implements IOrderView.PrintCusStkRequest
     Public Event CustomersGasDetailRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CustomersGasDetailRequest
     Public Event CusGetGasListRequest As EventHandler(Of Tuple(Of Date, Boolean)) Implements IOrderView.CusGetGasListRequest
+    Public Event DateChanged As EventHandler Implements IOrderView.DateChanged
 
 #Region "實作介面"
     Private Sub ClearInput() Implements IFormView(Of order, OrderListVM).ClearInput
@@ -253,6 +254,7 @@ Public Class ucOrder
 
     ' 日期
     Private Sub dtpOrder_KeyDown(sender As Object, e As KeyEventArgs) Handles dtpOrder.KeyDown
+        RaiseEvent DateChanged(sender, e)
         '按下Enter時,跳到"車號"
         If e.KeyCode = Keys.Enter Then
             If rdoPickUp.Checked Then
@@ -629,10 +631,6 @@ Public Class ucOrder
             Case Keys.F8
                 btnCusGetGasList_Click(btnCusGetGasList, EventArgs.Empty)
         End Select
-    End Sub
-
-    Private Sub dgvOrder_SelectionChanged(sender As Object, e As DataGridViewCellMouseEventArgs)
-
     End Sub
 #End Region
 End Class
