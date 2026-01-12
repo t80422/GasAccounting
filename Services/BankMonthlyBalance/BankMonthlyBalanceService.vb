@@ -6,17 +6,13 @@
         Dim monthEnd = monthStart.AddMonths(1)
 
         ' 當月借方：現金存銀行 + 銀行存款收入
-        'Dim monthCashToBank = Await paymentRep.GetCashToBankTransfersByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim monthCashToBank = paymentRep.GetCashToBankTransfersByAccountMonth(bankId, monthStart)
-        'Dim monthDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim monthDeposits = collectionRep.GetBankDepositsByAccountMonth(bankId, monthStart)
+        Dim monthCashToBank = Await paymentRep.GetCashToBankTransfersByDateRangeAsync(bankId, monthStart, monthEnd)
+        Dim monthDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, monthStart, monthEnd)
         Dim totalDebit As Decimal = monthCashToBank.Sum(Function(x) x.p_Amount) + monthDeposits.Sum(Function(x) x.col_Amount)
 
         ' 當月貸方：現金提銀行 + 銀行存款付款
-        'Dim monthBankToCash = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim monthBankToCash = collectionRep.GetCashToBankTransfersByAccountMonth(bankId, monthStart)
-        'Dim monthPayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim monthPayments = paymentRep.GetBankPaymentsByAccountMonth(bankId, monthStart)
+        Dim monthBankToCash = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, monthStart, monthEnd)
+        Dim monthPayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, monthStart, monthEnd)
         Dim totalCredit As Decimal = monthBankToCash.Sum(Function(x) x.col_Amount) + monthPayments.Sum(Function(x) x.p_Amount)
 
         ' 取得期初餘額（上期結餘 + 上期結餘日後至本月初的交易）
@@ -149,8 +145,7 @@
             Dim allMonths As New HashSet(Of Date)
 
             ' 從 payment 取得月份
-            Dim paymentMonths = paymentRep.GetBankAccount(bankId).Where(Function(x) x.p_AccountMonth.HasValue).
-                                                                  Select(Function(x) New Date(x.p_AccountMonth.Value.Year, x.p_AccountMonth.Value.Month, 1)).
+            Dim paymentMonths = paymentRep.GetBankAccount(bankId).Select(Function(x) New Date(x.p_Date.Year, x.p_Date.Month, 1)).
                                                                   Distinct.
                                                                   ToList
 
@@ -159,7 +154,7 @@
             Next
 
             ' 從 collection 取得月份
-            Dim collectionMonths = collectionRep.GetBankAccount(bankId).Select(Function(c) New Date(c.col_AccountMonth.Year, c.col_AccountMonth.Month, 1)).
+            Dim collectionMonths = collectionRep.GetBankAccount(bankId).Select(Function(c) New Date(c.col_Date.Year, c.col_Date.Month, 1)).
                                                                         Distinct.
                                                                         ToList
             collectionMonths.ForEach(Sub(x) allMonths.Add(x))

@@ -441,8 +441,8 @@ Public Class ReportRep
 
             '獲取收入數據
             Dim collections = _context.collections.AsNoTracking.
-                                                   Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso
-                                                                     x.col_AccountMonth.Month = month.Month AndAlso
+                                                   Where(Function(x) x.col_Date.Year = month.Year AndAlso
+                                                                     x.col_Date.Month = month.Month AndAlso
                                                                      x.col_Type = "銀行存款" AndAlso
                                                                      x.col_bank_Id = bankId).
                                                    Select(Function(x) New With {
@@ -470,8 +470,8 @@ Public Class ReportRep
                                                          })
             '獲取支出數據
             Dim payments = _context.payments.AsNoTracking.
-                                             Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
-                                                               x.p_AccountMonth.Value.Month = month.Month AndAlso
+                                             Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                               x.p_Date.Month = month.Month AndAlso
                                                                x.p_Type = "銀行存款" AndAlso
                                                                x.p_bank_Id = bankId).
                                              Select(Function(x) New With {
@@ -485,8 +485,8 @@ Public Class ReportRep
 
             ' 銀行存入現金: 獨立撈取現金類型且科目為銀行存款
             Dim cashToBankPayments = _context.payments.AsNoTracking.
-                                                 Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
-                                                                   x.p_AccountMonth.Value.Month = month.Month AndAlso
+                                                 Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                                   x.p_Date.Month = month.Month AndAlso
                                                                    x.p_Type = "現金" AndAlso
                                                                    x.p_bank_Id = bankId AndAlso
                                                                    x.subject.s_name = "銀行存款").
@@ -884,7 +884,10 @@ Public Class ReportRep
             If col.Count <> 0 Then result.GasAccountsReceived = col.Sum(Function(x) x.col_Amount)
 
             '新桶
-            result.NewBerralAccountsReceivable = col.Where(Function(x) x.col_s_Id.Value = 22).Sum(Function(x) CType(x.col_Amount, Integer?)).GetValueOrDefault()
+            Dim barrelOrder = orderByCusAndMonth.Sum(Function(x) x.o_BarrelPrice)
+            Dim barrelCol = col.Where(Function(x) x.col_s_Id.Value = 22).Sum(Function(x) CType(x.col_Amount, Integer?)).GetValueOrDefault()
+
+            result.NewBerralAccountsReceivable = barrelOrder - barrelCol
 
             ' 報廢桶
             result.ScrapBarrel = _context.scrap_barrel.

@@ -152,27 +152,4 @@ Public Class PaymentRep
             Throw
         End Try
     End Function
-
-    Public Function GetCashToBankTransfersByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of payment) Implements IPaymentRep.GetCashToBankTransfersByAccountMonth
-        Try
-            Return _dbSet.AsNoTracking.Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
-                                                         x.p_AccountMonth.Value.Month = month.Month AndAlso
-                                                         x.p_bank_Id = bankId AndAlso
-                                                         x.p_Type = "現金" AndAlso
-                                                         x.subject.s_name = "銀行存款")
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
-    Public Function GetBankPaymentsByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of payment) Implements IPaymentRep.GetBankPaymentsByAccountMonth
-        Try
-            Return _dbSet.AsNoTracking.Where(Function(x) x.p_AccountMonth.Value.Year = month.Year AndAlso
-                                                         x.p_AccountMonth.Value.Month = month.Month AndAlso
-                                                         x.p_bank_Id = bankId AndAlso
-                                                         x.p_Type = "銀行存款")
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
 End Class

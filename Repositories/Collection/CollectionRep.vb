@@ -86,8 +86,7 @@ Public Class CollectionRep
             Return Await _dbSet.AsNoTracking.
                 Where(Function(x) x.col_Date >= startDate AndAlso
                                   x.col_Date < endDate AndAlso
-                                  x.col_Type = "現金" AndAlso
-                                  x.col_bank_Id = bankId AndAlso
+                                  x.col_credit_bank_id = bankId AndAlso
                                   x.subject.s_name = "銀行存款").
                 ToListAsync()
         Catch ex As Exception
@@ -116,30 +115,7 @@ Public Class CollectionRep
 
     Public Function GetBankAccount(bankId As Integer) As IEnumerable(Of collection) Implements ICollectionRep.GetBankAccount
         Try
-            Return _dbSet.Where(Function(x) x.col_bank_Id = bankId AndAlso (x.col_Type = "銀行存款" OrElse x.subject.s_name = "銀行存款"))
-        Catch ex As Exception
-            Throw
-        End Try
-    End Function
-
-    Public Function GetBankDepositsByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of collection) Implements ICollectionRep.GetBankDepositsByAccountMonth
-        Try
-            Return _dbSet.AsNoTracking.Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso
-                                                        x.col_AccountMonth.Month = month.Month AndAlso
-                                                        x.col_bank_Id = bankId AndAlso
-                                                        x.col_Type = "銀行存款")
-        Catch ex As Exception
-
-        End Try
-    End Function
-
-    Public Function GetCashToBankTransfersByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of collection) Implements ICollectionRep.GetCashToBankTransfersByAccountMonth
-        Try
-            Return _dbSet.AsNoTracking.Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso
-                                                         x.col_AccountMonth.Month = month.Month AndAlso
-                                                         x.col_bank_Id = bankId AndAlso
-                                                         x.col_Type = "現金" AndAlso
-                                                         x.subject.s_name = "銀行存款")
+            Return _dbSet.Where(Function(x) (x.col_bank_Id = bankId AndAlso x.col_Type = "銀行存款") Or (x.col_credit_bank_id = bankId AndAlso x.subject.s_name = "銀行存款"))
         Catch ex As Exception
             Throw
         End Try

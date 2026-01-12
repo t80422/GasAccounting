@@ -13,20 +13,4 @@
     ''' <param name="bankId"></param>
     ''' <returns></returns>
     Function GetBankAccount(bankId As Integer) As IEnumerable(Of collection)
-
-    ''' <summary>
-    ''' 取得該帳款月份的銀行存款
-    ''' </summary>
-    ''' <param name="bankId"></param>
-    ''' <param name="month"></param>
-    ''' <returns></returns>
-    Function GetBankDepositsByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of collection)
-
-    ''' <summary>
-    ''' 取得該帳款月份的銀行提款
-    ''' </summary>
-    ''' <param name="bankId"></param>
-    ''' <param name="month"></param>
-    ''' <returns></returns>
-    Function GetCashToBankTransfersByAccountMonth(bankId As Integer, month As Date) As IEnumerable(Of collection)
 End Interface
