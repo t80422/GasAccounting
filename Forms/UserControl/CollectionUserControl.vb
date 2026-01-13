@@ -62,11 +62,14 @@
         Return InputBox("請輸入支票號碼")
     End Function
 
+    Public Sub SetButtomStatus(isSelectedRow As Boolean) Implements ICollectionView.SetButtomStatus
+        SetButtonState(Me, isSelectedRow)
+    End Sub
+
     ' 取消
     Private Sub btnCancel_col_Click(sender As Object, e As EventArgs) Handles btnCancel_col.Click
         Try
             _presenter.Initialize()
-            'SetButtonState_old(btnCancel_col, True)
             SetButtonState(Me, False)
 
             ' 公司預設 "豐合"

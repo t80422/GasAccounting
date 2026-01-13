@@ -28,6 +28,7 @@
             LoadList()
             _currentData = Nothing
             _currentCheque = Nothing
+            _view.SetButtomStatus(False)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -117,7 +118,7 @@
 
                 ' 儲存舊資料用於月結更新
                 Dim oldBankId = orgCol.col_bank_Id
-                Dim oldMonth = orgCol.col_AccountMonth
+                Dim oldMonth = orgCol.col_Date
                 Dim oldAmount = orgCol.col_Amount
                 Dim oldType = orgCol.col_Type
 
@@ -129,7 +130,7 @@
                                 uow.BankMonthlyBalancesRepository,
                                 uow.BankRepository,
                                 orgCol.col_bank_Id,
-                                orgCol.col_AccountMonth,
+                                orgCol.col_Date,
                                 creditDelta:=0,
                                 debitDelta:=-oldAmount
                             )
@@ -144,7 +145,7 @@
                             ' 都是銀行存款
                             If oldBankId = col.col_bank_Id Then
                                 ' 同銀行
-                                If oldMonth.Year = col.col_AccountMonth.Year AndAlso oldMonth.Month = col.col_AccountMonth.Month Then
+                                If oldMonth.Year = col.col_Date.Year AndAlso oldMonth.Month = col.col_Date.Month Then
                                     ' 同月份 - 只調整差額
                                     Dim amountDelta = col.col_Amount - oldAmount
                                     If amountDelta <> 0 Then
@@ -152,7 +153,7 @@
                                             uow.BankMonthlyBalancesRepository,
                                             uow.BankRepository,
                                             col.col_bank_Id,
-                                            col.col_AccountMonth,
+                                            col.col_Date,
                                             creditDelta:=0,
                                             debitDelta:=amountDelta
                                         )
@@ -171,7 +172,7 @@
                                         uow.BankMonthlyBalancesRepository,
                                         uow.BankRepository,
                                         col.col_bank_Id,
-                                        col.col_AccountMonth,
+                                        col.col_Date,
                                         creditDelta:=0,
                                         debitDelta:=col.col_Amount
                                     )
@@ -190,7 +191,7 @@
                                     uow.BankMonthlyBalancesRepository,
                                     uow.BankRepository,
                                     col.col_bank_Id,
-                                    col.col_AccountMonth,
+                                    col.col_Date,
                                     creditDelta:=0,
                                     debitDelta:=col.col_Amount
                                 )
@@ -204,7 +205,7 @@
                                 uow.BankMonthlyBalancesRepository,
                                 uow.BankRepository,
                                 col.col_bank_Id,
-                                col.col_AccountMonth,
+                                col.col_Date,
                                 creditDelta:=0,
                                 debitDelta:=col.col_Amount
                             )
@@ -214,7 +215,7 @@
                                 uow.BankMonthlyBalancesRepository,
                                 uow.BankRepository,
                                 col.col_bank_Id,
-                                col.col_AccountMonth,
+                                col.col_Date,
                                 creditDelta:=0,
                                 debitDelta:=col.col_Amount
                             )
@@ -240,7 +241,7 @@
                                 uow.BankMonthlyBalancesRepository,
                                 uow.BankRepository,
                                 orgCol.col_bank_Id,
-                                orgCol.col_AccountMonth,
+                                orgCol.col_Date,
                                 creditDelta:=0,
                                 debitDelta:=-oldAmount
                             )
@@ -262,7 +263,7 @@
                         oldMonth,
                         oldAmount,
                         col.col_bank_Id.GetValueOrDefault(),
-                        col.col_AccountMonth,
+                        col.col_Date,
                         col.col_Amount
                     )
                 End If

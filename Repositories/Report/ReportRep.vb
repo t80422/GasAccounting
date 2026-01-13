@@ -885,9 +885,10 @@ Public Class ReportRep
 
             '新桶
             Dim barrelOrder = orderByCusAndMonth.Sum(Function(x) x.o_BarrelPrice)
-            Dim barrelCol = col.Where(Function(x) x.col_s_Id.Value = 22).Sum(Function(x) CType(x.col_Amount, Integer?)).GetValueOrDefault()
+            Dim barrelCol = col.Where(Function(x) x.col_s_Id.HasValue AndAlso x.col_s_Id.Value = 22)
+            Dim barrelAmount = If(barrelCol.Count > 0, barrelCol.Sum(Function(x) CType(x.col_Amount, Integer?)).GetValueOrDefault(), 0)
 
-            result.NewBerralAccountsReceivable = barrelOrder - barrelCol
+            result.NewBerralAccountsReceivable = barrelOrder - barrelAmount
 
             ' 報廢桶
             result.ScrapBarrel = _context.scrap_barrel.

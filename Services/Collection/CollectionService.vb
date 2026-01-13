@@ -39,7 +39,7 @@ Public Class CollectionService
                             uow.BankMonthlyBalancesRepository,
                             uow.BankRepository,
                             col.col_bank_Id,
-                            col.col_AccountMonth,
+                            col.col_Date,
                             creditDelta:=0,
                             debitDelta:=col.col_Amount
                         )
@@ -72,7 +72,7 @@ Public Class CollectionService
                         uow.BankMonthlyBalancesRepository,
                         uow.BankRepository,
                         col.col_credit_bank_id,
-                        col.col_AccountMonth,
+                        col.col_Date,
                         creditDelta:=col.col_Amount,
                         debitDelta:=0
                     )
@@ -98,7 +98,7 @@ Public Class CollectionService
 
                 Dim payType = orgCol.col_Type
                 Dim bankId = orgCol.col_bank_Id
-                Dim accountMonth = orgCol.col_AccountMonth
+                Dim colMonth = orgCol.col_Date
                 Dim amount = orgCol.col_Amount
 
                 ' 銷帳
@@ -116,7 +116,7 @@ Public Class CollectionService
                         uow.BankMonthlyBalancesRepository,
                         uow.BankRepository,
                         bankId,
-                        accountMonth,
+                        colMonth,
                         creditDelta:=0,
                         debitDelta:=-amount
                     )
@@ -137,7 +137,7 @@ Public Class CollectionService
                         uow.BankMonthlyBalancesRepository,
                         uow.BankRepository,
                         bankId,
-                        accountMonth,
+                        colMonth,
                         creditDelta:=-amount,
                         debitDelta:=0
                     )
