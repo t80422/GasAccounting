@@ -77,6 +77,24 @@ Partial Class CollectionUserControl
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cmbCreditBank = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.cmbCompany2 = New System.Windows.Forms.ComboBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.cmbBank2 = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.cmbSubject2 = New System.Windows.Forms.ComboBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.cmbCompany3 = New System.Windows.Forms.ComboBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.cmbBank3 = New System.Windows.Forms.ComboBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.cmbSubject3 = New System.Windows.Forms.ComboBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.Label11 = New System.Windows.Forms.Label()
         CType(Me.dgvCollection, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -84,7 +102,7 @@ Partial Class CollectionUserControl
         '
         Me.btnPrint_Col.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.btnPrint_Col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnPrint_Col.Location = New System.Drawing.Point(787, 219)
+        Me.btnPrint_Col.Location = New System.Drawing.Point(783, 305)
         Me.btnPrint_Col.Name = "btnPrint_Col"
         Me.btnPrint_Col.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_Col.TabIndex = 509
@@ -93,7 +111,7 @@ Partial Class CollectionUserControl
         '
         'TextBox14
         '
-        Me.TextBox14.Location = New System.Drawing.Point(128, 181)
+        Me.TextBox14.Location = New System.Drawing.Point(128, 267)
         Me.TextBox14.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.TextBox14.Name = "TextBox14"
         Me.TextBox14.ReadOnly = True
@@ -105,7 +123,7 @@ Partial Class CollectionUserControl
         '
         Me.Label141.AutoSize = True
         Me.Label141.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label141.Location = New System.Drawing.Point(25, 187)
+        Me.Label141.Location = New System.Drawing.Point(29, 273)
         Me.Label141.Name = "Label141"
         Me.Label141.Size = New System.Drawing.Size(94, 19)
         Me.Label141.TabIndex = 508
@@ -115,7 +133,7 @@ Partial Class CollectionUserControl
         '
         Me.btnWriteOff.BackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.btnWriteOff.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnWriteOff.Location = New System.Drawing.Point(631, 219)
+        Me.btnWriteOff.Location = New System.Drawing.Point(627, 305)
         Me.btnWriteOff.Name = "btnWriteOff"
         Me.btnWriteOff.Size = New System.Drawing.Size(140, 44)
         Me.btnWriteOff.TabIndex = 506
@@ -126,7 +144,7 @@ Partial Class CollectionUserControl
         '
         Me.btnQuery_col.BackColor = System.Drawing.Color.Lime
         Me.btnQuery_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnQuery_col.Location = New System.Drawing.Point(943, 219)
+        Me.btnQuery_col.Location = New System.Drawing.Point(939, 305)
         Me.btnQuery_col.Name = "btnQuery_col"
         Me.btnQuery_col.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_col.TabIndex = 468
@@ -136,7 +154,7 @@ Partial Class CollectionUserControl
         'dtpAbleCashingDate
         '
         Me.dtpAbleCashingDate.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.dtpAbleCashingDate.Location = New System.Drawing.Point(1267, 135)
+        Me.dtpAbleCashingDate.Location = New System.Drawing.Point(1289, 221)
         Me.dtpAbleCashingDate.Name = "dtpAbleCashingDate"
         Me.dtpAbleCashingDate.Size = New System.Drawing.Size(165, 30)
         Me.dtpAbleCashingDate.TabIndex = 505
@@ -147,7 +165,7 @@ Partial Class CollectionUserControl
         '
         Me.lblAbleCashingDate.AutoSize = True
         Me.lblAbleCashingDate.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblAbleCashingDate.Location = New System.Drawing.Point(1168, 141)
+        Me.lblAbleCashingDate.Location = New System.Drawing.Point(1190, 227)
         Me.lblAbleCashingDate.Name = "lblAbleCashingDate"
         Me.lblAbleCashingDate.Size = New System.Drawing.Size(93, 19)
         Me.lblAbleCashingDate.TabIndex = 504
@@ -156,7 +174,7 @@ Partial Class CollectionUserControl
         '
         'txtPayBank
         '
-        Me.txtPayBank.Location = New System.Drawing.Point(1540, 135)
+        Me.txtPayBank.Location = New System.Drawing.Point(1562, 221)
         Me.txtPayBank.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtPayBank.Name = "txtPayBank"
         Me.txtPayBank.Size = New System.Drawing.Size(165, 30)
@@ -168,7 +186,7 @@ Partial Class CollectionUserControl
         '
         Me.lblPayBank.AutoSize = True
         Me.lblPayBank.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblPayBank.Location = New System.Drawing.Point(1438, 141)
+        Me.lblPayBank.Location = New System.Drawing.Point(1460, 227)
         Me.lblPayBank.Name = "lblPayBank"
         Me.lblPayBank.Size = New System.Drawing.Size(93, 19)
         Me.lblPayBank.TabIndex = 503
@@ -177,7 +195,7 @@ Partial Class CollectionUserControl
         '
         'txtCashingDate
         '
-        Me.txtCashingDate.Location = New System.Drawing.Point(398, 135)
+        Me.txtCashingDate.Location = New System.Drawing.Point(409, 221)
         Me.txtCashingDate.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCashingDate.Name = "txtCashingDate"
         Me.txtCashingDate.ReadOnly = True
@@ -188,7 +206,7 @@ Partial Class CollectionUserControl
         '
         'txtCusCode_col
         '
-        Me.txtCusCode_col.Location = New System.Drawing.Point(997, 3)
+        Me.txtCusCode_col.Location = New System.Drawing.Point(1019, 3)
         Me.txtCusCode_col.Name = "txtCusCode_col"
         Me.txtCusCode_col.Size = New System.Drawing.Size(165, 30)
         Me.txtCusCode_col.TabIndex = 500
@@ -196,7 +214,7 @@ Partial Class CollectionUserControl
         '
         'txtCheAcctNum
         '
-        Me.txtCheAcctNum.Location = New System.Drawing.Point(997, 135)
+        Me.txtCheAcctNum.Location = New System.Drawing.Point(1019, 221)
         Me.txtCheAcctNum.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCheAcctNum.Name = "txtCheAcctNum"
         Me.txtCheAcctNum.Size = New System.Drawing.Size(165, 30)
@@ -208,7 +226,7 @@ Partial Class CollectionUserControl
         '
         Me.lblChequeAccountNumberReq.AutoSize = True
         Me.lblChequeAccountNumberReq.ForeColor = System.Drawing.Color.Red
-        Me.lblChequeAccountNumberReq.Location = New System.Drawing.Point(869, 141)
+        Me.lblChequeAccountNumberReq.Location = New System.Drawing.Point(891, 227)
         Me.lblChequeAccountNumberReq.Name = "lblChequeAccountNumberReq"
         Me.lblChequeAccountNumberReq.Size = New System.Drawing.Size(20, 19)
         Me.lblChequeAccountNumberReq.TabIndex = 498
@@ -219,7 +237,7 @@ Partial Class CollectionUserControl
         '
         Me.lblChequeAccountNumber.AutoSize = True
         Me.lblChequeAccountNumber.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblChequeAccountNumber.Location = New System.Drawing.Point(895, 141)
+        Me.lblChequeAccountNumber.Location = New System.Drawing.Point(917, 227)
         Me.lblChequeAccountNumber.Name = "lblChequeAccountNumber"
         Me.lblChequeAccountNumber.Size = New System.Drawing.Size(93, 19)
         Me.lblChequeAccountNumber.TabIndex = 497
@@ -228,7 +246,7 @@ Partial Class CollectionUserControl
         '
         'txtIssuerName
         '
-        Me.txtIssuerName.Location = New System.Drawing.Point(694, 135)
+        Me.txtIssuerName.Location = New System.Drawing.Point(716, 221)
         Me.txtIssuerName.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtIssuerName.Name = "txtIssuerName"
         Me.txtIssuerName.Size = New System.Drawing.Size(166, 30)
@@ -240,7 +258,7 @@ Partial Class CollectionUserControl
         '
         Me.lblIssuerNameReq.AutoSize = True
         Me.lblIssuerNameReq.ForeColor = System.Drawing.Color.Red
-        Me.lblIssuerNameReq.Location = New System.Drawing.Point(569, 141)
+        Me.lblIssuerNameReq.Location = New System.Drawing.Point(580, 227)
         Me.lblIssuerNameReq.Name = "lblIssuerNameReq"
         Me.lblIssuerNameReq.Size = New System.Drawing.Size(20, 19)
         Me.lblIssuerNameReq.TabIndex = 495
@@ -251,7 +269,7 @@ Partial Class CollectionUserControl
         '
         Me.lblIssuerName.AutoSize = True
         Me.lblIssuerName.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblIssuerName.Location = New System.Drawing.Point(595, 141)
+        Me.lblIssuerName.Location = New System.Drawing.Point(606, 227)
         Me.lblIssuerName.Name = "lblIssuerName"
         Me.lblIssuerName.Size = New System.Drawing.Size(94, 19)
         Me.lblIssuerName.TabIndex = 494
@@ -262,7 +280,7 @@ Partial Class CollectionUserControl
         '
         Me.lblCashingDate_col.AutoSize = True
         Me.lblCashingDate_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblCashingDate_col.Location = New System.Drawing.Point(299, 141)
+        Me.lblCashingDate_col.Location = New System.Drawing.Point(299, 227)
         Me.lblCashingDate_col.Name = "lblCashingDate_col"
         Me.lblCashingDate_col.Size = New System.Drawing.Size(93, 19)
         Me.lblCashingDate_col.TabIndex = 493
@@ -272,7 +290,7 @@ Partial Class CollectionUserControl
         'cmbCompany_col
         '
         Me.cmbCompany_col.FormattingEnabled = True
-        Me.cmbCompany_col.Location = New System.Drawing.Point(398, 49)
+        Me.cmbCompany_col.Location = New System.Drawing.Point(409, 49)
         Me.cmbCompany_col.Name = "cmbCompany_col"
         Me.cmbCompany_col.Size = New System.Drawing.Size(165, 27)
         Me.cmbCompany_col.TabIndex = 491
@@ -291,7 +309,7 @@ Partial Class CollectionUserControl
         'cmbBank_col
         '
         Me.cmbBank_col.FormattingEnabled = True
-        Me.cmbBank_col.Location = New System.Drawing.Point(694, 49)
+        Me.cmbBank_col.Location = New System.Drawing.Point(716, 49)
         Me.cmbBank_col.Name = "cmbBank_col"
         Me.cmbBank_col.Size = New System.Drawing.Size(468, 27)
         Me.cmbBank_col.TabIndex = 489
@@ -301,7 +319,7 @@ Partial Class CollectionUserControl
         '
         Me.lblBankAccount_col.AutoSize = True
         Me.lblBankAccount_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblBankAccount_col.Location = New System.Drawing.Point(595, 53)
+        Me.lblBankAccount_col.Location = New System.Drawing.Point(606, 53)
         Me.lblBankAccount_col.Name = "lblBankAccount_col"
         Me.lblBankAccount_col.Size = New System.Drawing.Size(93, 19)
         Me.lblBankAccount_col.TabIndex = 488
@@ -321,7 +339,7 @@ Partial Class CollectionUserControl
         '
         Me.lblChequeReq_col.AutoSize = True
         Me.lblChequeReq_col.ForeColor = System.Drawing.Color.Red
-        Me.lblChequeReq_col.Location = New System.Drawing.Point(3, 141)
+        Me.lblChequeReq_col.Location = New System.Drawing.Point(3, 227)
         Me.lblChequeReq_col.Name = "lblChequeReq_col"
         Me.lblChequeReq_col.Size = New System.Drawing.Size(20, 19)
         Me.lblChequeReq_col.TabIndex = 485
@@ -342,7 +360,7 @@ Partial Class CollectionUserControl
         '
         Me.Label96.AutoSize = True
         Me.Label96.ForeColor = System.Drawing.Color.Red
-        Me.Label96.Location = New System.Drawing.Point(569, 9)
+        Me.Label96.Location = New System.Drawing.Point(580, 9)
         Me.Label96.Name = "Label96"
         Me.Label96.Size = New System.Drawing.Size(20, 19)
         Me.Label96.TabIndex = 483
@@ -369,7 +387,7 @@ Partial Class CollectionUserControl
         '
         'txtCusName_col
         '
-        Me.txtCusName_col.Location = New System.Drawing.Point(1267, 3)
+        Me.txtCusName_col.Location = New System.Drawing.Point(1289, 3)
         Me.txtCusName_col.Name = "txtCusName_col"
         Me.txtCusName_col.ReadOnly = True
         Me.txtCusName_col.Size = New System.Drawing.Size(435, 30)
@@ -378,7 +396,7 @@ Partial Class CollectionUserControl
         '
         'txtCusId_col
         '
-        Me.txtCusId_col.Location = New System.Drawing.Point(869, 181)
+        Me.txtCusId_col.Location = New System.Drawing.Point(869, 267)
         Me.txtCusId_col.Name = "txtCusId_col"
         Me.txtCusId_col.ReadOnly = True
         Me.txtCusId_col.Size = New System.Drawing.Size(165, 30)
@@ -391,7 +409,7 @@ Partial Class CollectionUserControl
         Me.btnQueryCus_col.AutoSize = True
         Me.btnQueryCus_col.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.btnQueryCus_col.Font = New System.Drawing.Font("標楷體", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnQueryCus_col.Location = New System.Drawing.Point(1708, 6)
+        Me.btnQueryCus_col.Location = New System.Drawing.Point(1730, 5)
         Me.btnQueryCus_col.Name = "btnQueryCus_col"
         Me.btnQueryCus_col.Size = New System.Drawing.Size(82, 26)
         Me.btnQueryCus_col.TabIndex = 480
@@ -402,7 +420,7 @@ Partial Class CollectionUserControl
         '
         Me.Label93.AutoSize = True
         Me.Label93.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label93.Location = New System.Drawing.Point(1168, 9)
+        Me.Label93.Location = New System.Drawing.Point(1190, 9)
         Me.Label93.Name = "Label93"
         Me.Label93.Size = New System.Drawing.Size(93, 19)
         Me.Label93.TabIndex = 478
@@ -412,7 +430,7 @@ Partial Class CollectionUserControl
         '
         Me.lblCusCode_col.AutoSize = True
         Me.lblCusCode_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblCusCode_col.Location = New System.Drawing.Point(895, 9)
+        Me.lblCusCode_col.Location = New System.Drawing.Point(917, 9)
         Me.lblCusCode_col.Name = "lblCusCode_col"
         Me.lblCusCode_col.Size = New System.Drawing.Size(93, 19)
         Me.lblCusCode_col.TabIndex = 476
@@ -423,7 +441,7 @@ Partial Class CollectionUserControl
         Me.dtpAccountMonth.CustomFormat = "yyyy年MM月"
         Me.dtpAccountMonth.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.dtpAccountMonth.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpAccountMonth.Location = New System.Drawing.Point(398, 3)
+        Me.dtpAccountMonth.Location = New System.Drawing.Point(409, 3)
         Me.dtpAccountMonth.Name = "dtpAccountMonth"
         Me.dtpAccountMonth.Size = New System.Drawing.Size(165, 30)
         Me.dtpAccountMonth.TabIndex = 475
@@ -441,7 +459,7 @@ Partial Class CollectionUserControl
         '
         'txtCheque_col
         '
-        Me.txtCheque_col.Location = New System.Drawing.Point(128, 135)
+        Me.txtCheque_col.Location = New System.Drawing.Point(128, 221)
         Me.txtCheque_col.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCheque_col.Name = "txtCheque_col"
         Me.txtCheque_col.Size = New System.Drawing.Size(165, 30)
@@ -451,7 +469,7 @@ Partial Class CollectionUserControl
         '
         'txtMemo_col
         '
-        Me.txtMemo_col.Location = New System.Drawing.Point(398, 181)
+        Me.txtMemo_col.Location = New System.Drawing.Point(409, 267)
         Me.txtMemo_col.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtMemo_col.Name = "txtMemo_col"
         Me.txtMemo_col.Size = New System.Drawing.Size(462, 30)
@@ -460,7 +478,7 @@ Partial Class CollectionUserControl
         '
         'txtAmount_collection
         '
-        Me.txtAmount_collection.Location = New System.Drawing.Point(694, 3)
+        Me.txtAmount_collection.Location = New System.Drawing.Point(716, 3)
         Me.txtAmount_collection.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtAmount_collection.Name = "txtAmount_collection"
         Me.txtAmount_collection.Size = New System.Drawing.Size(165, 30)
@@ -469,7 +487,7 @@ Partial Class CollectionUserControl
         '
         'txtColId
         '
-        Me.txtColId.Location = New System.Drawing.Point(1043, 181)
+        Me.txtColId.Location = New System.Drawing.Point(1043, 267)
         Me.txtColId.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtColId.Name = "txtColId"
         Me.txtColId.ReadOnly = True
@@ -482,7 +500,7 @@ Partial Class CollectionUserControl
         '
         Me.lblCheque_col.AutoSize = True
         Me.lblCheque_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblCheque_col.Location = New System.Drawing.Point(29, 141)
+        Me.lblCheque_col.Location = New System.Drawing.Point(29, 227)
         Me.lblCheque_col.Name = "lblCheque_col"
         Me.lblCheque_col.Size = New System.Drawing.Size(93, 19)
         Me.lblCheque_col.TabIndex = 473
@@ -512,18 +530,18 @@ Partial Class CollectionUserControl
         '
         Me.dgvCollection.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCollection.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvCollection.Location = New System.Drawing.Point(0, 289)
+        Me.dgvCollection.Location = New System.Drawing.Point(0, 369)
         Me.dgvCollection.Name = "dgvCollection"
         Me.dgvCollection.ReadOnly = True
         Me.dgvCollection.RowTemplate.Height = 24
-        Me.dgvCollection.Size = New System.Drawing.Size(1882, 660)
+        Me.dgvCollection.Size = New System.Drawing.Size(1882, 580)
         Me.dgvCollection.TabIndex = 469
         '
         'btnCancel_col
         '
         Me.btnCancel_col.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.btnCancel_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnCancel_col.Location = New System.Drawing.Point(475, 219)
+        Me.btnCancel_col.Location = New System.Drawing.Point(471, 305)
         Me.btnCancel_col.Name = "btnCancel_col"
         Me.btnCancel_col.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_col.TabIndex = 467
@@ -534,7 +552,7 @@ Partial Class CollectionUserControl
         '
         Me.btnDelete_col.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.btnDelete_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnDelete_col.Location = New System.Drawing.Point(319, 219)
+        Me.btnDelete_col.Location = New System.Drawing.Point(315, 305)
         Me.btnDelete_col.Name = "btnDelete_col"
         Me.btnDelete_col.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_col.TabIndex = 466
@@ -545,7 +563,7 @@ Partial Class CollectionUserControl
         '
         Me.btnEdit_col.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.btnEdit_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnEdit_col.Location = New System.Drawing.Point(163, 219)
+        Me.btnEdit_col.Location = New System.Drawing.Point(159, 305)
         Me.btnEdit_col.Name = "btnEdit_col"
         Me.btnEdit_col.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_col.TabIndex = 465
@@ -556,7 +574,7 @@ Partial Class CollectionUserControl
         '
         Me.btnAdd_col.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
         Me.btnAdd_col.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.btnAdd_col.Location = New System.Drawing.Point(7, 219)
+        Me.btnAdd_col.Location = New System.Drawing.Point(3, 305)
         Me.btnAdd_col.Name = "btnAdd_col"
         Me.btnAdd_col.Size = New System.Drawing.Size(140, 44)
         Me.btnAdd_col.TabIndex = 464
@@ -578,7 +596,7 @@ Partial Class CollectionUserControl
         '
         Me.Label110.AutoSize = True
         Me.Label110.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label110.Location = New System.Drawing.Point(299, 187)
+        Me.Label110.Location = New System.Drawing.Point(299, 273)
         Me.Label110.Name = "Label110"
         Me.Label110.Size = New System.Drawing.Size(95, 19)
         Me.Label110.TabIndex = 462
@@ -598,7 +616,7 @@ Partial Class CollectionUserControl
         '
         Me.Label109.AutoSize = True
         Me.Label109.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label109.Location = New System.Drawing.Point(595, 9)
+        Me.Label109.Location = New System.Drawing.Point(606, 9)
         Me.Label109.Name = "Label109"
         Me.Label109.Size = New System.Drawing.Size(95, 19)
         Me.Label109.TabIndex = 459
@@ -607,7 +625,7 @@ Partial Class CollectionUserControl
         'cmbCreditCompany
         '
         Me.cmbCreditCompany.FormattingEnabled = True
-        Me.cmbCreditCompany.Location = New System.Drawing.Point(398, 92)
+        Me.cmbCreditCompany.Location = New System.Drawing.Point(409, 92)
         Me.cmbCreditCompany.Name = "cmbCreditCompany"
         Me.cmbCreditCompany.Size = New System.Drawing.Size(165, 27)
         Me.cmbCreditCompany.TabIndex = 513
@@ -626,7 +644,7 @@ Partial Class CollectionUserControl
         'cmbCreditBank
         '
         Me.cmbCreditBank.FormattingEnabled = True
-        Me.cmbCreditBank.Location = New System.Drawing.Point(694, 92)
+        Me.cmbCreditBank.Location = New System.Drawing.Point(716, 92)
         Me.cmbCreditBank.Name = "cmbCreditBank"
         Me.cmbCreditBank.Size = New System.Drawing.Size(468, 27)
         Me.cmbCreditBank.TabIndex = 511
@@ -636,16 +654,205 @@ Partial Class CollectionUserControl
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.Label2.Location = New System.Drawing.Point(595, 96)
+        Me.Label2.Location = New System.Drawing.Point(606, 96)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(93, 19)
         Me.Label2.TabIndex = 510
         Me.Label2.Text = "貸方銀行"
         '
+        'cmbCompany2
+        '
+        Me.cmbCompany2.FormattingEnabled = True
+        Me.cmbCompany2.Location = New System.Drawing.Point(409, 135)
+        Me.cmbCompany2.Name = "cmbCompany2"
+        Me.cmbCompany2.Size = New System.Drawing.Size(165, 27)
+        Me.cmbCompany2.TabIndex = 520
+        Me.cmbCompany2.Tag = "col_credit_company_id_2"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label3.Location = New System.Drawing.Point(299, 139)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(104, 19)
+        Me.Label3.TabIndex = 519
+        Me.Label3.Text = "貸方公司2"
+        '
+        'cmbBank2
+        '
+        Me.cmbBank2.FormattingEnabled = True
+        Me.cmbBank2.Location = New System.Drawing.Point(716, 135)
+        Me.cmbBank2.Name = "cmbBank2"
+        Me.cmbBank2.Size = New System.Drawing.Size(468, 27)
+        Me.cmbBank2.TabIndex = 518
+        Me.cmbBank2.Tag = "col_credit_bank_id_2"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label4.Location = New System.Drawing.Point(606, 139)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(104, 19)
+        Me.Label4.TabIndex = 517
+        Me.Label4.Text = "貸方銀行2"
+        '
+        'cmbSubject2
+        '
+        Me.cmbSubject2.FormattingEnabled = True
+        Me.cmbSubject2.Location = New System.Drawing.Point(128, 135)
+        Me.cmbSubject2.Name = "cmbSubject2"
+        Me.cmbSubject2.Size = New System.Drawing.Size(165, 27)
+        Me.cmbSubject2.TabIndex = 515
+        Me.cmbSubject2.Tag = "col_s_Id_2"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label6.Location = New System.Drawing.Point(18, 139)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(104, 19)
+        Me.Label6.TabIndex = 514
+        Me.Label6.Text = "貸方科目2"
+        '
+        'cmbCompany3
+        '
+        Me.cmbCompany3.FormattingEnabled = True
+        Me.cmbCompany3.Location = New System.Drawing.Point(409, 178)
+        Me.cmbCompany3.Name = "cmbCompany3"
+        Me.cmbCompany3.Size = New System.Drawing.Size(165, 27)
+        Me.cmbCompany3.TabIndex = 527
+        Me.cmbCompany3.Tag = "col_credit_company_id_3"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label7.Location = New System.Drawing.Point(299, 182)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(104, 19)
+        Me.Label7.TabIndex = 526
+        Me.Label7.Text = "貸方公司3"
+        '
+        'cmbBank3
+        '
+        Me.cmbBank3.FormattingEnabled = True
+        Me.cmbBank3.Location = New System.Drawing.Point(716, 178)
+        Me.cmbBank3.Name = "cmbBank3"
+        Me.cmbBank3.Size = New System.Drawing.Size(468, 27)
+        Me.cmbBank3.TabIndex = 525
+        Me.cmbBank3.Tag = "col_credit_bank_id_3"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label8.Location = New System.Drawing.Point(606, 182)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(104, 19)
+        Me.Label8.TabIndex = 524
+        Me.Label8.Text = "貸方銀行3"
+        '
+        'cmbSubject3
+        '
+        Me.cmbSubject3.FormattingEnabled = True
+        Me.cmbSubject3.Location = New System.Drawing.Point(128, 178)
+        Me.cmbSubject3.Name = "cmbSubject3"
+        Me.cmbSubject3.Size = New System.Drawing.Size(165, 27)
+        Me.cmbSubject3.TabIndex = 522
+        Me.cmbSubject3.Tag = "col_s_Id_3"
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label10.Location = New System.Drawing.Point(18, 182)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(104, 19)
+        Me.Label10.TabIndex = 521
+        Me.Label10.Text = "貸方科目3"
+        '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(1289, 90)
+        Me.TextBox1.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(165, 30)
+        Me.TextBox1.TabIndex = 528
+        Me.TextBox1.Tag = "col_credit_amount_1"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label5.Location = New System.Drawing.Point(1190, 96)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(95, 19)
+        Me.Label5.TabIndex = 529
+        Me.Label5.Text = "金    額"
+        '
+        'TextBox2
+        '
+        Me.TextBox2.Location = New System.Drawing.Point(1289, 133)
+        Me.TextBox2.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(165, 30)
+        Me.TextBox2.TabIndex = 530
+        Me.TextBox2.Tag = "col_credit_amount_2"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label9.Location = New System.Drawing.Point(1190, 139)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(95, 19)
+        Me.Label9.TabIndex = 531
+        Me.Label9.Text = "金    額"
+        '
+        'TextBox3
+        '
+        Me.TextBox3.Location = New System.Drawing.Point(1289, 176)
+        Me.TextBox3.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
+        Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.Size = New System.Drawing.Size(165, 30)
+        Me.TextBox3.TabIndex = 532
+        Me.TextBox3.Tag = "col_credit_amount_3"
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
+        Me.Label11.Location = New System.Drawing.Point(1190, 182)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(95, 19)
+        Me.Label11.TabIndex = 533
+        Me.Label11.Text = "金    額"
+        '
         'CollectionUserControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.TextBox3)
+        Me.Controls.Add(Me.Label11)
+        Me.Controls.Add(Me.TextBox2)
+        Me.Controls.Add(Me.Label9)
+        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.cmbCompany3)
+        Me.Controls.Add(Me.Label7)
+        Me.Controls.Add(Me.cmbBank3)
+        Me.Controls.Add(Me.Label8)
+        Me.Controls.Add(Me.cmbSubject3)
+        Me.Controls.Add(Me.Label10)
+        Me.Controls.Add(Me.cmbCompany2)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.cmbBank2)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.cmbSubject2)
+        Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.cmbCreditCompany)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.cmbCreditBank)
@@ -766,4 +973,22 @@ Partial Class CollectionUserControl
     Friend WithEvents Label1 As Label
     Friend WithEvents cmbCreditBank As ComboBox
     Friend WithEvents Label2 As Label
+    Friend WithEvents cmbCompany2 As ComboBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents cmbBank2 As ComboBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents cmbSubject2 As ComboBox
+    Friend WithEvents Label6 As Label
+    Friend WithEvents cmbCompany3 As ComboBox
+    Friend WithEvents Label7 As Label
+    Friend WithEvents cmbBank3 As ComboBox
+    Friend WithEvents Label8 As Label
+    Friend WithEvents cmbSubject3 As ComboBox
+    Friend WithEvents Label10 As Label
+    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents Label5 As Label
+    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents Label9 As Label
+    Friend WithEvents TextBox3 As TextBox
+    Friend WithEvents Label11 As Label
 End Class

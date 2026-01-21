@@ -1,4 +1,4 @@
-﻿Public Class CollectionPresenter
+Public Class CollectionPresenter
     Private _view As ICollectionView
     Private ReadOnly _bmbService As IBankMonthlyBalanceService
     Private ReadOnly _ocmSer As IOrderCollectionMappingService
@@ -248,25 +248,27 @@
                         End If
                 End Select
 
-                ' 科目為銀行存款的特殊處理：依科目增量調整（作為貸方/支出）
-                Dim oldSubject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
-                Dim newSubject = Await uow.SubjectRepository.GetByIdAsync(col.col_s_Id)
-                Dim oldIsBankSubject = oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款"
-                Dim newIsBankSubject = newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款"
+                ' 處理三組貸方科目為銀行存款的情況
+                ' 第一組貸方
+                Await ProcessCreditBankSubjectAsync(uow, orgCol, col,
+                    orgCol.col_s_Id, col.col_s_Id,
+                    orgCol.col_credit_bank_id, col.col_credit_bank_id,
+                    oldAmount, col.col_credit_amount_1,
+                    oldMonth, col.col_Date)
 
-                If oldIsBankSubject Or newIsBankSubject Then
-                    Await AdjustBankMonthlyBalanceForBankSubjectAsync(
-                        uow,
-                        oldIsBankSubject,
-                        newIsBankSubject,
-                        oldBankId.GetValueOrDefault(),
-                        oldMonth,
-                        oldAmount,
-                        col.col_bank_Id.GetValueOrDefault(),
-                        col.col_Date,
-                        col.col_Amount
-                    )
-                End If
+                ' 第二組貸方
+                Await ProcessCreditBankSubjectAsync(uow, orgCol, col,
+                    orgCol.col_s_Id_2, col.col_s_Id_2,
+                    orgCol.col_credit_bank_id_2, col.col_credit_bank_id_2,
+                    orgCol.col_credit_amount_2, col.col_credit_amount_2,
+                    oldMonth, col.col_Date)
+
+                ' 第三組貸方
+                Await ProcessCreditBankSubjectAsync(uow, orgCol, col,
+                    orgCol.col_s_Id_3, col.col_s_Id_3,
+                    orgCol.col_credit_bank_id_3, col.col_credit_bank_id_3,
+                    orgCol.col_credit_amount_3, col.col_credit_amount_3,
+                    oldMonth, col.col_Date)
 
                 Await uow.CollectionRepository.UpdateAsync(orgCol, col)
 
@@ -292,6 +294,56 @@
             MessageBox.Show("刪除時發生錯誤：" & ex.Message)
         End Try
     End Sub
+
+    ''' <summary>
+    ''' 處理單組貸方科目為銀行存款時的月結調整
+    ''' </summary>
+    Private Async Function ProcessCreditBankSubjectAsync(
+        uow As IUnitOfWork,
+        orgCol As collection,
+        col As collection,
+        oldSubjectId As Integer?,
+        newSubjectId As Integer?,
+        oldBankId As Integer?,
+        newBankId As Integer?,
+        oldAmount As Integer?,
+        newAmount As Integer?,
+        oldMonth As Date,
+        newMonth As Date) As Task
+
+        ' 如果新舊科目都沒有值，直接返回
+        If Not oldSubjectId.HasValue AndAlso Not newSubjectId.HasValue Then
+            Return
+        End If
+
+        ' 檢查舊科目和新科目是否為銀行存款
+        Dim oldSubject = If(oldSubjectId.HasValue,
+                            Await uow.SubjectRepository.GetByIdAsync(oldSubjectId.Value),
+                            Nothing)
+        Dim newSubject = If(newSubjectId.HasValue,
+                            Await uow.SubjectRepository.GetByIdAsync(newSubjectId.Value),
+                            Nothing)
+        Dim oldIsBankSubject = oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款"
+        Dim newIsBankSubject = newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款"
+
+        ' 如果新舊都不是銀行存款，不需要調整
+        If Not oldIsBankSubject AndAlso Not newIsBankSubject Then
+            Return
+        End If
+
+        ' 調用原有的銀行月結調整方法
+        Await AdjustBankMonthlyBalanceForBankSubjectAsync(
+            uow,
+            oldIsBankSubject,
+            newIsBankSubject,
+            oldBankId.GetValueOrDefault(),
+            oldMonth,
+            oldAmount.GetValueOrDefault(),
+            newBankId.GetValueOrDefault(),
+            newMonth,
+            newAmount.GetValueOrDefault()
+        )
+    End Function
 
     Private Async Function AdjustBankMonthlyBalanceForBankSubjectAsync(uow As IUnitOfWork,
                                                                        oldIsBankSubject As Boolean,
@@ -377,6 +429,14 @@
             If String.IsNullOrEmpty(data.col_Cheque) Then Throw New Exception("請輸入支票號碼")
         End If
         If data.col_cus_Id = 0 Then data.col_cus_Id = Nothing
+
+        ' 驗證貸方金額總和是否等於總金額
+        Dim creditTotal = data.col_credit_amount_1.GetValueOrDefault() +
+                          data.col_credit_amount_2.GetValueOrDefault() +
+                          data.col_credit_amount_3.GetValueOrDefault()
+        If creditTotal <> data.col_Amount Then
+            Throw New Exception($"貸方金額總和 ({creditTotal}) 必須等於總金額 ({data.col_Amount})")
+        End If
     End Sub
 
     Private Sub Validate(data As cheque)

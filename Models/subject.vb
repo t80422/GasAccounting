@@ -19,6 +19,8 @@ Partial Public Class subject
     Public Overridable Property closing_entry As ICollection(Of closing_entry) = New HashSet(Of closing_entry)
     Public Overridable Property closing_entry1 As ICollection(Of closing_entry) = New HashSet(Of closing_entry)
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property collections1 As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property collections2 As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class
