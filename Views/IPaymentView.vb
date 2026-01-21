@@ -6,7 +6,7 @@ Public Interface IPaymentView
     ' 事件
     Event PrintRequested As EventHandler(Of Tuple(Of Date, String))
     Event ManufacturerSelected As EventHandler(Of Integer)
-    Event CompanySelected As EventHandler(Of Integer)
+    Event CompanySelected As EventHandler(Of Tuple(Of Integer, Integer))
 
     ''' <summary>
     ''' 設定廠商下拉選單
@@ -28,7 +28,8 @@ Public Interface IPaymentView
     ''' 設定銀行下拉選單
     ''' </summary>
     ''' <param name="data"></param>
-    Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem))
+    ''' <param name="cmbNo"></param>
+    Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem), cmbNo As Integer)
 
     ''' <summary>
     ''' 設定應付未付列表

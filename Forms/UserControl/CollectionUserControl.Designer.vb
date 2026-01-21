@@ -519,7 +519,7 @@ Partial Class CollectionUserControl
         'cmbType_col
         '
         Me.cmbType_col.FormattingEnabled = True
-        Me.cmbType_col.Items.AddRange(New Object() {"現金", "銀行存款", "應收票據"})
+        Me.cmbType_col.Items.AddRange(New Object() {"現金", "銀行存款", "應收票據", "銷貨折讓"})
         Me.cmbType_col.Location = New System.Drawing.Point(128, 49)
         Me.cmbType_col.Name = "cmbType_col"
         Me.cmbType_col.Size = New System.Drawing.Size(165, 27)

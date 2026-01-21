@@ -104,11 +104,14 @@ Public Class PaymentPresenter
         End Try
     End Sub
 
-    Private Sub LoadBankDropdown(sender As Object, companyId As Integer)
+    Private Sub LoadBankDropdown(sender As Object, company As Tuple(Of Integer, Integer))
         Try
+            Dim compId = company.Item1
+            Dim cmbCompNo = company.Item2
+
             Using uow = _uowFactory.Create()
-                Dim data = uow.BankRepository.GetBankDropdownAsync(companyId).Result
-                _view.PopulateBankDropdown(data)
+                Dim data = uow.BankRepository.GetBankDropdownAsync(compId).Result
+                _view.PopulateBankDropdown(data, cmbCompNo)
             End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -144,6 +147,7 @@ Public Class PaymentPresenter
             Try
                 Dim data As New payment
                 _view.GetInput(data)
+                Validate(data)
                 Await uow.PaymentRepository.AddAsync(data)
                 Await uow.SaveChangesAsync()
 
@@ -202,9 +206,6 @@ Public Class PaymentPresenter
                     )
                 End If
 
-                'Dim entries = CreatePaymentEntries(data)
-                '_aeSer.AddEntries(uow.AccountingEntryRepository, entries)
-
                 Await uow.SaveChangesAsync()
                 uow.Commit()
 
@@ -229,6 +230,7 @@ Public Class PaymentPresenter
                 Dim orgData = uow.PaymentRepository.GetByIdAsync(selectPayment.p_Id).Result
                 Dim data As New payment
                 _view.GetInput(data)
+                Validate(data)
 
                 ' 儲存舊資料用於月結更新
                 Dim oldBankId = orgData.p_bank_Id
@@ -497,7 +499,22 @@ Public Class PaymentPresenter
                 _view.ClearInput()
                 selectPayment = uow.PaymentRepository.GetByIdAsync(id).Result
                 uow.PaymentRepository.Reload(selectPayment)
-                LoadBankDropdown(sender, selectPayment.p_comp_Id)
+
+                If selectPayment.p_comp_Id.HasValue Then
+                    Dim compData = New Tuple(Of Integer, Integer)(selectPayment.p_comp_Id.Value, 1)
+                    LoadBankDropdown(sender, compData)
+                End If
+
+                If selectPayment.p_debit_comp_id_2.HasValue Then
+                    Dim compData = New Tuple(Of Integer, Integer)(selectPayment.p_debit_comp_id_2.Value, 2)
+                    LoadBankDropdown(sender, compData)
+                End If
+
+                If selectPayment.p_debit_comp_id_3.HasValue Then
+                    Dim compData = New Tuple(Of Integer, Integer)(selectPayment.p_debit_comp_id_3.Value, 3)
+                    LoadBankDropdown(sender, compData)
+                End If
+
                 _view.ShowDetail(selectPayment)
                 If selectPayment.p_m_Id.HasValue Then ManufacturerSelected(sender, selectPayment.p_m_Id)
                 _view.ButtonStatus(True)
@@ -528,71 +545,6 @@ Public Class PaymentPresenter
         End Try
     End Sub
 
-    'Private Function CreatePaymentEntries(payment As payment) As List(Of accounting_entry)
-    '    Dim entries = New List(Of accounting_entry)
-
-    '    Select Case payment.p_Type
-    '        Case "現金"
-    '            entries.Add(New accounting_entry With {
-    '                .ae_TransactionId = payment.p_Id,
-    '                .ae_Date = payment.p_Date,
-    '                .ae_TransactionType = "付款作業",
-    '                .ae_s_Id = payment.p_s_Id,
-    '                .ae_Debit = payment.p_Amount,
-    '                .ae_Credit = 0
-    '            })
-
-    '            entries.Add(New accounting_entry With {
-    '                .ae_TransactionId = payment.p_Id,
-    '                .ae_Date = payment.p_Date,
-    '                .ae_TransactionType = "付款作業",
-    '                .ae_s_Id = 5,
-    '                .ae_Debit = 0,
-    '                .ae_Credit = payment.p_Amount
-    '            })
-
-    '        Case "銀行存款"
-    '            entries.Add(New accounting_entry With {
-    '                .ae_TransactionId = payment.p_Id,
-    '                .ae_Date = payment.p_Date,
-    '                .ae_TransactionType = "付款作業",
-    '                .ae_s_Id = payment.p_s_Id,
-    '                .ae_Debit = payment.p_Amount,
-    '                .ae_Credit = 0
-    '            })
-
-    '            entries.Add(New accounting_entry With {
-    '                .ae_TransactionId = payment.p_Id,
-    '                .ae_Date = payment.p_Date,
-    '                .ae_TransactionType = "付款作業",
-    '                .ae_s_Id = 6,
-    '                .ae_Debit = 0,
-    '                .ae_Credit = payment.p_Amount
-    '            })
-
-    '        Case "應付票據", "應收票據"
-    '            entries.Add(New accounting_entry With {
-    '                .ae_TransactionId = payment.p_Id,
-    '                .ae_Date = payment.p_Date,
-    '                .ae_TransactionType = "付款作業",
-    '                .ae_s_Id = payment.p_s_Id,
-    '                .ae_Debit = payment.p_Amount,
-    '                .ae_Credit = 0
-    '            })
-
-    '            entries.Add(New accounting_entry With {
-    '                .ae_TransactionId = payment.p_Id,
-    '                .ae_Date = payment.p_Date,
-    '                .ae_TransactionType = "付款作業",
-    '                .ae_s_Id = 7,
-    '                .ae_Debit = 0,
-    '                .ae_Credit = payment.p_Amount
-    '            })
-    '    End Select
-
-    '    Return entries
-    'End Function
-
     Private Sub Search()
         Try
             Dim criteria = _view.GetSearchCriteria
@@ -600,5 +552,14 @@ Public Class PaymentPresenter
         Catch ex As Exception
             Throw
         End Try
+    End Sub
+
+    Private Sub Validate(data As payment)
+        ' 驗證是否借貸平衡
+        Dim debitTotal = data.p_debit_amount_1.GetValueOrDefault +
+                         data.p_debit_amount_2.GetValueOrDefault +
+                         data.p_debit_amount_3.GetValueOrDefault
+
+        If debitTotal <> data.p_Amount Then Throw New Exception($"借方金額總和 ({debitTotal}) 必須等於貸方金額 ({data.p_Amount})")
     End Sub
 End Class

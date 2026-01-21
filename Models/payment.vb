@@ -23,12 +23,27 @@ Partial Public Class payment
     Public Property p_SubpoenaNo As Integer
     Public Property p_cp_Id As Nullable(Of Integer)
     Public Property p_AccountMonth As Nullable(Of Date)
+    Public Property p_debit_amount_1 As Nullable(Of Integer)
+    Public Property p_debit_s_id_2 As Nullable(Of Integer)
+    Public Property p_debit_comp_id_2 As Nullable(Of Integer)
+    Public Property p_debit_bank_id_2 As Nullable(Of Integer)
+    Public Property p_debit_amount_2 As Nullable(Of Integer)
+    Public Property p_debit_s_id_3 As Nullable(Of Integer)
+    Public Property p_debit_comp_id_3 As Nullable(Of Integer)
+    Public Property p_debit_bank_id_3 As Nullable(Of Integer)
+    Public Property p_debit_amount_3 As Nullable(Of Integer)
 
     Public Overridable Property bank As bank
+    Public Overridable Property bank1 As bank
+    Public Overridable Property bank2 As bank
     Public Overridable Property chque_pay As chque_pay
     Public Overridable Property company As company
+    Public Overridable Property company1 As company
+    Public Overridable Property company2 As company
     Public Overridable Property manufacturer As manufacturer
     Public Overridable Property payment_cheque As ICollection(Of payment_cheque) = New HashSet(Of payment_cheque)
     Public Overridable Property subject As subject
+    Public Overridable Property subject1 As subject
+    Public Overridable Property subject2 As subject
 
 End Class

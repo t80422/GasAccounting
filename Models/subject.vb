@@ -22,5 +22,7 @@ Partial Public Class subject
     Public Overridable Property collections1 As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property collections2 As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property payments1 As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property payments2 As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class

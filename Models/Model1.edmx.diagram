@@ -28,7 +28,6 @@
         <EntityTypeShape EntityType="gas_accounting_systemModel.monthly_account" Width="1.5" PointX="11.25" PointY="39.75" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.order_collection_mapping" Width="1.5" PointX="15.75" PointY="48.125" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.order" Width="1.5" PointX="13.5" PointY="30.375" />
-        <EntityTypeShape EntityType="gas_accounting_systemModel.payment" Width="1.5" PointX="5.25" PointY="59" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.payment_cheque" Width="1.5" PointX="7.5" PointY="60.25" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.permission" Width="1.5" PointX="9" PointY="26.75" />
         <EntityTypeShape EntityType="gas_accounting_systemModel.priceplan" Width="1.5" PointX="6.75" PointY="38.875" />
@@ -48,7 +47,6 @@
         <AssociationConnector Association="gas_accounting_systemModel.collection_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.collection_ibfk_5" />
         <AssociationConnector Association="gas_accounting_systemModel.collection_ibfk_8" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.barrel_monthly_balances_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.car_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.car_ibfk_2" />
@@ -56,7 +54,6 @@
         <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.cheque_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.payment_cheque_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_5" />
         <AssociationConnector Association="gas_accounting_systemModel.closing_entry_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.closing_entry_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.collection_ibfk_1" />
@@ -72,7 +69,6 @@
         <AssociationConnector Association="gas_accounting_systemModel.customer_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.gas_monthly_balances_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.invoice_split_ibfk_1" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_1" />
@@ -84,21 +80,31 @@
         <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.employee_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.orders_ibfk_3" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_barrel_ibfk_4" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.purchase_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.write_off_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.order_collection_mapping_ibfk_2" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_cheque_ibfk_2" />
-        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_4" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_1" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_3" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_2" />
         <AssociationConnector Association="gas_accounting_systemModel.rolepermission_ibfk_4" />
         <AssociationConnector Association="gas_accounting_systemModel.scrap_barrel_detail_ibfk_2" />
-      </Diagram>
+        <EntityTypeShape EntityType="gas_accounting_systemModel.payment" Width="1.5" PointX="16.25" PointY="56.75" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_11" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_2" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_9" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_5" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_12" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_3" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_8" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_1" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_cheque_ibfk_2" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_10" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_4" />
+        <AssociationConnector Association="gas_accounting_systemModel.payment_ibfk_7" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

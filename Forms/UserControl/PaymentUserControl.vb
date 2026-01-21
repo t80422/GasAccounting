@@ -6,13 +6,13 @@ Public Class PaymentUserControl
 
     Public Event PrintRequested As EventHandler(Of Tuple(Of Date, String)) Implements IPaymentView.PrintRequested
     Public Event ManufacturerSelected As EventHandler(Of Integer) Implements IPaymentView.ManufacturerSelected
-    Public Event CompanySelected As EventHandler(Of Integer) Implements IPaymentView.CompanySelected
     Public Event CreateRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).CreateRequest
     Public Event DataSelectedRequest As EventHandler(Of Integer) Implements IFormView(Of payment, PaymentListVM).DataSelectedRequest
     Public Event UpdateRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).UpdateRequest
     Public Event DeleteRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).DeleteRequest
     Public Event CancelRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).CancelRequest
     Public Event SearchRequest As EventHandler Implements IFormView(Of payment, PaymentListVM).SearchRequest
+    Private Event CompanySelected As EventHandler(Of Tuple(Of Integer, Integer)) Implements IPaymentView.CompanySelected
 
     ' === 介面實作 ===
     Public Sub PopulateVendorDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateVendorDropdown
@@ -21,14 +21,25 @@ Public Class PaymentUserControl
 
     Public Sub PopulateSubjectDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateSubjectDropdown
         SetComboBox(cmbSubjects_payment, data)
+        SetComboBox(cmbDebitSubject2, data)
+        SetComboBox(cmbDebitSubject3, data)
     End Sub
 
     Public Sub PopulateCompanyDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateCompanyDropdown
         SetComboBox(cmbCompany_payment, data)
+        SetComboBox(cmbDebitCompany2, data)
+        SetComboBox(cmbDebitCompany3, data)
     End Sub
 
-    Public Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem)) Implements IPaymentView.PopulateBankDropdown
-        SetComboBox(cmbBank, data)
+    Public Sub PopulateBankDropdown(data As IReadOnlyList(Of SelectListItem), cmbNo As Integer) Implements IPaymentView.PopulateBankDropdown
+        Select Case cmbNo
+            Case 1
+                SetComboBox(cmbBank, data)
+            Case 2
+                SetComboBox(cmbDebitBank2, data)
+            Case 3
+                SetComboBox(cmbDebitBank3, data)
+        End Select
     End Sub
 
     Public Sub DisplayAmountDueList(data As IReadOnlyList(Of AmountDueVM)) Implements IPaymentView.DisplayAmountDueList
@@ -160,7 +171,18 @@ Public Class PaymentUserControl
 
     ' 選擇公司
     Private Sub cmbCompany_payment_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbCompany_payment.SelectionChangeCommitted
-        RaiseEvent CompanySelected(Me, cmbCompany_payment.SelectedValue)
+        Dim data = New Tuple(Of Integer, Integer)(cmbCompany_payment.SelectedValue, 1)
+        RaiseEvent CompanySelected(Me, data)
+    End Sub
+
+    Private Sub cmbDebitCompany2_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbDebitCompany2.SelectionChangeCommitted
+        Dim data = New Tuple(Of Integer, Integer)(cmbDebitCompany2.SelectedValue, 2)
+        RaiseEvent CompanySelected(Me, data)
+    End Sub
+
+    Private Sub cmbDebitCompany3_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cmbDebitCompany3.SelectionChangeCommitted
+        Dim data = New Tuple(Of Integer, Integer)(cmbDebitCompany3.SelectedValue, 3)
+        RaiseEvent CompanySelected(Me, data)
     End Sub
 
     Private Sub cmbSubjects_payment_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSubjects_payment.SelectedIndexChanged
@@ -190,12 +212,8 @@ Public Class PaymentUserControl
                 dtpCashing,
                 txtVendorAccount_payment,
                 lblVendorBankRequired_payment,
-                lblVendorBank_payment,
-                lblBankReq,
-                lblBank,
-                cmbBank
-            }},
-            {"銀行存款", {lblVendorBankRequired_payment, lblVendorBank_payment, txtVendorAccount_payment, lblBankReq, lblBank, cmbBank}}
+                lblVendorBank_payment
+            }}
         }
 
         ' 先隱藏所有相關控制項
@@ -210,12 +228,6 @@ Public Class PaymentUserControl
             For Each ctrl In ctrlVisibility(paymentType)
                 ctrl.Visible = True
             Next
-        End If
-
-        If debitType = "銀行存款" Then
-            lblBankReq.Visible = True
-            lblBank.Visible = True
-            cmbBank.Visible = True
         End If
     End Sub
 
