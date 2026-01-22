@@ -231,6 +231,9 @@ Public Class CollectionPresenter
                                 Await uow.ChequeRepository.AddAsync(cheque)
                             Else
                                 cheque.che_Id = orgCheque.che_Id
+                                cheque.chu_State = orgCheque.chu_State
+                                cheque.che_CollectionDate = orgCheque.che_CollectionDate
+
                                 Await uow.ChequeRepository.UpdateAsync(orgCheque, cheque)
                             End If
                         ElseIf orgCol.col_Type = "現金" Then

@@ -124,7 +124,7 @@ Public Class CollectionRep
         Try
             ' 轉帳傳票範圍：銀行存款、應收票據、轉帳折讓
             Dim collections = _dbSet.Where(Function(x) x.col_Date = day AndAlso
-                                          (x.col_Type = "銀行存款" OrElse x.col_Type = "應收票據" OrElse x.col_Type = "轉帳折讓")).ToList()
+                                          (x.col_Type = "銀行存款" OrElse x.col_Type = "應收票據" OrElse x.col_Type = "銷貨折讓")).ToList()
 
             Dim result As New List(Of TransferSubpoenaDTO)
 

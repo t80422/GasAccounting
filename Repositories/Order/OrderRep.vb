@@ -71,7 +71,7 @@ Public Class OrderRep
                 query = query.Where(Function(x) x.o_date < endDate)
             End If
 
-            If criteria.CusId <> 0 Then query = query.Where(Function(x) x.o_cus_Id = criteria.CusId)
+            If Not String.IsNullOrEmpty(criteria.CusCode) Then query = query.Where(Function(x) x.customer.cus_code = criteria.CusCode)
 
             Return Await query.OrderByDescending(Function(x) x.o_date).ThenByDescending(Function(x) x.o_id).ToListAsync
         Catch ex As Exception

@@ -85,15 +85,42 @@ Public Class PaymentRep
 
     Public Function GetCashSubpoenaData(selectDate As Date) As List(Of CashSubpoenaDTO) Implements IPaymentRep.GetCashSubpoenaData
         Try
-            Dim query = _dbSet.Where(Function(x) x.p_Date = selectDate)
+            Dim payments = _dbSet.Where(Function(x) x.p_Date = selectDate AndAlso x.p_Type = "現金").ToList()
+            Dim result As New List(Of CashSubpoenaDTO)
 
-            Return query.Where(Function(x) x.p_Type = "現金").
-                Select(Function(x) New CashSubpoenaDTO With {
-                    .SubjectName = x.subject.s_name,
-                    .Amount = x.p_Amount,
-                    .Summary = x.p_Memo,
-                    .Code = x.manufacturer.manu_code
-                }).ToList
+            For Each x In payments
+                ' 第一組：金額 1 -> subject1
+                If x.p_debit_amount_1.GetValueOrDefault() > 0 Then
+                    result.Add(New CashSubpoenaDTO With {
+                        .SubjectName = x.subject1?.s_name,
+                        .Amount = x.p_debit_amount_1.Value,
+                        .Summary = x.p_Memo,
+                        .Code = x.manufacturer?.manu_code
+                    })
+                End If
+
+                ' 第二組：金額 2 -> subject2
+                If x.p_debit_amount_2.GetValueOrDefault() > 0 Then
+                    result.Add(New CashSubpoenaDTO With {
+                        .SubjectName = x.subject2?.s_name,
+                        .Amount = x.p_debit_amount_2.Value,
+                        .Summary = x.p_Memo,
+                        .Code = x.manufacturer?.manu_code
+                    })
+                End If
+
+                ' 第三組：金額 3 -> subject
+                If x.p_debit_amount_3.GetValueOrDefault() > 0 Then
+                    result.Add(New CashSubpoenaDTO With {
+                        .SubjectName = x.subject?.s_name,
+                        .Amount = x.p_debit_amount_3.Value,
+                        .Summary = x.p_Memo,
+                        .Code = x.manufacturer?.manu_code
+                    })
+                End If
+            Next
+
+            Return result
         Catch ex As Exception
             Throw
         End Try
@@ -101,16 +128,51 @@ Public Class PaymentRep
 
     Public Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO) Implements IPaymentRep.GetTransferSubpoenaData
         Try
-            Dim query = _dbSet.Where(Function(x) x.p_Date = day)
+            ' 轉帳傳票範圍：銀行存款、應付票據 (不含轉帳折讓)
+            Dim payments = _dbSet.Where(Function(x) x.p_Date = day AndAlso
+                                          (x.p_Type = "銀行存款" OrElse x.p_Type = "應付票據")).ToList()
 
-            Return query.Where(Function(x) x.p_Type = "銀行存款" Or x.p_Type = "應付票據").
-                Select(Function(x) New TransferSubpoenaDTO With {
-                    .CreditAmount = x.p_Amount,
-                    .CreditSubjectName = x.p_Type,
-                    .DebitAmount = x.p_Amount,
-                    .DebitSubjectName = x.subject.s_name,
-                    .DebitSummary = x.p_Memo
-                }).ToList
+            Dim result As New List(Of TransferSubpoenaDTO)
+
+            For Each x In payments
+                ' 第一組：金額 1 -> subject1 (借) / p_Type (貸)
+                If x.p_debit_amount_1.GetValueOrDefault() > 0 Then
+                    result.Add(New TransferSubpoenaDTO With {
+                        .DebitSubjectName = x.subject1?.s_name,
+                        .DebitAmount = x.p_debit_amount_1.Value,
+                        .DebitSummary = x.p_Memo,
+                        .CreditSubjectName = x.p_Type,
+                        .CreditAmount = x.p_debit_amount_1.Value,
+                        .CreditSummary = x.p_Memo
+                    })
+                End If
+
+                ' 第二組：金額 2 -> subject2 (借) / p_Type (貸)
+                If x.p_debit_amount_2.GetValueOrDefault() > 0 Then
+                    result.Add(New TransferSubpoenaDTO With {
+                        .DebitSubjectName = x.subject2?.s_name,
+                        .DebitAmount = x.p_debit_amount_2.Value,
+                        .DebitSummary = x.p_Memo,
+                        .CreditSubjectName = x.p_Type,
+                        .CreditAmount = x.p_debit_amount_2.Value,
+                        .CreditSummary = x.p_Memo
+                    })
+                End If
+
+                ' 第三組：金額 3 -> subject (借) / p_Type (貸)
+                If x.p_debit_amount_3.GetValueOrDefault() > 0 Then
+                    result.Add(New TransferSubpoenaDTO With {
+                        .DebitSubjectName = x.subject?.s_name,
+                        .DebitAmount = x.p_debit_amount_3.Value,
+                        .DebitSummary = x.p_Memo,
+                        .CreditSubjectName = x.p_Type,
+                        .CreditAmount = x.p_debit_amount_3.Value,
+                        .CreditSummary = x.p_Memo
+                    })
+                End If
+            Next
+
+            Return result
         Catch ex As Exception
             Throw
         End Try

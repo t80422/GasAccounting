@@ -32,7 +32,6 @@ Partial Class frmSearch_Order
         Me.lblCusCode = New System.Windows.Forms.Label()
         Me.txtCusName = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.txtCusID = New System.Windows.Forms.TextBox()
         Me.chkIn = New System.Windows.Forms.CheckBox()
         Me.chkOut = New System.Windows.Forms.CheckBox()
         Me.btnSubmit = New System.Windows.Forms.Button()
@@ -73,6 +72,8 @@ Partial Class frmSearch_Order
         'chkIsDate
         '
         Me.chkIsDate.AutoSize = True
+        Me.chkIsDate.Checked = True
+        Me.chkIsDate.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkIsDate.Location = New System.Drawing.Point(532, 17)
         Me.chkIsDate.Name = "chkIsDate"
         Me.chkIsDate.Size = New System.Drawing.Size(154, 23)
@@ -127,16 +128,6 @@ Partial Class frmSearch_Order
         Me.Label3.TabIndex = 516
         Me.Label3.Text = "客戶名稱"
         '
-        'txtCusID
-        '
-        Me.txtCusID.Location = New System.Drawing.Point(292, 59)
-        Me.txtCusID.Name = "txtCusID"
-        Me.txtCusID.ReadOnly = True
-        Me.txtCusID.Size = New System.Drawing.Size(100, 30)
-        Me.txtCusID.TabIndex = 518
-        Me.txtCusID.Tag = "o_cus_Id"
-        Me.txtCusID.Visible = False
-        '
         'chkIn
         '
         Me.chkIn.AutoSize = True
@@ -174,13 +165,13 @@ Partial Class frmSearch_Order
         '
         'frmSearch_Order
         '
+        Me.AcceptButton = Me.btnSubmit
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(692, 189)
         Me.Controls.Add(Me.btnSubmit)
         Me.Controls.Add(Me.chkOut)
         Me.Controls.Add(Me.chkIn)
-        Me.Controls.Add(Me.txtCusID)
         Me.Controls.Add(Me.txtCusName)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.txtCusCode)
@@ -216,7 +207,6 @@ Partial Class frmSearch_Order
     Friend WithEvents lblCusCode As Label
     Friend WithEvents txtCusName As TextBox
     Friend WithEvents Label3 As Label
-    Friend WithEvents txtCusID As TextBox
     Friend WithEvents chkIn As CheckBox
     Friend WithEvents chkOut As CheckBox
     Friend WithEvents btnSubmit As Button
