@@ -13,4 +13,6 @@
     ''' <param name="bankId"></param>
     ''' <returns></returns>
     Function GetBankAccount(bankId As Integer) As IEnumerable(Of collection)
+    Function GetBankMainDepositSumAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of Integer)
+    Function GetBankSideWithdrawalSumAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of Integer)
 End Interface

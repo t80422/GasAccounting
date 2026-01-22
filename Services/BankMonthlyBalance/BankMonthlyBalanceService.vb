@@ -6,14 +6,14 @@
         Dim monthEnd = monthStart.AddMonths(1)
 
         ' 當月借方：現金存銀行 + 銀行存款收入
-        Dim monthCashToBank = Await paymentRep.GetCashToBankTransfersByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim monthDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim totalDebit As Decimal = monthCashToBank.Sum(Function(x) x.p_Amount) + monthDeposits.Sum(Function(x) x.col_Amount)
+        Dim monthCashToBank = Await paymentRep.GetBankSideDepositSumAsync(bankId, monthStart, monthEnd)
+        Dim monthDeposits = Await collectionRep.GetBankMainDepositSumAsync(bankId, monthStart, monthEnd)
+        Dim totalDebit As Decimal = monthCashToBank + monthDeposits
 
         ' 當月貸方：現金提銀行 + 銀行存款付款
-        Dim monthBankToCash = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim monthPayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, monthStart, monthEnd)
-        Dim totalCredit As Decimal = monthBankToCash.Sum(Function(x) x.col_Amount) + monthPayments.Sum(Function(x) x.p_Amount)
+        Dim monthBankToCash = Await collectionRep.GetBankSideWithdrawalSumAsync(bankId, monthStart, monthEnd)
+        Dim monthPayments = Await paymentRep.GetBankMainWithdrawalSumAsync(bankId, monthStart, monthEnd)
+        Dim totalCredit As Decimal = monthBankToCash + monthPayments
 
         ' 取得期初餘額（上期結餘 + 上期結餘日後至本月初的交易）
 

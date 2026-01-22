@@ -131,16 +131,49 @@ Public Class CollectionService
                 End If
 
                 ' 科目為銀行存款時也需回沖（對應新增時的增量增加，即減少 Credit）
-                Dim subject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
-                If subject IsNot Nothing AndAlso subject.s_name = "銀行存款" Then
-                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
-                        uow.BankMonthlyBalancesRepository,
-                        uow.BankRepository,
-                        bankId,
-                        colMonth,
-                        creditDelta:=-amount,
-                        debitDelta:=0
-                    )
+                If orgCol.col_s_Id.HasValue Then
+                    Dim subject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id)
+
+                    If subject IsNot Nothing AndAlso subject.s_name = "銀行存款" Then
+                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            orgCol.col_credit_bank_id,
+                            colMonth,
+                            creditDelta:=-orgCol.col_credit_amount_1,
+                            debitDelta:=0
+                        )
+                    End If
+                End If
+
+                If orgCol.col_s_Id_2.HasValue Then
+                    Dim subject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id_2)
+
+                    If subject IsNot Nothing AndAlso subject.s_name = "銀行存款" Then
+                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            orgCol.col_credit_bank_id_2,
+                            colMonth,
+                            creditDelta:=-orgCol.col_credit_amount_2,
+                            debitDelta:=0
+                        )
+                    End If
+                End If
+
+                If orgCol.col_s_Id_3.HasValue Then
+                    Dim subject = Await uow.SubjectRepository.GetByIdAsync(orgCol.col_s_Id_3)
+
+                    If subject IsNot Nothing AndAlso subject.s_name = "銀行存款" Then
+                        Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                            uow.BankMonthlyBalancesRepository,
+                            uow.BankRepository,
+                            orgCol.col_credit_bank_id_3,
+                            colMonth,
+                            creditDelta:=-orgCol.col_credit_amount_3,
+                            debitDelta:=0
+                        )
+                    End If
                 End If
 
                 '刪除資料

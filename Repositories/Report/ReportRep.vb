@@ -1,4 +1,4 @@
-﻿Imports System.Data.Entity
+Imports System.Data.Entity
 
 Public Class ReportRep
     Implements IReportRep
@@ -449,26 +449,56 @@ Public Class ReportRep
                                                         .Date = x.col_Date,
                                                         .Subject = x.subject.s_name,
                                                         .Memo = x.col_Memo,
-                                                        .Amount = x.col_Amount,
+                                                        .Amount = CType(x.col_Amount, Integer?),
                                                         .IsIncome = True,
                                                         .Target = x.customer.cus_code
                                                    })
 
-            '銀行取出現金：獨立撈取現金類型且科目為銀行存款
-            Dim cashToBankCollections = _context.collections.AsNoTracking.
-                                                         Where(Function(x) x.col_Date.Year = month.Year AndAlso
-                                                                           x.col_Date.Month = month.Month AndAlso
-                                                                           x.col_credit_bank_id = bankId AndAlso
-                                                                           x.subject.s_name = "銀行存款").
-                                                         Select(Function(x) New With {
-                                                              .Date = x.col_Date,
-                                                              .Subject = x.col_Type,
-                                                              .Memo = x.col_Memo,
-                                                              .Amount = x.col_Amount,
-                                                              .IsIncome = False,
-                                                              .Target = x.customer.cus_code
-                                                         })
-            '獲取支出數據
+            '銀行取出現金：獨立撈取現金類型且科目為銀行存款 (包含所有拆分)
+            ' Split 1
+            Dim cashToBankCol1 = _context.collections.AsNoTracking.
+                                     Where(Function(x) x.col_Date.Year = month.Year AndAlso
+                                                       x.col_Date.Month = month.Month AndAlso
+                                                       x.col_credit_bank_id = bankId AndAlso
+                                                       x.subject.s_name = "銀行存款").
+                                     Select(Function(x) New With {
+                                          .Date = x.col_Date,
+                                          .Subject = x.col_Type,
+                                          .Memo = x.col_Memo,
+                                          .Amount = CType(x.col_credit_amount_1, Integer?),
+                                          .IsIncome = False,
+                                          .Target = x.customer.cus_code
+                                     })
+            ' Split 2
+            Dim cashToBankCol2 = _context.collections.AsNoTracking.
+                                     Where(Function(x) x.col_Date.Year = month.Year AndAlso
+                                                       x.col_Date.Month = month.Month AndAlso
+                                                       x.col_credit_bank_id_2 = bankId AndAlso
+                                                       x.subject2.s_name = "銀行存款").
+                                     Select(Function(x) New With {
+                                          .Date = x.col_Date,
+                                          .Subject = x.col_Type,
+                                          .Memo = x.col_Memo,
+                                          .Amount = CType(x.col_credit_amount_2, Integer?),
+                                          .IsIncome = False,
+                                          .Target = x.customer.cus_code
+                                     })
+            ' Split 3
+            Dim cashToBankCol3 = _context.collections.AsNoTracking.
+                                     Where(Function(x) x.col_Date.Year = month.Year AndAlso
+                                                       x.col_Date.Month = month.Month AndAlso
+                                                       x.col_credit_bank_id_3 = bankId AndAlso
+                                                       x.subject1.s_name = "銀行存款").
+                                     Select(Function(x) New With {
+                                          .Date = x.col_Date,
+                                          .Subject = x.col_Type,
+                                          .Memo = x.col_Memo,
+                                          .Amount = CType(x.col_credit_amount_3, Integer?),
+                                          .IsIncome = False,
+                                          .Target = x.customer.cus_code
+                                     })
+
+            '獲取支出數據 (Main Payment is Bank Deposit -> Bank Out)
             Dim payments = _context.payments.AsNoTracking.
                                              Where(Function(x) x.p_Date.Year = month.Year AndAlso
                                                                x.p_Date.Month = month.Month AndAlso
@@ -478,29 +508,59 @@ Public Class ReportRep
                                                 .Date = x.p_Date,
                                                 .Subject = x.subject.s_name,
                                                 .Memo = x.p_Memo,
-                                                .Amount = x.p_Amount,
+                                                .Amount = CType(x.p_Amount, Integer?),
                                                 .IsIncome = False,
                                                 .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
                                              })
 
-            ' 銀行存入現金: 獨立撈取現金類型且科目為銀行存款
-            Dim cashToBankPayments = _context.payments.AsNoTracking.
-                                                 Where(Function(x) x.p_Date.Year = month.Year AndAlso
-                                                                   x.p_Date.Month = month.Month AndAlso
-                                                                   x.p_Type = "現金" AndAlso
-                                                                   x.p_bank_Id = bankId AndAlso
-                                                                   x.subject.s_name = "銀行存款").
-                                                 Select(Function(x) New With {
-                                                      .Date = x.p_Date,
-                                                      .Subject = x.p_Type,
-                                                      .Memo = x.p_Memo,
-                                                      .Amount = x.p_Amount,
-                                                      .IsIncome = True,
-                                                      .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
-                                                 })
+            ' 銀行存入現金: 獨立撈取借方科目為銀行存款 (包含所有拆分)
+            ' Split 1 (Main Debit usually)
+            Dim cashToBankPay1 = _context.payments.AsNoTracking.
+                                     Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                       x.p_Date.Month = month.Month AndAlso
+                                                       x.p_bank_Id = bankId AndAlso
+                                                       x.subject1.s_name = "銀行存款").
+                                     Select(Function(x) New With {
+                                          .Date = x.p_Date,
+                                          .Subject = x.p_Type,
+                                          .Memo = x.p_Memo,
+                                          .Amount = CType(x.p_debit_amount_1, Integer?),
+                                          .IsIncome = True,
+                                          .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
+                                     })
+            ' Split 2
+            Dim cashToBankPay2 = _context.payments.AsNoTracking.
+                                     Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                       x.p_Date.Month = month.Month AndAlso
+                                                       x.p_debit_bank_id_2 = bankId AndAlso
+                                                       x.subject2.s_name = "銀行存款").
+                                     Select(Function(x) New With {
+                                          .Date = x.p_Date,
+                                          .Subject = x.p_Type,
+                                          .Memo = x.p_Memo,
+                                          .Amount = CType(x.p_debit_amount_2, Integer?),
+                                          .IsIncome = True,
+                                          .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
+                                     })
+            ' Split 3
+            Dim cashToBankPay3 = _context.payments.AsNoTracking.
+                                     Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                       x.p_Date.Month = month.Month AndAlso
+                                                       x.p_debit_bank_id_3 = bankId AndAlso
+                                                       x.subject.s_name = "銀行存款").
+                                     Select(Function(x) New With {
+                                          .Date = x.p_Date,
+                                          .Subject = x.p_Type,
+                                          .Memo = x.p_Memo,
+                                          .Amount = CType(x.p_debit_amount_3, Integer?),
+                                          .IsIncome = True,
+                                          .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
+                                     })
 
             '合併並排列數據
-            Dim allTransactions = collections.Concat(cashToBankCollections).Concat(payments).Concat(cashToBankPayments).
+            Dim allTransactions = collections.Concat(cashToBankCol1).Concat(cashToBankCol2).Concat(cashToBankCol3).
+                                              Concat(payments).
+                                              Concat(cashToBankPay1).Concat(cashToBankPay2).Concat(cashToBankPay3).
                                               OrderBy(Function(x) x.Date).
                                               ThenBy(Function(x) x.IsIncome).
                                               ToList
@@ -517,28 +577,6 @@ Public Class ReportRep
                                                  _context.banks.Find(bankId)?.bank_InitialBalance,
                                                  lastMonthlyBalance.bm_ClosingBalance)
 
-            ''2. 計算從上期月結到開始日期前的交易金額
-            'If lastMonthlyBalance IsNot Nothing Then
-            '    '將上期月結日期轉換到該月的最後一天
-            '    Dim lastMonthEndDate = New Date(lastMonthlyBalance.bm_Month.Year,
-            '                                  lastMonthlyBalance.bm_Month.Month,
-            '                                  Date.DaysInMonth(lastMonthlyBalance.bm_Month.Year, lastMonthlyBalance.bm_Month.Month))
-
-            '    Dim collectionsQuery = _context.collections.Where(Function(x) x.col_Date > lastMonthEndDate AndAlso
-            '                                                                 x.col_Date < startMonth AndAlso
-            '                                                                 x.col_Type = "銀行" AndAlso
-            '                                                                 x.col_bank_Id = bankId)
-            '    Dim paymentsQuery = _context.payments.Where(Function(x) x.p_Date > lastMonthEndDate AndAlso
-            '                                                           x.p_Date < startMonth AndAlso
-            '                                                           x.p_Type = "銀行" AndAlso
-            '                                                           x.p_bank_Id = bankId)
-
-            '    Dim collectionsSum As Integer = If(collectionsQuery.Any(), collectionsQuery.Sum(Function(x) x.col_Amount), 0)
-            '    Dim paymentsSum As Integer = If(paymentsQuery.Any(), paymentsQuery.Sum(Function(x) x.p_Amount), 0)
-
-            '    Dim transactionsBeforeStart = collectionsSum - paymentsSum
-            '    lastClosingBalance += transactionsBeforeStart
-            'End If
 
             result.List = New List(Of BankAccountList) From {
                 New BankAccountList With {

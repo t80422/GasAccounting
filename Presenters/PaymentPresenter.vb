@@ -206,6 +206,14 @@ Public Class PaymentPresenter
                     )
                 End If
 
+                ' 處理借方(存入)銀行科目的餘額更新 (資金流入銀行 -> Debit 增加)
+                ' 第一組
+                Await ProcessDebitBankSubjectAsync(uow, Nothing, data, Nothing, data.p_s_Id, Nothing, data.p_bank_Id, Nothing, data.p_debit_amount_1, DateTime.MinValue, data.p_Date)
+                ' 第二組
+                Await ProcessDebitBankSubjectAsync(uow, Nothing, data, Nothing, data.p_debit_s_id_2, Nothing, data.p_debit_bank_id_2, Nothing, data.p_debit_amount_2, DateTime.MinValue, data.p_Date)
+                ' 第三組
+                Await ProcessDebitBankSubjectAsync(uow, Nothing, data, Nothing, data.p_debit_s_id_3, Nothing, data.p_debit_bank_id_3, Nothing, data.p_debit_amount_3, DateTime.MinValue, data.p_Date)
+
                 Await uow.SaveChangesAsync()
                 uow.Commit()
 
@@ -421,6 +429,14 @@ Public Class PaymentPresenter
                     )
                 End If
 
+                ' 處理借方科目(資金流入銀行)的變更
+                ' 第一組
+                Await ProcessDebitBankSubjectAsync(uow, orgData, data, orgData.p_s_Id, data.p_s_Id, orgData.p_bank_Id, data.p_bank_Id, orgData.p_debit_amount_1, data.p_debit_amount_1, oldDate, data.p_Date)
+                ' 第二組
+                Await ProcessDebitBankSubjectAsync(uow, orgData, data, orgData.p_debit_s_id_2, data.p_debit_s_id_2, orgData.p_debit_bank_id_2, data.p_debit_bank_id_2, orgData.p_debit_amount_2, data.p_debit_amount_2, oldDate, data.p_Date)
+                ' 第三組
+                Await ProcessDebitBankSubjectAsync(uow, orgData, data, orgData.p_debit_s_id_3, data.p_debit_s_id_3, orgData.p_debit_bank_id_3, data.p_debit_bank_id_3, orgData.p_debit_amount_3, data.p_debit_amount_3, oldDate, data.p_Date)
+
                 ' 更新付款主檔
                 Await uow.PaymentRepository.UpdateAsync(orgData, data)
                 Await uow.SaveChangesAsync()
@@ -478,6 +494,14 @@ Public Class PaymentPresenter
                         debitDelta:=0
                     )
                 End If
+
+                ' 處理借方(存入)銀行科目的餘額更新 (資金流入銀行 -> Debit 減少，因為是刪除)
+                ' 第一組
+                Await ProcessDebitBankSubjectAsync(uow, selectPayment, Nothing, selectPayment.p_s_Id, Nothing, selectPayment.p_bank_Id, Nothing, selectPayment.p_debit_amount_1, Nothing, payDate, DateTime.MinValue)
+                ' 第二組
+                Await ProcessDebitBankSubjectAsync(uow, selectPayment, Nothing, selectPayment.p_debit_s_id_2, Nothing, selectPayment.p_debit_bank_id_2, Nothing, selectPayment.p_debit_amount_2, Nothing, payDate, DateTime.MinValue)
+                ' 第三組
+                Await ProcessDebitBankSubjectAsync(uow, selectPayment, Nothing, selectPayment.p_debit_s_id_3, Nothing, selectPayment.p_debit_bank_id_3, Nothing, selectPayment.p_debit_amount_3, Nothing, payDate, DateTime.MinValue)
 
                 _aeSer.DeleteEntries(uow.AccountingEntryRepository, "付款作業", selectPayment.p_Id)
 
@@ -553,6 +577,132 @@ Public Class PaymentPresenter
             Throw
         End Try
     End Sub
+
+    ''' <summary>
+    ''' 處理單組借方(Debit/資金去向)科目為銀行存款時的月結調整
+    ''' </summary>
+    Private Async Function ProcessDebitBankSubjectAsync(
+        uow As IUnitOfWork,
+        orgPayment As payment,
+        newPayment As payment,
+        oldSubjectId As Integer?,
+        newSubjectId As Integer?,
+        oldBankId As Integer?,
+        newBankId As Integer?,
+        oldAmount As Integer?,
+        newAmount As Integer?,
+        oldMonth As Date,
+        newMonth As Date) As Task
+
+        ' 如果新舊科目都沒有值，直接返回
+        If Not oldSubjectId.HasValue AndAlso Not newSubjectId.HasValue Then
+            Return
+        End If
+
+        ' 檢查舊科目和新科目是否為銀行存款
+        Dim oldSubject = If(oldSubjectId.HasValue,
+                            Await uow.SubjectRepository.GetByIdAsync(oldSubjectId.Value),
+                            Nothing)
+        Dim newSubject = If(newSubjectId.HasValue,
+                            Await uow.SubjectRepository.GetByIdAsync(newSubjectId.Value),
+                            Nothing)
+        Dim oldIsBankSubject = oldSubject IsNot Nothing AndAlso oldSubject.s_name = "銀行存款"
+        Dim newIsBankSubject = newSubject IsNot Nothing AndAlso newSubject.s_name = "銀行存款"
+
+        ' 如果新舊都不是銀行存款，不需要調整
+        If Not oldIsBankSubject AndAlso Not newIsBankSubject Then
+            Return
+        End If
+
+        ' 調用銀行月結調整方法 (借方)
+        Await AdjustBankMonthlyBalanceForDebitSubjectAsync(
+            uow,
+            oldIsBankSubject,
+            newIsBankSubject,
+            oldBankId.GetValueOrDefault(),
+            oldMonth,
+            oldAmount.GetValueOrDefault(),
+            newBankId.GetValueOrDefault(),
+            newMonth,
+            newAmount.GetValueOrDefault()
+        )
+    End Function
+
+    ''' <summary>
+    ''' 針對借方科目(Debit/存款)的銀行餘額調整
+    ''' </summary>
+    Private Async Function AdjustBankMonthlyBalanceForDebitSubjectAsync(uow As IUnitOfWork,
+                                                                       oldIsBankSubject As Boolean,
+                                                                       newIsBankSubject As Boolean,
+                                                                       oldBankId As Integer,
+                                                                       oldMonth As Date,
+                                                                       oldAmount As Decimal,
+                                                                       newBankId As Integer,
+                                                                       newMonth As Date,
+                                                                       newAmount As Decimal) As Task
+        ' 注意：此處處理的是「借方」，即資金流入銀行。
+        ' 增加借方金額 = 增加 Debit (餘額增加)
+        ' 減少借方金額 = 減少 Debit (餘額減少)
+
+        If Not oldIsBankSubject AndAlso Not newIsBankSubject Then Exit Function
+
+        If oldIsBankSubject AndAlso newIsBankSubject Then
+            If oldBankId = newBankId AndAlso oldMonth.Year = newMonth.Year AndAlso oldMonth.Month = newMonth.Month Then
+                ' 同銀行同月份：調整差額
+                Dim amountDelta = newAmount - oldAmount
+                If amountDelta <> 0 Then
+                    Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                        uow.BankMonthlyBalancesRepository,
+                        uow.BankRepository,
+                        newBankId,
+                        newMonth,
+                        creditDelta:=0,
+                        debitDelta:=amountDelta
+                    )
+                End If
+            Else
+                ' 不同銀行或月份：
+                ' 1. 舊的減少 Debit (減少餘額) -> debitDelta 用負數
+                Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                    uow.BankMonthlyBalancesRepository,
+                    uow.BankRepository,
+                    oldBankId,
+                    oldMonth,
+                    creditDelta:=0,
+                    debitDelta:=-oldAmount
+                )
+                ' 2. 新的增加 Debit (增加餘額) -> debitDelta 用正數
+                Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                    uow.BankMonthlyBalancesRepository,
+                    uow.BankRepository,
+                    newBankId,
+                    newMonth,
+                    creditDelta:=0,
+                    debitDelta:=newAmount
+                )
+            End If
+        ElseIf oldIsBankSubject Then
+            ' 舊的是銀行（現在不是）：減少 Debit (減少餘額)
+            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                uow.BankMonthlyBalancesRepository,
+                uow.BankRepository,
+                oldBankId,
+                oldMonth,
+                creditDelta:=0,
+                debitDelta:=-oldAmount
+            )
+        ElseIf newIsBankSubject Then
+            ' 新的是銀行（以前不是）：增加 Debit (增加餘額)
+            Await _bmbService.UpdateMonthBalanceIncrementalAsync(
+                uow.BankMonthlyBalancesRepository,
+                uow.BankRepository,
+                newBankId,
+                newMonth,
+                creditDelta:=0,
+                debitDelta:=newAmount
+            )
+        End If
+    End Function
 
     Private Sub Validate(data As payment)
         ' 驗證是否借貸平衡

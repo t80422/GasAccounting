@@ -224,6 +224,17 @@ Public Class TestReportRep
                  .subject = incomeSubject,
                  .customer = customer1,
                  .bank = bank
+             },
+             New collection With {
+                 .col_Id = 2,
+                 .col_Date = New Date(2024, 5, 6),
+                 .col_Type = "現金",
+                 .col_Amount = 2000,
+                 .col_credit_bank_id_2 = bank.bank_id,  ' Split 2 is Bank
+                 .col_credit_amount_2 = 1500,           ' Amount for Bank
+                 .col_Memo = "拆分提款",
+                 .subject2 = bankSubject,               ' Subject is Bank (Withdrawal)
+                 .customer = customer1
              }
         }
 
@@ -234,44 +245,22 @@ Public Class TestReportRep
                  .p_Date = New Date(2024, 5, 10),
                  .p_Type = "銀行存款",
                  .p_bank_Id = bank.bank_id,
-                 .p_Amount = 1095000,
+                 .p_Amount = 1000,
                  .subject = paymentSubject1,
                  .company = company1,
                  .bank = bank,
-                 .p_Memo = ""
+                 .p_Memo = "一般付款"
              },
              New payment With {
-                 .p_Id = 1,
-                 .p_Date = New Date(2024, 5, 10),
-                 .p_Type = "銀行存款",
-                 .p_bank_Id = bank.bank_id,
-                 .p_Amount = 456250,
-                 .subject = paymentSubject1,
+                 .p_Id = 2,
+                 .p_Date = New Date(2024, 5, 11),
+                 .p_Type = "現金",
+                 .p_Amount = 3000,
+                 .p_debit_bank_id_2 = bank.bank_id,    ' Split 2 is Bank
+                 .p_debit_amount_2 = 2500,             ' Amount for Bank
+                 .subject2 = bankSubject,              ' Subject is Bank (Deposit)
                  .company = company1,
-                 .bank = bank,
-                 .p_Memo = ""
-             },
-             New payment With {
-                 .p_Id = 1,
-                 .p_Date = New Date(2024, 5, 10),
-                 .p_Type = "銀行存款",
-                 .p_bank_Id = bank.bank_id,
-                 .p_Amount = 30,
-                 .subject = paymentSubject2,
-                 .company = company1,
-                 .bank = bank,
-                 .p_Memo = ""
-             },
-             New payment With {
-                 .p_Id = 1,
-                 .p_Date = New Date(2024, 5, 10),
-                 .p_Type = "銀行存款",
-                 .p_bank_Id = bank.bank_id,
-                 .p_Amount = 30,
-                 .subject = paymentSubject2,
-                 .company = company1,
-                 .bank = bank,
-                 .p_Memo = ""
+                 .p_Memo = "拆分存款"
              }
         }
 
