@@ -456,7 +456,7 @@ Public Class CollectionPresenter
     End Function
 
     ''' <summary>
-    ''' 列印
+    ''' 列印傳票
     ''' </summary>
     ''' <param name="selectDate">選擇日期</param>
     ''' <param name="type">傳票類型:現金、轉帳</param>
@@ -473,7 +473,7 @@ Public Class CollectionPresenter
                 End Select
             End Using
         Catch ex As Exception
-            MsgBox("列印時發生錯誤：" & ex.Message)
+            MessageBox.Show("列印傳票時發生錯誤：" & ex.Message)
         End Try
     End Sub
 
