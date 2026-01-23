@@ -1,5 +1,4 @@
 ﻿Imports System.Data.Entity
-Imports System.Runtime.InteropServices
 Imports GasAccounting
 Imports Moq
 
@@ -33,14 +32,10 @@ Public Class TestReportRep
                 Dim targetId = keyValues(0)
                 Dim className = GetType(T).Name.ToLower()
                 ' 優先尋找 [類名]_id 或 id，若找不到才找結尾為 id 的屬性
-                Dim idProp = GetType(T).GetProperties().FirstOrDefault(Function(p)
-                                                                           Dim pName = p.Name.ToLower()
-                                                                           Return pName = className & "_id" OrElse pName = className & "id" OrElse pName = "id"
-                                                                       End Function)
-
-                If idProp Is Nothing Then
-                    idProp = GetType(T).GetProperties().FirstOrDefault(Function(p) p.Name.ToLower().EndsWith("id"))
-                End If
+                Dim idProp = If(GetType(T).GetProperties().FirstOrDefault(Function(p)
+                                                                              Dim pName = p.Name.ToLower()
+                                                                              Return pName = className & "_id" OrElse pName = className & "id" OrElse pName = "id"
+                                                                          End Function), GetType(T).GetProperties().FirstOrDefault(Function(p) p.Name.ToLower().EndsWith("id")))
 
                 If idProp IsNot Nothing Then
                     ' 使用字串比較以避免 Integer/Object 類型不匹配問題

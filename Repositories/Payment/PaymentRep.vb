@@ -234,17 +234,6 @@ Public Class PaymentRep
 
     Public Async Function GetBankSideDepositSumAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of Integer) Implements IPaymentRep.GetBankSideDepositSumAsync
         Try
-            ' 加總三個拆分欄位中，科目為銀行存款且銀行 ID 符合的部分
-            ' 第一組借方 (subject1): 我們假設它的銀行 ID 存在 p_bank_Id (當它不是作為主要貸方銀行時?)
-            ' 為求保險並符合現有邏輯 (GetCashToBankTransfersByDateRangeAsync 使用 p_bank_Id + subject.s_name="銀行存款")
-            ' 我們沿用 p_bank_Id 作為第一組借方銀行的判斷，但需排除 col_Type="銀行存款"(那是貸方) 的情況以免混淆?
-            ' 不，如果 Type="銀行存款"，那 p_bank_Id 肯定是貸方。那此時第一組借方如果是銀行，它的 ID 存哪?
-            ' 如果系統不允許「銀行轉銀行」在 Payment 透過第一組，那可能不需要擔心。
-            ' 但為了安全，我們先假設: 第一組借方的 Bank Id check 使用 p_bank_Id，但必須確認它不是在扮演貸方角色?
-            ' 其實: "存款" 是指 Payment 的借方 (資金流向銀行)。
-            ' 如果 Type="銀行存款"，那是 "提款" (資金流出銀行)。
-            ' 所以這兩個集合理論上不重疊 (除非同一筆交易既是提款又是存款 -> 內部轉帳)。
-            
             Dim sum1 = Await _dbSet.AsNoTracking.
                 Where(Function(x) x.p_Date >= startDate AndAlso
                                   x.p_Date < endDate AndAlso

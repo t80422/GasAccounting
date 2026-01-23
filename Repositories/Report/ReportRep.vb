@@ -447,12 +447,12 @@ Public Class ReportRep
                                                                      x.col_bank_Id = bankId).
                                                    Select(Function(x) New With {
                                                         .Date = x.col_Date,
-                                                        .Subject = x.subject.s_name,
+                                                        .Subject = x.subject1.s_name,
                                                         .Memo = x.col_Memo,
                                                         .Amount = CType(x.col_Amount, Integer?),
                                                         .IsIncome = True,
                                                         .Target = x.customer.cus_code
-                                                   })
+                                                   }).ToList
 
             '銀行取出現金：獨立撈取現金類型且科目為銀行存款 (包含所有拆分)
             ' Split 1
@@ -460,7 +460,7 @@ Public Class ReportRep
                                      Where(Function(x) x.col_Date.Year = month.Year AndAlso
                                                        x.col_Date.Month = month.Month AndAlso
                                                        x.col_credit_bank_id = bankId AndAlso
-                                                       x.subject.s_name = "銀行存款").
+                                                       x.subject1.s_name = "銀行存款").
                                      Select(Function(x) New With {
                                           .Date = x.col_Date,
                                           .Subject = x.col_Type,
@@ -488,7 +488,7 @@ Public Class ReportRep
                                      Where(Function(x) x.col_Date.Year = month.Year AndAlso
                                                        x.col_Date.Month = month.Month AndAlso
                                                        x.col_credit_bank_id_3 = bankId AndAlso
-                                                       x.subject1.s_name = "銀行存款").
+                                                       x.subject.s_name = "銀行存款").
                                      Select(Function(x) New With {
                                           .Date = x.col_Date,
                                           .Subject = x.col_Type,
@@ -506,7 +506,7 @@ Public Class ReportRep
                                                                x.p_bank_Id = bankId).
                                              Select(Function(x) New With {
                                                 .Date = x.p_Date,
-                                                .Subject = x.subject.s_name,
+                                                .Subject = x.subject1.s_name,
                                                 .Memo = x.p_Memo,
                                                 .Amount = CType(x.p_Amount, Integer?),
                                                 .IsIncome = False,

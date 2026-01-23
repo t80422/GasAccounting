@@ -97,9 +97,11 @@
     <Import Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EF6_Moq_Helper.vb" />
     <Compile Include="TestBankMonthlyBalanceService.vb" />
     <Compile Include="TestCollectionPresenter.vb" />
     <Compile Include="TestPaymentPresenter.vb" />
+    <Compile Include="TestPaymentRep.vb" />
     <Compile Include="TestReportRep.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

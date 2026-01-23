@@ -201,14 +201,11 @@ Public Class CollectionRep
 
     Public Async Function GetBankSideWithdrawalSumAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of Integer) Implements ICollectionRep.GetBankSideWithdrawalSumAsync
         Try
-            ' 加總三個拆分欄位中，科目為銀行存款且銀行 ID 符合的部分
-            ' 分開計算避免 LINQ 翻譯複雜度過高
-
             Dim sum1 = Await _dbSet.AsNoTracking.
                 Where(Function(x) x.col_Date >= startDate AndAlso
                                   x.col_Date < endDate AndAlso
                                   x.col_credit_bank_id = bankId AndAlso
-                                  x.subject.s_name = "銀行存款").
+                                  x.subject1.s_name = "銀行存款").
                 SumAsync(Function(x) CType(x.col_credit_amount_1, Integer?))
 
             Dim sum2 = Await _dbSet.AsNoTracking.
@@ -222,7 +219,7 @@ Public Class CollectionRep
                 Where(Function(x) x.col_Date >= startDate AndAlso
                                   x.col_Date < endDate AndAlso
                                   x.col_credit_bank_id_3 = bankId AndAlso
-                                  x.subject1.s_name = "銀行存款").
+                                  x.subject.s_name = "銀行存款").
                 SumAsync(Function(x) CType(x.col_credit_amount_3, Integer?))
 
             Return sum1.GetValueOrDefault() + sum2.GetValueOrDefault() + sum3.GetValueOrDefault()

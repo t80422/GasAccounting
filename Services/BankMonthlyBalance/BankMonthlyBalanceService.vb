@@ -20,29 +20,6 @@
         Dim lastBalance = Await bmbRep.GetLastBalanceBeforeMonthAsync(monthStart, bankId)
         Dim openingBalance = If(lastBalance IsNot Nothing, lastBalance.bm_ClosingBalance, bankRep.GetByIdAsync(bankId).Result.bank_InitialBalance)
 
-        'If lastBalance IsNot Nothing Then
-        '    openingBalance = lastBalance.bm_ClosingBalance
-
-        '    Dim lastMonthEnd = New Date(lastBalance.bm_Month.Year,
-        '                               lastBalance.bm_Month.Month,
-        '                               Date.DaysInMonth(lastBalance.bm_Month.Year, lastBalance.bm_Month.Month))
-        '    Dim preStart = lastMonthEnd.AddDays(1)
-        '    Dim preEnd = monthStart
-
-        '    If preStart < preEnd Then
-        '        Dim preDeposits = Await collectionRep.GetBankDepositsByDateRangeAsync(bankId, preStart, preEnd)
-        '        Dim preCashToBank = Await collectionRep.GetCashToBankTransfersByDateRangeAsync(bankId, preStart, preEnd)
-        '        Dim prePayments = Await paymentRep.GetBankPaymentsByDateRangeAsync(bankId, preStart, preEnd)
-
-        '        Dim preDebit = preDeposits.Sum(Function(x) x.col_Amount)
-        '        Dim preCredit = preCashToBank.Sum(Function(x) x.col_Amount) + prePayments.Sum(Function(x) x.p_Amount)
-        '        openingBalance += preDebit - preCredit
-        '    End If
-        'Else
-        '    Dim bank = Await bankRep.GetByIdAsync(bankId)
-        '    openingBalance = bank.bank_InitialBalance
-        'End If
-
         ' 更新月結餘額資料表
         Dim newBmb = New bank_monthly_balances With {
             .bm_bank_Id = bankId,
@@ -145,8 +122,7 @@
             Dim allMonths As New HashSet(Of Date)
 
             ' 從 payment 取得月份
-            Dim paymentMonths = paymentRep.GetBankAccount(bankId).Select(Function(x) New Date(x.p_Date.Year, x.p_Date.Month, 1)).
-                                                                  Distinct.
+            Dim paymentMonths = paymentRep.GetBankAccount(bankId).Select(Function(x) New Date(x.p_Date.Year, x.p_Date.Month, 1)).Distinct.
                                                                   ToList
 
             For Each m In paymentMonths
