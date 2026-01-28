@@ -47,17 +47,11 @@ Public Class OrderPresenter
     End Property
 
     Private Sub RefreshCurrentEntities(Optional includeOrder As Boolean = False)
-        If includeOrder AndAlso currentOrder IsNot Nothing Then
-            _ordRep.Reload(currentOrder)
-        End If
+        If includeOrder AndAlso currentOrder IsNot Nothing Then _ordRep.Reload(currentOrder)
 
-        If currentCustomer IsNot Nothing Then
-            _cusRep.Reload(currentCustomer)
-        End If
+        If currentCustomer IsNot Nothing Then _cusRep.Reload(currentCustomer)
 
-        If currentCar IsNot Nothing Then
-            _carRep.Reload(currentCar)
-        End If
+        If currentCar IsNot Nothing Then _carRep.Reload(currentCar)
     End Sub
 
 #Region "建構函數與初始化"
@@ -288,6 +282,8 @@ Public Class OrderPresenter
     ''' 載入單價
     ''' </summary>
     Private Sub LoadUnitPrice()
+        If currentOrder IsNot Nothing Then Return
+
         ' 瓦斯單價
         Dim inputOrder = _view.GetOrderInput
         Dim isDelivery = inputOrder.o_delivery_type = "廠運"
@@ -307,7 +303,7 @@ Public Class OrderPresenter
             .o_barrel_unit_price_4 = lastOrder?.o_barrel_unit_price_4,
             .o_barrel_unit_price_5 = lastOrder?.o_barrel_unit_price_5,
             .o_barrel_unit_price_50 = lastOrder?.o_barrel_unit_price_50,
-            .o_insurance_unit_price = If(currentCustomer.cus_IsInsurance, currentCustomer.cus_InsurancePrice, 0) ' 保險單價
+            .o_insurance_unit_price = currentCustomer.cus_InsurancePrice
         }
 
         _view.ShowUnitPrice(data)
@@ -723,11 +719,9 @@ Public Class OrderPresenter
     Private Sub CalculateInsurance()
         Try
             Dim input = _view.GetOrderInput
-            Dim result As Double = 0
-
-            If currentCustomer.cus_IsInsurance Then
-                result = ((input.o_gas_total + input.o_gas_c_total) + (input.o_return + input.o_return_c)) * input.o_insurance_unit_price
-            End If
+            Dim result As Double = If(currentCustomer.cus_IsInsurance,
+                                      0,
+                                      (input.o_gas_total + input.o_gas_c_total + input.o_return + input.o_return_c) * input.o_insurance_unit_price)
 
             _view.ShowInsurance(Math.Round(result, 2))
         Catch ex As Exception
@@ -764,6 +758,7 @@ Public Class OrderPresenter
 
                 Dim orderInput As New order
                 _view.GetInput(orderInput)
+                _logger.LogInfo($"===== 新增 Order 中: {orderInput.o_id} =====")
 
                 If _currentUserService.UserRole <> 1 AndAlso orderInput.o_date < Today.AddDays(-3) Then Throw New Exception("非管理者不能新增三天前的訂單")
 
@@ -799,10 +794,17 @@ Public Class OrderPresenter
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
 
                 Dim order = _ordRep.AddAsync(orderInput).Result
+                _logger.LogInfo($"新增 order 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
+                sw.Restart()
+
                 Dim gbRep As New GasBarrelRep(CType(_ordRep.Context, gas_accounting_systemEntities))
                 _barrelInvSer.ApplyOrderIssueAsync(gbRep, orderInput).Wait()
+                _logger.LogInfo($"更新 瓦斯瓶庫存 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
+                sw.Restart()
 
                 _service.UpdateOrAddAsync(orderInput.o_date)
+                _logger.LogInfo($"更新 瓦斯瓶月結算 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
+                sw.Restart()
 
                 Dim entries = New List(Of accounting_entry) From {
                     New accounting_entry With {
@@ -824,9 +826,13 @@ Public Class OrderPresenter
                 }
 
                 _aeSer.AddEntries(entries)
+                _logger.LogInfo($"新增 會計分錄帳 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
+                sw.Restart()
 
                 ' 同步更新月度帳單資料
                 _maService.SyncOrderToMonthlyAccount(order.o_id, True, False)
+                _logger.LogInfo($"新增 月度帳單 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
+                sw.Restart()
 
                 _cusRep.SaveChangesAsync()
 
@@ -834,20 +840,19 @@ Public Class OrderPresenter
 
                 Initialize()
                 MessageBox.Show("新增成功")
-                _logger.LogInfo($"新增 {orderInput.o_id}")
                 LoadDetail(Nothing, order.o_id)
+                _logger.LogInfo($"===== 新增 Order 完成 =====")
             Catch ex As Exception
                 transaction.Rollback()
 
                 Dim innerEx = ex
+                Dim errorMsg = innerEx.Message
                 While innerEx.InnerException IsNot Nothing
                     innerEx = innerEx.InnerException
+                    errorMsg &= vbCrLf & innerEx.Message
                 End While
 
-                MessageBox.Show(innerEx.Message)
-            Finally
-                sw.Stop()
-                _logger.LogInfo($"Add 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
+                MessageBox.Show(errorMsg)
             End Try
         End Using
     End Sub
@@ -898,6 +903,8 @@ Public Class OrderPresenter
     End Sub
 
     Private Sub Update()
+        Dim sw As New Stopwatch
+        sw.Start()
         Using transaction = _ordRep.BeginTransaction
             Try
                 RefreshCurrentEntities(includeOrder:=True)
@@ -958,6 +965,9 @@ Public Class OrderPresenter
             Catch ex As Exception
                 transaction.Rollback()
                 MessageBox.Show(ex.Message)
+            Finally
+                sw.Stop()
+                _logger.LogInfo($"Edit 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
             End Try
         End Using
     End Sub
@@ -1054,6 +1064,9 @@ Public Class OrderPresenter
 
         Try
             Dim data = _ordRep.GetOrderVoucherData(orderId)
+            _logger.LogInfo($"Print-取得資料 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
+            sw.Restart()
+
             templatePath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.html")
             Dim htmlContent = FillTemplate(templatePath, data)
             pdfPath = Path.Combine(Application.StartupPath, "Report", "客戶提氣量憑單.pdf")
@@ -1074,11 +1087,13 @@ Public Class OrderPresenter
                     pdfDocument.SetDefaultPageSize(New PageSize(widthInPoints, heightInPoints))
 
                     HtmlConverter.ConvertToPdf(htmlContent, pdfDocument, converterProperties)
+                    _logger.LogInfo($"Print-資料寫入PDF 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
+                    sw.Restart()
                 End Using
             End Using
 
             PrintPDF(pdfPath)
-
+            _logger.LogInfo($"Print-列印 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
             MessageBox.Show("成功")
             Initialize()
         Catch ex As Exception
@@ -1095,9 +1110,6 @@ Public Class OrderPresenter
                              $"堆疊追蹤：{vbCrLf}{ex.StackTrace}"
 
             MessageBox.Show(errorDetails, "PDF轉換錯誤診斷", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            sw.Stop()
-            _logger.LogInfo($"Print 耗時: {sw.ElapsedMilliseconds / 1000} 秒")
         End Try
     End Sub
 
@@ -1124,7 +1136,7 @@ Public Class OrderPresenter
                     Dim rowIndex = 5
                     Dim totalSum As Integer
                     Dim db As New gas_accounting_systemEntities
-                    Dim endOfToday As DateTime = Date.Today + New TimeSpan(23, 59, 59)
+                    Dim endOfToday As Date = Date.Today + New TimeSpan(23, 59, 59)
 
                     For Each cus In customers
                         Dim query = From o In db.orders Where o.o_date < endOfToday AndAlso o.o_cus_Id = cus.cus_id Select o
@@ -1439,7 +1451,7 @@ Public Class OrderPresenter
                         .Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center
                     }
 
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=ClosedXML.Excel.XLBorderStyleValues.Thin)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 12, topStyle:=XLBorderStyleValues.Thin)
                     .WriteToCell(rowIndex, 2, "合計", totalStyle)
                     .WriteToCell(rowIndex, 3, customers.Sum(Function(x) x.cus_gas_50).ToString)
                     .WriteToCell(rowIndex, 4, customers.Sum(Function(x) x.cus_gas_20).ToString)
@@ -1458,13 +1470,12 @@ Public Class OrderPresenter
 
                     '取得印表機
                     Dim printerName = _printerSer.GetOrSelectPrinter
-                    .Print(exportFilePath, printerName, 1, 4)
 
+                    If Not String.IsNullOrEmpty(printerName) Then .Print(exportFilePath, printerName, 1, 4)
                 End With
             End Using
         Catch ex As Exception
-            Console.WriteLine(ex.StackTrace)
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
@@ -1881,9 +1892,7 @@ Public Class OrderPresenter
     ''' </summary>
     ''' <param name="orderInput">包含計算後結存瓶（o_cus_XX）的訂單物件</param>
     Private Sub UpdateCustomerStockByDiff(orderInput As order)
-        If currentCustomer Is Nothing Then
-            Throw New Exception("客戶資料不存在")
-        End If
+        If currentCustomer Is Nothing Then Throw New Exception("客戶資料不存在")
 
         Dim initProps = initCusStk.GetType().GetProperties()
         Dim orderProps = orderInput.GetType().GetProperties()
@@ -1901,9 +1910,6 @@ Public Class OrderPresenter
             Dim diff = finalStock - initStock
             Dim cusProperty = currentCustomer.GetType().GetProperty($"cus_gas_{barrelType}")
             Dim currentStock = CInt(cusProperty.GetValue(currentCustomer))
-
-            'edit by Kevin 20251103 不用回存到 customer資料表
-            'cusProperty.SetValue(currentCustomer, currentStock + diff)
 
             If diff <> 0 Then
                 _logger.LogInfo($"[UpdateCustomerStockByDiff] {barrelType}Kg: 初始={initStock}, 結存={finalStock}, 差值={diff}, 更新後={currentStock + diff}")

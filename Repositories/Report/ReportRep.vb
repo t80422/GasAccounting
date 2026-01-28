@@ -1231,7 +1231,7 @@ Public Class ReportRep
             Next
 
             ' 收入管理 - 貸方 (收入類型)
-            For Each group In collectionDatas.GroupBy(Function(x) x.subject.s_name)
+            For Each group In collectionDatas.GroupBy(Function(x) x.subject?.s_name)
                 Dim subject = group.Key
                 Dim amount = group.Sum(Function(x) x.col_Amount)
 
