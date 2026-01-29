@@ -381,33 +381,73 @@ Public Class ReportRep
             })
 
             '獲取收入數據
-            Dim collections = _context.collections.AsNoTracking.
+            Dim baseCollections = _context.collections.AsNoTracking.
                 Where(Function(x) x.col_Date >= startDate AndAlso
                                   x.col_Date < formatEndDate AndAlso
-                                  x.col_Type = "現金").
-                Select(Function(x) New With {
-                    .Date = x.col_Date,
-                    .Subject = x.subject.s_name,
-                    .Memo = If(x.customer IsNot Nothing, x.customer.cus_code + " ", "") + x.col_Memo,
-                    .Amount = x.col_Amount,
-                    .IsIncome = True
-                }).ToList
+                                  x.col_Type = "現金")
+
+            Dim collections1 = baseCollections.Select(Function(x) New With {
+                                                    .Date = x.col_Date,
+                                                    .Subject = x.subject1.s_name,
+                                                    .Memo = If(x.customer IsNot Nothing, x.customer.cus_code + " ", "") + x.col_Memo,
+                                                    .Amount = x.col_credit_amount_1,
+                                                    .IsIncome = True
+                                               })
+
+            Dim collections2 = baseCollections.Where(Function(x) x.subject2 IsNot Nothing).
+                                               Select(Function(x) New With {
+                                                   .Date = x.col_Date,
+                                                   .Subject = x.subject2.s_name,
+                                                   .Memo = If(x.customer IsNot Nothing, x.customer.cus_code + " ", "") + x.col_Memo,
+                                                   .Amount = x.col_credit_amount_2,
+                                                   .IsIncome = True
+                                               })
+
+            Dim collections3 = baseCollections.Where(Function(x) x.subject IsNot Nothing).
+                                               Select(Function(x) New With {
+                                                    .Date = x.col_Date,
+                                                    .Subject = x.subject.s_name,
+                                                    .Memo = If(x.customer IsNot Nothing, x.customer.cus_code + " ", "") + x.col_Memo,
+                                                    .Amount = x.col_credit_amount_3,
+                                                    .IsIncome = True
+                                               })
 
             '獲取支出數據
-            Dim payments = _context.payments.Where(Function(x) x.p_Date >= startDate AndAlso
-                                                         x.p_Date < formatEndDate AndAlso
-                                                         x.p_Type = "現金").
-                                            Select(Function(x) New With {
-                                                        .Date = x.p_Date,
-                                                        .Subject = x.subject.s_name,
-                                                        .Memo = x.p_Memo,
-                                                        .Amount = x.p_Amount,
-                                                        .IsIncome = False
-                                            }).ToList
+            Dim basePayments = _context.payments.AsNoTracking.
+                Where(Function(x) x.p_Date >= startDate AndAlso
+                                  x.p_Date < formatEndDate AndAlso
+                                  x.p_Type = "現金")
+
+            Dim payments1 = basePayments.Where(Function(x) x.subject1 IsNot Nothing).
+                                         Select(Function(x) New With {
+                                            .Date = x.p_Date,
+                                            .Subject = x.subject1.s_name,
+                                            .Memo = x.p_Memo,
+                                            .Amount = x.p_debit_amount_1,
+                                            .IsIncome = False
+                                         })
+
+            Dim payments2 = basePayments.Where(Function(x) x.subject2 IsNot Nothing).
+                                         Select(Function(x) New With {
+                                            .Date = x.p_Date,
+                                            .Subject = x.subject2.s_name,
+                                            .Memo = x.p_Memo,
+                                            .Amount = x.p_debit_amount_2,
+                                            .IsIncome = False
+                                         })
+
+            Dim payments3 = basePayments.Where(Function(x) x.subject IsNot Nothing).
+                                         Select(Function(x) New With {
+                                            .Date = x.p_Date,
+                                            .Subject = x.subject.s_name,
+                                            .Memo = x.p_Memo,
+                                            .Amount = x.p_debit_amount_3,
+                                            .IsIncome = False
+                                         })
             '合併並排列數據
-            Dim allTransactions = collections.Union(payments) _
-                                             .OrderBy(Function(x) x.Date) _
-                                             .ThenBy(Function(x) x.IsIncome).ToList
+            Dim allTransactions = collections1.Concat(collections2).Concat(collections3).Concat(payments1).Concat(payments2).Concat(payments3).
+                                               OrderBy(Function(x) x.Date).
+                                               ToList
 
             '計算餘額並填入模型
             Dim balance As Integer = initialBalance + lastCollectionSum - lastPaymentSum
@@ -424,7 +464,6 @@ Public Class ReportRep
             Next
         Catch ex As Exception
             MessageBox.Show(ex.StackTrace)
-            Throw
         End Try
 
         Return result

@@ -71,19 +71,19 @@ Public Class CloseXML_Excel
         End Try
     End Sub
 
-    Public Sub WriteToCell(rowIndex As Integer, columnIndex As Integer, content As String, Optional formatOptions As CellFormatOptions = Nothing)
+    Public Sub WriteToCell(rowIndex As Integer, columnIndex As Integer, content As Object, Optional formatOptions As CellFormatOptions = Nothing)
         Dim cell = Worksheet.Cell(rowIndex, columnIndex)
-        cell.Value = content
+        cell.Value = XLCellValue.FromObject(content)
 
         If formatOptions IsNot Nothing Then
             SetCellFormat(cell, formatOptions)
         End If
     End Sub
 
-    Public Sub WriteToCell(cellAddress As String, content As String, Optional formatOptions As CellFormatOptions = Nothing)
+    Public Sub WriteToCell(cellAddress As String, content As Object, Optional formatOptions As CellFormatOptions = Nothing)
         Try
             Dim cell = Worksheet.Cell(cellAddress)
-            cell.Value = content
+            cell.Value = XLCellValue.FromObject(content)
 
             If formatOptions IsNot Nothing Then
                 SetCellFormat(cell, formatOptions)
@@ -93,18 +93,39 @@ Public Class CloseXML_Excel
         End Try
     End Sub
 
-    Public Sub WriteToCell(columnName As String, rowIndex As Integer, content As String, Optional formatOptions As CellFormatOptions = Nothing)
+    Public Sub WriteToCell(columnName As String, rowIndex As Integer, content As Object, Optional formatOptions As CellFormatOptions = Nothing)
         Try
             Dim cell = Worksheet.Cell(rowIndex, columnName)
-            cell.Value = content
+            cell.Value = XLCellValue.FromObject(content)
 
             If formatOptions IsNot Nothing Then
                 SetCellFormat(cell, formatOptions)
             End If
         Catch ex As Exception
-            Throw New Exception($"寫入單元格 {columnName}{rowIndex} 時發生錯誤: {ex.Message}", ex)
+            Throw New Exception($"寫入單元格 {columnName}{rowIndex} 時發生錯誤: {ex.Message}", New Exception(ex.Message))
         End Try
     End Sub
+
+    ''' <summary>
+    ''' 寫入公式
+    ''' </summary>
+    ''' <param name="columnName">欄位名稱 (如 A, B, C...)</param>
+    ''' <param name="rowIndex">列索引</param>
+    ''' <param name="formula">公式內容 (例如 SUM(C4:C10))</param>
+    ''' <param name="formatOptions">格式選項</param>
+    Public Sub WriteFormula(columnName As String, rowIndex As Integer, formula As String, Optional formatOptions As CellFormatOptions = Nothing)
+        Try
+            Dim cell = Worksheet.Cell(rowIndex, columnName)
+            cell.FormulaA1 = formula
+
+            If formatOptions IsNot Nothing Then
+                SetCellFormat(cell, formatOptions)
+            End If
+        Catch ex As Exception
+            Throw New Exception($"寫入公式 {formula} 於 {columnName}{rowIndex} 時發生錯誤: {ex.Message}", ex)
+        End Try
+    End Sub
+
 
     Public Function SaveAs(filePath As String) As Boolean
         Try

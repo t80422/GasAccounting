@@ -58,17 +58,54 @@ Public Class ReportService
                     .WriteToCell("A1", title)
                     .WriteToCell("A2", $"日期: {day:yyyy年MM月dd日}")
 
+                    datas = datas.OrderBy(Function(x) x.Id).ToList()
+
+                    Dim currentStartRow As Integer = 4
+                    Dim currentColId As Integer = -1
+
                     For i As Integer = 0 To datas.Count - 1
-                        .WriteToCell("A", i + 4, datas(i).DebitSubjectName)
-                        .WriteToCell("B", i + 4, datas(i).DebitSummary)
-                        .WriteToCell("C", i + 4, datas(i).DebitAmount.ToString)
-                        .SetCustomBorders(i + 4, 1, i + 4, 2, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
-                        .SetCustomBorders(i + 4, 3, i + 4, 3, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double)
-                        .WriteToCell("D", i + 4, datas(i).CreditSubjectName)
-                        .WriteToCell("E", i + 4, datas(i).CreditSummary)
-                        .WriteToCell("F", i + 4, datas(i).CreditAmount.ToString)
-                        .SetCustomBorders(i + 4, 4, i + 4, 4, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double, XLBorderStyleValues.Thin)
-                        .SetCustomBorders(i + 4, 5, i + 4, 6, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
+                        Dim currentRow = i + 4
+                        Dim data = datas(i)
+
+                        .WriteToCell("A", currentRow, data.DebitSubjectName, New CloseXML_Excel.CellFormatOptions With {.VerticalCenter = True})
+                        .WriteToCell("B", currentRow, data.DebitSummary, New CloseXML_Excel.CellFormatOptions With {.VerticalCenter = True})
+
+                        ' 如果是收款(isCollection=True)，借方是總額，只需在第一列顯示
+                        Dim debitAmountVal As Object = If(isCollection AndAlso i > 0 AndAlso data.Id = datas(i - 1).Id, String.Empty, data.DebitAmount)
+                        .WriteToCell("C", currentRow, debitAmountVal, New CloseXML_Excel.CellFormatOptions With {.VerticalCenter = True})
+
+                        .SetCustomBorders(currentRow, 1, currentRow, 2, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
+                        .SetCustomBorders(currentRow, 3, currentRow, 3, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double)
+
+                        .WriteToCell("D", currentRow, data.CreditSubjectName, New CloseXML_Excel.CellFormatOptions With {.VerticalCenter = True})
+                        .WriteToCell("E", currentRow, data.CreditSummary, New CloseXML_Excel.CellFormatOptions With {.VerticalCenter = True})
+
+                        ' 如果是付款(isCollection=False)，貸方是總額，只需在第一列顯示
+                        Dim creditAmountVal As Object = If(Not isCollection AndAlso i > 0 AndAlso data.Id = datas(i - 1).Id, String.Empty, data.CreditAmount)
+                        .WriteToCell("F", currentRow, creditAmountVal, New CloseXML_Excel.CellFormatOptions With {.VerticalCenter = True})
+
+                        .SetCustomBorders(currentRow, 4, currentRow, 4, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double, XLBorderStyleValues.Thin)
+                        .SetCustomBorders(currentRow, 5, currentRow, 6, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
+
+                        ' 檢查是否需要合併 (當 Id 改變)
+                        If data.Id <> currentColId Then
+                            If i > 0 AndAlso currentRow - 1 > currentStartRow Then
+                                ' 直接合併借方 A、B、C 欄
+                                .MergeCells(currentStartRow, 1, currentRow - 1, 1)
+                                .MergeCells(currentStartRow, 2, currentRow - 1, 2)
+                                .MergeCells(currentStartRow, 3, currentRow - 1, 3)
+                            End If
+                            currentStartRow = currentRow
+                            currentColId = data.Id
+                        End If
+
+                        ' 最後一筆資料的特殊處理
+                        If i = datas.Count - 1 AndAlso currentRow > currentStartRow Then
+                            ' 直接合併借方 A、B、C 欄
+                            .MergeCells(currentStartRow, 1, currentRow, 1)
+                            .MergeCells(currentStartRow, 2, currentRow, 2)
+                            .MergeCells(currentStartRow, 3, currentRow, 3)
+                        End If
                     Next
 
                     ' 頁尾
@@ -78,11 +115,15 @@ Public Class ReportService
 
                     ' 總計
                     .WriteToCell("A", rowIndex, "合計")
-                    .WriteToCell("C", rowIndex, datas.Sum(Function(x) x.DebitAmount).ToString)
+                    ' 使用 Excel SUM 公式從第 4 列加總到最後一筆資料列
+                    .WriteFormula("C", rowIndex, $"SUM(C4:C{rowIndex - 1})")
+
                     .SetCustomBorders(rowIndex, 1, rowIndex, 2, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
                     .SetCustomBorders(rowIndex, 3, rowIndex, 3, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Double)
+
                     .WriteToCell("D", rowIndex, "合計")
-                    .WriteToCell("F", rowIndex, datas.Sum(Function(x) x.CreditAmount).ToString)
+                    .WriteFormula("F", rowIndex, $"SUM(F4:F{rowIndex - 1})")
+
                     .SetCustomBorders(rowIndex, 4, rowIndex, 4, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Double, XLBorderStyleValues.Thin)
                     .SetCustomBorders(rowIndex, 5, rowIndex, 6, XLBorderStyleValues.Medium, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin, XLBorderStyleValues.Thin)
 

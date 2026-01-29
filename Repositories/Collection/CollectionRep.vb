@@ -135,11 +135,12 @@ Public Class CollectionRep
                 If x.col_credit_amount_1.GetValueOrDefault() > 0 Then
                     result.Add(New TransferSubpoenaDTO With {
                         .DebitSubjectName = x.col_Type,
-                        .DebitAmount = x.col_credit_amount_1.Value,
+                        .DebitAmount = x.col_Amount,
                         .DebitSummary = commonDebitSummary,
                         .CreditSubjectName = x.subject1?.s_name,
                         .CreditAmount = x.col_credit_amount_1.Value,
-                        .CreditSummary = commonDebitSummary
+                        .CreditSummary = commonDebitSummary,
+                        .Id = x.col_Id
                     })
                 End If
 
@@ -147,11 +148,12 @@ Public Class CollectionRep
                 If x.col_credit_amount_2.GetValueOrDefault() > 0 Then
                     result.Add(New TransferSubpoenaDTO With {
                         .DebitSubjectName = x.col_Type,
-                        .DebitAmount = x.col_credit_amount_2.Value,
+                        .DebitAmount = x.col_Amount,
                         .DebitSummary = commonDebitSummary,
                         .CreditSubjectName = x.subject2?.s_name,
                         .CreditAmount = x.col_credit_amount_2.Value,
-                        .CreditSummary = commonDebitSummary
+                        .CreditSummary = commonDebitSummary,
+                        .Id = x.col_Id
                     })
                 End If
 
@@ -159,11 +161,12 @@ Public Class CollectionRep
                 If x.col_credit_amount_3.GetValueOrDefault() > 0 Then
                     result.Add(New TransferSubpoenaDTO With {
                         .DebitSubjectName = x.col_Type,
-                        .DebitAmount = x.col_credit_amount_3.Value,
+                        .DebitAmount = x.col_Amount,
                         .DebitSummary = commonDebitSummary,
                         .CreditSubjectName = x.subject?.s_name,
                         .CreditAmount = x.col_credit_amount_3.Value,
-                        .CreditSummary = commonDebitSummary
+                        .CreditSummary = commonDebitSummary,
+                        .Id = x.col_Id
                     })
                 End If
             Next

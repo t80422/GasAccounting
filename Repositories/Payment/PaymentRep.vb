@@ -142,8 +142,9 @@ Public Class PaymentRep
                         .DebitAmount = x.p_debit_amount_1.Value,
                         .DebitSummary = x.p_Memo,
                         .CreditSubjectName = x.p_Type,
-                        .CreditAmount = x.p_debit_amount_1.Value,
-                        .CreditSummary = x.p_Memo
+                        .CreditAmount = x.p_Amount,
+                        .CreditSummary = x.p_Memo,
+                        .Id = x.p_Id
                     })
                 End If
 
@@ -154,8 +155,9 @@ Public Class PaymentRep
                         .DebitAmount = x.p_debit_amount_2.Value,
                         .DebitSummary = x.p_Memo,
                         .CreditSubjectName = x.p_Type,
-                        .CreditAmount = x.p_debit_amount_2.Value,
-                        .CreditSummary = x.p_Memo
+                        .CreditAmount = x.p_Amount,
+                        .CreditSummary = x.p_Memo,
+                        .Id = x.p_Id
                     })
                 End If
 
@@ -166,8 +168,9 @@ Public Class PaymentRep
                         .DebitAmount = x.p_debit_amount_3.Value,
                         .DebitSummary = x.p_Memo,
                         .CreditSubjectName = x.p_Type,
-                        .CreditAmount = x.p_debit_amount_3.Value,
-                        .CreditSummary = x.p_Memo
+                        .CreditAmount = x.p_Amount,
+                        .CreditSummary = x.p_Memo,
+                        .Id = x.p_Id
                     })
                 End If
             Next

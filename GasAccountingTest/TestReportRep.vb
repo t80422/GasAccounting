@@ -368,6 +368,30 @@ Public Class TestReportRep
         Assert.AreEqual(100, result.GasAccountsReceived, "應只包含指定帳款月份的收款")
     End Sub
 
+    <TestMethod("現金帳-正常測試")>
+    Public Sub GetCashAccount_NormalTest()
+        ' Arrange
+        Dim testDate = Now.Date
+        Dim basicSets = New List(Of basic_set) From {
+            New basic_set With {
+                .bs_Id = 1,
+                .bs_Cash = 100
+            }
+        }
+        Dim mockBasicSet = CreateMockDbSet(basicSets)
+        _mockContext.Setup(Function(x) x.basic_set).Returns(mockBasicSet.Object)
+
+        Dim collections = New List(Of collection) From {
+            New collection With {
+                .col_Id = 1,
+                .col_Date = testDate,
+                .col_Type = "現金"
+            }
+        }
+        ' Act
+        Dim result = _reportRep.GetCashAccount(testDate, testDate)
+    End Sub
+
     <TestCleanup()>
     Public Sub Cleanup()
         _mockContext = Nothing

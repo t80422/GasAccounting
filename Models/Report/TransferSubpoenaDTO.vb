@@ -37,4 +37,6 @@ Public Class TransferSubpoenaDTO
     ''' </summary>
     ''' <returns></returns>
     Public Property CreditAmount As Integer
+
+    Public Property Id As Integer
 End Class
