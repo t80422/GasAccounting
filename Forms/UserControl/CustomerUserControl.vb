@@ -67,9 +67,10 @@
         Return criteria
     End Function
 
-    ' === 事件 ===
+    ' === 控制項事件 ===
     Private Sub CustomerUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel.PerformClick()
+        ReadDataGridWidth(dgvCustomer)
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -111,5 +112,9 @@
                 RaiseEvent PricePlanSelectedChange(sender, id)
             End If
         End If
+    End Sub
+
+    Private Sub dgvCustomer_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvCustomer.ColumnWidthChanged
+        SaveDataGridWidth(sender, e)
     End Sub
 End Class

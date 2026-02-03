@@ -188,14 +188,13 @@
 
     ' 客戶設定-取消
     Private Sub btnCancel_sbd_Click(sender As Object, e As EventArgs) Handles btnCancel_sbd.Click
-        SetButtonState_old(sender, True)
+        SetButtonState(grpPrice_sbd, False)
         _sbdPresenter.Reset()
         dgvSBD.DataSource = Nothing
 
         Dim sbId = txtSBId.Text
-        If Not String.IsNullOrEmpty(sbId) Then
-            _sbdPresenter.LoadList(sbId)
-        End If
+        If Not String.IsNullOrEmpty(sbId) Then _sbdPresenter.LoadList(sbId)
+        ReadDataGridWidth(dgvSBD)
     End Sub
 
     ' 客戶設定-新增

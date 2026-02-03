@@ -1,4 +1,5 @@
-﻿Public Class SurplusGasUserControl
+﻿' 結餘氣
+Public Class SurplusGasUserControl
     Implements ISurplusGasView
 
     Private _presenter As SurplusGasPresenter
@@ -12,6 +13,7 @@
     Public Event RowSelected As EventHandler(Of Integer) Implements ISurplusGasView.RowSelected
     Public Event PrintClicked As EventHandler Implements ISurplusGasView.PrintClicked
 
+    ' === View ===
     Public Sub DisplayList(data As List(Of SurplusGasListVM)) Implements ISurplusGasView.DisplayList
         dgvPurchaseBarrel.DataSource = data
     End Sub
@@ -19,12 +21,6 @@
     Public Function GetSearchCriteria() As Object Implements ISurplusGasView.GetSearchCriteria
         Throw New NotImplementedException()
     End Function
-
-    Private Sub SurplusGasUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _presenter = DependencyContainer.Resolve(Of SurplusGasPresenter)
-        _presenter.SetView(Me)
-        RaiseEvent Loaded(sender, EventArgs.Empty)
-    End Sub
 
     Public Sub DisplayDetail(data As surplus_gas) Implements ISurplusGasView.DisplayDetail
         dtpStart.Value = data.sg_StartDate
@@ -62,7 +58,7 @@
     End Sub
 
     Public Sub ButtonControl(isCreate As Boolean) Implements ISurplusGasView.ButtonControl
-        SetButtonState_old(btnAdd, isCreate)
+        SetButtonState(Me, Not isCreate)
     End Sub
 
     Private Sub Calculate() Handles txtPlatform.KeyUp, txtPlatform_C.KeyUp, txtSlot.KeyUp, txtSlot_C.KeyUp, txtCar.KeyUp, txtCar_C.KeyUp, txtSell.KeyUp
@@ -83,6 +79,14 @@
         Integer.TryParse(txtSell.Text, sell)
 
         txtTotal.Text = (platform + platform_c + slot + slot_c + car + car_c + sell).ToString()
+    End Sub
+
+    ' === 控制項事件 ===
+    Private Sub SurplusGasUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _presenter = DependencyContainer.Resolve(Of SurplusGasPresenter)
+        _presenter.SetView(Me)
+        RaiseEvent Loaded(sender, EventArgs.Empty)
+        ReadDataGridWidth(dgvPurchaseBarrel)
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click

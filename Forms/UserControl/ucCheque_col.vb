@@ -133,5 +133,6 @@ Public Class ucCheque_col
 
     Private Sub Cheque_colUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel_Che.PerformClick()
+        ReadDataGridWidth(dgvCheque)
     End Sub
 End Class

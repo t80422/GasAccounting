@@ -53,6 +53,7 @@ Public Class ucChequePay
 	' UI 事件
 	Private Sub ChequePayUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		RaiseEvent Loaded(Me, EventArgs.Empty)
+		ReadDataGridWidth(dgvCheque)
 	End Sub
 
 	Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click

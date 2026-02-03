@@ -1,6 +1,5 @@
 ﻿' 結轉
 Public Class ucClosingEntry
-    Inherits UserControl
     Implements IClosingEntryView
 
     Private _presenter As ClosingEntryPresenter
@@ -45,6 +44,7 @@ Public Class ucClosingEntry
     Private Sub ucClosingEntry_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _presenter.SetView(Me)
         btnCancel.PerformClick()
+        ReadDataGridWidth(dgvClosingEntry)
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

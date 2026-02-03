@@ -1,4 +1,5 @@
-﻿Public Class GasCheckoutUserControl
+﻿' 大氣結帳
+Public Class GasCheckoutUserControl
     Implements IGasCheckoutView
 
     Public Event QueryClicked() Implements IGasCheckoutView.QueryClicked
@@ -50,5 +51,6 @@
 
     Private Sub GasCheckoutUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel.PerformClick()
+        ReadDataGridWidth(dgvGasCheckout)
     End Sub
 End Class

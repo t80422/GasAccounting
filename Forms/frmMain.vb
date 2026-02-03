@@ -1,6 +1,4 @@
-﻿Imports Unity.Resolution
-
-Public Class frmMain
+﻿Public Class frmMain
     Implements ISubjectsView, IManufacturerView, IPricePlanView, IEmployeeView, IBankView, IUnitPriceHistoryView, IPermissionView, IBasicPriceView, IInvoiceView, IGasBarrelView, ICarView, IInvoiceSplitView, IInspectionView
 
     Public Structure UserData
@@ -284,8 +282,10 @@ Public Class frmMain
     ''' </summary>
     Private Sub SetDGVColumnWidthSave()
         Dim dgvs = GetControlInParent(Of DataGridView)(Me)
-        GetControlInParent(Of DataGridView)(Me).ForEach(Sub(dgv) AddHandler dgv.ColumnWidthChanged, AddressOf SaveDataGridWidth)
-        ReadDataGridWidth(dgvs)
+        dgvs.ForEach(Sub(dgv)
+                         AddHandler dgv.ColumnWidthChanged, AddressOf SaveDataGridWidth
+                         ReadDataGridWidth(dgv)
+                     End Sub)
     End Sub
 
     ''' <summary>
@@ -874,7 +874,7 @@ Public Class frmMain
 
     End Sub
 
-    '基本資料-員工管理-dgv
+    '基本資料-員工管理-dgv-選擇列
     Private Sub dgvEmployee_SelectionChanged(sender As Object, e As EventArgs) Handles dgvEmployee.SelectionChanged, dgvEmployee.CellMouseClick
         Dim ctrl As DataGridView = sender
         If Not ctrl.Focused OrElse ctrl.SelectedRows.Count = 0 Then Return

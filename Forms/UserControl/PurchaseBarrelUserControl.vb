@@ -60,6 +60,7 @@ Public Class PurchaseBarrelUserControl
     Private Sub PurchaseBarrelUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         grpBarrel.Controls.OfType(Of TextBox).ToList.ForEach(Sub(x) AddHandler x.TextChanged, Sub(s, ev) CalculateAmount())
         RaiseEvent CancelRequest(Me, EventArgs.Empty)
+        ReadDataGridWidth(dgvPurchaseBarrel)
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

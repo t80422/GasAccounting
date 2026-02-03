@@ -136,7 +136,7 @@ Public Class CollectionRep
                     result.Add(New TransferSubpoenaDTO With {
                         .DebitSubjectName = x.col_Type,
                         .DebitAmount = x.col_Amount,
-                        .DebitSummary = commonDebitSummary,
+                        .DebitSummary = If(x.col_Type = "銀行存款", "", commonDebitSummary),
                         .CreditSubjectName = x.subject1?.s_name,
                         .CreditAmount = x.col_credit_amount_1.Value,
                         .CreditSummary = commonDebitSummary,
@@ -149,7 +149,7 @@ Public Class CollectionRep
                     result.Add(New TransferSubpoenaDTO With {
                         .DebitSubjectName = x.col_Type,
                         .DebitAmount = x.col_Amount,
-                        .DebitSummary = commonDebitSummary,
+                        .DebitSummary = If(x.col_Type = "銀行存款", "", commonDebitSummary),
                         .CreditSubjectName = x.subject2?.s_name,
                         .CreditAmount = x.col_credit_amount_2.Value,
                         .CreditSummary = commonDebitSummary,
@@ -162,7 +162,7 @@ Public Class CollectionRep
                     result.Add(New TransferSubpoenaDTO With {
                         .DebitSubjectName = x.col_Type,
                         .DebitAmount = x.col_Amount,
-                        .DebitSummary = commonDebitSummary,
+                        .DebitSummary = If(x.col_Type = "銀行存款", "", commonDebitSummary),
                         .CreditSubjectName = x.subject?.s_name,
                         .CreditAmount = x.col_credit_amount_3.Value,
                         .CreditSummary = commonDebitSummary,

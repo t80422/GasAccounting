@@ -143,7 +143,7 @@ Public Class PaymentRep
                         .DebitSummary = x.p_Memo,
                         .CreditSubjectName = x.p_Type,
                         .CreditAmount = x.p_Amount,
-                        .CreditSummary = x.p_Memo,
+                        .CreditSummary = If(x.p_Type = "銀行存款", "", x.p_Memo),
                         .Id = x.p_Id
                     })
                 End If
@@ -156,7 +156,7 @@ Public Class PaymentRep
                         .DebitSummary = x.p_Memo,
                         .CreditSubjectName = x.p_Type,
                         .CreditAmount = x.p_Amount,
-                        .CreditSummary = x.p_Memo,
+                        .CreditSummary = If(x.p_Type = "銀行存款", "", x.p_Memo),
                         .Id = x.p_Id
                     })
                 End If
@@ -169,7 +169,7 @@ Public Class PaymentRep
                         .DebitSummary = x.p_Memo,
                         .CreditSubjectName = x.p_Type,
                         .CreditAmount = x.p_Amount,
-                        .CreditSummary = x.p_Memo,
+                        .CreditSummary = If(x.p_Type = "銀行存款", "", x.p_Memo),
                         .Id = x.p_Id
                     })
                 End If
@@ -211,7 +211,7 @@ Public Class PaymentRep
     End Function
 
     Public Function GetBankAccount(bankId As Integer) As IEnumerable(Of payment) Implements IPaymentRep.GetBankAccount
-        Try 
+        Try
             Return _dbSet.Where(Function(x) (x.p_bank_Id = bankId AndAlso x.p_Type = "銀行存款") Or
                                             (x.p_bank_Id = bankId AndAlso x.subject1.s_name = "銀行存款") Or
                                             (x.p_debit_bank_id_2 = bankId AndAlso x.subject2.s_name = "銀行存款") Or

@@ -10,6 +10,7 @@
     Public Event EditClicked As EventHandler Implements ICompanyView.EditClicked
     Public Event DeleteClicked As EventHandler Implements ICompanyView.DeleteClicked
 
+    '=== View ===
     Public Sub DisplayList(data As List(Of CompanyVM)) Implements ICompanyView.DisplayList
         dgvCompany.DataSource = data
         SetColumnHeaders("company", dgvCompany)
@@ -33,17 +34,19 @@
         Return data
     End Function
 
+    ' === 控制項事件 ===
     ' 載入
     Private Sub CompanyUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _presenter = DependencyContainer.Resolve(Of CompanyPresenter)()
         _presenter.SetView(Me)
         RaiseEvent Loaded(Me, EventArgs.Empty)
+        ReadDataGridWidth(dgvCompany)
     End Sub
 
     ' 取消
     Private Sub btnCancel_comp_Click(sender As Object, e As EventArgs) Handles btnCancel_comp.Click
         RaiseEvent CancelClicked(Me, EventArgs.Empty)
-        SetButtonState_old(sender, True)
+        SetButtonState(Me, False)
     End Sub
 
     ' 新增
@@ -70,5 +73,9 @@
     Private Sub btnDelete_comp_Click(sender As Object, e As EventArgs) Handles btnDelete_comp.Click
         RaiseEvent DeleteClicked(Me, EventArgs.Empty)
         SetButtonState_old(sender, True)
+    End Sub
+
+    Private Sub dgvCompany_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvCompany.ColumnWidthChanged
+        SaveDataGridWidth(sender, e)
     End Sub
 End Class
