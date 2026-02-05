@@ -294,68 +294,65 @@ Public Class ReportPresenter
                         .InsertRow(rowIndex)
 
                         .WriteToCell(rowIndex, 1, datas(i).日期)
-                        .WriteToCell(rowIndex, 2, datas(i).總提氣.ToString)
+                        .WriteToCell(rowIndex, 2, datas(i).總提氣)
 
-                        .WriteToCell(rowIndex, 3, datas(i).廠運總提氣.ToString)
-                        .WriteToCell(rowIndex, 4, datas(i).廠運普氣.ToString)
-                        .WriteToCell(rowIndex, 5, datas(i).廠運普氣退氣.ToString)
+                        .WriteToCell(rowIndex, 3, datas(i).廠運總提氣)
+                        .WriteToCell(rowIndex, 4, datas(i).廠運普氣)
+                        .WriteToCell(rowIndex, 5, datas(i).廠運普氣退氣)
                         .WriteToCell(rowIndex, 6, datas(i).廠運普氣單價.ToString("N3"))
-                        .WriteToCell(rowIndex, 7, datas(i).廠運普氣金額.ToString)
-                        .WriteToCell(rowIndex, 8, datas(i).廠運丙氣.ToString)
-                        .WriteToCell(rowIndex, 9, datas(i).廠運丙氣退氣.ToString)
+                        .WriteToCell(rowIndex, 7, datas(i).廠運普氣金額)
+                        .WriteToCell(rowIndex, 8, datas(i).廠運丙氣)
+                        .WriteToCell(rowIndex, 9, datas(i).廠運丙氣退氣)
                         .WriteToCell(rowIndex, 10, datas(i).廠運丙氣單價.ToString("N3"))
-                        .WriteToCell(rowIndex, 11, datas(i).廠運丙氣金額.ToString)
+                        .WriteToCell(rowIndex, 11, datas(i).廠運丙氣金額)
 
-                        .WriteToCell(rowIndex, 12, datas(i).自運總提氣.ToString)
-                        .WriteToCell(rowIndex, 13, datas(i).自運普氣.ToString)
-                        .WriteToCell(rowIndex, 14, datas(i).自運普氣退氣.ToString)
+                        .WriteToCell(rowIndex, 12, datas(i).自運總提氣)
+                        .WriteToCell(rowIndex, 13, datas(i).自運普氣)
+                        .WriteToCell(rowIndex, 14, datas(i).自運普氣退氣)
                         .WriteToCell(rowIndex, 15, datas(i).自運普氣單價.ToString("N3"))
-                        .WriteToCell(rowIndex, 16, datas(i).自運普氣金額.ToString)
-                        .WriteToCell(rowIndex, 17, datas(i).自運丙氣.ToString)
-                        .WriteToCell(rowIndex, 18, datas(i).自運丙氣退氣.ToString)
+                        .WriteToCell(rowIndex, 16, datas(i).自運普氣金額)
+                        .WriteToCell(rowIndex, 17, datas(i).自運丙氣)
+                        .WriteToCell(rowIndex, 18, datas(i).自運丙氣退氣)
                         .WriteToCell(rowIndex, 19, datas(i).自運丙氣單價.ToString("N3"))
-                        .WriteToCell(rowIndex, 20, datas(i).自運丙氣金額.ToString)
+                        .WriteToCell(rowIndex, 20, datas(i).自運丙氣金額)
 
-                        .WriteToCell(rowIndex, 21, datas(i).總額.ToString)
-                        .WriteToCell(rowIndex, 22, datas(i).現金.ToString)
-                        .WriteToCell(rowIndex, 23, datas(i).銀行.ToString)
-                        .WriteToCell(rowIndex, 24, datas(i).票據.ToString)
-                        .WriteToCell(rowIndex, 25, datas(i).掛帳.ToString)
-                        .WriteToCell(rowIndex, 26, datas(i).累計.ToString)
+                        .WriteToCell(rowIndex, 21, datas(i).總額)
+                        .WriteToCell(rowIndex, 22, datas(i).現金)
+                        .WriteToCell(rowIndex, 23, datas(i).銀行)
+                        .WriteToCell(rowIndex, 24, datas(i).票據)
+                        .WriteToCell(rowIndex, 25, datas(i).掛帳)
+                        .WriteToCell(rowIndex, 26, datas(i).累計)
                     Next
 
                     rowIndex += 1
-                    Dim deliveryGas = datas.Sum(Function(x) x.廠運總提氣).ToString
 
                     .WriteToCell("A", rowIndex, "合計")
-                    .WriteToCell("B", rowIndex, datas.Sum(Function(x) x.總提氣).ToString)
-                    .WriteToCell("C", rowIndex, deliveryGas)
-                    .WriteToCell("D", rowIndex, datas.Sum(Function(x) x.廠運普氣).ToString)
-                    .WriteToCell("E", rowIndex, datas.Sum(Function(x) x.廠運普氣退氣).ToString)
-                    .WriteToCell("G", rowIndex, datas.Sum(Function(x) x.廠運普氣金額).ToString)
-                    .WriteToCell("H", rowIndex, datas.Sum(Function(x) x.廠運丙氣).ToString)
-                    .WriteToCell("I", rowIndex, datas.Sum(Function(x) x.廠運丙氣退氣).ToString)
-                    .WriteToCell("K", rowIndex, datas.Sum(Function(x) x.廠運丙氣金額).ToString)
-
-                    .WriteToCell("L", rowIndex, datas.Sum(Function(x) x.自運總提氣).ToString)
-                    .WriteToCell("M", rowIndex, datas.Sum(Function(x) x.自運普氣).ToString)
-                    .WriteToCell("N", rowIndex, datas.Sum(Function(x) x.自運普氣退氣).ToString)
-                    .WriteToCell("P", rowIndex, datas.Sum(Function(x) x.自運普氣金額).ToString)
-                    .WriteToCell("Q", rowIndex, datas.Sum(Function(x) x.自運丙氣).ToString)
-                    .WriteToCell("R", rowIndex, datas.Sum(Function(x) x.自運丙氣退氣).ToString)
-                    .WriteToCell("T", rowIndex, datas.Sum(Function(x) x.自運丙氣金額).ToString)
-
-                    .WriteToCell("U", rowIndex, datas.Sum(Function(x) x.總額).ToString)
-                    .WriteToCell("V", rowIndex, datas.Sum(Function(x) x.現金).ToString)
-                    .WriteToCell("W", rowIndex, datas.Sum(Function(x) x.銀行).ToString)
-                    .WriteToCell("X", rowIndex, datas.Sum(Function(x) x.票據).ToString)
-                    .WriteToCell("Y", rowIndex, datas.Sum(Function(x) x.掛帳).ToString)
-                    .WriteToCell("Z", rowIndex, datas.LastOrDefault.累計.ToString)
+                    .WriteFormula("B", rowIndex, $"=SUM(B4:B{rowIndex - 1})")
+                    .WriteFormula("C", rowIndex, $"=SUM(C4:C{rowIndex - 1})")
+                    .WriteFormula("D", rowIndex, $"=SUM(D4:D{rowIndex - 1})")
+                    .WriteFormula("E", rowIndex, $"=SUM(E4:E{rowIndex - 1})")
+                    .WriteFormula("G", rowIndex, $"=SUM(G4:G{rowIndex - 1})")
+                    .WriteFormula("H", rowIndex, $"=SUM(H4:H{rowIndex - 1})")
+                    .WriteFormula("I", rowIndex, $"=SUM(I4:I{rowIndex - 1})")
+                    .WriteFormula("K", rowIndex, $"=SUM(K4:K{rowIndex - 1})")
+                    .WriteFormula("L", rowIndex, $"=SUM(L4:L{rowIndex - 1})")
+                    .WriteFormula("M", rowIndex, $"=SUM(M4:M{rowIndex - 1})")
+                    .WriteFormula("N", rowIndex, $"=SUM(N4:N{rowIndex - 1})")
+                    .WriteFormula("P", rowIndex, $"=SUM(P4:P{rowIndex - 1})")
+                    .WriteFormula("Q", rowIndex, $"=SUM(Q4:Q{rowIndex - 1})")
+                    .WriteFormula("R", rowIndex, $"=SUM(R4:R{rowIndex - 1})")
+                    .WriteFormula("T", rowIndex, $"=SUM(T4:T{rowIndex - 1})")
+                    .WriteFormula("U", rowIndex, $"=SUM(U4:U{rowIndex - 1})")
+                    .WriteFormula("V", rowIndex, $"=SUM(V4:V{rowIndex - 1})")
+                    .WriteFormula("W", rowIndex, $"=SUM(W4:W{rowIndex - 1})")
+                    .WriteFormula("X", rowIndex, $"=SUM(X4:X{rowIndex - 1})")
+                    .WriteFormula("Y", rowIndex, $"=SUM(Y4:Y{rowIndex - 1})")
+                    .WriteFormula("Z", rowIndex, $"=Z{rowIndex - 1}")
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 25, XLBorderStyleValues.Medium, XLBorderStyleValues.Medium)
 
                     ' 若沒有廠運就隱藏
-                    If deliveryGas = 0 Then .HideColumns(3, 11)
+                    If datas.Sum(Function(x) x.廠運總提氣) = 0 Then .HideColumns(3, 11)
 
                     '存檔
                     .SaveExcel($"單一客戶每月的應收帳明細表_{cusName}_{d:yyyyMM}")
@@ -1584,31 +1581,32 @@ Public Class ReportPresenter
                     .WriteToCell("A1", title)
 
                     Dim rowIndex As Integer = 3
-                    Dim totalBalance As Double = 0
 
                     For i As Integer = 0 To data.Count - 1
                         Dim item = data(i)
                         .WriteToCell("A", rowIndex, item.Subject)
                         .WriteToCell("C", rowIndex, item.Debit.ToString)
                         .WriteToCell("D", rowIndex, item.Credit.ToString)
-                        Dim balance = item.Debit - item.Credit
-                        .WriteToCell("E", rowIndex, (balance).ToString)
-                        totalBalance += balance
+                        .WriteToCell("E", rowIndex, (item.Debit - item.Credit).ToString)
                         rowIndex += 1
                     Next
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 5, XLBorderStyleValues.Thin)
                     .WriteToCell("A", rowIndex, "合計")
-                    .WriteToCell("C", rowIndex, data.Sum(Function(x) x.Debit).ToString)
-                    .WriteToCell("D", rowIndex, data.Sum(Function(x) x.Credit).ToString)
-                    .WriteToCell("E", rowIndex, totalBalance.ToString)
+
+                    Dim totalDebit = data.Sum(Function(x) x.Debit)
+                    .WriteToCell("C", rowIndex, totalDebit.ToString)
+
+                    Dim totalCredit = data.Sum(Function(x) x.Credit)
+                    .WriteToCell("D", rowIndex, totalCredit.ToString)
+                    .WriteToCell("E", rowIndex, (totalDebit - totalCredit).ToString)
 
                     '存檔
                     .SaveExcel(title)
                 End With
             End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 
