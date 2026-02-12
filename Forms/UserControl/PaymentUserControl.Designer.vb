@@ -197,7 +197,6 @@ Partial Class PaymentUserControl
         '
         'cmbCompany_payment
         '
-        Me.cmbCompany_payment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbCompany_payment.FormattingEnabled = True
         Me.cmbCompany_payment.Location = New System.Drawing.Point(494, 197)
         Me.cmbCompany_payment.Name = "cmbCompany_payment"
@@ -267,7 +266,6 @@ Partial Class PaymentUserControl
         '
         'cmbSubjects_payment
         '
-        Me.cmbSubjects_payment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbSubjects_payment.FormattingEnabled = True
         Me.cmbSubjects_payment.Location = New System.Drawing.Point(180, 197)
         Me.cmbSubjects_payment.Name = "cmbSubjects_payment"
@@ -597,7 +595,6 @@ Partial Class PaymentUserControl
         '
         'cmbDebitCompany2
         '
-        Me.cmbDebitCompany2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDebitCompany2.FormattingEnabled = True
         Me.cmbDebitCompany2.Location = New System.Drawing.Point(494, 240)
         Me.cmbDebitCompany2.Name = "cmbDebitCompany2"
@@ -617,7 +614,6 @@ Partial Class PaymentUserControl
         '
         'cmbDebitSubject2
         '
-        Me.cmbDebitSubject2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDebitSubject2.FormattingEnabled = True
         Me.cmbDebitSubject2.Location = New System.Drawing.Point(180, 240)
         Me.cmbDebitSubject2.Name = "cmbDebitSubject2"
@@ -695,7 +691,6 @@ Partial Class PaymentUserControl
         '
         'cmbDebitCompany3
         '
-        Me.cmbDebitCompany3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDebitCompany3.FormattingEnabled = True
         Me.cmbDebitCompany3.Location = New System.Drawing.Point(494, 283)
         Me.cmbDebitCompany3.Name = "cmbDebitCompany3"
@@ -715,7 +710,6 @@ Partial Class PaymentUserControl
         '
         'cmbDebitSubject3
         '
-        Me.cmbDebitSubject3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDebitSubject3.FormattingEnabled = True
         Me.cmbDebitSubject3.Location = New System.Drawing.Point(180, 283)
         Me.cmbDebitSubject3.Name = "cmbDebitSubject3"

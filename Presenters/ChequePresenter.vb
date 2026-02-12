@@ -99,25 +99,28 @@ Public Class ChequePresenter
             Using xml As New CloseXML_Excel(filePath)
                 With xml
                     .SelectWorksheet("Sheet1")
-                    .WriteToCell("A1", "應收支票管理")
+                    .WriteToCell("B1", "應收支票管理")
+                    .WriteToCell("J1", datas.Where(Function(x) x.代收日期.HasValue).First.代收日期.Value.ToString("yyyy/MM/dd"))
 
                     Dim rowIndex = 3
 
-                    For Each item In datas
-                        .WriteToCell(rowIndex, 1, item.收票日期.Value.ToString("yyyy/MM/dd"))
-                        .WriteToCell(rowIndex, 2, item.支票號碼)
-                        .WriteToCell(rowIndex, 3, item.客戶代號)
-                        .WriteToCell(rowIndex, 4, item.銀行帳號)
-                        .WriteToCell(rowIndex, 5, item.發票人)
-                        .WriteToCell(rowIndex, 6, item.金額.ToString)
-                        .WriteToCell(rowIndex, 7, item.狀態)
-                        .WriteToCell(rowIndex, 8, If(item.支票兌現日期.HasValue, item.支票兌現日期.Value.ToString("yyyy/MM/dd"), ""))
-                        .WriteToCell(rowIndex, 9, If(item.代收日期.HasValue, item.代收日期.Value.ToString("yyyy/MM/dd"), ""))
+                    For i = 0 To datas.Count - 1
+                        Dim item = datas(i)
+
+                        .WriteToCell(rowIndex, 1, i + 1)
+                        .WriteToCell(rowIndex, 2, item.收票日期.Value.ToString("yyyy/MM/dd"))
+                        .WriteToCell(rowIndex, 3, item.支票號碼)
+                        .WriteToCell(rowIndex, 4, item.客戶代號)
+                        .WriteToCell(rowIndex, 5, item.銀行帳號)
+                        .WriteToCell(rowIndex, 6, item.發票人)
+                        .WriteToCell(rowIndex, 7, item.金額.ToString)
+                        .WriteToCell(rowIndex, 8, item.狀態)
+                        .WriteToCell(rowIndex, 9, If(item.支票兌現日期.HasValue, item.支票兌現日期.Value.ToString("yyyy/MM/dd"), ""))
 
                         rowIndex += 1
                     Next
 
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 8, XLBorderStyleValues.Thin)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 10, XLBorderStyleValues.Thin)
                     .WriteToCell(rowIndex, 5, "合計")
                     .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.金額).ToString("N0"))
 
