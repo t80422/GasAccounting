@@ -1,4 +1,4 @@
-﻿Imports System.Data.Entity
+Imports System.Data.Entity
 
 Public Class PaymentRep
     Inherits Repository(Of payment)
@@ -126,51 +126,45 @@ Public Class PaymentRep
         End Try
     End Function
 
-    Public Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO) Implements IPaymentRep.GetTransferSubpoenaData
+    Public Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaGroup) Implements IPaymentRep.GetTransferSubpoenaData
         Try
-            ' 轉帳傳票範圍：銀行存款、應付票據 (不含轉帳折讓)
+            ' 轉帳傳票範圍：銀行存款、應付票據（支出：一貸多借，Group=貸方，Details=借方明細）
             Dim payments = _dbSet.Where(Function(x) x.p_Date = day AndAlso
                                           (x.p_Type = "銀行存款" OrElse x.p_Type = "應付票據")).ToList()
 
-            Dim result As New List(Of TransferSubpoenaDTO)
+            Dim result As New List(Of TransferSubpoenaGroup)
 
             For Each x In payments
-                ' 第一組：金額 1 -> subject1 (借) / p_Type (貸)
+                Dim details As New List(Of TransferSubpoenaDetail)
+
                 If x.p_debit_amount_1.GetValueOrDefault() > 0 Then
-                    result.Add(New TransferSubpoenaDTO With {
-                        .DebitSubjectName = x.subject1?.s_name,
-                        .DebitAmount = x.p_debit_amount_1.Value,
-                        .DebitSummary = x.p_Memo,
-                        .CreditSubjectName = x.p_Type,
-                        .CreditAmount = x.p_Amount,
-                        .CreditSummary = If(x.p_Type = "銀行存款", "", x.p_Memo),
-                        .Id = x.p_Id
+                    details.Add(New TransferSubpoenaDetail With {
+                        .SubjectName = x.subject1?.s_name,
+                        .Summary = x.p_Memo,
+                        .Amount = x.p_debit_amount_1.Value
                     })
                 End If
-
-                ' 第二組：金額 2 -> subject2 (借) / p_Type (貸)
                 If x.p_debit_amount_2.GetValueOrDefault() > 0 Then
-                    result.Add(New TransferSubpoenaDTO With {
-                        .DebitSubjectName = x.subject2?.s_name,
-                        .DebitAmount = x.p_debit_amount_2.Value,
-                        .DebitSummary = x.p_Memo,
-                        .CreditSubjectName = x.p_Type,
-                        .CreditAmount = x.p_Amount,
-                        .CreditSummary = If(x.p_Type = "銀行存款", "", x.p_Memo),
-                        .Id = x.p_Id
+                    details.Add(New TransferSubpoenaDetail With {
+                        .SubjectName = x.subject2?.s_name,
+                        .Summary = x.p_Memo,
+                        .Amount = x.p_debit_amount_2.Value
+                    })
+                End If
+                If x.p_debit_amount_3.GetValueOrDefault() > 0 Then
+                    details.Add(New TransferSubpoenaDetail With {
+                        .SubjectName = x.subject?.s_name,
+                        .Summary = x.p_Memo,
+                        .Amount = x.p_debit_amount_3.Value
                     })
                 End If
 
-                ' 第三組：金額 3 -> subject (借) / p_Type (貸)
-                If x.p_debit_amount_3.GetValueOrDefault() > 0 Then
-                    result.Add(New TransferSubpoenaDTO With {
-                        .DebitSubjectName = x.subject?.s_name,
-                        .DebitAmount = x.p_debit_amount_3.Value,
-                        .DebitSummary = x.p_Memo,
-                        .CreditSubjectName = x.p_Type,
-                        .CreditAmount = x.p_Amount,
-                        .CreditSummary = If(x.p_Type = "銀行存款", "", x.p_Memo),
-                        .Id = x.p_Id
+                If details.Count > 0 Then
+                    result.Add(New TransferSubpoenaGroup With {
+                        .SubjectName = x.p_Type,
+                        .Summary = If(x.p_Type = "銀行存款", "", x.p_Memo),
+                        .Amount = x.p_Amount,
+                        .Details = details
                     })
                 End If
             Next

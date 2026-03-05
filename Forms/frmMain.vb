@@ -150,7 +150,7 @@
             InitUI()
             SetCtrlStyle()
         Catch ex As Exception
-            Throw
+            MessageBox.Show("frmMain_Load: " + ex.Message)
         End Try
     End Sub
 
@@ -198,19 +198,23 @@
     ''' 初始化各TabPage
     ''' </summary>
     Private Sub InitTabPage()
-        btnCancel_emp_Click(btnCancel_emp, EventArgs.Empty)
-        btnCancel_bp_Click(btnCancel_bp, EventArgs.Empty)
-        btnCancel_bank_Click(btnCancel_bank, EventArgs.Empty)
-        btnCancel_car_Click(btnCancel_car, EventArgs.Empty)
-        btnCancel_subjects_Click(btnCancel_subjects, EventArgs.Empty)
-        btnCancel_manu_Click(btnCancel_manu, EventArgs.Empty)
-        btnCancel_pp_Click(btnCancel_pp, EventArgs.Empty)
-        btnCancel_roles_Click(btnCancel_roles, EventArgs.Empty)
-        btnCancel_uph_Click(btnCancel_uph, EventArgs.Empty)
-        btnCancel_invoice_Click(btnCancel_invoice, EventArgs.Empty)
-        btnCancel_gb_Click(btnCancel_gb, EventArgs.Empty)
-        btnCancel_ii_Click(btnCancel_ii, EventArgs.Empty)
-        btnCancel_ins_Click(btnCancel_ins, EventArgs.Empty)
+        Try
+            btnCancel_emp_Click(btnCancel_emp, EventArgs.Empty)
+            btnCancel_bp_Click(btnCancel_bp, EventArgs.Empty)
+            btnCancel_bank_Click(btnCancel_bank, EventArgs.Empty)
+            btnCancel_car_Click(btnCancel_car, EventArgs.Empty)
+            btnCancel_subjects_Click(btnCancel_subjects, EventArgs.Empty)
+            btnCancel_manu_Click(btnCancel_manu, EventArgs.Empty)
+            btnCancel_pp_Click(btnCancel_pp, EventArgs.Empty)
+            btnCancel_roles_Click(btnCancel_roles, EventArgs.Empty)
+            btnCancel_uph_Click(btnCancel_uph, EventArgs.Empty)
+            btnCancel_invoice_Click(btnCancel_invoice, EventArgs.Empty)
+            btnCancel_gb_Click(btnCancel_gb, EventArgs.Empty)
+            btnCancel_ii_Click(btnCancel_ii, EventArgs.Empty)
+            btnCancel_ins_Click(btnCancel_ins, EventArgs.Empty)
+        Catch ex As Exception
+            Throw
+        End Try
     End Sub
 
     ''' <summary>
@@ -424,9 +428,13 @@
 
     '基本資料-基礎價格-取消
     Private Async Sub btnCancel_bp_Click(sender As Object, e As EventArgs) Handles btnCancel_bp.Click
-        SetButtonState_old(sender, True)
-        ClearControls(tpBasePrice)
-        Await _basicPrice.SearchAsync(False)
+        Try
+            SetButtonState_old(sender, True)
+            ClearControls(tpBasePrice)
+            Await _basicPrice.SearchAsync(False)
+        Catch ex As Exception
+            MessageBox.Show("btnCancel_bp_Click: " + ex.Message)
+        End Try
     End Sub
 
     '基本資料-基礎價格-新增

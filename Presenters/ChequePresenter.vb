@@ -121,8 +121,8 @@ Public Class ChequePresenter
                     Next
 
                     .SetCustomBorders(rowIndex, 1, rowIndex, 10, XLBorderStyleValues.Thin)
-                    .WriteToCell(rowIndex, 5, "合計")
-                    .WriteToCell(rowIndex, 6, datas.Sum(Function(x) x.金額).ToString("N0"))
+                    .WriteToCell("F", rowIndex, "合計")
+                    .WriteToCell("G", rowIndex, datas.Sum(Function(x) x.金額).ToString("N0"))
 
                     .SaveExcel("應收支票管理")
                 End With

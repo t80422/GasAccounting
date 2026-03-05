@@ -19,7 +19,7 @@ Public Class BasicPricePresenter
             Dim datas = Await _bpRep.SearchAsync(criteria)
             _view.DisplayList(datas.OrderByDescending(Function(x) x.bp_date).Select(Function(x) New BasicPriceMV(x)).ToList)
         Catch ex As Exception
-            MsgBox(ex.Message)
+            Throw
         End Try
     End Function
 

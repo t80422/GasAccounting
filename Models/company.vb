@@ -19,10 +19,6 @@ Partial Public Class company
     Public Property comp_Phone As String
 
     Public Overridable Property banks As ICollection(Of bank) = New HashSet(Of bank)
-    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
-    Public Overridable Property collections1 As ICollection(Of collection) = New HashSet(Of collection)
-    Public Overridable Property collections2 As ICollection(Of collection) = New HashSet(Of collection)
-    Public Overridable Property collections3 As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property customers As ICollection(Of customer) = New HashSet(Of customer)
     Public Overridable Property gas_monthly_balances As ICollection(Of gas_monthly_balances) = New HashSet(Of gas_monthly_balances)
     Public Overridable Property invoice_split As ICollection(Of invoice_split) = New HashSet(Of invoice_split)
@@ -32,5 +28,9 @@ Partial Public Class company
     Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property payments1 As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property payments2 As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property collections1 As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property collections2 As ICollection(Of collection) = New HashSet(Of collection)
+    Public Overridable Property collections3 As ICollection(Of collection) = New HashSet(Of collection)
 
 End Class

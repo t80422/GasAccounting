@@ -1,4 +1,4 @@
-﻿Imports System.Data.Entity
+Imports System.Data.Entity
 
 Public Class CollectionRep
     Inherits Repository(Of collection)
@@ -120,53 +120,46 @@ Public Class CollectionRep
         End Try
     End Function
 
-    Public Function GetTarnsferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO) Implements ICollectionRep.GetTarnsferSubpoenaData
+    Public Function GetTarnsferSubpoenaData(day As Date) As List(Of TransferSubpoenaGroup) Implements ICollectionRep.GetTarnsferSubpoenaData
         Try
-            ' 轉帳傳票範圍：銀行存款、應收票據、轉帳折讓
+            ' 轉帳傳票範圍：銀行存款、應收票據、轉帳折讓（收入：一借多貸，Group=借方，Details=貸方明細）
             Dim collections = _dbSet.Where(Function(x) x.col_Date = day AndAlso
                                           (x.col_Type = "銀行存款" OrElse x.col_Type = "應收票據" OrElse x.col_Type = "銷貨折讓")).ToList()
 
-            Dim result As New List(Of TransferSubpoenaDTO)
+            Dim result As New List(Of TransferSubpoenaGroup)
 
             For Each x In collections
                 Dim commonDebitSummary = If(x.customer IsNot Nothing, x.customer.cus_code, "") & x.col_Memo
+                Dim details As New List(Of TransferSubpoenaDetail)
 
-                ' 第一組：金額 1 -> subject1
                 If x.col_credit_amount_1.GetValueOrDefault() > 0 Then
-                    result.Add(New TransferSubpoenaDTO With {
-                        .DebitSubjectName = x.col_Type,
-                        .DebitAmount = x.col_Amount,
-                        .DebitSummary = If(x.col_Type = "銀行存款", "", commonDebitSummary),
-                        .CreditSubjectName = x.subject1?.s_name,
-                        .CreditAmount = x.col_credit_amount_1.Value,
-                        .CreditSummary = commonDebitSummary,
-                        .Id = x.col_Id
+                    details.Add(New TransferSubpoenaDetail With {
+                        .SubjectName = x.subject1?.s_name,
+                        .Summary = commonDebitSummary,
+                        .Amount = x.col_credit_amount_1.Value
                     })
                 End If
-
-                ' 第二組：金額 2 -> subject2
                 If x.col_credit_amount_2.GetValueOrDefault() > 0 Then
-                    result.Add(New TransferSubpoenaDTO With {
-                        .DebitSubjectName = x.col_Type,
-                        .DebitAmount = x.col_Amount,
-                        .DebitSummary = If(x.col_Type = "銀行存款", "", commonDebitSummary),
-                        .CreditSubjectName = x.subject2?.s_name,
-                        .CreditAmount = x.col_credit_amount_2.Value,
-                        .CreditSummary = commonDebitSummary,
-                        .Id = x.col_Id
+                    details.Add(New TransferSubpoenaDetail With {
+                        .SubjectName = x.subject2?.s_name,
+                        .Summary = commonDebitSummary,
+                        .Amount = x.col_credit_amount_2.Value
+                    })
+                End If
+                If x.col_credit_amount_3.GetValueOrDefault() > 0 Then
+                    details.Add(New TransferSubpoenaDetail With {
+                        .SubjectName = x.subject?.s_name,
+                        .Summary = commonDebitSummary,
+                        .Amount = x.col_credit_amount_3.Value
                     })
                 End If
 
-                ' 第三組：金額 3 -> subject
-                If x.col_credit_amount_3.GetValueOrDefault() > 0 Then
-                    result.Add(New TransferSubpoenaDTO With {
-                        .DebitSubjectName = x.col_Type,
-                        .DebitAmount = x.col_Amount,
-                        .DebitSummary = If(x.col_Type = "銀行存款", "", commonDebitSummary),
-                        .CreditSubjectName = x.subject?.s_name,
-                        .CreditAmount = x.col_credit_amount_3.Value,
-                        .CreditSummary = commonDebitSummary,
-                        .Id = x.col_Id
+                If details.Count > 0 Then
+                    result.Add(New TransferSubpoenaGroup With {
+                        .SubjectName = x.col_Type,
+                        .Summary = If(x.col_Type = "銀行存款", "", commonDebitSummary),
+                        .Amount = x.col_Amount,
+                        .Details = details
                     })
                 End If
             Next

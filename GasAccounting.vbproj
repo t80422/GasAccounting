@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\Microsoft.Testing.Extensions.Telemetry.1.8.2\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props" Condition="Exists('packages\Microsoft.Testing.Extensions.Telemetry.1.8.2\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" />
   <Import Project="packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.props" Condition="Exists('packages\Microsoft.Testing.Platform.MSBuild.1.8.2\build\Microsoft.Testing.Platform.MSBuild.props')" />
@@ -613,7 +613,9 @@
     <Compile Include="Models\Report\AccountBalanceDTO.vb" />
     <Compile Include="Models\Report\BillsReceivable.vb" />
     <Compile Include="Models\Report\SurplusGasDTO.vb" />
-    <Compile Include="Models\Report\TransferSubpoenaDTO.vb" />
+    <Compile Include="Models\Report\TransferSubpoenaGroup.vb" />
+    <Compile Include="Models\Report\TransferVoucherType.vb" />
+    <Compile Include="Models\Report\TransferSubpoenaReportRequest.vb" />
     <Compile Include="Models\Report\DailySubjectSummary.vb" />
     <Compile Include="Models\Report\EnergyBureau.vb" />
     <Compile Include="Models\Report\SplitCompanyInvoice.vb" />

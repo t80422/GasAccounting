@@ -1,4 +1,4 @@
-﻿Public Class ClosingEntryRep
+Public Class ClosingEntryRep
     Inherits Repository(Of closing_entry)
     Implements IClosingEntryRep
 
@@ -19,18 +19,22 @@
         Return result.Select(Function(x) New ClosingEntryVM(x)).ToList()
     End Function
 
-    Public Function GetTarnsferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO) Implements IClosingEntryRep.GetTarnsferSubpoenaData
+    Public Function GetTarnsferSubpoenaData(day As Date) As List(Of TransferSubpoenaGroup) Implements IClosingEntryRep.GetTarnsferSubpoenaData
         Try
             Dim query = _dbSet.Where(Function(x) x.ce_Date = day).ToList
 
             Dim result = query.
-                Select(Function(x) New TransferSubpoenaDTO With {
-                    .CreditAmount = x.ce_CreditAmount,
-                    .CreditSubjectName = x.subject.s_name,
-                    .CreditSummary = x.ce_CreditMemo,
-                    .DebitAmount = x.ce_DebitAmount,
-                    .DebitSubjectName = x.subject1.s_name,
-                    .DebitSummary = x.ce_DebitMemo
+                Select(Function(x) New TransferSubpoenaGroup With {
+                    .SubjectName = x.subject1.s_name,
+                    .Summary = x.ce_DebitMemo,
+                    .Amount = x.ce_DebitAmount,
+                    .Details = New List(Of TransferSubpoenaDetail) From {
+                        New TransferSubpoenaDetail With {
+                            .SubjectName = x.subject.s_name,
+                            .Summary = x.ce_CreditMemo,
+                            .Amount = x.ce_CreditAmount
+                        }
+                    }
                 }).ToList
             Return result
         Catch ex As Exception

@@ -470,7 +470,11 @@ Public Class CollectionPresenter
                     Case "現金"
                         _reportSer.GeneratorCashSubpoena(selectDate, uow.CollectionRepository.GetCashSubpoenaData(selectDate), True)
                     Case "轉帳"
-                        _reportSer.GeneratorTransferSubpoena(selectDate, uow.CollectionRepository.GetTarnsferSubpoenaData(selectDate), True)
+                        _reportSer.GeneratorTransferSubpoena(New TransferSubpoenaReportRequest With {
+                        .Day = selectDate,
+                        .Groups = uow.CollectionRepository.GetTarnsferSubpoenaData(selectDate),
+                        .VoucherType = TransferVoucherType.Income
+                    })
                     Case Else
                         Throw New Exception("type 傳票類型錯誤")
                 End Select

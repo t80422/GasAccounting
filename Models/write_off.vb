@@ -17,7 +17,7 @@ Partial Public Class write_off
     Public Property wo_date As Date
     Public Property wo_ma_id As Integer
 
-    Public Overridable Property collection As collection
     Public Overridable Property monthly_account As monthly_account
+    Public Overridable Property collection As collection
 
 End Class

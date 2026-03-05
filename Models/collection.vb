@@ -34,6 +34,8 @@ Partial Public Class collection
     Public Property col_credit_amount_1 As Nullable(Of Integer)
     Public Property col_credit_amount_2 As Nullable(Of Integer)
     Public Property col_credit_amount_3 As Nullable(Of Integer)
+    Public Property col_AccountMonth2 As Nullable(Of Date)
+    Public Property col_AccountMonth3 As Nullable(Of Date)
 
     Public Overridable Property bank As bank
     Public Overridable Property bank1 As bank

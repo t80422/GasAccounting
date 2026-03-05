@@ -26,13 +26,11 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property banks() As DbSet(Of bank)
     Public Overridable Property bank_monthly_balances() As DbSet(Of bank_monthly_balances)
     Public Overridable Property barrel_monthly_balances() As DbSet(Of barrel_monthly_balances)
-    Public Overridable Property basic_price() As DbSet(Of basic_price)
     Public Overridable Property basic_set() As DbSet(Of basic_set)
     Public Overridable Property cars() As DbSet(Of car)
     Public Overridable Property cheques() As DbSet(Of cheque)
     Public Overridable Property chque_pay() As DbSet(Of chque_pay)
     Public Overridable Property closing_entry() As DbSet(Of closing_entry)
-    Public Overridable Property collections() As DbSet(Of collection)
     Public Overridable Property companies() As DbSet(Of company)
     Public Overridable Property customers() As DbSet(Of customer)
     Public Overridable Property employees() As DbSet(Of employee)
@@ -59,5 +57,7 @@ Partial Public Class gas_accounting_systemEntities
     Public Overridable Property surplus_gas() As DbSet(Of surplus_gas)
     Public Overridable Property write_off() As DbSet(Of write_off)
     Public Overridable Property payments() As DbSet(Of payment)
+    Public Overridable Property collections() As DbSet(Of collection)
+    Public Overridable Property basic_price() As DbSet(Of basic_price)
 
 End Class

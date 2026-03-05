@@ -1,4 +1,4 @@
-﻿Public Interface IPaymentRep
+Public Interface IPaymentRep
     Inherits IRepository(Of payment)
 
     Function SearchPaymentAsync(Optional criteria As PaymentSearchCriteria = Nothing) As Task(Of IEnumerable(Of payment))
@@ -12,7 +12,7 @@
     Function GetByCriteriaAndVendors(criteria As PaymentSearchCriteria, vendorIds As List(Of Integer)) As List(Of payment)
     Function GetVendorAmountDue(vendorId As Integer) As List(Of AmountDueVM)
     Function GetCashSubpoenaData(selectDate As Date) As List(Of CashSubpoenaDTO)
-    Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaDTO)
+    Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaGroup)
     Function GetBankPaymentsByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment))
     Function GetCashToBankTransfersByDateRangeAsync(bankId As Integer, startDate As Date, endDate As Date) As Task(Of IEnumerable(Of payment))
 

@@ -21,12 +21,12 @@ Partial Public Class bank
 
     Public Overridable Property company As company
     Public Overridable Property bank_monthly_balances As ICollection(Of bank_monthly_balances) = New HashSet(Of bank_monthly_balances)
+    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property payments1 As ICollection(Of payment) = New HashSet(Of payment)
+    Public Overridable Property payments2 As ICollection(Of payment) = New HashSet(Of payment)
     Public Overridable Property collections As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property collections1 As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property collections2 As ICollection(Of collection) = New HashSet(Of collection)
     Public Overridable Property collections3 As ICollection(Of collection) = New HashSet(Of collection)
-    Public Overridable Property payments As ICollection(Of payment) = New HashSet(Of payment)
-    Public Overridable Property payments1 As ICollection(Of payment) = New HashSet(Of payment)
-    Public Overridable Property payments2 As ICollection(Of payment) = New HashSet(Of payment)
 
 End Class

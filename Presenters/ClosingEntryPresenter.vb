@@ -1,4 +1,4 @@
-﻿''' <summary>
+''' <summary>
 ''' 會計管理-結轉
 ''' </summary>
 Public Class ClosingEntryPresenter
@@ -96,8 +96,12 @@ Public Class ClosingEntryPresenter
     Public Sub Print(selectDate As Date)
         Try
             Using uow As New UnitOfWork()
-                Dim datas = uow.ClosingEntryRepository.GetTarnsferSubpoenaData(selectDate)
-                _reportSer.GeneratorTransferSubpoena(selectDate, datas, True)
+                Dim groups = uow.ClosingEntryRepository.GetTarnsferSubpoenaData(selectDate)
+                _reportSer.GeneratorTransferSubpoena(New TransferSubpoenaReportRequest With {
+                .Day = selectDate,
+                .Groups = groups,
+                .VoucherType = TransferVoucherType.Income
+            })
             End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)

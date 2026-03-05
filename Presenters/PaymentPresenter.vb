@@ -1,4 +1,4 @@
-﻿Imports System.ComponentModel
+Imports System.ComponentModel
 
 Public Class PaymentPresenter
     Private ReadOnly _view As IPaymentView
@@ -559,7 +559,11 @@ Public Class PaymentPresenter
                     Case "現金"
                         _reportSer.GeneratorCashSubpoena(data.Item1, uow.PaymentRepository.GetCashSubpoenaData(data.Item1), False)
                     Case "轉帳"
-                        _reportSer.GeneratorTransferSubpoena(data.Item1, uow.PaymentRepository.GetTransferSubpoenaData(data.Item1), False)
+                        _reportSer.GeneratorTransferSubpoena(New TransferSubpoenaReportRequest With {
+                        .Day = data.Item1,
+                        .Groups = uow.PaymentRepository.GetTransferSubpoenaData(data.Item1),
+                        .VoucherType = TransferVoucherType.Expense
+                    })
                     Case Else
                         Throw New Exception("類型錯誤")
                 End Select

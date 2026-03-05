@@ -23,7 +23,7 @@ Public Class BasicPriceRep
             If criteria IsNot Nothing Then query = query.Where(Function(x) x.bp_date = criteria.bp_date)
 
             Return Await query.ToListAsync
-        Catch
+        Catch ex As Exception
             Throw
         End Try
     End Function

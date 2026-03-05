@@ -17,7 +17,7 @@ Partial Public Class order_collection_mapping
     Public Property ocm_Amount As Integer
     Public Property ocm_Date As Date
 
-    Public Overridable Property collection As collection
     Public Overridable Property order As order
+    Public Overridable Property collection As collection
 
 End Class
