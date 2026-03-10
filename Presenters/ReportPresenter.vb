@@ -1,7 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.IO
-Imports System.Security.AccessControl
-Imports System.Windows.Interop
+﻿Imports System.IO
 Imports ClosedXML.Excel
 
 Public Class ReportPresenter
@@ -349,7 +346,10 @@ Public Class ReportPresenter
                     .WriteFormula("Y", rowIndex, $"=SUM(Y4:Y{rowIndex - 1})")
                     .WriteFormula("Z", rowIndex, $"=Z{rowIndex - 1}")
 
-                    .SetCustomBorders(rowIndex, 1, rowIndex, 25, XLBorderStyleValues.Medium, XLBorderStyleValues.Medium)
+                    .SetCustomBorders(rowIndex, 1, rowIndex, 26, XLBorderStyleValues.Medium, XLBorderStyleValues.Medium)
+
+                    '自動調整欄寬
+                    .Worksheet.Columns.AdjustToContents()
 
                     ' 若沒有廠運就隱藏
                     If datas.Sum(Function(x) x.廠運總提氣) = 0 Then .HideColumns(3, 11)

@@ -944,18 +944,20 @@ Public Class ReportRep
         Try
             Dim result = New MonthlyStatement
 
-            ' 取得客戶該月訂單
-            Dim orderByCusAndMonth = _context.orders.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
-                                                                       x.o_date.Value.Month = month.Month AndAlso
-                                                                       x.customer.cus_code = cusCode).ToList
+            ' 取得客戶資訊（先查客戶，避免 lazy loading）
+            Dim cus = _context.customers.AsNoTracking.Include(Function(c) c.company).FirstOrDefault(Function(x) x.cus_code = cusCode)
+            If cus Is Nothing Then Throw New Exception("查無此客戶代號")
 
-            If orderByCusAndMonth.Count = 0 Then Throw New Exception($"該客戶 {month:yyyy/MM} 無訂購資料")
-
-            ' 取得客戶資訊
-            Dim cus = orderByCusAndMonth.FirstOrDefault.customer
             result.CusCode = cus.cus_code
             result.CompanyName = cus.company?.comp_name
             result.CusName = cus.cus_name
+
+            ' 取得客戶該月訂單
+            Dim orderByCusAndMonth = _context.orders.AsNoTracking.Where(Function(x) x.o_date.Value.Year = month.Year AndAlso
+                                                                                       x.o_date.Value.Month = month.Month AndAlso
+                                                                                       x.o_cus_Id = cus.cus_id).ToList
+
+            If orderByCusAndMonth.Count = 0 Then Throw New Exception($"該客戶 {month:yyyy/MM} 無訂購資料")
 
             ' 分類運送方式
             Dim orderGroup = orderByCusAndMonth.GroupBy(Function(x) x.o_delivery_type).ToList
@@ -971,13 +973,13 @@ Public Class ReportRep
                 End Select
             Next
 
-            '保險
-            result.InsuranceUnitPrice = cus.cus_InsurancePrice
+            '保險（包含保險則單價為 0）
+            result.InsuranceUnitPrice = If(cus.cus_IsInsurance, 0, cus.cus_InsurancePrice)
 
             '本月已收氣款
-            Dim col = _context.collections.Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso
-                                                             x.col_AccountMonth.Month = month.Month AndAlso
-                                                             x.col_cus_Id = cus.cus_id)
+            Dim col = _context.collections.AsNoTracking.Where(Function(x) x.col_AccountMonth.Year = month.Year AndAlso
+                                                                          x.col_AccountMonth.Month = month.Month AndAlso
+                                                                          x.col_cus_Id = cus.cus_id)
 
             If col.Count <> 0 Then result.GasAccountsReceived = col.Sum(Function(x) x.col_Amount)
 
@@ -989,7 +991,7 @@ Public Class ReportRep
             result.NewBerralAccountsReceivable = barrelOrder - barrelAmount
 
             ' 報廢桶
-            result.ScrapBarrel = _context.scrap_barrel.
+            result.ScrapBarrel = _context.scrap_barrel.AsNoTracking().
                 Join(_context.scrap_barrel_detail,
                     Function(sb) sb.sb_Id,
                     Function(sbd) sbd.sbd_sb_Id,
@@ -1005,21 +1007,6 @@ Public Class ReportRep
                                    x.sbd.sbd_Qty4 * x.sb.sb_Buy4).
                 DefaultIfEmpty(0).
                 Sum()
-
-            '註新桶
-            Dim newBarrelCounts = New Dictionary(Of String, Integer) From {{"50", 0}, {"20", 0}, {"16", 0}, {"10", 0}, {"4", 0}, {"18", 0}, {"14", 0}, {"5", 0}, {"2", 0}}
-
-            For Each order In orderByCusAndMonth
-                newBarrelCounts("50") += order.o_new_in_50
-                newBarrelCounts("20") += order.o_new_in_20
-                newBarrelCounts("16") += order.o_new_in_16
-                newBarrelCounts("10") += order.o_new_in_10
-                newBarrelCounts("4") += order.o_new_in_4
-                newBarrelCounts("18") += order.o_new_in_18
-                newBarrelCounts("14") += order.o_new_in_14
-                newBarrelCounts("5") += order.o_new_in_5
-                newBarrelCounts("2") += order.o_new_in_2
-            Next
 
             result.IsInsurance = cus.cus_IsInsurance
 
