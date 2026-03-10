@@ -22,6 +22,43 @@ Public Class ChequeRep
         End Try
     End Sub
 
+    Public Async Sub UpdateStatus(chequeIds As List(Of Integer), day As Date, status As String) Implements IChequeRep.UpdateStatus
+        Try
+            Dim orgStatus As String
+
+            Select Case status
+                Case "已代收"
+                    orgStatus = Nothing
+                Case "已兌現"
+                    orgStatus = "已代收"
+                Case "未代收"
+                    orgStatus = "已代收"
+                Case Else
+                    Throw New Exception("不合法的狀態")
+            End Select
+
+            Dim cheques = _dbSet.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = orgStatus).ToList
+
+            cheques.ForEach(Sub(x)
+                                Dim newStatus = If(status = "未代收", Nothing, status)
+                                x.chu_State = newStatus
+
+                                Select Case status
+                                    Case "已代收"
+                                        x.che_CollectionDate = day
+                                    Case "已兌現"
+                                        x.che_CashingDate = day
+                                    Case "未代收"
+                                        x.che_CollectionDate = Nothing
+                                        x.che_CashingDate = Nothing
+                                End Select
+                            End Sub)
+            Await SaveChangesAsync()
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
+
     Public Async Function UpdateCollectionStatusAsync(chequeIds As List(Of Integer), collectionDate As Date) As Task Implements IChequeRep.UpdateCollectionStatusAsync
         Try
             Dim cheques = Await _dbSet.Where(Function(x) chequeIds.Contains(x.che_Id) AndAlso x.chu_State = Nothing).ToListAsync
@@ -33,7 +70,6 @@ Public Class ChequeRep
 
             Await _context.SaveChangesAsync
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
             Throw New Exception("更新批量代收發生錯誤")
         End Try
     End Function

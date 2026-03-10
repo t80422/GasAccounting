@@ -68,10 +68,9 @@ Public Class ChequePresenter
     ''' <summary>
     ''' 批次設定狀態
     ''' </summary>
-    ''' <param name="chequeIds"></param>
-    ''' <param name="d"></param>
-    ''' <param name="isCollect">true:已代收 false:已兌現</param>
-    Public Async Sub SetBatchStatus(sender As Object, isCollect As Boolean)
+    ''' <param name="sender"></param>
+    ''' <param name="status">0:已代收、1:已兌現、2:未代收</param>
+    Public Sub SetBatchStatus(sender As Object, status As Integer)
         Try
             Dim ids = _view.GetSelectedIds
             Dim input As New cheque
@@ -79,11 +78,14 @@ Public Class ChequePresenter
 
             If ids.Count = 0 Then Throw New Exception("請先選擇要設定的支票")
 
-            If isCollect Then
-                Await _cheRep.UpdateCollectionStatusAsync(ids, input.che_CollectionDate)
-            Else
-                _cheRep.UpdateRedeemedStatus(ids, input.che_CashingDate)
-            End If
+            Select Case status
+                Case 0
+                    _cheRep.UpdateStatus(ids, input.che_CollectionDate, "已代收")
+                Case 1
+                    _cheRep.UpdateStatus(ids, input.che_CashingDate, "已兌現")
+                Case 2
+                    _cheRep.UpdateStatus(ids, input.che_CollectionDate, "未代收")
+            End Select
 
             LoadList()
         Catch ex As Exception

@@ -51,13 +51,14 @@ Partial Class ucCheque_col
         Me.Label146 = New System.Windows.Forms.Label()
         Me.dgvCheque = New System.Windows.Forms.DataGridView()
         Me.btnRedeemed = New System.Windows.Forms.Button()
+        Me.btnCancelChange = New System.Windows.Forms.Button()
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnQuery_che
         '
         Me.btnQuery_che.BackColor = System.Drawing.Color.Lime
-        Me.btnQuery_che.Location = New System.Drawing.Point(788, 83)
+        Me.btnQuery_che.Location = New System.Drawing.Point(944, 83)
         Me.btnQuery_che.Name = "btnQuery_che"
         Me.btnQuery_che.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_che.TabIndex = 463
@@ -193,7 +194,7 @@ Partial Class ucCheque_col
         'btnPrint_cheque
         '
         Me.btnPrint_cheque.BackColor = System.Drawing.Color.Cyan
-        Me.btnPrint_cheque.Location = New System.Drawing.Point(632, 83)
+        Me.btnPrint_cheque.Location = New System.Drawing.Point(788, 83)
         Me.btnPrint_cheque.Name = "btnPrint_cheque"
         Me.btnPrint_cheque.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_cheque.TabIndex = 448
@@ -241,7 +242,7 @@ Partial Class ucCheque_col
         'btnCancel_Che
         '
         Me.btnCancel_Che.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnCancel_Che.Location = New System.Drawing.Point(476, 83)
+        Me.btnCancel_Che.Location = New System.Drawing.Point(632, 83)
         Me.btnCancel_Che.Name = "btnCancel_Che"
         Me.btnCancel_Che.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_Che.TabIndex = 442
@@ -321,10 +322,21 @@ Partial Class ucCheque_col
         Me.btnRedeemed.Text = "轉為已兌現"
         Me.btnRedeemed.UseVisualStyleBackColor = False
         '
-        'Cheque_colUserControl
+        'btnCancelChange
+        '
+        Me.btnCancelChange.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.btnCancelChange.Location = New System.Drawing.Point(476, 83)
+        Me.btnCancelChange.Name = "btnCancelChange"
+        Me.btnCancelChange.Size = New System.Drawing.Size(140, 44)
+        Me.btnCancelChange.TabIndex = 465
+        Me.btnCancelChange.Text = "轉為未代收"
+        Me.btnCancelChange.UseVisualStyleBackColor = False
+        '
+        'ucCheque_col
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.btnCancelChange)
         Me.Controls.Add(Me.btnRedeemed)
         Me.Controls.Add(Me.btnQuery_che)
         Me.Controls.Add(Me.btnSelectAll)
@@ -356,7 +368,7 @@ Partial Class ucCheque_col
         Me.Controls.Add(Me.dgvCheque)
         Me.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
         Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
-        Me.Name = "Cheque_colUserControl"
+        Me.Name = "ucCheque_col"
         Me.Size = New System.Drawing.Size(1882, 949)
         CType(Me.dgvCheque, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -393,4 +405,5 @@ Partial Class ucCheque_col
     Friend WithEvents Label146 As Label
     Friend WithEvents dgvCheque As DataGridView
     Friend WithEvents btnRedeemed As Button
+    Friend WithEvents btnCancelChange As Button
 End Class

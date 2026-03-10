@@ -10,7 +10,7 @@ Public Class ucCheque_col
     Public Event DeleteRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).DeleteRequest
     Public Event CancelRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).CancelRequest
     Public Event SearchRequest As EventHandler Implements IFormView(Of cheque, ChequeVM).SearchRequest
-    Public Event SetBatchStatusRequest As EventHandler(Of Boolean) Implements ICheque.SetBatchStatusRequest
+    Public Event SetBatchStatusRequest As EventHandler(Of Integer) Implements ICheque.SetBatchStatusRequest
     Public Event PrintRequest As EventHandler(Of List(Of ChequeVM)) Implements ICheque.PrintRequest
 
     ' === 介面 ===
@@ -116,12 +116,12 @@ Public Class ucCheque_col
 
     ' 轉為已代收
     Private Sub btnChange_Click(sender As Object, e As EventArgs) Handles btnChange.Click
-        RaiseEvent SetBatchStatusRequest(sender, True)
+        RaiseEvent SetBatchStatusRequest(sender, 0)
     End Sub
 
     ' 轉為已兌現
     Private Sub btnRedeemed_Click(sender As Object, e As EventArgs) Handles btnRedeemed.Click
-        RaiseEvent SetBatchStatusRequest(sender, False)
+        RaiseEvent SetBatchStatusRequest(sender, 1)
     End Sub
 
     ' 列印
@@ -134,5 +134,10 @@ Public Class ucCheque_col
     Private Sub Cheque_colUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnCancel_Che.PerformClick()
         ReadDataGridWidth(dgvCheque)
+    End Sub
+
+    ' 轉為未代收
+    Private Sub btnCancelChange_Click(sender As Object, e As EventArgs) Handles btnCancelChange.Click
+        RaiseEvent SetBatchStatusRequest(sender, 2)
     End Sub
 End Class

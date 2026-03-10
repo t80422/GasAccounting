@@ -11,6 +11,8 @@
 
     Sub UpdateRedeemedStatus(chequeIds As List(Of Integer), redeemedDate As Date)
 
+    Sub UpdateStatus(chequeIds As List(Of Integer), day As Date, status As String)
+
     Function GetByNumberAsync(chequeNum As String) As Task(Of cheque)
 
     Function GetList(Optional criteria As ChequeSC = Nothing) As List(Of cheque)

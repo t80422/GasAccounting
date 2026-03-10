@@ -1,7 +1,7 @@
 ﻿Public Interface ICheque
     Inherits IFormView(Of cheque, ChequeVM)
 
-    Event SetBatchStatusRequest As EventHandler(Of Boolean)
+    Event SetBatchStatusRequest As EventHandler(Of Integer)
     Event PrintRequest As EventHandler(Of List(Of ChequeVM))
 
     Function GetSearchCriteria() As ChequeSC
