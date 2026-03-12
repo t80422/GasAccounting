@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class CollectionUserControl
     Inherits System.Windows.Forms.UserControl
 
@@ -110,6 +110,7 @@ Partial Class CollectionUserControl
         Me.btnPrint_Col.Name = "btnPrint_Col"
         Me.btnPrint_Col.Size = New System.Drawing.Size(140, 44)
         Me.btnPrint_Col.TabIndex = 509
+        Me.btnPrint_Col.TabStop = False
         Me.btnPrint_Col.Text = "列印傳票"
         Me.btnPrint_Col.UseVisualStyleBackColor = False
         '
@@ -141,6 +142,7 @@ Partial Class CollectionUserControl
         Me.btnWriteOff.Name = "btnWriteOff"
         Me.btnWriteOff.Size = New System.Drawing.Size(140, 44)
         Me.btnWriteOff.TabIndex = 506
+        Me.btnWriteOff.TabStop = False
         Me.btnWriteOff.Text = "銷   帳"
         Me.btnWriteOff.UseVisualStyleBackColor = False
         '
@@ -152,6 +154,7 @@ Partial Class CollectionUserControl
         Me.btnQuery_col.Name = "btnQuery_col"
         Me.btnQuery_col.Size = New System.Drawing.Size(140, 44)
         Me.btnQuery_col.TabIndex = 468
+        Me.btnQuery_col.TabStop = False
         Me.btnQuery_col.Text = "查  詢"
         Me.btnQuery_col.UseVisualStyleBackColor = False
         '
@@ -161,7 +164,7 @@ Partial Class CollectionUserControl
         Me.dtpAbleCashingDate.Location = New System.Drawing.Point(1325, 221)
         Me.dtpAbleCashingDate.Name = "dtpAbleCashingDate"
         Me.dtpAbleCashingDate.Size = New System.Drawing.Size(165, 30)
-        Me.dtpAbleCashingDate.TabIndex = 505
+        Me.dtpAbleCashingDate.TabIndex = 26
         Me.dtpAbleCashingDate.Tag = "che_AbleCashingDate"
         Me.dtpAbleCashingDate.Visible = False
         '
@@ -182,7 +185,7 @@ Partial Class CollectionUserControl
         Me.txtPayBank.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtPayBank.Name = "txtPayBank"
         Me.txtPayBank.Size = New System.Drawing.Size(165, 30)
-        Me.txtPayBank.TabIndex = 502
+        Me.txtPayBank.TabIndex = 27
         Me.txtPayBank.Tag = "che_PayBankName"
         Me.txtPayBank.Visible = False
         '
@@ -204,7 +207,7 @@ Partial Class CollectionUserControl
         Me.txtCashingDate.Name = "txtCashingDate"
         Me.txtCashingDate.ReadOnly = True
         Me.txtCashingDate.Size = New System.Drawing.Size(169, 30)
-        Me.txtCashingDate.TabIndex = 501
+        Me.txtCashingDate.TabIndex = 244
         Me.txtCashingDate.Tag = "che_CashingDate"
         Me.txtCashingDate.Visible = False
         '
@@ -213,7 +216,7 @@ Partial Class CollectionUserControl
         Me.txtCusCode_col.Location = New System.Drawing.Point(749, 3)
         Me.txtCusCode_col.Name = "txtCusCode_col"
         Me.txtCusCode_col.Size = New System.Drawing.Size(165, 30)
-        Me.txtCusCode_col.TabIndex = 500
+        Me.txtCusCode_col.TabIndex = 3
         Me.txtCusCode_col.Tag = "cus_code"
         '
         'txtCheAcctNum
@@ -222,7 +225,7 @@ Partial Class CollectionUserControl
         Me.txtCheAcctNum.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCheAcctNum.Name = "txtCheAcctNum"
         Me.txtCheAcctNum.Size = New System.Drawing.Size(165, 30)
-        Me.txtCheAcctNum.TabIndex = 499
+        Me.txtCheAcctNum.TabIndex = 25
         Me.txtCheAcctNum.Tag = "che_AccountNumber"
         Me.txtCheAcctNum.Visible = False
         '
@@ -254,7 +257,7 @@ Partial Class CollectionUserControl
         Me.txtIssuerName.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtIssuerName.Name = "txtIssuerName"
         Me.txtIssuerName.Size = New System.Drawing.Size(166, 30)
-        Me.txtIssuerName.TabIndex = 496
+        Me.txtIssuerName.TabIndex = 24
         Me.txtIssuerName.Tag = "che_IssuerName"
         Me.txtIssuerName.Visible = False
         '
@@ -297,7 +300,7 @@ Partial Class CollectionUserControl
         Me.cmbCompany_col.Location = New System.Drawing.Point(435, 49)
         Me.cmbCompany_col.Name = "cmbCompany_col"
         Me.cmbCompany_col.Size = New System.Drawing.Size(165, 27)
-        Me.cmbCompany_col.TabIndex = 491
+        Me.cmbCompany_col.TabIndex = 6
         Me.cmbCompany_col.Tag = "col_comp_Id"
         '
         'Label98
@@ -316,7 +319,7 @@ Partial Class CollectionUserControl
         Me.cmbBank_col.Location = New System.Drawing.Point(749, 49)
         Me.cmbBank_col.Name = "cmbBank_col"
         Me.cmbBank_col.Size = New System.Drawing.Size(468, 27)
-        Me.cmbBank_col.TabIndex = 489
+        Me.cmbBank_col.TabIndex = 7
         Me.cmbBank_col.Tag = "col_bank_Id"
         '
         'lblBankAccount_col
@@ -376,7 +379,7 @@ Partial Class CollectionUserControl
         Me.cmbSubjects.Location = New System.Drawing.Point(128, 92)
         Me.cmbSubjects.Name = "cmbSubjects"
         Me.cmbSubjects.Size = New System.Drawing.Size(165, 27)
-        Me.cmbSubjects.TabIndex = 482
+        Me.cmbSubjects.TabIndex = 8
         Me.cmbSubjects.Tag = "col_s_Id"
         '
         'lblSubjects_col
@@ -416,7 +419,8 @@ Partial Class CollectionUserControl
         Me.btnQueryCus_col.Location = New System.Drawing.Point(1504, 5)
         Me.btnQueryCus_col.Name = "btnQueryCus_col"
         Me.btnQueryCus_col.Size = New System.Drawing.Size(82, 26)
-        Me.btnQueryCus_col.TabIndex = 480
+        Me.btnQueryCus_col.TabIndex = 4
+        Me.btnQueryCus_col.TabStop = False
         Me.btnQueryCus_col.Text = "搜尋客戶"
         Me.btnQueryCus_col.UseVisualStyleBackColor = False
         '
@@ -448,7 +452,7 @@ Partial Class CollectionUserControl
         Me.dtpAccountMonth.Location = New System.Drawing.Point(1606, 90)
         Me.dtpAccountMonth.Name = "dtpAccountMonth"
         Me.dtpAccountMonth.Size = New System.Drawing.Size(165, 30)
-        Me.dtpAccountMonth.TabIndex = 475
+        Me.dtpAccountMonth.TabIndex = 12
         Me.dtpAccountMonth.Tag = "col_AccountMonth"
         '
         'Label156
@@ -467,7 +471,7 @@ Partial Class CollectionUserControl
         Me.txtCheque_col.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCheque_col.Name = "txtCheque_col"
         Me.txtCheque_col.Size = New System.Drawing.Size(165, 30)
-        Me.txtCheque_col.TabIndex = 472
+        Me.txtCheque_col.TabIndex = 23
         Me.txtCheque_col.Tag = "col_Cheque"
         Me.txtCheque_col.Visible = False
         '
@@ -477,7 +481,7 @@ Partial Class CollectionUserControl
         Me.txtMemo_col.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtMemo_col.Name = "txtMemo_col"
         Me.txtMemo_col.Size = New System.Drawing.Size(480, 30)
-        Me.txtMemo_col.TabIndex = 461
+        Me.txtMemo_col.TabIndex = 28
         Me.txtMemo_col.Tag = "col_Memo"
         '
         'txtAmount_collection
@@ -486,7 +490,7 @@ Partial Class CollectionUserControl
         Me.txtAmount_collection.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtAmount_collection.Name = "txtAmount_collection"
         Me.txtAmount_collection.Size = New System.Drawing.Size(165, 30)
-        Me.txtAmount_collection.TabIndex = 458
+        Me.txtAmount_collection.TabIndex = 1
         Me.txtAmount_collection.Tag = "col_Amount"
         '
         'txtColId
@@ -517,7 +521,7 @@ Partial Class CollectionUserControl
         Me.dtpDate_col.Location = New System.Drawing.Point(128, 3)
         Me.dtpDate_col.Name = "dtpDate_col"
         Me.dtpDate_col.Size = New System.Drawing.Size(165, 30)
-        Me.dtpDate_col.TabIndex = 471
+        Me.dtpDate_col.TabIndex = 0
         Me.dtpDate_col.Tag = "col_Date"
         '
         'cmbType_col
@@ -527,7 +531,7 @@ Partial Class CollectionUserControl
         Me.cmbType_col.Location = New System.Drawing.Point(128, 49)
         Me.cmbType_col.Name = "cmbType_col"
         Me.cmbType_col.Size = New System.Drawing.Size(165, 27)
-        Me.cmbType_col.TabIndex = 470
+        Me.cmbType_col.TabIndex = 5
         Me.cmbType_col.Tag = "col_Type"
         '
         'dgvCollection
@@ -540,6 +544,7 @@ Partial Class CollectionUserControl
         Me.dgvCollection.RowTemplate.Height = 24
         Me.dgvCollection.Size = New System.Drawing.Size(1882, 580)
         Me.dgvCollection.TabIndex = 469
+        Me.dgvCollection.TabStop = False
         '
         'btnCancel_col
         '
@@ -549,6 +554,7 @@ Partial Class CollectionUserControl
         Me.btnCancel_col.Name = "btnCancel_col"
         Me.btnCancel_col.Size = New System.Drawing.Size(140, 44)
         Me.btnCancel_col.TabIndex = 467
+        Me.btnCancel_col.TabStop = False
         Me.btnCancel_col.Text = "取  消"
         Me.btnCancel_col.UseVisualStyleBackColor = False
         '
@@ -560,6 +566,7 @@ Partial Class CollectionUserControl
         Me.btnDelete_col.Name = "btnDelete_col"
         Me.btnDelete_col.Size = New System.Drawing.Size(140, 44)
         Me.btnDelete_col.TabIndex = 466
+        Me.btnDelete_col.TabStop = False
         Me.btnDelete_col.Text = "刪  除"
         Me.btnDelete_col.UseVisualStyleBackColor = False
         '
@@ -571,6 +578,7 @@ Partial Class CollectionUserControl
         Me.btnEdit_col.Name = "btnEdit_col"
         Me.btnEdit_col.Size = New System.Drawing.Size(140, 44)
         Me.btnEdit_col.TabIndex = 465
+        Me.btnEdit_col.TabStop = False
         Me.btnEdit_col.Text = "修  改"
         Me.btnEdit_col.UseVisualStyleBackColor = False
         '
@@ -582,6 +590,7 @@ Partial Class CollectionUserControl
         Me.btnAdd_col.Name = "btnAdd_col"
         Me.btnAdd_col.Size = New System.Drawing.Size(140, 44)
         Me.btnAdd_col.TabIndex = 464
+        Me.btnAdd_col.TabStop = False
         Me.btnAdd_col.Tag = ""
         Me.btnAdd_col.Text = "新  增"
         Me.btnAdd_col.UseVisualStyleBackColor = False
@@ -632,7 +641,7 @@ Partial Class CollectionUserControl
         Me.cmbCreditCompany.Location = New System.Drawing.Point(435, 92)
         Me.cmbCreditCompany.Name = "cmbCreditCompany"
         Me.cmbCreditCompany.Size = New System.Drawing.Size(165, 27)
-        Me.cmbCreditCompany.TabIndex = 513
+        Me.cmbCreditCompany.TabIndex = 9
         Me.cmbCreditCompany.Tag = "col_credit_company_id"
         '
         'Label1
@@ -651,7 +660,7 @@ Partial Class CollectionUserControl
         Me.cmbCreditBank.Location = New System.Drawing.Point(749, 92)
         Me.cmbCreditBank.Name = "cmbCreditBank"
         Me.cmbCreditBank.Size = New System.Drawing.Size(468, 27)
-        Me.cmbCreditBank.TabIndex = 511
+        Me.cmbCreditBank.TabIndex = 10
         Me.cmbCreditBank.Tag = "col_credit_bank_id"
         '
         'Label2
@@ -670,7 +679,7 @@ Partial Class CollectionUserControl
         Me.cmbCompany2.Location = New System.Drawing.Point(435, 135)
         Me.cmbCompany2.Name = "cmbCompany2"
         Me.cmbCompany2.Size = New System.Drawing.Size(165, 27)
-        Me.cmbCompany2.TabIndex = 520
+        Me.cmbCompany2.TabIndex = 14
         Me.cmbCompany2.Tag = "col_credit_company_id_2"
         '
         'Label3
@@ -689,7 +698,7 @@ Partial Class CollectionUserControl
         Me.cmbBank2.Location = New System.Drawing.Point(749, 135)
         Me.cmbBank2.Name = "cmbBank2"
         Me.cmbBank2.Size = New System.Drawing.Size(468, 27)
-        Me.cmbBank2.TabIndex = 518
+        Me.cmbBank2.TabIndex = 15
         Me.cmbBank2.Tag = "col_credit_bank_id_2"
         '
         'Label4
@@ -708,7 +717,7 @@ Partial Class CollectionUserControl
         Me.cmbSubject2.Location = New System.Drawing.Point(128, 135)
         Me.cmbSubject2.Name = "cmbSubject2"
         Me.cmbSubject2.Size = New System.Drawing.Size(165, 27)
-        Me.cmbSubject2.TabIndex = 515
+        Me.cmbSubject2.TabIndex = 13
         Me.cmbSubject2.Tag = "col_s_Id_2"
         '
         'Label6
@@ -727,7 +736,7 @@ Partial Class CollectionUserControl
         Me.cmbCompany3.Location = New System.Drawing.Point(435, 178)
         Me.cmbCompany3.Name = "cmbCompany3"
         Me.cmbCompany3.Size = New System.Drawing.Size(165, 27)
-        Me.cmbCompany3.TabIndex = 527
+        Me.cmbCompany3.TabIndex = 19
         Me.cmbCompany3.Tag = "col_credit_company_id_3"
         '
         'Label7
@@ -746,7 +755,7 @@ Partial Class CollectionUserControl
         Me.cmbBank3.Location = New System.Drawing.Point(749, 178)
         Me.cmbBank3.Name = "cmbBank3"
         Me.cmbBank3.Size = New System.Drawing.Size(468, 27)
-        Me.cmbBank3.TabIndex = 525
+        Me.cmbBank3.TabIndex = 20
         Me.cmbBank3.Tag = "col_credit_bank_id_3"
         '
         'Label8
@@ -765,7 +774,7 @@ Partial Class CollectionUserControl
         Me.cmbSubject3.Location = New System.Drawing.Point(128, 178)
         Me.cmbSubject3.Name = "cmbSubject3"
         Me.cmbSubject3.Size = New System.Drawing.Size(165, 27)
-        Me.cmbSubject3.TabIndex = 522
+        Me.cmbSubject3.TabIndex = 18
         Me.cmbSubject3.Tag = "col_s_Id_3"
         '
         'Label10
@@ -784,7 +793,7 @@ Partial Class CollectionUserControl
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(165, 30)
-        Me.TextBox1.TabIndex = 528
+        Me.TextBox1.TabIndex = 11
         Me.TextBox1.Tag = "col_credit_amount_1"
         '
         'Label5
@@ -803,7 +812,7 @@ Partial Class CollectionUserControl
         Me.TextBox2.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.TextBox2.Name = "TextBox2"
         Me.TextBox2.Size = New System.Drawing.Size(165, 30)
-        Me.TextBox2.TabIndex = 530
+        Me.TextBox2.TabIndex = 16
         Me.TextBox2.Tag = "col_credit_amount_2"
         '
         'Label9
@@ -822,7 +831,7 @@ Partial Class CollectionUserControl
         Me.TextBox3.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(165, 30)
-        Me.TextBox3.TabIndex = 532
+        Me.TextBox3.TabIndex = 21
         Me.TextBox3.Tag = "col_credit_amount_3"
         '
         'Label11
@@ -843,7 +852,7 @@ Partial Class CollectionUserControl
         Me.dtpAccountMonth2.Location = New System.Drawing.Point(1606, 135)
         Me.dtpAccountMonth2.Name = "dtpAccountMonth2"
         Me.dtpAccountMonth2.Size = New System.Drawing.Size(165, 30)
-        Me.dtpAccountMonth2.TabIndex = 535
+        Me.dtpAccountMonth2.TabIndex = 17
         Me.dtpAccountMonth2.Tag = "col_AccountMonth2"
         '
         'Label12
@@ -864,7 +873,7 @@ Partial Class CollectionUserControl
         Me.dtpAccountMonth3.Location = New System.Drawing.Point(1606, 176)
         Me.dtpAccountMonth3.Name = "dtpAccountMonth3"
         Me.dtpAccountMonth3.Size = New System.Drawing.Size(165, 30)
-        Me.dtpAccountMonth3.TabIndex = 537
+        Me.dtpAccountMonth3.TabIndex = 22
         Me.dtpAccountMonth3.Tag = "col_AccountMonth3"
         '
         'Label13

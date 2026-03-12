@@ -1,4 +1,4 @@
-﻿Public Class ScrapBarrelUserControl
+Public Class ScrapBarrelUserControl
     Implements IScrapBarrelView, IScrapBarrelDetailView
 
     Private _sbPresenter As ScrapBarrelPresenter
@@ -31,6 +31,8 @@
         Try
             ' 定義容量陣列
             Dim capacities = {"50", "20", "16", "10", "4"}
+            Dim buyTotal As Integer = 0
+            Dim acquisitionsTotal As Integer = 0
 
             For Each capacity In capacities
                 ' 取得對應的控制項
@@ -53,10 +55,18 @@
                     Decimal.TryParse(acquisitionsPriceCtrl.Text, acquisitionsPrice)
 
                     ' 計算並設定結果
-                    buyResultCtrl.Text = (buyPrice * qty).ToString()
-                    acquisitionsResultCtrl.Text = (acquisitionsPrice * qty).ToString()
+                    Dim buyAmount = buyPrice * qty
+                    Dim acquisitionsAmount = acquisitionsPrice * qty
+
+                    buyResultCtrl.Text = buyAmount.ToString()
+                    acquisitionsResultCtrl.Text = acquisitionsAmount.ToString()
+                    buyTotal += buyAmount
+                    acquisitionsTotal += acquisitionsAmount
                 End If
             Next
+
+            txtBuyTotal.Text = buyTotal.ToString()
+            txtAcquisitionsTotal.Text = acquisitionsTotal.ToString()
         Catch ex As Exception
             Console.WriteLine($"計算報廢桶金額時發生錯誤: {ex.Message}")
         End Try

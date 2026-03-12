@@ -1,4 +1,4 @@
-﻿Public Class CollectionUserControl
+Public Class CollectionUserControl
     Implements ICollectionView
 
     Private _presenter As CollectionPresenter
@@ -197,4 +197,13 @@
     Public Sub ShowCheque(data As cheque) Implements ICollectionView.ShowCheque
         AutoMapEntityToControls(data, Me)
     End Sub
+
+    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+        If keyData = Keys.F1 Then
+            btnAdd_col.PerformClick()
+            Return True
+        End If
+
+        Return MyBase.ProcessCmdKey(msg, keyData)
+    End Function
 End Class

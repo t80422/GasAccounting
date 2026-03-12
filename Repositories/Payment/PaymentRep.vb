@@ -136,6 +136,15 @@ Public Class PaymentRep
 
             For Each x In payments
                 Dim details As New List(Of TransferSubpoenaDetail)
+                Dim groupSummary As String = x.p_Memo
+
+                If x.p_Type = "銀行存款" Then
+                    groupSummary = ""
+                ElseIf x.p_Type = "應付票據" AndAlso
+                    x.chque_pay IsNot Nothing AndAlso
+                    x.chque_pay.cp_CashingDate.HasValue Then
+                    groupSummary = $"{x.chque_pay.cp_Number} {x.chque_pay.cp_CashingDate.Value:M/d}"
+                End If
 
                 If x.p_debit_amount_1.GetValueOrDefault() > 0 Then
                     details.Add(New TransferSubpoenaDetail With {
@@ -162,7 +171,7 @@ Public Class PaymentRep
                 If details.Count > 0 Then
                     result.Add(New TransferSubpoenaGroup With {
                         .SubjectName = x.p_Type,
-                        .Summary = If(x.p_Type = "銀行存款", "", x.p_Memo),
+                        .Summary = groupSummary,
                         .Amount = x.p_Amount,
                         .Details = details
                     })

@@ -560,16 +560,16 @@ Public Class PaymentPresenter
                         _reportSer.GeneratorCashSubpoena(data.Item1, uow.PaymentRepository.GetCashSubpoenaData(data.Item1), False)
                     Case "轉帳"
                         _reportSer.GeneratorTransferSubpoena(New TransferSubpoenaReportRequest With {
-                        .Day = data.Item1,
-                        .Groups = uow.PaymentRepository.GetTransferSubpoenaData(data.Item1),
-                        .VoucherType = TransferVoucherType.Expense
-                    })
+                            .Day = data.Item1,
+                            .Groups = uow.PaymentRepository.GetTransferSubpoenaData(data.Item1),
+                            .VoucherType = TransferVoucherType.Expense
+                        })
                     Case Else
                         Throw New Exception("類型錯誤")
                 End Select
             End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MessageBox.Show(ex.Message)
         End Try
     End Sub
 

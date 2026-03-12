@@ -23,6 +23,7 @@ Partial Class ScrapBarrelUserControl
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.grpSBD = New System.Windows.Forms.GroupBox()
+        Me.chkIsMonthlyStatement = New System.Windows.Forms.CheckBox()
         Me.dgvSBD = New System.Windows.Forms.DataGridView()
         Me.btnCreate_sbd = New System.Windows.Forms.Button()
         Me.btnEdit_sbd = New System.Windows.Forms.Button()
@@ -88,7 +89,9 @@ Partial Class ScrapBarrelUserControl
         Me.BtnEdit_sb = New System.Windows.Forms.Button()
         Me.btnDelete_sb = New System.Windows.Forms.Button()
         Me.btnCancel_sb = New System.Windows.Forms.Button()
-        Me.chkIsMonthlyStatement = New System.Windows.Forms.CheckBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtAcquisitionsTotal = New System.Windows.Forms.TextBox()
+        Me.txtBuyTotal = New System.Windows.Forms.TextBox()
         Me.grpSBD.SuspendLayout()
         CType(Me.dgvSBD, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpPrice_sbd.SuspendLayout()
@@ -119,6 +122,16 @@ Partial Class ScrapBarrelUserControl
         Me.grpSBD.TabIndex = 485
         Me.grpSBD.TabStop = False
         Me.grpSBD.Text = "客戶設定"
+        '
+        'chkIsMonthlyStatement
+        '
+        Me.chkIsMonthlyStatement.AutoSize = True
+        Me.chkIsMonthlyStatement.Location = New System.Drawing.Point(10, 108)
+        Me.chkIsMonthlyStatement.Name = "chkIsMonthlyStatement"
+        Me.chkIsMonthlyStatement.Size = New System.Drawing.Size(133, 23)
+        Me.chkIsMonthlyStatement.TabIndex = 488
+        Me.chkIsMonthlyStatement.Text = "紀錄對帳單"
+        Me.chkIsMonthlyStatement.UseVisualStyleBackColor = True
         '
         'dgvSBD
         '
@@ -174,6 +187,9 @@ Partial Class ScrapBarrelUserControl
         '
         'grpPrice_sbd
         '
+        Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitionsTotal)
+        Me.grpPrice_sbd.Controls.Add(Me.txtBuyTotal)
+        Me.grpPrice_sbd.Controls.Add(Me.Label1)
         Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions10_sbd)
         Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions16_sbd)
         Me.grpPrice_sbd.Controls.Add(Me.txtAcquisitions4_sbd)
@@ -200,41 +216,41 @@ Partial Class ScrapBarrelUserControl
         Me.grpPrice_sbd.Controls.Add(Me.Label327)
         Me.grpPrice_sbd.Location = New System.Drawing.Point(489, 29)
         Me.grpPrice_sbd.Name = "grpPrice_sbd"
-        Me.grpPrice_sbd.Size = New System.Drawing.Size(398, 164)
+        Me.grpPrice_sbd.Size = New System.Drawing.Size(523, 164)
         Me.grpPrice_sbd.TabIndex = 482
         Me.grpPrice_sbd.TabStop = False
         Me.grpPrice_sbd.Text = "價格"
         '
         'txtAcquisitions10_sbd
         '
-        Me.txtAcquisitions10_sbd.Location = New System.Drawing.Point(279, 124)
+        Me.txtAcquisitions10_sbd.Location = New System.Drawing.Point(309, 124)
         Me.txtAcquisitions10_sbd.Name = "txtAcquisitions10_sbd"
         Me.txtAcquisitions10_sbd.ReadOnly = True
-        Me.txtAcquisitions10_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions10_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtAcquisitions10_sbd.TabIndex = 34
         '
         'txtAcquisitions16_sbd
         '
-        Me.txtAcquisitions16_sbd.Location = New System.Drawing.Point(221, 124)
+        Me.txtAcquisitions16_sbd.Location = New System.Drawing.Point(241, 124)
         Me.txtAcquisitions16_sbd.Name = "txtAcquisitions16_sbd"
         Me.txtAcquisitions16_sbd.ReadOnly = True
-        Me.txtAcquisitions16_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions16_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtAcquisitions16_sbd.TabIndex = 33
         '
         'txtAcquisitions4_sbd
         '
-        Me.txtAcquisitions4_sbd.Location = New System.Drawing.Point(337, 124)
+        Me.txtAcquisitions4_sbd.Location = New System.Drawing.Point(377, 124)
         Me.txtAcquisitions4_sbd.Name = "txtAcquisitions4_sbd"
         Me.txtAcquisitions4_sbd.ReadOnly = True
-        Me.txtAcquisitions4_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions4_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtAcquisitions4_sbd.TabIndex = 32
         '
         'txtAcquisitions20_sbd
         '
-        Me.txtAcquisitions20_sbd.Location = New System.Drawing.Point(163, 124)
+        Me.txtAcquisitions20_sbd.Location = New System.Drawing.Point(173, 124)
         Me.txtAcquisitions20_sbd.Name = "txtAcquisitions20_sbd"
         Me.txtAcquisitions20_sbd.ReadOnly = True
-        Me.txtAcquisitions20_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions20_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtAcquisitions20_sbd.TabIndex = 31
         '
         'txtAcquisitions50_sbd
@@ -242,7 +258,7 @@ Partial Class ScrapBarrelUserControl
         Me.txtAcquisitions50_sbd.Location = New System.Drawing.Point(105, 124)
         Me.txtAcquisitions50_sbd.Name = "txtAcquisitions50_sbd"
         Me.txtAcquisitions50_sbd.ReadOnly = True
-        Me.txtAcquisitions50_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtAcquisitions50_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtAcquisitions50_sbd.TabIndex = 30
         '
         'Label328
@@ -256,55 +272,55 @@ Partial Class ScrapBarrelUserControl
         '
         'txtBuy10_sbd
         '
-        Me.txtBuy10_sbd.Location = New System.Drawing.Point(279, 86)
+        Me.txtBuy10_sbd.Location = New System.Drawing.Point(309, 86)
         Me.txtBuy10_sbd.Name = "txtBuy10_sbd"
         Me.txtBuy10_sbd.ReadOnly = True
-        Me.txtBuy10_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy10_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtBuy10_sbd.TabIndex = 28
         '
         'txtBuy16_sbd
         '
-        Me.txtBuy16_sbd.Location = New System.Drawing.Point(221, 86)
+        Me.txtBuy16_sbd.Location = New System.Drawing.Point(241, 86)
         Me.txtBuy16_sbd.Name = "txtBuy16_sbd"
         Me.txtBuy16_sbd.ReadOnly = True
-        Me.txtBuy16_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy16_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtBuy16_sbd.TabIndex = 27
         '
         'txtQty4_sbd
         '
-        Me.txtQty4_sbd.Location = New System.Drawing.Point(337, 48)
+        Me.txtQty4_sbd.Location = New System.Drawing.Point(377, 48)
         Me.txtQty4_sbd.Name = "txtQty4_sbd"
-        Me.txtQty4_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty4_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtQty4_sbd.TabIndex = 24
         '
         'txtQty10_sbd
         '
-        Me.txtQty10_sbd.Location = New System.Drawing.Point(279, 48)
+        Me.txtQty10_sbd.Location = New System.Drawing.Point(309, 48)
         Me.txtQty10_sbd.Name = "txtQty10_sbd"
-        Me.txtQty10_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty10_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtQty10_sbd.TabIndex = 23
         '
         'txtQty16_sbd
         '
-        Me.txtQty16_sbd.Location = New System.Drawing.Point(221, 48)
+        Me.txtQty16_sbd.Location = New System.Drawing.Point(241, 48)
         Me.txtQty16_sbd.Name = "txtQty16_sbd"
-        Me.txtQty16_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty16_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtQty16_sbd.TabIndex = 22
         '
         'txtBuy4_sbd
         '
-        Me.txtBuy4_sbd.Location = New System.Drawing.Point(337, 86)
+        Me.txtBuy4_sbd.Location = New System.Drawing.Point(377, 86)
         Me.txtBuy4_sbd.Name = "txtBuy4_sbd"
         Me.txtBuy4_sbd.ReadOnly = True
-        Me.txtBuy4_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy4_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtBuy4_sbd.TabIndex = 19
         '
         'txtBuy20_sbd
         '
-        Me.txtBuy20_sbd.Location = New System.Drawing.Point(163, 86)
+        Me.txtBuy20_sbd.Location = New System.Drawing.Point(173, 86)
         Me.txtBuy20_sbd.Name = "txtBuy20_sbd"
         Me.txtBuy20_sbd.ReadOnly = True
-        Me.txtBuy20_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy20_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtBuy20_sbd.TabIndex = 18
         '
         'txtBuy50_sbd
@@ -312,27 +328,27 @@ Partial Class ScrapBarrelUserControl
         Me.txtBuy50_sbd.Location = New System.Drawing.Point(105, 86)
         Me.txtBuy50_sbd.Name = "txtBuy50_sbd"
         Me.txtBuy50_sbd.ReadOnly = True
-        Me.txtBuy50_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtBuy50_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtBuy50_sbd.TabIndex = 17
         '
         'txtQty20_sbd
         '
-        Me.txtQty20_sbd.Location = New System.Drawing.Point(163, 48)
+        Me.txtQty20_sbd.Location = New System.Drawing.Point(173, 48)
         Me.txtQty20_sbd.Name = "txtQty20_sbd"
-        Me.txtQty20_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty20_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtQty20_sbd.TabIndex = 14
         '
         'txtQty50_sbd
         '
         Me.txtQty50_sbd.Location = New System.Drawing.Point(105, 48)
         Me.txtQty50_sbd.Name = "txtQty50_sbd"
-        Me.txtQty50_sbd.Size = New System.Drawing.Size(50, 30)
+        Me.txtQty50_sbd.Size = New System.Drawing.Size(60, 30)
         Me.txtQty50_sbd.TabIndex = 13
         '
         'Label275
         '
         Me.Label275.AutoSize = True
-        Me.Label275.Location = New System.Drawing.Point(352, 26)
+        Me.Label275.Location = New System.Drawing.Point(397, 26)
         Me.Label275.Name = "Label275"
         Me.Label275.Size = New System.Drawing.Size(20, 19)
         Me.Label275.TabIndex = 8
@@ -341,7 +357,7 @@ Partial Class ScrapBarrelUserControl
         'Label276
         '
         Me.Label276.AutoSize = True
-        Me.Label276.Location = New System.Drawing.Point(289, 26)
+        Me.Label276.Location = New System.Drawing.Point(324, 26)
         Me.Label276.Name = "Label276"
         Me.Label276.Size = New System.Drawing.Size(31, 19)
         Me.Label276.TabIndex = 7
@@ -350,7 +366,7 @@ Partial Class ScrapBarrelUserControl
         'Label279
         '
         Me.Label279.AutoSize = True
-        Me.Label279.Location = New System.Drawing.Point(231, 26)
+        Me.Label279.Location = New System.Drawing.Point(256, 26)
         Me.Label279.Name = "Label279"
         Me.Label279.Size = New System.Drawing.Size(31, 19)
         Me.Label279.TabIndex = 6
@@ -359,7 +375,7 @@ Partial Class ScrapBarrelUserControl
         'Label301
         '
         Me.Label301.AutoSize = True
-        Me.Label301.Location = New System.Drawing.Point(173, 26)
+        Me.Label301.Location = New System.Drawing.Point(188, 26)
         Me.Label301.Name = "Label301"
         Me.Label301.Size = New System.Drawing.Size(31, 19)
         Me.Label301.TabIndex = 5
@@ -421,7 +437,7 @@ Partial Class ScrapBarrelUserControl
         '
         'txtCusId_sbd
         '
-        Me.txtCusId_sbd.Location = New System.Drawing.Point(893, 35)
+        Me.txtCusId_sbd.Location = New System.Drawing.Point(620, 209)
         Me.txtCusId_sbd.Name = "txtCusId_sbd"
         Me.txtCusId_sbd.ReadOnly = True
         Me.txtCusId_sbd.Size = New System.Drawing.Size(165, 30)
@@ -736,15 +752,30 @@ Partial Class ScrapBarrelUserControl
         Me.btnCancel_sb.Text = "取  消"
         Me.btnCancel_sb.UseVisualStyleBackColor = False
         '
-        'chkIsMonthlyStatement
+        'Label1
         '
-        Me.chkIsMonthlyStatement.AutoSize = True
-        Me.chkIsMonthlyStatement.Location = New System.Drawing.Point(10, 108)
-        Me.chkIsMonthlyStatement.Name = "chkIsMonthlyStatement"
-        Me.chkIsMonthlyStatement.Size = New System.Drawing.Size(133, 23)
-        Me.chkIsMonthlyStatement.TabIndex = 488
-        Me.chkIsMonthlyStatement.Text = "紀錄對帳單"
-        Me.chkIsMonthlyStatement.UseVisualStyleBackColor = True
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(450, 26)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(51, 19)
+        Me.Label1.TabIndex = 35
+        Me.Label1.Text = "合計"
+        '
+        'txtAcquisitionsTotal
+        '
+        Me.txtAcquisitionsTotal.Location = New System.Drawing.Point(445, 124)
+        Me.txtAcquisitionsTotal.Name = "txtAcquisitionsTotal"
+        Me.txtAcquisitionsTotal.ReadOnly = True
+        Me.txtAcquisitionsTotal.Size = New System.Drawing.Size(60, 30)
+        Me.txtAcquisitionsTotal.TabIndex = 37
+        '
+        'txtBuyTotal
+        '
+        Me.txtBuyTotal.Location = New System.Drawing.Point(445, 86)
+        Me.txtBuyTotal.Name = "txtBuyTotal"
+        Me.txtBuyTotal.ReadOnly = True
+        Me.txtBuyTotal.Size = New System.Drawing.Size(60, 30)
+        Me.txtBuyTotal.TabIndex = 36
         '
         'ScrapBarrelUserControl
         '
@@ -837,4 +868,7 @@ Partial Class ScrapBarrelUserControl
     Friend WithEvents btnDelete_sb As Button
     Friend WithEvents btnCancel_sb As Button
     Friend WithEvents chkIsMonthlyStatement As CheckBox
+    Friend WithEvents txtAcquisitionsTotal As TextBox
+    Friend WithEvents txtBuyTotal As TextBox
+    Friend WithEvents Label1 As Label
 End Class

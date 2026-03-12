@@ -569,7 +569,7 @@ Public Class ReportRep
                                                 .Subject = x.subject1.s_name,
                                                 .Memo = x.p_Memo,
                                                 .Amount = x.p_debit_amount_1,
-                                                .IsIncome = True,
+                                                .IsIncome = False,
                                                 .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
                                           }).ToList
             Dim paymentSubject2 = payments.Where(Function(x) x.subject2 IsNot Nothing).
@@ -578,7 +578,7 @@ Public Class ReportRep
                                               .Subject = x.subject2.s_name,
                                               .Memo = x.p_Memo,
                                               .Amount = x.p_debit_amount_2,
-                                              .IsIncome = True,
+                                              .IsIncome = False,
                                               .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
                                           }).ToList
             Dim paymentSubject3 = payments.Where(Function(x) x.subject IsNot Nothing).
@@ -587,7 +587,7 @@ Public Class ReportRep
                                                 .Subject = x.subject.s_name,
                                                 .Memo = x.p_Memo,
                                                 .Amount = x.p_debit_amount_3,
-                                                .IsIncome = True,
+                                                .IsIncome = False,
                                                 .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
                                           }).ToList
 
