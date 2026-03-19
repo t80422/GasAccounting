@@ -9,6 +9,9 @@
             .Status = cmbStatus.SelectedItem
             .IsStatus = chkStatus.Checked
             .BankId = cmbBank.SelectedValue
+            .CollectionDateStart = dtpColDateStart.Value.Date
+            .CollectionDateEnd = dtpColDateEnd.Value.Date.AddDays(1)
+            .IsCollectionDate = chkColDate.Checked
         End With
 
         DialogResult = DialogResult.OK

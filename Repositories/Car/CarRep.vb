@@ -30,4 +30,12 @@
             Throw
         End Try
     End Function
+
+    Public Function GetDelivery() As car Implements ICarRep.GetDelivery
+        Try
+            Return _dbSet.AsNoTracking.FirstOrDefault(Function(x) x.c_no = "廠運")
+        Catch ex As Exception
+            Throw
+        End Try
+    End Function
 End Class

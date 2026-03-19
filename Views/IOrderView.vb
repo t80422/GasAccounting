@@ -3,7 +3,7 @@
 
     ' 事件
     Event CustomerSelected As EventHandler(Of String)
-    Event TransportTypeSelected As EventHandler(Of String)
+    Event TransportTypeSelected As EventHandler(Of Boolean)
     Event BarrelInInput As EventHandler
     Event BarrelOutInput As EventHandler
     Event BarrelUnitPriceInput As EventHandler

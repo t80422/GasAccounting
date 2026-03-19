@@ -7,4 +7,7 @@
     Public Property BankId As Integer? = Nothing
     Public Property CompanyId As Integer? = Nothing
     Public Property ChequeNumber As String
+    Public Property CollectionDateStart As Date
+    Public Property CollectionDateEnd As Date
+    Public Property IsCollectionDate As Boolean
 End Class

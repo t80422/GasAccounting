@@ -221,7 +221,7 @@ Partial Class CollectionUserControl
         '
         'txtCheAcctNum
         '
-        Me.txtCheAcctNum.Location = New System.Drawing.Point(1052, 221)
+        Me.txtCheAcctNum.Location = New System.Drawing.Point(749, 221)
         Me.txtCheAcctNum.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtCheAcctNum.Name = "txtCheAcctNum"
         Me.txtCheAcctNum.Size = New System.Drawing.Size(165, 30)
@@ -233,7 +233,7 @@ Partial Class CollectionUserControl
         '
         Me.lblChequeAccountNumberReq.AutoSize = True
         Me.lblChequeAccountNumberReq.ForeColor = System.Drawing.Color.Red
-        Me.lblChequeAccountNumberReq.Location = New System.Drawing.Point(924, 227)
+        Me.lblChequeAccountNumberReq.Location = New System.Drawing.Point(621, 227)
         Me.lblChequeAccountNumberReq.Name = "lblChequeAccountNumberReq"
         Me.lblChequeAccountNumberReq.Size = New System.Drawing.Size(20, 19)
         Me.lblChequeAccountNumberReq.TabIndex = 498
@@ -244,7 +244,7 @@ Partial Class CollectionUserControl
         '
         Me.lblChequeAccountNumber.AutoSize = True
         Me.lblChequeAccountNumber.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblChequeAccountNumber.Location = New System.Drawing.Point(950, 227)
+        Me.lblChequeAccountNumber.Location = New System.Drawing.Point(647, 227)
         Me.lblChequeAccountNumber.Name = "lblChequeAccountNumber"
         Me.lblChequeAccountNumber.Size = New System.Drawing.Size(93, 19)
         Me.lblChequeAccountNumber.TabIndex = 497
@@ -253,7 +253,7 @@ Partial Class CollectionUserControl
         '
         'txtIssuerName
         '
-        Me.txtIssuerName.Location = New System.Drawing.Point(749, 221)
+        Me.txtIssuerName.Location = New System.Drawing.Point(1051, 221)
         Me.txtIssuerName.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.txtIssuerName.Name = "txtIssuerName"
         Me.txtIssuerName.Size = New System.Drawing.Size(166, 30)
@@ -265,7 +265,7 @@ Partial Class CollectionUserControl
         '
         Me.lblIssuerNameReq.AutoSize = True
         Me.lblIssuerNameReq.ForeColor = System.Drawing.Color.Red
-        Me.lblIssuerNameReq.Location = New System.Drawing.Point(613, 227)
+        Me.lblIssuerNameReq.Location = New System.Drawing.Point(915, 227)
         Me.lblIssuerNameReq.Name = "lblIssuerNameReq"
         Me.lblIssuerNameReq.Size = New System.Drawing.Size(20, 19)
         Me.lblIssuerNameReq.TabIndex = 495
@@ -276,7 +276,7 @@ Partial Class CollectionUserControl
         '
         Me.lblIssuerName.AutoSize = True
         Me.lblIssuerName.Font = New System.Drawing.Font("標楷體", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(136, Byte))
-        Me.lblIssuerName.Location = New System.Drawing.Point(639, 227)
+        Me.lblIssuerName.Location = New System.Drawing.Point(941, 227)
         Me.lblIssuerName.Name = "lblIssuerName"
         Me.lblIssuerName.Size = New System.Drawing.Size(94, 19)
         Me.lblIssuerName.TabIndex = 494

@@ -11,7 +11,7 @@ Public Class ucOrder
     Public Event CancelRequest As EventHandler Implements IFormView(Of order, OrderListVM).CancelRequest
     Public Event SearchRequest As EventHandler Implements IFormView(Of order, OrderListVM).SearchRequest
     Public Event CustomerSelected As EventHandler(Of String) Implements IOrderView.CustomerSelected
-    Public Event TransportTypeSelected As EventHandler(Of String) Implements IOrderView.TransportTypeSelected
+    Public Event TransportTypeSelected As EventHandler(Of Boolean) Implements IOrderView.TransportTypeSelected
     Public Event BarrelInInput As EventHandler Implements IOrderView.BarrelInInput
     Public Event BarrelUnitPriceInput As EventHandler Implements IOrderView.BarrelUnitPriceInput
     Public Event BarrelOutInput As EventHandler Implements IOrderView.BarrelOutInput
@@ -67,7 +67,7 @@ Public Class ucOrder
     Public Sub ShowCustomer(data As customer) Implements IOrderView.ShowCustomer
         AutoMapEntityToControls(data, Me)
         txtCusID.Text = data.cus_id
-        If rdoPickUp.Checked Then RaiseEvent TransportTypeSelected(Nothing, rdoPickUp.Text)
+        RaiseEvent TransportTypeSelected(Nothing, rdoPickUp.Checked)
         dtpOrder.Focus()
     End Sub
 
@@ -269,13 +269,14 @@ Public Class ucOrder
 
     ' 運送方式-廠運
     Private Sub rdoDelivery_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDelivery.CheckedChanged
-        cmbCar.DataSource = Nothing
-        cmbCarOut.DataSource = Nothing
+        'cmbCar.DataSource = Nothing
+        'cmbCarOut.DataSource = Nothing
+        RaiseEvent TransportTypeSelected(sender, False)
     End Sub
 
     ' 運送方式-自運
     Private Sub rdoPickUp_CheckedChanged(sender As Object, e As EventArgs) Handles rdoPickUp.CheckedChanged
-        If Not String.IsNullOrEmpty(txtCusCode.Text) Then RaiseEvent TransportTypeSelected(sender, txtCusCode.Text)
+        If Not String.IsNullOrEmpty(txtCusCode.Text) Then RaiseEvent TransportTypeSelected(sender, True)
     End Sub
 
     ' 進出場單-按下Enter

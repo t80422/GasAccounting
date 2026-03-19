@@ -233,8 +233,8 @@ Public Class OrderPresenter
         End Try
     End Sub
 
-    Private Sub OnTransportTypeSelected()
-        LoadCar()
+    Private Sub OnTransportTypeSelected(sender As Object, isSelf As Boolean)
+        LoadCar(isSelf)
         LoadUnitPrice()
     End Sub
 
@@ -309,10 +309,17 @@ Public Class OrderPresenter
         _view.ShowUnitPrice(data)
     End Sub
 
-    Private Sub LoadCar()
+    Private Sub LoadCar(isSelf As Boolean)
         Try
-            Dim cars = currentCustomer.cars.Select(Function(x) New SelectListItem With {.Display = $"{x.c_no}-{x.c_driver}", .Value = x.c_id}).ToList
-            _view.SetCarDropdown(cars)
+            Dim carList As New List(Of SelectListItem)
+
+            If isSelf Then
+                carList = currentCustomer.cars.Select(Function(x) New SelectListItem With {.Display = $"{x.c_no}-{x.c_driver}", .Value = x.c_id}).ToList
+            Else
+                Dim deliveryCar = _carRep.GetDelivery
+                If deliveryCar IsNot Nothing Then carList.Add(New SelectListItem With {.Display = deliveryCar.c_no, .Value = deliveryCar.c_id})
+            End If
+                _view.SetCarDropdown(carList)
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try

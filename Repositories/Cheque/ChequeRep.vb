@@ -90,6 +90,7 @@ Public Class ChequeRep
                 If criteria.IsDate Then query = query.Where(Function(x) x.che_ReceivedDate >= criteria.StartDate AndAlso x.che_ReceivedDate < criteria.EndDate)
                 If criteria.IsStatus Then query = query.Where(Function(x) x.chu_State = criteria.Status)
                 If criteria.BankId.HasValue Then query = query.Where(Function(x) x.collection.col_bank_Id = criteria.BankId)
+                If criteria.IsCollectionDate Then query = query.Where(Function(x) x.che_CollectionDate >= criteria.CollectionDateStart AndAlso x.che_CollectionDate < criteria.CollectionDateEnd)
             Else
                 query = query.Where(Function(x) x.chu_State <> "已兌現")
             End If
