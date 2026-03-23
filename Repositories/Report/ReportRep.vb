@@ -591,9 +591,55 @@ Public Class ReportRep
                                                 .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
                                           }).ToList
 
+            ' 付款作業（銀行存款補撈）
+            Dim bankDepositPay1 = _context.payments.AsNoTracking.
+                                  Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                    x.p_Date.Month = month.Month AndAlso
+                                                    x.subject1 IsNot Nothing AndAlso
+                                                    x.subject1.s_name = "銀行存款" AndAlso
+                                                    x.p_bank_Id = bankId AndAlso
+                                                    x.p_Type <> "銀行存款").
+                                  Select(Function(x) New With {
+                                        .Date = x.p_Date,
+                                        .Subject = x.p_Type,
+                                        .Memo = x.p_Memo,
+                                        .Amount = x.p_debit_amount_1,
+                                        .IsIncome = True,
+                                        .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
+                                  }).ToList
+            Dim bankDepositPay2 = _context.payments.AsNoTracking.
+                                  Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                    x.p_Date.Month = month.Month AndAlso
+                                                    x.subject2 IsNot Nothing AndAlso
+                                                    x.subject2.s_name = "銀行存款" AndAlso
+                                                    x.p_debit_bank_id_2 = bankId).
+                                  Select(Function(x) New With {
+                                        .Date = x.p_Date,
+                                        .Subject = x.p_Type,
+                                        .Memo = x.p_Memo,
+                                        .Amount = x.p_debit_amount_2,
+                                        .IsIncome = True,
+                                        .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
+                                  }).ToList
+            Dim bankDepositPay3 = _context.payments.AsNoTracking.
+                                  Where(Function(x) x.p_Date.Year = month.Year AndAlso
+                                                    x.p_Date.Month = month.Month AndAlso
+                                                    x.subject IsNot Nothing AndAlso
+                                                    x.subject.s_name = "銀行存款" AndAlso
+                                                    x.p_debit_bank_id_3 = bankId).
+                                  Select(Function(x) New With {
+                                        .Date = x.p_Date,
+                                        .Subject = x.p_Type,
+                                        .Memo = x.p_Memo,
+                                        .Amount = x.p_debit_amount_3,
+                                        .IsIncome = True,
+                                        .Target = If(x.company IsNot Nothing, x.company.comp_name, "")
+                                  }).ToList
+
             '合併並排列數據
             Dim allTransactions = collections.Concat(cashToBankCol1).Concat(cashToBankCol2).Concat(cashToBankCol3).
                                               Concat(paymentSubject1).Concat(paymentSubject2).Concat(paymentSubject3).
+                                              Concat(bankDepositPay1).Concat(bankDepositPay2).Concat(bankDepositPay3).
                                               OrderBy(Function(x) x.Date).
                                               ThenBy(Function(x) x.IsIncome).
                                               ToList
