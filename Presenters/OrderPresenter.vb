@@ -1,4 +1,5 @@
-﻿Imports System.Drawing.Printing
+﻿Imports System.Configuration
+Imports System.Drawing.Printing
 Imports System.IO
 Imports ClosedXML.Excel
 Imports iText.Html2pdf
@@ -27,6 +28,9 @@ Public Class OrderPresenter
     Private ReadOnly _logger As ILoggerService
     Private ReadOnly _currentUserService As ICurrentUserService
     Private ReadOnly _barrelInvSer As IBarrelInventoryService
+
+    Private ReadOnly _isDebug As Boolean
+    Private _timingTracker As New DebugTimingTracker()
 
     Private currentCustomer As customer
     Private currentOrder As New order
@@ -78,6 +82,8 @@ Public Class OrderPresenter
         _barrelInvSer = barrelInvSer
 
         SubscribeToViewEvents()
+        _isDebug = ConfigurationManager.AppSettings("debug")?.ToUpper() = "T"
+        _view.TimingPanelVisible = _isDebug
     End Sub
 
     ''' <summary>
@@ -757,6 +763,7 @@ Public Class OrderPresenter
             sw.Start()
 
             Try
+                If _isDebug Then _timingTracker.StartTracking()
                 RefreshCurrentEntities()
 
                 ' 記錄交易前的客戶庫存
@@ -765,6 +772,7 @@ Public Class OrderPresenter
 
                 Dim orderInput As New order
                 _view.GetInput(orderInput)
+                If _isDebug Then _timingTracker.Mark("1.取得UI輸入")
                 _logger.LogInfo($"===== 新增 Order 中: {orderInput.o_id} =====")
 
                 If _currentUserService.UserRole <> 1 AndAlso orderInput.o_date < Today.AddDays(-3) Then Throw New Exception("非管理者不能新增三天前的訂單")
@@ -793,9 +801,11 @@ Public Class OrderPresenter
                     ' 提示使用者並中止此次新增
                     Throw New Exception("庫存已被其他使用者更新，請重新確認數量後再儲存")
                 End If
+                If _isDebug Then _timingTracker.Mark("2.庫存衝突檢查")
 
                 ' === 計算並更新客戶庫存（用差值法）===
                 UpdateCustomerStockByDiff(orderInput)
+                If _isDebug Then _timingTracker.Mark("3.客戶庫存計算")
 
                 ' 更新車輛寄桶庫存
                 If currentCar IsNot Nothing Then _view.GetCarStkInput(currentCar)
@@ -803,15 +813,18 @@ Public Class OrderPresenter
                 Dim order = _ordRep.AddAsync(orderInput).Result
                 _logger.LogInfo($"新增 order 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
                 sw.Restart()
+                If _isDebug Then _timingTracker.Mark("4.訂單寫入DB")
 
                 Dim gbRep As New GasBarrelRep(CType(_ordRep.Context, gas_accounting_systemEntities))
                 _barrelInvSer.ApplyOrderIssueAsync(gbRep, orderInput).Wait()
                 _logger.LogInfo($"更新 瓦斯瓶庫存 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
                 sw.Restart()
+                If _isDebug Then _timingTracker.Mark("5.瓦斯瓶庫存更新")
 
                 _service.UpdateOrAddAsync(orderInput.o_date)
                 _logger.LogInfo($"更新 瓦斯瓶月結算 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
                 sw.Restart()
+                If _isDebug Then _timingTracker.Mark("6.瓦斯瓶月結算")
 
                 Dim entries = New List(Of accounting_entry) From {
                     New accounting_entry With {
@@ -835,15 +848,19 @@ Public Class OrderPresenter
                 _aeSer.AddEntries(entries)
                 _logger.LogInfo($"新增 會計分錄帳 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
                 sw.Restart()
+                If _isDebug Then _timingTracker.Mark("7.會計分錄新增")
 
                 ' 同步更新月度帳單資料
                 _maService.SyncOrderToMonthlyAccount(order.o_id, True, False)
                 _logger.LogInfo($"新增 月度帳單 耗時 {sw.ElapsedMilliseconds / 1000} 秒")
                 sw.Restart()
+                If _isDebug Then _timingTracker.Mark("8.月度帳單同步")
 
                 _cusRep.SaveChangesAsync()
 
                 transaction.Commit()
+                If _isDebug Then _timingTracker.Mark("9.事務提交")
+                If _isDebug Then _view.ShowTimingReport(_timingTracker.GetReport())
 
                 Initialize()
                 MessageBox.Show("新增成功")
@@ -859,6 +876,7 @@ Public Class OrderPresenter
                     errorMsg &= vbCrLf & innerEx.Message
                 End While
 
+                If _isDebug Then _view.ShowTimingReport("失敗" & Environment.NewLine & _timingTracker.GetReport())
                 MessageBox.Show(errorMsg)
             End Try
         End Using
