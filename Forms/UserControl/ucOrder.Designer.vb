@@ -233,6 +233,7 @@ Partial Class ucOrder
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtUpdateAt = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.txtDebug = New System.Windows.Forms.TextBox()
         Me.tcInOut.SuspendLayout()
         Me.tpIn.SuspendLayout()
         Me.tpOut.SuspendLayout()
@@ -2285,10 +2286,20 @@ Partial Class ucOrder
         Me.Label5.TabIndex = 532
         Me.Label5.Text = "更新時間"
         '
+        'txtDebug
+        '
+        Me.txtDebug.Location = New System.Drawing.Point(844, 13)
+        Me.txtDebug.Multiline = True
+        Me.txtDebug.Name = "txtDebug"
+        Me.txtDebug.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.txtDebug.Size = New System.Drawing.Size(195, 267)
+        Me.txtDebug.TabIndex = 534
+        '
         'ucOrder
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.txtDebug)
         Me.Controls.Add(Me.txtUpdateAt)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.txtCreateAt)
@@ -2573,4 +2584,5 @@ Partial Class ucOrder
     Friend WithEvents Label4 As Label
     Friend WithEvents txtUpdateAt As TextBox
     Friend WithEvents Label5 As Label
+    Friend WithEvents txtDebug As TextBox
 End Class

@@ -83,7 +83,6 @@ Public Class OrderPresenter
 
         SubscribeToViewEvents()
         _isDebug = ConfigurationManager.AppSettings("debug")?.ToUpper() = "T"
-        _view.TimingPanelVisible = _isDebug
     End Sub
 
     ''' <summary>

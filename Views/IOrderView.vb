@@ -92,7 +92,4 @@
 
     ''' <summary>顯示 Debug 計時報告</summary>
     Sub ShowTimingReport(report As String)
-
-    ''' <summary>控制計時面板顯示</summary>
-    WriteOnly Property TimingPanelVisible As Boolean
 End Interface

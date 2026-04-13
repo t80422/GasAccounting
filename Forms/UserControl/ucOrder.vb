@@ -4,9 +4,6 @@
 Public Class ucOrder
     Implements IOrderView
 
-    Private _txtDebugTiming As TextBox
-    Private _pnlDebugTiming As Panel
-
     ' === 介面 ===
     Public Event CreateRequest As EventHandler Implements IFormView(Of order, OrderListVM).CreateRequest
     Public Event UpdateRequest As EventHandler Implements IFormView(Of order, OrderListVM).UpdateRequest
@@ -31,7 +28,8 @@ Public Class ucOrder
 
 #Region "實作介面"
     Private Sub ClearInput() Implements IFormView(Of order, OrderListVM).ClearInput
-        ClearControls(Me)
+        Dim exceptions As New List(Of String) From {"txtDebug"}
+        ClearControls(Me, exceptions)
         cmbCar.DataSource = Nothing
         cmbCarOut.DataSource = Nothing
 
@@ -226,39 +224,14 @@ Public Class ucOrder
             txto_return_c.BackColor = Color.White
         End If
     End Sub
+
+    Public Sub ShowTimingReport(report As String) Implements IOrderView.ShowTimingReport
+        txtDebug.Text = report
+    End Sub
 #End Region
 
 #Region "UI事件"
     Private Sub OrderUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' === Debug 計時面板（程式碼動態建立）===
-        _pnlDebugTiming = New Panel() With {
-            .Dock = DockStyle.Bottom,
-            .Height = 150,
-            .Visible = False
-        }
-
-        Dim lbl As New Label() With {
-            .Text = "■ Debug 計時",
-            .Dock = DockStyle.Top,
-            .Height = 20,
-            .ForeColor = Color.Lime,
-            .BackColor = Color.Black
-        }
-
-        _txtDebugTiming = New TextBox() With {
-            .Multiline = True,
-            .ReadOnly = True,
-            .ScrollBars = ScrollBars.Vertical,
-            .Dock = DockStyle.Fill,
-            .BackColor = Color.Black,
-            .ForeColor = Color.Lime,
-            .Font = New Font("Consolas", 9)
-        }
-
-        _pnlDebugTiming.Controls.Add(_txtDebugTiming)
-        _pnlDebugTiming.Controls.Add(lbl)
-        Me.Controls.Add(_pnlDebugTiming)
-
         btnCancel.PerformClick()
         SetupSalesManagementHandlers()
         tcInOut.DrawMode = TabDrawMode.OwnerDrawFixed
@@ -626,20 +599,6 @@ Public Class ucOrder
         txt.Focus()
         txt.SelectAll()
     End Sub
-
-    Public Sub ShowTimingReport(report As String) Implements IOrderView.ShowTimingReport
-        If _txtDebugTiming IsNot Nothing Then
-            _txtDebugTiming.Text = report
-        End If
-    End Sub
-
-    Public WriteOnly Property TimingPanelVisible As Boolean Implements IOrderView.TimingPanelVisible
-        Set(value As Boolean)
-            If _pnlDebugTiming IsNot Nothing Then
-                _pnlDebugTiming.Visible = value
-            End If
-        End Set
-    End Property
 
     Private Sub EditMode(isDataSelected As Boolean)
         txtCusCode.ReadOnly = isDataSelected

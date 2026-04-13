@@ -49,16 +49,6 @@ Public Class frmLogin
         mainForm.Show()
     End Sub
 
-    Private Sub frmLogin_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        If (ConfigurationManager.AppSettings("debug") = "T") Then
-            Dim user = New employee
-            user.emp_name = "test"
-            user.emp_id = 0
-
-            OpenMain(user)
-        End If
-    End Sub
-
     Private Function GetUserPermissions(empId As Integer) As List(Of String)
         Using db As New gas_accounting_systemEntities
             Return db.rolepermissions.Where(Function(x) x.role.employees.Any(Function(e) e.emp_id = empId)).

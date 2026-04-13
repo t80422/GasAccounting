@@ -795,6 +795,7 @@
     <Compile Include="Services\Printer\PrinterService.vb" />
     <Compile Include="Services\Report\IReportService.vb" />
     <Compile Include="Services\Report\ReportService.vb" />
+    <Compile Include="Utilities\DebugTimingTracker.vb" />
     <Compile Include="Views\IBasicSetView.vb" />
     <Compile Include="Views\IBaseView.vb" />
     <Compile Include="Views\IBasicPriceView.vb" />
