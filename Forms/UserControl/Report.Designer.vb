@@ -27,6 +27,7 @@ Partial Class Report
         Me.Label65 = New System.Windows.Forms.Label()
         Me.dtpDate_DSS = New System.Windows.Forms.DateTimePicker()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+        Me.dtpDCR = New System.Windows.Forms.DateTimePicker()
         Me.txtCusCode_dcr = New System.Windows.Forms.TextBox()
         Me.btnMonthlyCusReceivable = New System.Windows.Forms.Button()
         Me.Label133 = New System.Windows.Forms.Label()
@@ -110,7 +111,7 @@ Partial Class Report
         Me.btnAccountBalance = New System.Windows.Forms.Button()
         Me.dtpAccountBalance = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.dtpDCR = New System.Windows.Forms.DateTimePicker()
+        Me.btnRecalculateBarrelInventory = New System.Windows.Forms.Button()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox26.SuspendLayout()
@@ -183,6 +184,15 @@ Partial Class Report
         Me.GroupBox7.TabIndex = 496
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "單一客戶每月應收帳明細表"
+        '
+        'dtpDCR
+        '
+        Me.dtpDCR.CustomFormat = "yyyy年MM月"
+        Me.dtpDCR.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpDCR.Location = New System.Drawing.Point(211, 28)
+        Me.dtpDCR.Name = "dtpDCR"
+        Me.dtpDCR.Size = New System.Drawing.Size(171, 30)
+        Me.dtpDCR.TabIndex = 476
         '
         'txtCusCode_dcr
         '
@@ -1017,19 +1027,23 @@ Partial Class Report
         Me.Label1.TabIndex = 22
         Me.Label1.Text = "月份"
         '
-        'dtpDCR
+        'btnRecalculateBarrelInventory
         '
-        Me.dtpDCR.CustomFormat = "yyyy年MM月"
-        Me.dtpDCR.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpDCR.Location = New System.Drawing.Point(211, 28)
-        Me.dtpDCR.Name = "dtpDCR"
-        Me.dtpDCR.Size = New System.Drawing.Size(171, 30)
-        Me.dtpDCR.TabIndex = 476
+        Me.btnRecalculateBarrelInventory.AutoSize = True
+        Me.btnRecalculateBarrelInventory.BackColor = System.Drawing.Color.DarkRed
+        Me.btnRecalculateBarrelInventory.ForeColor = System.Drawing.Color.White
+        Me.btnRecalculateBarrelInventory.Location = New System.Drawing.Point(1268, 306)
+        Me.btnRecalculateBarrelInventory.Name = "btnRecalculateBarrelInventory"
+        Me.btnRecalculateBarrelInventory.Size = New System.Drawing.Size(145, 29)
+        Me.btnRecalculateBarrelInventory.TabIndex = 498
+        Me.btnRecalculateBarrelInventory.Text = "重整新瓶庫存"
+        Me.btnRecalculateBarrelInventory.UseVisualStyleBackColor = False
         '
         'Report
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.btnRecalculateBarrelInventory)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox7)
@@ -1181,4 +1195,5 @@ Partial Class Report
     Friend WithEvents dtpAccountBalance As DateTimePicker
     Friend WithEvents Label1 As Label
     Friend WithEvents dtpDCR As DateTimePicker
+    Friend WithEvents btnRecalculateBarrelInventory As Button
 End Class

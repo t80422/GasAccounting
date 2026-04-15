@@ -138,7 +138,7 @@
     End Sub
 
     ' 重整庫存
-    Private Async Sub btnRecalculateBarrelInventory_Click(sender As Object, e As EventArgs) Handles btnRecalculateBarrelInventory.Click
-        Await _presenter.RecalculateBarrelInventoryAsync()
+    Private Sub btnRecalculateBarrelInventory_Click(sender As Object, e As EventArgs) Handles btnRecalculateBarrelInventory.Click
+        _presenter.RecalculateBarrelInventoryAsync()
     End Sub
 End Class
