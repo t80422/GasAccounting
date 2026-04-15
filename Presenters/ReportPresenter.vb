@@ -1721,10 +1721,10 @@ Public Class ReportPresenter
             MessageBoxIcon.Warning)
         If confirm = DialogResult.No Then Return
 
-        Dim barInvSvc = DependencyContainer.Resolve(Of IBarrelInventoryService)()
-        Dim barMBSvc = DependencyContainer.Resolve(Of IBarrelMonthlyBalanceService)()
-
         Using uow As New UnitOfWork()
+            Dim barInvSvc As New BarrelInventoryService()
+            Dim barMBSvc As New BarrelMonthlyBalanceService(uow.BarrelMonthlyBalanceRep, uow.GasBarrelRepository, uow.PurchaseBarrelRep, uow.OrderRepository)
+            uow.Context.Database.CommandTimeout = 120
             Try
                 uow.BeginTransaction()
 

@@ -114,4 +114,10 @@ Public Class Repository(Of TEntity As Class)
         If entity Is Nothing Then Return
         _context.Entry(entity).Reload()
     End Sub
+
+    Public Sub DetachAllUnchanged() Implements IRepository(Of TEntity).DetachAllUnchanged
+        For Each entry In _context.ChangeTracker.Entries().Where(Function(e) e.State = EntityState.Unchanged).ToList()
+            entry.State = EntityState.Detached
+        Next
+    End Sub
 End Class

@@ -11,7 +11,7 @@ Public Class BarrelMonthlyBalancesRep
     Public Async Function GetLastClosingBalance(month As Date, gbId As Integer) As Task(Of Integer?) Implements IBarrelMonthlyBalancesRep.GetLastClosingBalance
         Try
             Dim result As Integer?
-            Dim data = Await _dbSet.Where(Function(x) x.barmb_gb_Id = gbId AndAlso x.barmb_Month < month).OrderByDescending(Function(x) x.barmb_Month).FirstOrDefaultAsync()
+            Dim data = Await _dbSet.AsNoTracking.Where(Function(x) x.barmb_gb_Id = gbId AndAlso x.barmb_Month < month).OrderByDescending(Function(x) x.barmb_Month).FirstOrDefaultAsync()
             If data IsNot Nothing Then result = data.barmb_ClosingBalance
             Return result
         Catch ex As Exception

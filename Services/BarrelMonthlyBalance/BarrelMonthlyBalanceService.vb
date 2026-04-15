@@ -129,6 +129,7 @@
         Dim current = startMonth
         While current <= endMonth
             Await UpdateOrAddAsync(current, skipSubsequentUpdate:=True)
+            _barMBRep.DetachAllUnchanged()
             current = current.AddMonths(1)
         End While
     End Function

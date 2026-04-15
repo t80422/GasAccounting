@@ -13,4 +13,5 @@ Public Interface IRepository(Of TEntity As Class)
     Function SaveChangesAsync() As Task
     Function BeginTransaction() As DbContextTransaction
     Sub Reload(entity As TEntity)
+    Sub DetachAllUnchanged()
 End Interface
