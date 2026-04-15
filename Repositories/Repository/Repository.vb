@@ -50,6 +50,10 @@ Public Class Repository(Of TEntity As Class)
         End Try
     End Function
 
+    Public Sub AddEntityOnly(entity As TEntity) Implements IRepository(Of TEntity).AddEntityOnly
+        _dbSet.Add(entity)
+    End Sub
+
     Public Async Function DeleteAsync(id As Integer) As Task Implements IRepository(Of TEntity).DeleteAsync
         Try
             Dim entity = Await GetByIdAsync(id)

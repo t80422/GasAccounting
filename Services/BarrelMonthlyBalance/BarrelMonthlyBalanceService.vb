@@ -49,7 +49,7 @@
                         .barmb_ClosingBalance = closingBalance
                     }
 
-                    Await _barMBRep.AddAsync(newBarMB)
+                    _barMBRep.AddEntityOnly(newBarMB)
                 Else
                     barMB.barmb_OpeningBalance = lastClosingBalance
                     barMB.barmb_Total = barrelTotals
