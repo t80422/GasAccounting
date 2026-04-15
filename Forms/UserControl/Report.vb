@@ -136,4 +136,9 @@
     Private Sub btnAccountBalance_Click(sender As Object, e As EventArgs) Handles btnAccountBalance.Click
         _presenter.GenerateAccountBalance(dtpAccountBalance.Value.Date)
     End Sub
+
+    ' 重整庫存
+    Private Async Sub btnRecalculateBarrelInventory_Click(sender As Object, e As EventArgs) Handles btnRecalculateBarrelInventory.Click
+        Await _presenter.RecalculateBarrelInventoryAsync()
+    End Sub
 End Class

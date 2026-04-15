@@ -95,6 +95,42 @@
         End If
     End Function
 
+    Public Async Function RecalculateAllMonthsAsync(pbRep As IPurchaseBarrelRep, orderRep As IOrderRep) As Task Implements IBarrelMonthlyBalanceService.RecalculateAllMonthsAsync
+        Dim allPurchases = Await pbRep.GetAllAsync()
+        Dim allOrders = Await orderRep.GetAllAsync()
+
+        Dim hasPurchase = allPurchases IsNot Nothing AndAlso allPurchases.Any()
+        Dim hasOrder = allOrders IsNot Nothing AndAlso allOrders.Any()
+
+        If Not hasPurchase AndAlso Not hasOrder Then Return
+
+        Dim minDate As Date = Date.MaxValue
+        Dim maxDate As Date = Date.MinValue
+
+        If hasPurchase Then
+            Dim pbMin = allPurchases.Min(Function(x) x.pb_Date)
+            Dim pbMax = allPurchases.Max(Function(x) x.pb_Date)
+            If pbMin < minDate Then minDate = pbMin
+            If pbMax > maxDate Then maxDate = pbMax
+        End If
+
+        If hasOrder Then
+            Dim ordMin = allOrders.Where(Function(x) x.o_date.HasValue).Min(Function(x) x.o_date.Value)
+            Dim ordMax = allOrders.Where(Function(x) x.o_date.HasValue).Max(Function(x) x.o_date.Value)
+            If ordMin < minDate Then minDate = ordMin
+            If ordMax > maxDate Then maxDate = ordMax
+        End If
+
+        Dim startMonth As New Date(minDate.Year, minDate.Month, 1)
+        Dim endMonth As New Date(maxDate.Year, maxDate.Month, 1)
+
+        Dim current = startMonth
+        While current <= endMonth
+            Await UpdateOrAddAsync(current)
+            current = current.AddMonths(1)
+        End While
+    End Function
+
     Private Function CalculateTotalPurchase(purchases As IEnumerable(Of purchase_barrel), kg As Integer) As Integer
         Dim propertyName = $"pb_Qty_{kg}"
         Return purchases.Sum(Function(x) x.GetType.GetProperty(propertyName).GetValue(x, Nothing))

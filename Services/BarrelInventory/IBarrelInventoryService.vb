@@ -7,5 +7,7 @@ Public Interface IBarrelInventoryService
     Function ApplyOrderIssueAsync(gasBarrelRep As IGasBarrelRep, ord As order) As Task
     Function ApplyOrderIssueUpdateAsync(gasBarrelRep As IGasBarrelRep, originalOrder As order, updatedOrder As order) As Task
     Function ApplyOrderIssueDeleteAsync(gasBarrelRep As IGasBarrelRep, ord As order) As Task
+
+    Function RecalculateInventoryAsync(gasBarrelRep As IGasBarrelRep, pbRep As IPurchaseBarrelRep, orderRep As IOrderRep) As Task
 End Interface
 

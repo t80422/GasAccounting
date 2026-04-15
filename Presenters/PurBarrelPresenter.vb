@@ -265,6 +265,13 @@ Public Class PurBarrelPresenter
 
     Private Sub Validate(input As purchase_barrel)
         If input.pb_manu_Id = 0 Then Throw New Exception("請選擇廠商")
+
+        Dim qtys = New List(Of Integer?) From {
+            input.pb_Qty_50, input.pb_Qty_20, input.pb_Qty_16, input.pb_Qty_10,
+            input.pb_Qty_4, input.pb_Qty_18, input.pb_Qty_14, input.pb_Qty_5, input.pb_Qty_2
+        }
+        If qtys.Any(Function(q) q.HasValue AndAlso q.Value < 0) Then Throw New Exception("採購數量不可為負數")
+        If Not qtys.Any(Function(q) q.HasValue AndAlso q.Value > 0) Then Throw New Exception("請至少輸入一種規格的採購數量")
     End Sub
 
     Private Async Function LoadVendor() As Task

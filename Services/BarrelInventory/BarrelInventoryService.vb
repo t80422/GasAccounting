@@ -91,22 +91,55 @@ Public Class BarrelInventoryService
         }
     End Function
 
-    Private Shared Async Function ApplyDeltaAsync(gasBarrelRep As IGasBarrelRep, delta As Dictionary(Of String, Integer)) As Task
-        Dim targetNames = delta.Where(Function(x) x.Value <> 0).Select(Function(x) x.Key).ToList()
-        If Not targetNames.Any() Then Return
+    Public Async Function RecalculateInventoryAsync(gasBarrelRep As IGasBarrelRep, pbRep As IPurchaseBarrelRep, orderRep As IOrderRep) As Task Implements IBarrelInventoryService.RecalculateInventoryAsync
+        If gasBarrelRep Is Nothing Then Throw New ArgumentNullException(NameOf(gasBarrelRep))
+        If pbRep Is Nothing Then Throw New ArgumentNullException(NameOf(pbRep))
+        If orderRep Is Nothing Then Throw New ArgumentNullException(NameOf(orderRep))
 
-        Dim ctx = gasBarrelRep.Context.Set(Of gas_barrel)()
-        Dim barrels = Await ctx.Where(Function(x) targetNames.Contains(x.gb_Name)).ToListAsync()
-        Dim missing = targetNames.Except(barrels.Select(Function(x) x.gb_Name)).ToList()
-        If missing.Any() Then Throw New Exception($"找不到瓦斯桶類型：{String.Join(", ", missing)}")
+        Dim allBarrels = Await gasBarrelRep.GetAllAsync()
 
-        For Each kv In delta
-            If kv.Value = 0 Then Continue For
-            Dim entity = barrels.First(Function(x) x.gb_Name = kv.Key)
-            entity.gb_Inventory += kv.Value
+        Dim allPurchases = Await pbRep.GetAllAsync()
+        Dim totalPurchase As New Dictionary(Of String, Integer)
+        For Each barrel In allBarrels
+            totalPurchase(barrel.gb_Name) = 0
+        Next
+        For Each purchase In allPurchases
+            Dim dict = BuildQtyDictionary(purchase)
+            For Each kv In dict
+                If totalPurchase.ContainsKey(kv.Key) Then
+                    totalPurchase(kv.Key) += kv.Value
+                End If
+            Next
         Next
 
-        Await gasBarrelRep.SaveChangesAsync()
+        Dim allOrders = Await orderRep.GetAllAsync()
+        Dim totalSales As New Dictionary(Of String, Integer)
+        For Each barrel In allBarrels
+            totalSales(barrel.gb_Name) = 0
+        Next
+        For Each ord In allOrders
+            Dim dict = BuildOrderNewOutDictionary(ord)
+            For Each kv In dict
+                If totalSales.ContainsKey(kv.Key) Then
+                    totalSales(kv.Key) += kv.Value
+                End If
+            Next
+        Next
+
+        For Each barrel In allBarrels
+            Dim name = barrel.gb_Name
+            Dim purchase As Integer = If(totalPurchase.ContainsKey(name), totalPurchase(name), 0)
+            Dim sales As Integer = If(totalSales.ContainsKey(name), totalSales(name), 0)
+            Dim newInventory As Integer = barrel.gb_InitialInventory + purchase - sales
+            Await gasBarrelRep.SetInventoryAsync(name, newInventory)
+        Next
+    End Function
+
+    Private Shared Async Function ApplyDeltaAsync(gasBarrelRep As IGasBarrelRep, delta As Dictionary(Of String, Integer)) As Task
+        For Each kv In delta
+            If kv.Value = 0 Then Continue For
+            Await gasBarrelRep.UpdateInventoryByDeltaAsync(kv.Key, kv.Value)
+        Next
     End Function
 
     Private Shared Function SafeQty(value As Integer?) As Integer

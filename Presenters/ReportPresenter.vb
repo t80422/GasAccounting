@@ -1712,4 +1712,32 @@ Public Class ReportPresenter
             Return Nothing
         End Try
     End Function
+
+    Public Async Sub RecalculateBarrelInventoryAsync()
+        Dim confirm = MessageBox.Show(
+            "此操作將重新計算所有鋼瓶庫存與月結算，建議先備份資料庫，確定要繼續嗎？",
+            "重整庫存確認",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Warning)
+        If confirm = DialogResult.No Then Return
+
+        Dim barInvSvc = DependencyContainer.Resolve(Of IBarrelInventoryService)()
+        Dim barMBSvc = DependencyContainer.Resolve(Of IBarrelMonthlyBalanceService)()
+
+        Using uow As New UnitOfWork()
+            Try
+                uow.BeginTransaction()
+
+                Await barInvSvc.RecalculateInventoryAsync(uow.GasBarrelRepository, uow.PurchaseBarrelRep, uow.OrderRepository)
+                Await barMBSvc.RecalculateAllMonthsAsync(uow.PurchaseBarrelRep, uow.OrderRepository)
+                Await uow.SaveChangesAsync()
+
+                uow.Commit()
+                MessageBox.Show("重整完成！庫存資料已重新計算。")
+            Catch ex As Exception
+                uow.Rollback()
+                MessageBox.Show("重整失敗：" & ex.Message)
+            End Try
+        End Using
+    End Sub
 End Class
