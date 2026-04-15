@@ -13,7 +13,7 @@
         _orderRep = orderRep
     End Sub
 
-    Public Async Function UpdateOrAddAsync(month As Date) As Task Implements IBarrelMonthlyBalanceService.UpdateOrAddAsync
+    Public Async Function UpdateOrAddAsync(month As Date, Optional skipSubsequentUpdate As Boolean = False) As Task Implements IBarrelMonthlyBalanceService.UpdateOrAddAsync
         Try
             Dim thisMonth = New Date(month.Year, month.Month, 1)
 
@@ -56,8 +56,10 @@
                     barMB.barmb_ClosingBalance = closingBalance
                 End If
 
-                '更新後續月份
-                Await UpdateSubsequentMonths(thisMonth, gbId, closingBalance)
+                '更新後續月份（重整全月時由迴圈依序處理，不需要逐月級聯更新）
+                If Not skipSubsequentUpdate Then
+                    Await UpdateSubsequentMonths(thisMonth, gbId, closingBalance)
+                End If
             Next
 
             Await _barMBRep.SaveChangesAsync()
@@ -126,7 +128,7 @@
 
         Dim current = startMonth
         While current <= endMonth
-            Await UpdateOrAddAsync(current)
+            Await UpdateOrAddAsync(current, skipSubsequentUpdate:=True)
             current = current.AddMonths(1)
         End While
     End Function
