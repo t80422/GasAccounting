@@ -10,6 +10,7 @@ Public Interface IPaymentRep
     ''' <param name="vendorIds">廠商編號</param>
     ''' <returns></returns>
     Function GetByCriteriaAndVendors(criteria As PaymentSearchCriteria, vendorIds As List(Of Integer)) As List(Of payment)
+    Function GetByCriteriaAndVendors(criteria As PaymentSearchCriteria, vendorIds As List(Of Integer), companyIds As List(Of Integer)) As List(Of payment)
     Function GetVendorAmountDue(vendorId As Integer) As List(Of AmountDueVM)
     Function GetCashSubpoenaData(selectDate As Date) As List(Of CashSubpoenaDTO)
     Function GetTransferSubpoenaData(day As Date) As List(Of TransferSubpoenaGroup)

@@ -50,15 +50,18 @@ Public Class GasPurchaseService
             ' 取得所有涉及的大氣廠商ID
             Dim gasVendorIds = gasVendorMonthlyData.Select(Function(p) Integer.Parse(p.VendorId)).Distinct().ToList()
 
+            ' 從採購資料中提取實際公司 ID 清單（避免 criteria.CompanyId 為 0 或 Nothing 導致漏撈）
+            Dim gasVendorCompanyIds = gasVendorMonthlyData.Select(Function(p) p.CompId).Distinct().Cast(Of Integer)().ToList()
+
             ' 查詢大氣付款資料並手動分組
             Dim vendorPaymentCriteria = New PaymentSearchCriteria With {
                 .IsSearchDate = criteria.IsDateSearch,
                 .StartDate = criteria.StartDate,
                 .EndDate = criteria.EndDate,
-                .CompanyId = criteria.CompanyId
+                .CompanyId = Nothing
             }
 
-            Dim gasVendorPayment = _paymentRep.GetByCriteriaAndVendors(vendorPaymentCriteria, gasVendorIds)
+            Dim gasVendorPayment = _paymentRep.GetByCriteriaAndVendors(vendorPaymentCriteria, gasVendorIds, gasVendorCompanyIds)
             Dim validPayments = gasVendorPayment.Where(Function(x) x.p_m_Id.HasValue).ToList()
 
             ' 手動分組處理：按帳款月份+廠商+公司分組付款資料

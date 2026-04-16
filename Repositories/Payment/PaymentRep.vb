@@ -185,11 +185,16 @@ Public Class PaymentRep
     End Function
 
     Public Function GetByCriteriaAndVendors(criteria As PaymentSearchCriteria, vendorIds As List(Of Integer)) As List(Of payment) Implements IPaymentRep.GetByCriteriaAndVendors
+        Return GetByCriteriaAndVendors(criteria, vendorIds, Nothing)
+    End Function
+
+    Public Function GetByCriteriaAndVendors(criteria As PaymentSearchCriteria, vendorIds As List(Of Integer), Optional companyIds As List(Of Integer) = Nothing) As List(Of payment) Implements IPaymentRep.GetByCriteriaAndVendors
         Try
             Dim query = _dbSet.AsNoTracking.AsQueryable
 
             If criteria.IsSearchDate Then query = query.Where(Function(x) x.p_AccountMonth >= criteria.StartDate AndAlso x.p_AccountMonth < criteria.EndDate)
             If criteria.CompanyId.HasValue Then query = query.Where(Function(x) x.p_comp_Id = criteria.CompanyId)
+            If companyIds IsNot Nothing AndAlso companyIds.Any() Then query = query.Where(Function(x) companyIds.Contains(x.p_comp_Id))
 
             query = query.Where(Function(x) vendorIds.Contains(x.p_m_Id))
 
